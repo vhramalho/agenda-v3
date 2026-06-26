@@ -23,6 +23,10 @@ function criarCelulaDia(numero, foraDoMes, aoSelecionar) {
 
 function gerarGradeCalendario(container, ano, mes, diaAtivo, aoSelecionar) {
   container.innerHTML = "";
+  const hoje = new Date();
+  const ehMesDeHoje = hoje.getFullYear() === ano && hoje.getMonth() === mes;
+  const diaHoje = ehMesDeHoje ? hoje.getDate() : null;
+
   const primeiroDiaSemana = new Date(ano, mes, 1).getDay();
   const diasNoMes = new Date(ano, mes + 1, 0).getDate();
   const diasMesAnterior = new Date(ano, mes, 0).getDate();
@@ -33,6 +37,7 @@ function gerarGradeCalendario(container, ano, mes, diaAtivo, aoSelecionar) {
   for (let dia = 1; dia <= diasNoMes; dia++) {
     const celula = criarCelulaDia(dia, false, aoSelecionar);
     if (dia === diaAtivo) celula.classList.add("cal-grid__day--ativo");
+    else if (dia === diaHoje) celula.classList.add("cal-grid__day--hoje");
     container.appendChild(celula);
   }
   const totalCelulas = primeiroDiaSemana + diasNoMes;
@@ -61,16 +66,20 @@ document.addEventListener("DOMContentLoaded", () => {
     const hoje = new Date();
     let calAno = hoje.getFullYear();
     let calMes = hoje.getMonth();
-    let calDiaAtivo = hoje.getDate();
+    let selecionado = { ano: hoje.getFullYear(), mes: hoje.getMonth(), dia: hoje.getDate() };
+
+    function diaAtivoNoGrid() {
+      return (calAno === selecionado.ano && calMes === selecionado.mes) ? selecionado.dia : null;
+    }
 
     function atualizarCalendario() {
       rotuloMes.textContent = `${MESES_NOME[calMes]} ${calAno}`;
-      gerarGradeCalendario(gradeDias, calAno, calMes, calDiaAtivo, (celula) => {
+      gerarGradeCalendario(gradeDias, calAno, calMes, diaAtivoNoGrid(), (celula) => {
         qsa(".cal-grid__day", gradeDias).forEach((d) => d.classList.remove("cal-grid__day--ativo"));
         celula.classList.add("cal-grid__day--ativo");
-        calDiaAtivo = Number(celula.textContent);
+        selecionado = { ano: calAno, mes: calMes, dia: Number(celula.textContent) };
         if (typeof window.aoSelecionarDiaCalendarioAgenda === "function") {
-          window.aoSelecionarDiaCalendarioAgenda(calAno, calMes, calDiaAtivo);
+          window.aoSelecionarDiaCalendarioAgenda(selecionado.ano, selecionado.mes, selecionado.dia);
         }
         setTimeout(() => fecharModal("modal-calendario"), 150);
       });
@@ -79,21 +88,19 @@ document.addEventListener("DOMContentLoaded", () => {
     window.irParaMesCalendarioAgenda = (ano, mes, dia) => {
       calAno = ano;
       calMes = mes;
-      calDiaAtivo = dia;
+      selecionado = { ano, mes, dia };
       atualizarCalendario();
     };
 
     qs("#js-cal-anterior").addEventListener("click", () => {
       calMes--;
       if (calMes < 0) { calMes = 11; calAno--; }
-      calDiaAtivo = null;
       atualizarCalendario();
     });
 
     qs("#js-cal-proximo").addEventListener("click", () => {
       calMes++;
       if (calMes > 11) { calMes = 0; calAno++; }
-      calDiaAtivo = null;
       atualizarCalendario();
     });
 

@@ -171,13 +171,17 @@ function montarSlotRealizado(item) {
       <p class="agenda-slot__subtitulo"></p>
       <p class="agenda-slot__observacao"></p>
     </div>
-    <span class="${a.status === "realizado_pago" ? "text-success" : "text-warning"}" style="font-weight:600;font-size:var(--text-sm);">${a.status === "realizado_pago" ? "Pago" : "Pendente"}</span>
+    <div class="agenda-slot__status">
+      <p class="${a.status === "realizado_pago" ? "text-success" : "text-warning"}" style="font-weight:600;font-size:var(--text-sm);">${a.status === "realizado_pago" ? "Pago" : "Pendente"}</p>
+      <p class="agenda-slot__status-valor"></p>
+    </div>
     <svg class="list-item__chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
   `;
   el.querySelector(".agenda-slot__titulo").textContent = a.nomeCliente;
   el.querySelector(".agenda-slot__subtitulo").textContent = nomesServicosPorIds(a.servicosIds) || "—";
   const obsEl = el.querySelector(".agenda-slot__observacao");
   if (a.observacao) obsEl.textContent = a.observacao; else obsEl.remove();
+  el.querySelector(".agenda-slot__status-valor").textContent = formatarMoeda(a.valorTotal || 0);
   el.addEventListener("click", (e) => { e.preventDefault(); abrirHorarioRealizado(a); });
   return el;
 }
@@ -242,6 +246,11 @@ function selecionarData(iso) {
   renderizarCabecalho();
   renderizarSemana();
   renderizarAgendaLista();
+  qs("#js-btn-hoje").classList.toggle("is-hidden", dataSelecionada === hojeIso());
+  if (typeof window.irParaMesCalendarioAgenda === "function") {
+    const d = isoParaDate(iso);
+    window.irParaMesCalendarioAgenda(d.getFullYear(), d.getMonth(), d.getDate());
+  }
 }
 
 window.aoSelecionarDiaCalendarioAgenda = (ano, mes, dia) => {
@@ -249,7 +258,28 @@ window.aoSelecionarDiaCalendarioAgenda = (ano, mes, dia) => {
   selecionarData(iso);
 };
 
-function adicionarGestoSwipe(elemento, aoArrastarEsquerda, aoArrastarDireita) {
+function aplicarProgressoCarrossel(deltaX) {
+  const carrossel = qs("#js-week-carousel");
+  const ativo = qs(".week-day.is-active", carrossel);
+  if (!ativo) return;
+  if (!deltaX) {
+    qsa(".week-day", carrossel).forEach((el) => {
+      el.classList.remove("week-day--preview");
+      el.style.opacity = "";
+    });
+    return;
+  }
+  const progresso = Math.min(Math.abs(deltaX) / 100, 1);
+  const vizinho = deltaX < 0 ? ativo.nextElementSibling : ativo.previousElementSibling;
+  ativo.style.opacity = String(1 - progresso);
+  qsa(".week-day", carrossel).forEach((el) => { if (el !== ativo && el !== vizinho) el.classList.remove("week-day--preview"); });
+  if (vizinho) {
+    vizinho.classList.add("week-day--preview");
+    vizinho.style.opacity = String(progresso);
+  }
+}
+
+function adicionarGestoSwipe(elemento, aoArrastarEsquerda, aoArrastarDireita, aoProgresso) {
   let inicioX = 0;
   let inicioY = 0;
   let deltaX = 0;
@@ -280,6 +310,7 @@ function adicionarGestoSwipe(elemento, aoArrastarEsquerda, aoArrastarDireita) {
     if (horizontal) {
       if (e.cancelable) e.preventDefault();
       elemento.style.transform = `translateX(${deltaX}px)`;
+      if (aoProgresso) aoProgresso(deltaX);
     }
   }, { passive: false });
 
@@ -287,6 +318,7 @@ function adicionarGestoSwipe(elemento, aoArrastarEsquerda, aoArrastarDireita) {
     if (!arrastando) return;
     arrastando = false;
     elemento.style.transition = "transform 200ms ease";
+    if (aoProgresso) aoProgresso(0);
     if (horizontal && Math.abs(deltaX) > 60) {
       const indoParaEsquerda = deltaX < 0;
       elemento.style.transform = `translateX(${indoParaEsquerda ? "-24px" : "24px"})`;
@@ -456,17 +488,7 @@ function limparCompletarCadastro() {
   qs("#js-novo-agendamento-completar-telefone").value = "";
   qs("#js-novo-agendamento-completar-aniversario").value = "";
   qs("#js-novo-agendamento-completar-observacao").value = "";
-  qs("#js-novo-agendamento-completar-campos").classList.add("is-hidden");
-  qs("#js-novo-agendamento-completar-wrap").style.display = "none";
-}
-
-function atualizarVisibilidadeCompletarCadastro() {
-  const nome = qs("#js-novo-agendamento-nome").value.trim();
-  const mostrar = !clienteSelecionadoId && !agendamentoEditandoId && nome.length > 0;
-  qs("#js-novo-agendamento-completar-wrap").style.display = mostrar ? "block" : "none";
-  if (!mostrar) {
-    qs("#js-novo-agendamento-completar-campos").classList.add("is-hidden");
-  }
+  qs("#js-novo-agendamento-completar-wrap").classList.add("is-hidden");
 }
 
 function prepararNovoAgendamento() {
@@ -499,10 +521,21 @@ function prepararEdicaoAgendamento(agendamento) {
 
 function renderizarResultadosBusca(termo) {
   const resultados = qs("#js-novo-agendamento-resultados");
-  if (!termo) { resultados.classList.add("is-hidden"); resultados.innerHTML = ""; return; }
-  const encontrados = obterClientes().filter((c) => c.ativo && c.nome.toLowerCase().includes(termo.toLowerCase())).slice(0, 6);
-  if (encontrados.length === 0) { resultados.classList.add("is-hidden"); resultados.innerHTML = ""; return; }
   resultados.innerHTML = "";
+  if (!termo || agendamentoEditandoId) { resultados.classList.add("is-hidden"); return; }
+
+  const linhaCadastrar = document.createElement("div");
+  linhaCadastrar.className = "list-item";
+  linhaCadastrar.style.cursor = "pointer";
+  linhaCadastrar.style.padding = "8px 0";
+  linhaCadastrar.innerHTML = `<div class="list-item__body"><p class="list-item__title text-primary-accent" style="font-weight:600;font-size:var(--text-sm);">+ Cadastrar novo (opcional)</p></div>`;
+  linhaCadastrar.addEventListener("click", () => {
+    resultados.classList.add("is-hidden");
+    qs("#js-novo-agendamento-completar-wrap").classList.remove("is-hidden");
+  });
+  resultados.appendChild(linhaCadastrar);
+
+  const encontrados = obterClientes().filter((c) => c.ativo && c.nome.toLowerCase().includes(termo.toLowerCase())).slice(0, 5);
   encontrados.forEach((cliente) => {
     const linha = document.createElement("div");
     linha.className = "list-item";
@@ -516,7 +549,7 @@ function renderizarResultadosBusca(termo) {
       qs("#js-novo-agendamento-nome").value = cliente.nome;
       mostrarClienteCard(cliente);
       resultados.classList.add("is-hidden");
-      atualizarVisibilidadeCompletarCadastro();
+      qs("#js-novo-agendamento-completar-wrap").classList.add("is-hidden");
     });
     resultados.appendChild(linha);
   });
@@ -604,11 +637,7 @@ function prepararEditarRealizado(agendamento) {
 
 document.addEventListener("DOMContentLoaded", () => {
   const dataDaUrl = new URLSearchParams(window.location.search).get("data");
-  if (dataDaUrl) dataSelecionada = dataDaUrl;
-
-  renderizarCabecalho();
-  renderizarSemana();
-  renderizarAgendaLista();
+  selecionarData(dataDaUrl || dataSelecionada);
 
   qs("#js-btn-hoje").addEventListener("click", () => {
     selecionarData(hojeIso());
@@ -619,7 +648,8 @@ document.addEventListener("DOMContentLoaded", () => {
     () => selecionarData(somarDias(dataSelecionada, -7)));
   adicionarGestoSwipe(qs("#js-agenda-lista"),
     () => selecionarData(somarDias(dataSelecionada, 1)),
-    () => selecionarData(somarDias(dataSelecionada, -1)));
+    () => selecionarData(somarDias(dataSelecionada, -1)),
+    aplicarProgressoCarrossel);
 
   qs('#modal-horario-livre [data-trocar-modal="modal-novo-agendamento"]').addEventListener("click", prepararNovoAgendamento);
   qs('#modal-horario-livre [data-trocar-modal="modal-bloquear-horario"]').addEventListener("click", () => {
@@ -710,11 +740,6 @@ document.addEventListener("DOMContentLoaded", () => {
   qs("#js-novo-agendamento-nome").addEventListener("input", (e) => {
     clienteSelecionadoId = null;
     renderizarResultadosBusca(e.target.value.trim());
-    atualizarVisibilidadeCompletarCadastro();
-  });
-
-  qs("#js-novo-agendamento-completar-toggle").addEventListener("click", () => {
-    qs("#js-novo-agendamento-completar-campos").classList.toggle("is-hidden");
   });
 
   qs("#js-novo-agendamento-salvar").addEventListener("click", () => {

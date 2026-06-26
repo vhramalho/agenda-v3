@@ -812,6 +812,10 @@
   background: var(--primary-soft);
 }
 
+.cal-grid__day--hoje {
+  border: 1.5px solid var(--primary);
+}
+
 .cal-grid__day--ativo {
   background: var(--primary);
   color: var(--text-on-primary);

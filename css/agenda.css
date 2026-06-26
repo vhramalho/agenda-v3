@@ -81,6 +81,16 @@
   opacity: 0.45;
 }
 
+.week-day--preview {
+  background: var(--primary);
+  border-color: var(--primary);
+}
+
+.week-day--preview .week-day__label,
+.week-day--preview .week-day__numero {
+  color: var(--text-on-primary);
+}
+
 /* ---------- Lista de horários ---------- */
 .agenda-lista {
   display: flex;
@@ -152,6 +162,17 @@
 .agenda-slot__subtitulo {
   font-size: var(--text-sm);
   color: var(--text-secondary);
+}
+
+.agenda-slot__status {
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.agenda-slot__status-valor {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  margin-top: 1px;
 }
 
 .agenda-slot__observacao {
