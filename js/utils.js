@@ -65,6 +65,14 @@ function hojeIso() {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 }
 
+function extrairAniversario(texto) {
+  const partes = (texto || "").split("/");
+  if (partes.length < 2) return { dia: null, mes: null };
+  const dia = parseInt(partes[0], 10);
+  const mes = parseInt(partes[1], 10);
+  return { dia: isNaN(dia) ? null : dia, mes: isNaN(mes) ? null : mes };
+}
+
 function extrairValor(texto) {
   const limpo = (texto || "").replace(/[^\d,.-]/g, "").replace(",", ".");
   const numero = parseFloat(limpo);

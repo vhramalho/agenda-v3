@@ -107,14 +107,6 @@ function renderizarClientes() {
   }
 }
 
-function extrairAniversario(texto) {
-  const partes = (texto || "").split("/");
-  if (partes.length < 2) return { dia: null, mes: null };
-  const dia = parseInt(partes[0], 10);
-  const mes = parseInt(partes[1], 10);
-  return { dia: isNaN(dia) ? null : dia, mes: isNaN(mes) ? null : mes };
-}
-
 document.addEventListener("DOMContentLoaded", () => {
   renderizarClientes();
 

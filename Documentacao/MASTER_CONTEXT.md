@@ -221,20 +221,21 @@ Todas as 10 perguntas resolvidas em `docs/LOGICA_E_FLUXO_DE_DADOS.md` seção 7,
 - **Fase 1** (estrutura e visual estático): ✅ concluída.
 - **Fase 2** (interações, sem dados reais): ✅ concluída.
 - **Fase 3** (dados reais via localStorage): ✅ **concluída (todas as 11 etapas)**.
-- **Fase 4** (refinamento) e **Fase 5** (backend): não iniciadas.
+- **Fase 4** (refinamento): 🔶 em andamento de forma informal — usuário está testando o app publicado (GitHub Pages) e mandando rodadas de ajustes de UX/bugs, cada rodada termina em commit. Sem plano de etapas formal ainda, é ajuste reativo ao uso real.
+- **Fase 5** (backend): não iniciada.
 
 ## 22. Fase atual
 
-**Fase 3 concluída.** Aguardando revisão do usuário, commit e `/compact` antes de iniciar a Fase 4.
+**Fase 4 informal** — rodadas de revisão de UX e correção de bugs encontrados pelo usuário testando no celular via GitHub Pages (https://vhramalho.github.io/agenda-v3/). Publicado no GitHub em https://github.com/vhramalho/agenda-v3.
 
 ## 23. Próxima etapa
 
-Definir o plano da **Fase 4 (refinamento geral)** junto com o usuário, após a revisão da Fase 3.
+Continuar recebendo e aplicando rodadas de ajuste do usuário (padrão: ele lista os problemas, conversamos para alinhar entendimento, eu implemento, testo, e comitamos — depois ele testa de novo e manda a próxima rodada).
 
 ## 24. Pendências
 
-- Publicar o projeto no GitHub + GitHub Pages (solicitado pelo usuário em 2026-06-25, repositório público confirmado, **ainda não executado**).
+- Publicar o projeto no GitHub + GitHub Pages — ✅ feito em 2026-06-26 (repo público https://github.com/vhramalho/agenda-v3, Pages ativado pelo usuário via Settings > Pages, branch main).
 - Validar com o usuário as duas interpretações marcadas como "a confirmar" na seção 19.
 - Decidir onde mora o botão de `mensagemEndereco` (Pergunta 7, deliberadamente em espera).
 - Testar em tela a importação real de um arquivo de backup (só a exportação foi confirmada por screenshot).
-- Re-testar em tela (não só por lógica revisada) os fluxos de editar agendamento existente, editar atendimento já realizado e excluir — implementados na Etapa 6 mas não fotografados em screenshot.
+- **Chips de serviços/formas de pagamento nos modais de Agendar e Finalizar atendimento continuam "desorganizados" visualmente** (CSS `.chip-group` ajudou mas não resolveu de verdade) — usuário pediu explicitamente para deixar para uma modificação futura, "pra não estragar o funcionamento". Não tocar nisso sem pedido explícito.

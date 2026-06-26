@@ -71,6 +71,8 @@ function classificarGradeDoDia(iso) {
   const porHora = {};
   compromissos.forEach((a) => { porHora[a.hora] = a; });
 
+  const horariosOcupados = Array.from(new Set([...compromissos.map((a) => a.hora), ...horariosFixos.keys()])).sort();
+
   let ponteiro = config.horaInicio;
   const estrategico = config.modoCompartilhamento === "estrategico";
 
@@ -99,11 +101,9 @@ function classificarGradeDoDia(iso) {
       return { hora, tipo: "livre" };
     }
 
-    const proximo = compromissos
-      .filter((a) => a.hora > hora)
-      .sort((a, b) => (a.hora < b.hora ? -1 : 1))[0];
+    const proximo = horariosOcupados.find((h) => h > hora);
     const fimJanela = somarMinutos(hora, config.tempoPadraoAtendimento);
-    const colideComProximo = proximo && fimJanela > proximo.hora;
+    const colideComProximo = proximo && fimJanela > proximo;
     const noRitmo = hora === ponteiro;
 
     if (noRitmo && !colideComProximo) {
@@ -188,10 +188,13 @@ function montarSlotBloqueado(item) {
   const nome = item.pontual ? (item.agendamento.nomeBloqueio || "Bloqueado") : item.bloqueio.nome;
   el.innerHTML = `
     <span class="agenda-slot__hora">${item.hora}</span>
-    <span class="agenda-slot__icone agenda-slot__icone--bloqueado"></span>
-    <div class="agenda-slot__body"><p class="agenda-slot__titulo"></p></div>
+    <svg class="agenda-slot__icone--bloqueado" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="11" width="14" height="9" rx="1"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+    <div class="agenda-slot__body">
+      <p class="agenda-slot__titulo">Bloqueado</p>
+      <p class="agenda-slot__subtitulo"></p>
+    </div>
   `;
-  el.querySelector(".agenda-slot__titulo").textContent = nome;
+  el.querySelector(".agenda-slot__subtitulo").textContent = nome;
   el.addEventListener("click", () => abrirHorarioBloqueado(item));
   return el;
 }
@@ -249,21 +252,53 @@ window.aoSelecionarDiaCalendarioAgenda = (ano, mes, dia) => {
 function adicionarGestoSwipe(elemento, aoArrastarEsquerda, aoArrastarDireita) {
   let inicioX = 0;
   let inicioY = 0;
-  let ativo = false;
+  let deltaX = 0;
+  let arrastando = false;
+  let decidido = false;
+  let horizontal = false;
+
   elemento.addEventListener("touchstart", (e) => {
     inicioX = e.touches[0].clientX;
     inicioY = e.touches[0].clientY;
-    ativo = true;
+    deltaX = 0;
+    arrastando = true;
+    decidido = false;
+    horizontal = false;
+    elemento.style.transition = "none";
   }, { passive: true });
-  elemento.addEventListener("touchend", (e) => {
-    if (!ativo) return;
-    ativo = false;
-    const deltaX = e.changedTouches[0].clientX - inicioX;
-    const deltaY = e.changedTouches[0].clientY - inicioY;
-    if (Math.abs(deltaX) > 50 && Math.abs(deltaX) > Math.abs(deltaY) * 1.5) {
-      if (deltaX < 0) aoArrastarEsquerda(); else aoArrastarDireita();
+
+  elemento.addEventListener("touchmove", (e) => {
+    if (!arrastando) return;
+    const x = e.touches[0].clientX;
+    const y = e.touches[0].clientY;
+    deltaX = x - inicioX;
+    const deltaY = y - inicioY;
+    if (!decidido && (Math.abs(deltaX) > 8 || Math.abs(deltaY) > 8)) {
+      horizontal = Math.abs(deltaX) > Math.abs(deltaY);
+      decidido = true;
     }
-  }, { passive: true });
+    if (horizontal) {
+      if (e.cancelable) e.preventDefault();
+      elemento.style.transform = `translateX(${deltaX}px)`;
+    }
+  }, { passive: false });
+
+  elemento.addEventListener("touchend", () => {
+    if (!arrastando) return;
+    arrastando = false;
+    elemento.style.transition = "transform 200ms ease";
+    if (horizontal && Math.abs(deltaX) > 60) {
+      const indoParaEsquerda = deltaX < 0;
+      elemento.style.transform = `translateX(${indoParaEsquerda ? "-24px" : "24px"})`;
+      setTimeout(() => {
+        elemento.style.transition = "none";
+        elemento.style.transform = "translateX(0)";
+        if (indoParaEsquerda) aoArrastarEsquerda(); else aoArrastarDireita();
+      }, 130);
+    } else {
+      elemento.style.transform = "translateX(0)";
+    }
+  });
 }
 
 /* ============================================================
@@ -417,6 +452,23 @@ function mostrarClienteCard(cliente) {
   card.classList.remove("is-hidden");
 }
 
+function limparCompletarCadastro() {
+  qs("#js-novo-agendamento-completar-telefone").value = "";
+  qs("#js-novo-agendamento-completar-aniversario").value = "";
+  qs("#js-novo-agendamento-completar-observacao").value = "";
+  qs("#js-novo-agendamento-completar-campos").classList.add("is-hidden");
+  qs("#js-novo-agendamento-completar-wrap").style.display = "none";
+}
+
+function atualizarVisibilidadeCompletarCadastro() {
+  const nome = qs("#js-novo-agendamento-nome").value.trim();
+  const mostrar = !clienteSelecionadoId && !agendamentoEditandoId && nome.length > 0;
+  qs("#js-novo-agendamento-completar-wrap").style.display = mostrar ? "block" : "none";
+  if (!mostrar) {
+    qs("#js-novo-agendamento-completar-campos").classList.add("is-hidden");
+  }
+}
+
 function prepararNovoAgendamento() {
   agendamentoEditandoId = null;
   clienteSelecionadoId = null;
@@ -425,6 +477,7 @@ function prepararNovoAgendamento() {
   qs("#js-novo-agendamento-nome").value = "";
   qs("#js-novo-agendamento-resultados").classList.add("is-hidden");
   mostrarClienteCard(null);
+  limparCompletarCadastro();
   montarServicosChips("js-novo-agendamento-servicos", []);
   qs("#js-novo-agendamento-observacao").value = "";
 }
@@ -439,6 +492,7 @@ function prepararEdicaoAgendamento(agendamento) {
   qs("#js-novo-agendamento-resultados").classList.add("is-hidden");
   const cliente = agendamento.clienteId ? obterClientes().find((c) => c.id === agendamento.clienteId) : null;
   mostrarClienteCard(cliente);
+  limparCompletarCadastro();
   montarServicosChips("js-novo-agendamento-servicos", agendamento.servicosIds || []);
   qs("#js-novo-agendamento-observacao").value = agendamento.observacao || "";
 }
@@ -462,6 +516,7 @@ function renderizarResultadosBusca(termo) {
       qs("#js-novo-agendamento-nome").value = cliente.nome;
       mostrarClienteCard(cliente);
       resultados.classList.add("is-hidden");
+      atualizarVisibilidadeCompletarCadastro();
     });
     resultados.appendChild(linha);
   });
@@ -602,6 +657,7 @@ document.addEventListener("DOMContentLoaded", () => {
     fecharModal("modal-confirmar-exclusao-agendamento");
     fecharModal("modal-horario-agendado");
     renderizarAgendaLista();
+    mostrarSucesso();
   });
 
   qs("#js-btn-desbloquear").addEventListener("click", () => {
@@ -610,6 +666,7 @@ document.addEventListener("DOMContentLoaded", () => {
     bloqueioPontualEditandoId = null;
     fecharModal("modal-horario-bloqueado");
     renderizarAgendaLista();
+    mostrarSucesso();
   });
 
   qs("#js-btn-desbloquear-fixo").addEventListener("click", () => {
@@ -624,6 +681,7 @@ document.addEventListener("DOMContentLoaded", () => {
     bloqueioFixoEditando = null;
     fecharModal("modal-horario-bloqueado");
     renderizarAgendaLista();
+    mostrarSucesso();
   });
 
   qs("#js-btn-editar-bloqueio").addEventListener("click", () => {
@@ -652,6 +710,11 @@ document.addEventListener("DOMContentLoaded", () => {
   qs("#js-novo-agendamento-nome").addEventListener("input", (e) => {
     clienteSelecionadoId = null;
     renderizarResultadosBusca(e.target.value.trim());
+    atualizarVisibilidadeCompletarCadastro();
+  });
+
+  qs("#js-novo-agendamento-completar-toggle").addEventListener("click", () => {
+    qs("#js-novo-agendamento-completar-campos").classList.toggle("is-hidden");
   });
 
   qs("#js-novo-agendamento-salvar").addEventListener("click", () => {
@@ -664,6 +727,22 @@ document.addEventListener("DOMContentLoaded", () => {
     const matchExato = obterClientes().find((c) => c.ativo && c.nome.toLowerCase() === nome.toLowerCase());
     if (matchExato) {
       finalizarCriacaoOuEdicaoAgendamento(matchExato.id, nome);
+      return;
+    }
+    const telefoneCompletar = qs("#js-novo-agendamento-completar-telefone").value.trim();
+    const { dia: diaCompletar, mes: mesCompletar } = extrairAniversario(qs("#js-novo-agendamento-completar-aniversario").value);
+    const observacaoCompletar = qs("#js-novo-agendamento-completar-observacao").value.trim();
+    if (telefoneCompletar || diaCompletar || observacaoCompletar) {
+      const hoje = hojeIso();
+      const clientes = obterClientes();
+      const novoCliente = {
+        id: gerarId("cli"), nome, telefone: telefoneCompletar,
+        aniversarioDia: diaCompletar, aniversarioMes: mesCompletar, aniversarioAno: null,
+        observacao: observacaoCompletar, criadoEm: hoje, atualizadoEm: hoje, ativo: true,
+      };
+      clientes.push(novoCliente);
+      salvarClientes(clientes);
+      finalizarCriacaoOuEdicaoAgendamento(novoCliente.id, nome);
       return;
     }
     pendenteAgendamentoNome = nome;
@@ -743,6 +822,7 @@ document.addEventListener("DOMContentLoaded", () => {
     salvarAgendamentos(lista);
     fecharModal("modal-editar-realizado");
     renderizarAgendaLista();
+    mostrarSucesso();
   });
 
   qs("#js-confirmar-exclusao-realizado").addEventListener("click", () => {
@@ -751,6 +831,7 @@ document.addEventListener("DOMContentLoaded", () => {
     fecharModal("modal-confirmar-exclusao-realizado");
     fecharModal("modal-horario-realizado");
     renderizarAgendaLista();
+    mostrarSucesso();
   });
 
   qs("#js-btn-compartilhar-whatsapp").addEventListener("click", () => {

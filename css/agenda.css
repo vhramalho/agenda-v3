@@ -42,6 +42,7 @@
   display: flex;
   gap: var(--space-2);
   margin-bottom: var(--space-5);
+  touch-action: pan-y;
 }
 
 .week-day {
@@ -85,6 +86,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
+  touch-action: pan-y;
 }
 
 .agenda-slot {
@@ -125,10 +127,9 @@
 }
 
 .agenda-slot__icone--bloqueado {
-  width: 10px;
-  height: 10px;
-  border-radius: var(--radius-full);
-  background: var(--danger);
+  width: 16px;
+  height: 16px;
+  color: var(--danger);
   flex-shrink: 0;
 }
 
@@ -179,13 +180,14 @@
 }
 
 .agenda-slot--bloqueado .agenda-slot__titulo {
-  color: var(--text-muted);
-  font-weight: 500;
+  color: var(--text-secondary);
+  font-weight: 600;
   font-size: var(--text-sm);
 }
 
 .agenda-slot--bloqueado .agenda-slot__subtitulo {
   color: var(--text-muted);
+  font-size: var(--text-xs);
 }
 
 .agenda-slot--encaixe {
