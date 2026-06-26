@@ -40,6 +40,16 @@ function gerarGradeCalendario(container, ano, mes, diaAtivo, aoSelecionar) {
   for (let dia = 1; dia <= restante; dia++) {
     container.appendChild(criarCelulaDia(dia, true));
   }
+
+  const celulaAtiva = qs(".cal-grid__day--ativo", container);
+  if (celulaAtiva) {
+    const todasCelulas = qsa(".cal-grid__day", container);
+    const indiceAtivo = todasCelulas.indexOf(celulaAtiva);
+    const inicioSemana = indiceAtivo - (indiceAtivo % 7);
+    for (let i = inicioSemana; i < inicioSemana + 7 && i < todasCelulas.length; i++) {
+      if (todasCelulas[i] !== celulaAtiva) todasCelulas[i].classList.add("cal-grid__day--semana-ativa");
+    }
+  }
 }
 
 document.addEventListener("DOMContentLoaded", () => {

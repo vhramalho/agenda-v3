@@ -80,13 +80,14 @@
             <p class="text-secondary" id="js-bloqueado-info"></p>
           </div>
         </div>
-        <p class="text-secondary is-hidden" id="js-bloqueado-aviso-fixo" style="margin-bottom:12px;">Este horário vem de um intervalo fixo. Pra mudar, edite em <a href="intervalos.html" class="text-primary-accent">Intervalos</a>.</p>
+        <p class="text-secondary is-hidden" id="js-bloqueado-aviso-fixo" style="margin-bottom:12px;">Este horário vem de um intervalo fixo. Desbloquear aqui vale só para este dia — para mudar todos os dias, edite em <a href="intervalos.html" class="text-primary-accent">Intervalos</a>.</p>
         <div class="stack" id="js-bloqueado-acoes-pontual">
           <button class="btn btn--primary" id="js-btn-desbloquear">Desbloquear</button>
           <button class="btn btn--secondary" id="js-btn-editar-bloqueio">Editar nome</button>
           <button class="btn btn--ghost" data-fechar-modal>Fechar</button>
         </div>
         <div class="stack is-hidden" id="js-bloqueado-acoes-fixo">
+          <button class="btn btn--primary" id="js-btn-desbloquear-fixo">Desbloquear só este dia</button>
           <button class="btn btn--ghost" data-fechar-modal>Fechar</button>
         </div>
       </div>
@@ -152,7 +153,7 @@
         <div class="field" style="position:relative;">
           <label class="field__label">Nome do cliente</label>
           <input class="input" placeholder="Buscar ou digitar nome" id="js-novo-agendamento-nome" />
-          <div class="card is-hidden" id="js-novo-agendamento-resultados" style="position:absolute;z-index:5;width:100%;max-height:180px;overflow-y:auto;margin-top:4px;"></div>
+          <div class="card is-hidden" id="js-novo-agendamento-resultados" style="position:absolute;top:100%;left:0;z-index:5;width:100%;max-height:150px;overflow-y:auto;margin-top:4px;padding:4px 12px;"></div>
         </div>
         <div class="card row is-hidden" id="js-novo-agendamento-cliente-card" style="margin-bottom:16px;">
           <div class="list-item__avatar" id="js-novo-agendamento-cliente-avatar"></div>
@@ -163,7 +164,7 @@
         </div>
         <div class="field">
           <label class="field__label">Serviços</label>
-          <div class="row" style="flex-wrap:wrap;gap:8px;" data-chips="multi" id="js-novo-agendamento-servicos"></div>
+          <div class="chip-group" data-chips="multi" id="js-novo-agendamento-servicos"></div>
         </div>
         <div class="field">
           <label class="field__label">Observação (opcional)</label>
@@ -180,7 +181,7 @@
           <label class="field__label">Nome do cliente</label>
           <div class="card row"><div class="list-item__avatar" id="js-finalizar-avatar"></div><span style="flex:1;font-weight:700;" id="js-finalizar-nome"></span></div>
         </div>
-        <div class="field"><label class="field__label">Serviços</label><div class="row" style="gap:8px;flex-wrap:wrap;" data-chips="multi" id="js-finalizar-servicos"></div></div>
+        <div class="field"><label class="field__label">Serviços</label><div class="chip-group" data-chips="multi" id="js-finalizar-servicos"></div></div>
         <div class="field"><label class="field__label">Observação (opcional)</label><textarea class="textarea" placeholder="Como foi o atendimento?" id="js-finalizar-observacao"></textarea></div>
         <div class="field">
           <label class="field__label">Foi pago?</label>
@@ -192,7 +193,7 @@
         <div class="field" data-campo-pago="sim">
           <label class="field__label">Forma de pagamento</label>
           <p class="text-secondary" style="font-size:var(--text-sm);margin-bottom:8px;">Toque em uma ou mais formas usadas pelo cliente.</p>
-          <div class="row" style="gap:8px;flex-wrap:wrap;" data-chips="multi" id="js-finalizar-formas"></div>
+          <div class="chip-group" id="js-finalizar-formas"></div>
           <div class="stack" data-linhas-pagamento style="margin-top:12px;gap:8px;" id="js-finalizar-linhas-pagamento"></div>
         </div>
         <div class="field is-hidden" data-campo-pago="nao">
@@ -236,7 +237,7 @@
           <label class="field__label">Nome</label>
           <div class="card row"><div class="list-item__avatar" id="js-editar-realizado-avatar"></div><span style="flex:1;font-weight:700;" id="js-editar-realizado-nome"></span></div>
         </div>
-        <div class="field"><label class="field__label">Serviços</label><div class="row" style="gap:8px;flex-wrap:wrap;" data-chips="multi" id="js-editar-realizado-servicos"></div></div>
+        <div class="field"><label class="field__label">Serviços</label><div class="chip-group" id="js-editar-realizado-servicos"></div></div>
         <div class="field"><label class="field__label">Observação (opcional)</label><textarea class="textarea" id="js-editar-realizado-observacao"></textarea></div>
         <div class="card row section" id="js-editar-realizado-status-pago" style="background:var(--success-soft);border-color:var(--success);">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></svg>
@@ -244,7 +245,7 @@
         </div>
         <div class="field is-hidden" id="js-editar-realizado-campo-formas">
           <label class="field__label">Formas de pagamento</label>
-          <div class="row" style="gap:8px;flex-wrap:wrap;" data-chips="multi" id="js-editar-realizado-formas"></div>
+          <div class="chip-group" id="js-editar-realizado-formas"></div>
           <div class="stack" data-linhas-pagamento style="margin-top:12px;gap:8px;" id="js-editar-realizado-linhas-pagamento"></div>
         </div>
         <div class="field is-hidden" id="js-editar-realizado-campo-pendente">

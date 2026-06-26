@@ -86,6 +86,18 @@ function estatisticasCliente(clienteId) {
   return { visitas, totalGasto, ultimaVisitaDias };
 }
 
+function mostrarSucesso() {
+  const overlay = document.createElement("div");
+  overlay.className = "sucesso-overlay";
+  overlay.innerHTML = `
+    <div class="sucesso-overlay__circulo">
+      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+  setTimeout(() => overlay.remove(), 900);
+}
+
 function classeAvatarPorIndice(indice) {
   const classes = ["", "list-item__avatar--c2", "list-item__avatar--c3", "list-item__avatar--c4", "list-item__avatar--c5"];
   return classes[indice % classes.length];

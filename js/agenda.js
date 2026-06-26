@@ -11,6 +11,7 @@ let dataSelecionada = hojeIso();
 let horaModalAtual = null;
 let agendamentoModalAtual = null;
 let bloqueioPontualEditandoId = null;
+let bloqueioFixoEditando = null;
 
 function dataParaIso(date) {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
@@ -60,7 +61,12 @@ function classificarGradeDoDia(iso) {
   const compromissos = obterCompromissosDoDia(iso);
   const bloqueiosFixos = obterBloqueiosFixosDoDia(iso);
   const horariosFixos = new Map();
-  bloqueiosFixos.forEach((b) => b.horariosBloqueados.forEach((h) => horariosFixos.set(h, b)));
+  bloqueiosFixos.forEach((b) => {
+    const excecoes = b.excecoes || [];
+    b.horariosBloqueados.forEach((h) => {
+      if (!excecoes.includes(`${iso}_${h}`)) horariosFixos.set(h, b);
+    });
+  });
 
   const porHora = {};
   compromissos.forEach((a) => { porHora[a.hora] = a; });
@@ -71,10 +77,12 @@ function classificarGradeDoDia(iso) {
   return grade.map((hora) => {
     const agendamento = porHora[hora];
     if (agendamento) {
-      ponteiro = somarMinutos(agendamento.hora, config.tempoPadraoAtendimento);
       if (agendamento.status === "bloqueado") {
+        const fimDoSlot = somarMinutos(hora, config.intervaloGrade);
+        if (fimDoSlot > ponteiro) ponteiro = fimDoSlot;
         return { hora, tipo: "bloqueado", pontual: true, agendamento };
       }
+      ponteiro = somarMinutos(agendamento.hora, config.tempoPadraoAtendimento);
       if (agendamento.status && agendamento.status.startsWith("realizado_")) {
         return { hora, tipo: "realizado", agendamento };
       }
@@ -138,11 +146,14 @@ function montarSlotAgendado(item) {
     <div class="agenda-slot__body">
       <p class="agenda-slot__titulo"></p>
       <p class="agenda-slot__subtitulo"></p>
+      <p class="agenda-slot__observacao"></p>
     </div>
     <svg class="list-item__chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
   `;
   el.querySelector(".agenda-slot__titulo").textContent = a.nomeCliente;
   el.querySelector(".agenda-slot__subtitulo").textContent = nomesServicosPorIds(a.servicosIds) || "—";
+  const obsEl = el.querySelector(".agenda-slot__observacao");
+  if (a.observacao) obsEl.textContent = a.observacao; else obsEl.remove();
   el.addEventListener("click", (e) => { e.preventDefault(); abrirHorarioAgendado(a); });
   return el;
 }
@@ -158,12 +169,15 @@ function montarSlotRealizado(item) {
     <div class="agenda-slot__body">
       <p class="agenda-slot__titulo"></p>
       <p class="agenda-slot__subtitulo"></p>
+      <p class="agenda-slot__observacao"></p>
     </div>
     <span class="${a.status === "realizado_pago" ? "text-success" : "text-warning"}" style="font-weight:600;font-size:var(--text-sm);">${a.status === "realizado_pago" ? "Pago" : "Pendente"}</span>
     <svg class="list-item__chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
   `;
   el.querySelector(".agenda-slot__titulo").textContent = a.nomeCliente;
   el.querySelector(".agenda-slot__subtitulo").textContent = nomesServicosPorIds(a.servicosIds) || "—";
+  const obsEl = el.querySelector(".agenda-slot__observacao");
+  if (a.observacao) obsEl.textContent = a.observacao; else obsEl.remove();
   el.addEventListener("click", (e) => { e.preventDefault(); abrirHorarioRealizado(a); });
   return el;
 }
@@ -174,11 +188,8 @@ function montarSlotBloqueado(item) {
   const nome = item.pontual ? (item.agendamento.nomeBloqueio || "Bloqueado") : item.bloqueio.nome;
   el.innerHTML = `
     <span class="agenda-slot__hora">${item.hora}</span>
-    <svg class="agenda-slot__icone--bloqueado" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="11" width="14" height="9" rx="1"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
-    <div class="agenda-slot__body">
-      <p class="agenda-slot__titulo"></p>
-      <p class="agenda-slot__subtitulo">Bloqueado</p>
-    </div>
+    <span class="agenda-slot__icone agenda-slot__icone--bloqueado"></span>
+    <div class="agenda-slot__body"><p class="agenda-slot__titulo"></p></div>
   `;
   el.querySelector(".agenda-slot__titulo").textContent = nome;
   el.addEventListener("click", () => abrirHorarioBloqueado(item));
@@ -209,11 +220,14 @@ function renderizarSemana() {
   const container = qs("#js-week-carousel");
   container.innerHTML = "";
   const inicio = inicioDaSemana(dataSelecionada);
+  const mesSelecionado = isoParaDate(dataSelecionada).getMonth();
   for (let i = 0; i < 7; i++) {
     const iso = somarDias(inicio, i);
     const d = isoParaDate(iso);
     const el = document.createElement("div");
-    el.className = "week-day" + (iso === dataSelecionada ? " is-active" : "");
+    el.className = "week-day"
+      + (iso === dataSelecionada ? " is-active" : "")
+      + (d.getMonth() !== mesSelecionado ? " is-outro-mes" : "");
     el.innerHTML = `<span class="week-day__label">${DIAS_SEMANA_LABEL[d.getDay()]}</span><span class="week-day__numero">${String(d.getDate()).padStart(2, "0")}</span>`;
     el.addEventListener("click", () => selecionarData(iso));
     container.appendChild(el);
@@ -231,6 +245,26 @@ window.aoSelecionarDiaCalendarioAgenda = (ano, mes, dia) => {
   const iso = `${ano}-${String(mes + 1).padStart(2, "0")}-${String(dia).padStart(2, "0")}`;
   selecionarData(iso);
 };
+
+function adicionarGestoSwipe(elemento, aoArrastarEsquerda, aoArrastarDireita) {
+  let inicioX = 0;
+  let inicioY = 0;
+  let ativo = false;
+  elemento.addEventListener("touchstart", (e) => {
+    inicioX = e.touches[0].clientX;
+    inicioY = e.touches[0].clientY;
+    ativo = true;
+  }, { passive: true });
+  elemento.addEventListener("touchend", (e) => {
+    if (!ativo) return;
+    ativo = false;
+    const deltaX = e.changedTouches[0].clientX - inicioX;
+    const deltaY = e.changedTouches[0].clientY - inicioY;
+    if (Math.abs(deltaX) > 50 && Math.abs(deltaX) > Math.abs(deltaY) * 1.5) {
+      if (deltaX < 0) aoArrastarEsquerda(); else aoArrastarDireita();
+    }
+  }, { passive: true });
+}
 
 /* ============================================================
    Parte 2: modais de horário (livre, agendado, bloqueado),
@@ -354,6 +388,7 @@ function abrirHorarioBloqueado(item) {
   } else {
     agendamentoModalAtual = null;
     bloqueioPontualEditandoId = null;
+    bloqueioFixoEditando = { bloqueioId: item.bloqueio.id, hora: item.hora };
     qs("#js-bloqueado-nome").textContent = item.bloqueio.nome;
     qs("#js-bloqueado-info").textContent = item.hora;
     acoesPontual.classList.add("is-hidden");
@@ -418,7 +453,8 @@ function renderizarResultadosBusca(termo) {
     const linha = document.createElement("div");
     linha.className = "list-item";
     linha.style.cursor = "pointer";
-    linha.innerHTML = `<div class="list-item__avatar"></div><div class="list-item__body"><p class="list-item__title"></p></div>`;
+    linha.style.padding = "8px 0";
+    linha.innerHTML = `<div class="list-item__avatar list-item__avatar--sm"></div><div class="list-item__body"><p class="list-item__title" style="font-size:var(--text-sm);"></p></div>`;
     linha.querySelector(".list-item__avatar").textContent = iniciaisCliente(cliente.nome);
     linha.querySelector(".list-item__title").textContent = cliente.nome;
     linha.addEventListener("click", () => {
@@ -456,6 +492,7 @@ function finalizarCriacaoOuEdicaoAgendamento(clienteId, nome) {
   fecharModal("modal-novo-agendamento");
   fecharModal("modal-adicionar-cliente-novo");
   renderizarAgendaLista();
+  mostrarSucesso();
 }
 
 /* ---------- Finalizar atendimento ---------- */
@@ -522,6 +559,13 @@ document.addEventListener("DOMContentLoaded", () => {
     selecionarData(hojeIso());
   });
 
+  adicionarGestoSwipe(qs("#js-week-carousel"),
+    () => selecionarData(somarDias(dataSelecionada, 7)),
+    () => selecionarData(somarDias(dataSelecionada, -7)));
+  adicionarGestoSwipe(qs("#js-agenda-lista"),
+    () => selecionarData(somarDias(dataSelecionada, 1)),
+    () => selecionarData(somarDias(dataSelecionada, -1)));
+
   qs('#modal-horario-livre [data-trocar-modal="modal-novo-agendamento"]').addEventListener("click", prepararNovoAgendamento);
   qs('#modal-horario-livre [data-trocar-modal="modal-bloquear-horario"]').addEventListener("click", () => {
     bloqueioPontualEditandoId = null;
@@ -568,6 +612,20 @@ document.addEventListener("DOMContentLoaded", () => {
     renderizarAgendaLista();
   });
 
+  qs("#js-btn-desbloquear-fixo").addEventListener("click", () => {
+    if (!bloqueioFixoEditando) return;
+    const lista = obterBloqueiosFixos();
+    const bloqueio = lista.find((b) => b.id === bloqueioFixoEditando.bloqueioId);
+    if (bloqueio) {
+      bloqueio.excecoes = bloqueio.excecoes || [];
+      bloqueio.excecoes.push(`${dataSelecionada}_${bloqueioFixoEditando.hora}`);
+      salvarBloqueiosFixos(lista);
+    }
+    bloqueioFixoEditando = null;
+    fecharModal("modal-horario-bloqueado");
+    renderizarAgendaLista();
+  });
+
   qs("#js-btn-editar-bloqueio").addEventListener("click", () => {
     fecharModal("modal-horario-bloqueado");
     qs("#js-bloquear-hora").textContent = horaModalAtual;
@@ -588,6 +646,7 @@ document.addEventListener("DOMContentLoaded", () => {
     bloqueioPontualEditandoId = null;
     fecharModal("modal-bloquear-horario");
     renderizarAgendaLista();
+    mostrarSucesso();
   });
 
   qs("#js-novo-agendamento-nome").addEventListener("input", (e) => {
@@ -655,6 +714,7 @@ document.addEventListener("DOMContentLoaded", () => {
     salvarAgendamentos(lista);
     fecharModal("modal-finalizar-atendimento");
     renderizarAgendaLista();
+    mostrarSucesso();
   });
 
   qs("#js-btn-editar-realizado").addEventListener("click", () => {

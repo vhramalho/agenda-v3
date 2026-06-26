@@ -188,6 +188,19 @@
   padding-bottom: 2px;
 }
 
+.chip-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 8px;
+  align-items: center;
+}
+
+.chip-group .chip {
+  min-width: 64px;
+  justify-content: center;
+  text-align: center;
+}
+
 /* ---------- Badge de status ---------- */
 .badge {
   display: inline-flex;
@@ -343,6 +356,12 @@
   width: 64px;
   height: 64px;
   font-size: var(--text-lg);
+}
+
+.list-item__avatar--sm {
+  width: 32px;
+  height: 32px;
+  font-size: var(--text-xs);
 }
 
 /* Variações de cor de avatar, só para dar identidade visual à lista */
@@ -722,6 +741,46 @@
   flex: 1;
 }
 
+/* ---------- Overlay de confirmação (check rápido) ---------- */
+.sucesso-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--overlay);
+  z-index: 200;
+  opacity: 0;
+  pointer-events: none;
+  animation: sucesso-fade 900ms ease forwards;
+}
+
+.sucesso-overlay__circulo {
+  width: 72px;
+  height: 72px;
+  border-radius: var(--radius-full);
+  background: var(--success);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: scale(0.6);
+  animation: sucesso-circulo 900ms cubic-bezier(.34,1.56,.64,1) forwards;
+}
+
+@keyframes sucesso-fade {
+  0% { opacity: 0; }
+  15% { opacity: 1; }
+  75% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+@keyframes sucesso-circulo {
+  0% { transform: scale(0.5); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
 /* Grade de calendário */
 .cal-grid {
   display: grid;
@@ -747,6 +806,10 @@
 .cal-grid__day--fora {
   color: var(--text-muted);
   opacity: 0.4;
+}
+
+.cal-grid__day--semana-ativa {
+  background: var(--primary-soft);
 }
 
 .cal-grid__day--ativo {

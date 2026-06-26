@@ -76,6 +76,10 @@
   color: var(--text-on-primary);
 }
 
+.week-day.is-outro-mes {
+  opacity: 0.45;
+}
+
 /* ---------- Lista de horários ---------- */
 .agenda-lista {
   display: flex;
@@ -121,9 +125,11 @@
 }
 
 .agenda-slot__icone--bloqueado {
-  width: 16px;
-  height: 16px;
-  color: var(--text-muted);
+  width: 10px;
+  height: 10px;
+  border-radius: var(--radius-full);
+  background: var(--danger);
+  flex-shrink: 0;
 }
 
 .agenda-slot__icone--encaixe {
@@ -147,6 +153,16 @@
   color: var(--text-secondary);
 }
 
+.agenda-slot__observacao {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  opacity: 0.7;
+  margin-top: 1px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .agenda-slot--livre {
   background: transparent;
   border-color: var(--border);
@@ -158,10 +174,16 @@
 }
 
 .agenda-slot--bloqueado {
+  padding: 8px 14px;
   background: transparent;
 }
 
-.agenda-slot--bloqueado .agenda-slot__titulo,
+.agenda-slot--bloqueado .agenda-slot__titulo {
+  color: var(--text-muted);
+  font-weight: 500;
+  font-size: var(--text-sm);
+}
+
 .agenda-slot--bloqueado .agenda-slot__subtitulo {
   color: var(--text-muted);
 }
