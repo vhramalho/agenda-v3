@@ -1,0 +1,1696 @@
+Agenda V3 (nome ainda não oficial)
+Documento mestre
+Versão: 1.0
+
+============================================================
+0. OBJETIVO DESTE DOCUMENTO
+============================================================
+
+Este é o documento mestre da Agenda V3.
+
+Este documento deve ser usado junto com as imagens de referência visual aprovadas (pasta referencias-visuais/).
+
+O objetivo é orientar a criação do app de forma simples, organizada e progressiva.
+
+Regra principal:
+- este documento define a base oficial;
+- as imagens definem a direção visual;
+- pedidos novos do usuário prevalecem sobre o documento, mas devem ser avaliados antes de implementar.
+
+Se o usuário pedir algo fora deste documento, o Claude deve:
+1. avisar que o pedido está fora do escopo atual;
+2. explicar o impacto no produto, nos dados, no fluxo ou no visual;
+3. perguntar se o usuário quer oficializar essa alteração;
+4. sugerir a melhor forma de implementar mantendo a organização do projeto;
+5. só implementar depois da confirmação.
+
+============================================================
+1. O QUE É O APP
+============================================================
+
+A Agenda V3 é um aplicativo mobile-first de agenda profissional para autônomos que trabalham com horários marcados.
+
+A ideia central é:
+
+"Uma agenda de papel no celular, moderna, rápida e organizada."
+
+O app deve ajudar o profissional a:
+
+- organizar horários;
+- criar agendamentos;
+- marcar atendimentos como realizados;
+- registrar pagamentos simples;
+- controlar pendentes;
+- acompanhar clientes;
+- consultar relatório de faturamento;
+- compartilhar horários pelo WhatsApp;
+- configurar serviços, formas de pagamento e bloqueios fixos.
+
+O app nasce inspirado no uso real de barbeiros, mas não deve ser limitado somente a barbeiros.
+
+Público-alvo:
+- barbeiro;
+- cabeleireira;
+- manicure;
+- designer de sobrancelha;
+- maquiadora;
+- tatuador;
+- personal;
+- terapeuta;
+- consultor;
+- profissional autônomo com agenda própria.
+
+Princípio do produto:
+O app deve ajudar o profissional, não mandar nele.
+
+O usuário precisa conseguir fazer encaixes, ajustes e decisões manuais sem o sistema travar o fluxo.
+
+============================================================
+2. PRINCÍPIOS DO PRODUTO
+============================================================
+
+1. Simplicidade
+Ações comuns devem ter poucos cliques.
+
+2. Velocidade
+Agendar, realizar, registrar pagamento e consultar informações deve ser rápido.
+
+3. Controle manual
+A agenda não deve empurrar horários automaticamente.
+
+4. Mobile-first
+A experiência principal é no celular.
+
+5. Visual profissional
+O app deve parecer produto pago, mas sem ficar pesado.
+
+6. Organização
+O código, os dados e as telas devem ser previsíveis.
+
+7. Evolução por fases
+Primeiro visual, depois interações, depois lógica real, depois backend.
+
+============================================================
+3. DECISÕES DE PRODUTO JÁ FECHADAS
+============================================================
+
+1. Serviço não controla duração.
+
+O serviço serve para identificar o que foi feito, aparecer no histórico e ajudar no relatório.
+Ele não empurra horário, não reorganiza a agenda e não define duração automática.
+
+2. Serviço pode ter valor opcional cadastrado, mas não deve preencher automaticamente o valor do atendimento na primeira versão.
+
+O valor real é informado/editado no momento de finalizar o atendimento.
+
+3. A agenda funciona como lista de horários.
+
+Horários livres são gerados pelas configurações de agenda e não precisam ser salvos individualmente.
+
+4. Agendamento e realizado usam modais grandes ou bottom sheets.
+
+Eles podem ocupar boa parte da tela, mas devem continuar simples e objetivos.
+
+5. Ranking, aniversariantes, clientes sem retornar e detalhe do cliente são páginas próprias.
+
+Não devem ser modais pequenos, porque são telas de consulta.
+
+6. Pendentes entram no relatório no dia do atendimento.
+
+O app não deve tratar pendente como fluxo financeiro por data de recebimento.
+Quando um pendente é quitado, o atendimento continua pertencendo ao dia em que foi realizado.
+
+7. Excluir cliente significa mover para lixeira.
+
+O histórico de atendimentos não deve sumir.
+
+8. Com assinatura vencida, os dados continuam preservados.
+
+O usuário pode visualizar parte do app e fazer ações básicas permitidas, mas recursos completos ficam bloqueados até renovar.
+
+9. O app deve começar com HTML, CSS, JavaScript puro e localStorage.
+
+Backend, login real, assinatura real e banco de dados entram depois.
+
+============================================================
+4. FASES DE DESENVOLVIMENTO
+============================================================
+
+FASE 1 — Estrutura e visual estático
+Objetivo:
+Criar a base visual do app com todas as telas principais usando dados fictícios.
+
+Entra:
+- estrutura de pastas;
+- HTML das telas;
+- CSS organizado;
+- design system;
+- menu inferior;
+- telas estáticas;
+- modais visuais;
+- tema escuro;
+- tema claro preparado;
+- cor principal preparada;
+- pequenas interações visuais.
+
+Ainda não entra:
+- lógica real completa;
+- cálculos reais;
+- localStorage completo;
+- backend;
+- login real;
+- assinatura real.
+
+FASE 2 — Componentes e interações simples
+Objetivo:
+Fazer a interface responder visualmente.
+
+Entra:
+- abrir e fechar modais;
+- alternar tema;
+- alternar cor principal;
+- selecionar chips;
+- navegar entre telas;
+- calendário visual;
+- ações simuladas.
+
+FASE 3 — Dados reais com localStorage
+Objetivo:
+Salvar e manipular dados reais no navegador.
+
+Entra:
+- clientes;
+- serviços;
+- formas de pagamento;
+- agendamentos;
+- realizados;
+- pendentes;
+- relatório;
+- bloqueios fixos;
+- WhatsApp;
+- configurações;
+- backup local.
+
+FASE 4 — Refinamento e testes
+Objetivo:
+Testar no uso real e corrigir.
+
+Entra:
+- testes no celular;
+- ajustes visuais;
+- correção de bugs;
+- organização de código;
+- melhoria de fluxo;
+- performance.
+
+FASE 5 — Backend e produto comercial
+Objetivo:
+Migrar para versão comercial.
+
+Entra futuramente:
+- login real;
+- cadastro real;
+- banco de dados;
+- assinatura;
+- sincronização;
+- backup em nuvem;
+- termos e privacidade definitivos.
+
+============================================================
+5. STACK E REGRAS TÉCNICAS
+============================================================
+
+Stack inicial obrigatória:
+- HTML;
+- CSS;
+- JavaScript puro;
+- localStorage;
+- Git/GitHub;
+- teste local ou GitHub Pages.
+
+Organização:
+- CSS separado por responsabilidade;
+- JavaScript separado por tela ou módulo;
+- dados centralizados em storage.js;
+- funções utilitárias em utils.js;
+- componentes reaproveitáveis quando fizer sentido;
+- nomes claros;
+- classes para CSS;
+- IDs com prefixo js- quando forem usados por JavaScript.
+
+Regra de alteração:
+Antes de alterar algo, entender o arquivo e mudar apenas o necessário.
+
+Ao receber uma tarefa, o Claude deve:
+1. entender o objetivo;
+2. identificar quais arquivos precisam mudar;
+3. preservar o que já funciona;
+4. alterar o mínimo necessário;
+5. explicar onde mexeu;
+6. avisar se houver risco ou conflito.
+
+============================================================
+6. ESTRUTURA OFICIAL DE PASTAS
+============================================================
+
+A pasta do projeto deve ser a pasta definitiva do app:
+
+agenda-v3/
+
+Estrutura recomendada:
+
+agenda-v3/
+├── index.html
+├── clientes.html
+├── cliente-detalhe.html
+├── ranking.html
+├── aniversariantes.html
+├── sem-retornar.html
+├── relatorio.html
+├── pendentes.html
+├── servicos.html
+├── pagamentos.html
+├── intervalos.html
+├── whatsapp.html
+├── configuracoes.html
+├── backup.html
+├── ajuda.html
+├── perfil.html
+├── onboarding.html
+├── assinatura.html
+├── assinatura-vencida.html
+├── login.html
+├── cadastro.html
+├── termos.html
+├── privacidade.html
+│
+├── css/
+│   ├── tokens.css
+│   ├── base.css
+│   ├── layout.css
+│   ├── components.css
+│   ├── modals.css
+│   ├── agenda.css
+│   ├── clientes.css
+│   ├── relatorio.css
+│   ├── pendentes.css
+│   ├── cadastros.css
+│   ├── onboarding.css
+│   └── auth.css
+│
+├── js/
+│   ├── app.js
+│   ├── storage.js
+│   ├── utils.js
+│   ├── menu.js
+│   ├── tema.js
+│   ├── agenda.js
+│   ├── clientes.js
+│   ├── relatorio.js
+│   ├── pendentes.js
+│   ├── servicos.js
+│   ├── pagamentos.js
+│   ├── intervalos.js
+│   ├── whatsapp.js
+│   ├── configuracoes.js
+│   └── onboarding.js
+│
+├── components/
+│   ├── menu.html
+│   ├── header.html
+│   └── empty-state.html
+│
+├── assets/
+│   ├── icons/
+│   ├── images/
+│   └── logos/
+│
+├── referencias-visuais/
+│
+└── docs/
+    └── AGENDA_V3_DOCUMENTO_MESTRE.txt
+
+A pasta referencias-visuais deve conter as imagens aprovadas:
+
+01-agenda.png
+02-clientes.png
+03-cliente-detalhe.png
+04-relatorio.png
+05-pendentes.png
+06-servicos.png
+07-formas-pagamento.png
+08-intervalos.png
+09-mais.png
+10-configuracoes.png
+11-assinatura.png
+12-onboarding.png
+13-whatsapp.png
+14-perfil.png
+15-ranking.png
+16-aniversariantes.png
+17-sem-retornar.png
+18-login.png
+19-cadastro.png
+20-assinatura-vencida.png
+21-backup.png
+22-ajuda.png
+23-modais-agenda.png
+24-modais-cadastro-gestao.png
+
+============================================================
+7. DESIGN SYSTEM
+============================================================
+
+Direção visual:
+- moderno;
+- escuro por padrão;
+- claro também preparado;
+- roxo como cor principal padrão;
+- limpo;
+- profissional;
+- mobile-first;
+- com poucos cliques;
+- com listas funcionais;
+- com cards apenas quando ajudam na hierarquia.
+
+As três principais referências visuais são:
+1. Agenda
+2. Clientes
+3. Detalhe do cliente
+
+Todas as outras telas devem parecer continuação natural dessas três.
+
+------------------------------------------------------------
+7.1 Temas
+------------------------------------------------------------
+
+O app deve ter:
+
+Tema escuro:
+- fundo quase preto;
+- cards escuros;
+- bordas discretas;
+- textos claros.
+
+Tema claro:
+- fundo claro suave;
+- cards brancos ou quase brancos;
+- bordas discretas;
+- textos escuros.
+
+O tema escuro é a prioridade visual inicial.
+
+------------------------------------------------------------
+7.2 Cor principal
+------------------------------------------------------------
+
+A cor principal padrão é roxo.
+
+Cores permitidas futuramente:
+- roxo;
+- azul;
+- ciano;
+- verde;
+- rosa;
+- vermelho;
+- amarelo/dourado.
+
+A cor principal deve afetar:
+- botões principais;
+- item ativo do menu;
+- dia selecionado;
+- chips ativos;
+- bordas de destaque;
+- gráficos principais;
+- elementos selecionados.
+
+A cor principal não deve afetar:
+- pago;
+- pendente;
+- alerta;
+- erro;
+- excluir;
+- sucesso;
+- perigo;
+- textos principais;
+- fundos gerais;
+- cards neutros.
+
+5- a cor principal não pode ser igual a alguma outra cor que já é usada no app, por exemplo: botão de exclusão (ação perigosa) provavelmente será vermelho então o vermelho da cor principal deve ser em outro tom.
+
+------------------------------------------------------------
+7.3 Tokens visuais iniciais
+------------------------------------------------------------
+
+Tema escuro:
+- fundo principal: #0B0B10
+- fundo secundário: #11111A
+- card: #171724
+- card elevado/modal: #1E1E2E
+- borda discreta: rgba(255,255,255,0.08)
+- texto principal: #F4F4F5
+- texto secundário: #A1A1AA
+- texto apagado: #71717A
+- primária roxa: #7C3AED
+- primária forte: #8B5CF6
+- primária suave: rgba(124,58,237,0.18)
+- sucesso/pago: #22C55E
+- atenção/pendente: #F59E0B
+- perigo/excluir: #EF4444
+
+------------------------------------------------------------
+7.4 Componentes principais
+------------------------------------------------------------
+
+Componentes necessários:
+- header de página;
+- menu inferior;
+- card de métrica;
+- card secundário;
+- lista compacta;
+- item de agenda;
+- badge de status;
+- chip;
+- botão primário;
+- botão secundário;
+- botão fantasma;
+- botão perigo;
+- botão ícone;
+- input;
+- textarea;
+- select;
+- modal pequeno;
+- modal grande/bottom sheet;
+- estado vazio;
+- calendário;
+- donut;
+- gráfico simples.
+
+------------------------------------------------------------
+7.5 Hierarquia visual
+------------------------------------------------------------
+
+Agenda:
+- lista de horários é protagonista.
+
+Clientes:
+- ranking e lista são protagonistas;
+- aniversariantes e sem retornar são secundários.
+
+Detalhe do cliente:
+- ficha do cliente e histórico são protagonistas.
+
+Relatório:
+- faturamento, atendimentos e recebimentos são protagonistas.
+
+Pendentes:
+- valor total pendente e lista de quem deve são protagonistas.
+
+Serviços:
+- lista de serviços é protagonista.
+
+Formas de pagamento:
+- lista de formas é protagonista.
+
+Intervalos:
+- lista de bloqueios é protagonista.
+
+Configurações:
+- seções organizadas são protagonistas.
+
+============================================================
+8. MENU E NAVEGAÇÃO
+============================================================
+
+O menu inferior é a navegação principal do app.
+
+Itens:
+- Agenda
+- Relatório
+- Pendentes
+- Clientes
+- Mais
+
+Regras:
+- fixo no rodapé nas telas principais;
+- item ativo destacado;
+- área de toque confortável;
+- visual consistente;
+- páginas secundárias podem ter botão voltar;
+- telas comerciais e autenticação podem não ter menu inferior.
+
+A tela Mais agrupa páginas secundárias:
+- Perfil;
+- Serviços;
+- Formas de pagamento;
+- Intervalos;
+- WhatsApp;
+- Assinatura;
+- Configurações;
+- Backup;
+- Ajuda;
+- Sair.
+
+============================================================
+9. TELAS OFICIAIS
+============================================================
+
+------------------------------------------------------------
+9.1 Agenda — index.html
+------------------------------------------------------------
+
+Função:
+Tela inicial do app.
+
+Elementos:
+- topo com título Agenda;
+- botão Hoje quando estiver fora do dia atual;
+- botão calendário;
+- botão WhatsApp/compartilhar horários;
+- mês do dia selecionado;
+- carrossel semanal;
+- lista de horários;
+- resumo discreto do dia;
+- menu inferior.
+
+Estados de horário:
+- livre;
+- agendado;
+- realizado pago;
+- realizado pendente;
+- bloqueado;
+- encaixe, quando aplicável.
+
+Ações:
+- tocar em horário livre abre modal de opções: Agendar ou Bloquear.
+- tocar em agendado abre opções: Realizado, Editar, Excluir.
+- tocar em realizado abre opções: Editar realizado ou Excluir realizado.
+- tocar em bloqueado abre opções: Desbloquear, Editar nome ou Fechar.
+- calendário permite escolher data.
+- WhatsApp abre modal de compartilhar horários.
+
+Observações:
+- horário livre não é salvo;
+- agendamentos e realizados ficam em agendaV3:agendamentos;
+- bloqueios fixos vêm de agendaV3:bloqueiosFixos;
+- resumo do dia calcula atendimentos e faturamento com base nos realizados do dia.
+
+------------------------------------------------------------
+9.2 Clientes — clientes.html
+------------------------------------------------------------
+
+Função:
+Lista inteligente de clientes.
+
+Elementos:
+- título Clientes;
+- botão adicionar;
+- busca;
+- card Ranking;
+- cards Aniversariantes e Sem retornar;
+- lista de clientes;
+- menu inferior.
+
+Ações:
+- tocar em cliente abre cliente-detalhe.html;
+- botão + abre modal de novo cliente;
+- Ranking abre ranking.html;
+- Aniversariantes abre aniversariantes.html;
+- Sem retornar abre sem-retornar.html.
+
+Dados:
+- clientes ativos em agendaV3:clientes;
+- clientes removidos em agendaV3:clientesLixeira;
+- histórico vem dos agendamentos realizados.
+
+------------------------------------------------------------
+9.3 Detalhe do cliente — cliente-detalhe.html
+------------------------------------------------------------
+
+Função:
+Mostrar ficha e histórico do cliente.
+
+Elementos:
+- voltar;
+- título Cliente;
+- editar;
+- avatar/iniciais;
+- nome;
+- telefone;
+- WhatsApp;
+- aniversário;
+- cliente desde;
+- visitas;
+- total gasto;
+- última visita;
+- observação;
+- histórico de atendimentos;
+- botão grande WhatsApp.
+
+Ações:
+- editar abre modal de editar cliente;
+- WhatsApp abre conversa com telefone do cliente;
+- mover para lixeira fica dentro da edição.
+
+------------------------------------------------------------
+9.4 Ranking — ranking.html
+------------------------------------------------------------
+
+Função:
+Mostrar melhores clientes.
+
+Elementos:
+- voltar;
+- título Ranking;
+- filtros: Faturamento, Visitas, Ticket médio;
+- top 3;
+- lista de clientes.
+
+Dados:
+- calculado com base em clientes e atendimentos realizados.
+
+------------------------------------------------------------
+9.5 Aniversariantes — aniversariantes.html
+------------------------------------------------------------
+
+Função:
+Mostrar clientes que fazem aniversário.
+
+Elementos:
+- voltar;
+- título Aniversariantes;
+- resumo do mês;
+- filtro/mês;
+- lista de clientes;
+- botão WhatsApp quando houver telefone.
+
+Dados:
+- usa aniversário salvo no cliente.
+
+------------------------------------------------------------
+9.6 Clientes sem retornar — sem-retornar.html
+------------------------------------------------------------
+
+Função:
+Mostrar clientes que estão há muitos dias sem voltar.
+
+Elementos:
+- voltar;
+- título Sem retornar;
+- filtros por dias;
+- lista;
+- última visita;
+- dias sem retornar;
+- WhatsApp quando houver telefone.
+
+Dados:
+- última visita calculada pelos atendimentos realizados.
+
+------------------------------------------------------------
+9.7 Relatório — relatorio.html
+------------------------------------------------------------
+
+Função:
+Mostrar resumo de faturamento e atendimentos.
+
+Elementos:
+- título Relatório;
+- calendário;
+- abas Dia, Semana, Mês, Ano;
+- faturamento;
+- atendimentos;
+- ticket médio;
+- gráfico simples;
+- recebimentos por tipo;
+- taxas;
+- pendentes do período;
+- menu inferior.
+
+Regras:
+- faturamento considera atendimentos realizados do período;
+- pendentes entram no dia do atendimento;
+- recebimentos agrupam por tipo da forma de pagamento;
+- taxa usa taxa cadastrada na forma de pagamento;
+- relatório não é fluxo financeiro completo.
+
+------------------------------------------------------------
+9.8 Pendentes — pendentes.html
+------------------------------------------------------------
+
+Função:
+Mostrar atendimentos realizados que ainda não foram pagos.
+
+Elementos:
+- título Pendentes;
+- total a receber;
+- quantidade;
+- lista de quem deve;
+- botão Receber;
+- pagos recentemente;
+- ranking simples;
+- menu inferior.
+
+Ações:
+- botão Receber leva para a agenda no dia do atendimento;
+- na agenda, o usuário edita o realizado e marca como pago.
+
+Dados:
+- pendentes vêm de agendamentos realizados com status pendente.
+
+------------------------------------------------------------
+9.9 Serviços — servicos.html
+------------------------------------------------------------
+
+Função:
+Cadastrar e editar serviços.
+
+Elementos:
+- título Serviços;
+- botão adicionar;
+- card secundário Mais realizado;
+- lista de serviços;
+- nome;
+- valor opcional;
+- menu inferior via Mais.
+
+Ações:
+- + abre modal novo serviço;
+- tocar em serviço abre opções editar/excluir;
+- editar abre modal.
+
+Dados:
+- agendaV3:servicos.
+
+------------------------------------------------------------
+9.10 Formas de pagamento — pagamentos.html
+------------------------------------------------------------
+
+Função:
+Cadastrar formas de pagamento.
+
+Elementos:
+- título Formas de pagamento;
+- botão adicionar;
+- card Mais utilizada;
+- lista;
+- nome;
+- tipo;
+- taxa opcional.
+
+Tipos:
+- dinheiro;
+- pix;
+- credito;
+- debito;
+- outras.
+
+Dados:
+- agendaV3:formasPagamento.
+
+------------------------------------------------------------
+9.11 Intervalos — intervalos.html
+------------------------------------------------------------
+
+Função:
+Gerenciar bloqueios fixos/recorrentes.
+
+Elementos:
+- título Intervalos;
+- botão adicionar;
+- filtros por dia;
+- lista de bloqueios;
+- nome;
+- dias;
+- horário inicial e final.
+
+Dados:
+- agendaV3:bloqueiosFixos.
+
+------------------------------------------------------------
+9.12 WhatsApp — whatsapp.html
+------------------------------------------------------------
+
+Função:
+Configurar número e mensagens padrão.
+
+Elementos:
+- voltar;
+- título WhatsApp;
+- número;
+- botão testar;
+- mensagens:
+  - horários disponíveis;
+  - lembrete;
+  - aniversário;
+  - endereço;
+- restaurar padrão.
+
+Observação:
+Esta tela é de configuração.
+Compartilhar horários é modal da Agenda.
+
+Dados:
+- agendaV3:whatsapp.
+
+------------------------------------------------------------
+9.13 Configurações — configuracoes.html
+------------------------------------------------------------
+
+Função:
+Configurar funcionamento do app.
+
+Seções:
+- Aparência;
+- Agenda;
+- Dados;
+- Sobre.
+
+Aparência:
+- tema;
+- cor principal.
+
+Agenda:
+- primeiro horário;
+- último horário;
+- intervalo visual da grade;
+- tempo padrão de atendimento;
+- modo de compartilhamento.
+
+Dados:
+- backup;
+- redefinir onboarding;
+- limpar agenda;
+- apagar todos os dados.
+
+Sobre:
+- versão;
+- termos;
+- privacidade.
+
+Dados:
+- agendaV3:config.
+
+------------------------------------------------------------
+9.14 Mais — tela ou seção de navegação
+------------------------------------------------------------
+
+Função:
+Acessar páginas secundárias.
+
+Elementos:
+- perfil;
+- plano;
+- grupos de menu;
+- sair.
+
+------------------------------------------------------------
+9.15 Backup — backup.html
+------------------------------------------------------------
+
+Função:
+Exportar e importar dados locais.
+
+Elementos:
+- voltar;
+- título Backup;
+- último backup;
+- exportar dados;
+- importar backup;
+- aviso de cuidado;
+- dados incluídos.
+
+Regra:
+Não prometer nuvem ou criptografia enquanto a primeira versão for localStorage.
+
+------------------------------------------------------------
+9.16 Ajuda — ajuda.html
+------------------------------------------------------------
+
+Função:
+Ajudar o usuário.
+
+Elementos:
+- voltar;
+- título Ajuda;
+- suporte;
+- perguntas frequentes;
+- versão;
+- termos;
+- privacidade.
+
+------------------------------------------------------------
+9.17 Perfil — perfil.html
+------------------------------------------------------------
+
+Função:
+Mostrar e editar dados do usuário.
+
+Elementos:
+- voltar;
+- nome;
+- e-mail;
+- telefone;
+- nome do estabelecimento;
+- plano;
+- sair.
+
+------------------------------------------------------------
+9.18 Onboarding — onboarding.html
+------------------------------------------------------------
+
+Função:
+Configuração inicial.
+
+Etapas:
+- boas-vindas;
+- nome profissional/estabelecimento;
+- WhatsApp;
+- endereço opcional;
+- tema;
+- cor principal;
+- horário da agenda;
+- grade visual;
+- tempo padrão de atendimento;
+- bloqueios recorrentes opcionais;
+- formas de pagamento opcionais;
+- serviços opcionais;
+- finalização.
+
+Dados:
+- agendaV3:onboarding;
+- agendaV3:config;
+- agendaV3:whatsapp;
+- agendaV3:formasPagamento;
+- agendaV3:servicos;
+- agendaV3:bloqueiosFixos.
+
+------------------------------------------------------------
+9.19 Assinatura — assinatura.html
+------------------------------------------------------------
+
+Função:
+Mostrar plano e assinatura.
+
+Elementos:
+- voltar;
+- plano Agenda Pro;
+- preço;
+- teste grátis;
+- benefícios;
+- assinar;
+- restaurar compra;
+- termos;
+- privacidade.
+
+------------------------------------------------------------
+9.20 Assinatura vencida — assinatura-vencida.html
+------------------------------------------------------------
+
+Função:
+Mostrar acesso limitado.
+
+Elementos:
+- aviso de vencimento;
+- renovar;
+- dados preservados;
+- recursos disponíveis;
+- recursos bloqueados.
+
+------------------------------------------------------------
+9.21 Login — login.html
+------------------------------------------------------------
+
+Função:
+Entrar na conta.
+
+Elementos:
+- marca;
+- e-mail;
+- senha;
+- entrar;
+- esqueci senha;
+- criar conta.
+
+Primeira versão:
+Pode ser visual/estática até backend existir.
+
+------------------------------------------------------------
+9.22 Cadastro — cadastro.html
+------------------------------------------------------------
+
+Função:
+Criar conta.
+
+Elementos:
+- nome;
+- e-mail;
+- senha;
+- confirmar senha;
+- WhatsApp opcional;
+- termos;
+- criar conta.
+
+Primeira versão:
+Pode ser visual/estática até backend existir.
+
+------------------------------------------------------------
+9.23 Termos e Privacidade
+------------------------------------------------------------
+
+Função:
+Telas de texto legal.
+
+Visual:
+- leitura fácil;
+- blocos de texto;
+- sem excesso visual.
+
+============================================================
+10. MODAIS OFICIAIS
+============================================================
+
+------------------------------------------------------------
+10.1 Modais da Agenda
+------------------------------------------------------------
+
+1. Horário livre
+Abre ao tocar em horário livre.
+Conteúdo:
+- horário;
+- Agendar;
+- Bloquear;
+
+2. Horário agendado
+Abre ao tocar em agendamento.
+Conteúdo:
+- cliente;
+- horário;
+- serviços;
+- Realizado;
+- Editar;
+- Excluir.
+
+3. Horário realizado
+Abre ao tocar em realizado.
+Conteúdo:
+- cliente;
+- horário;
+- serviços;
+- valor;
+- status pago/pendente;
+- Editar realizado;
+- Excluir realizado.
+
+4. Horário bloqueado
+Abre ao tocar em bloqueio.
+Conteúdo:
+- nome do bloqueio;
+- horário;
+- Desbloquear;
+- Editar nome;
+- Fechar.
+
+5. Bloquear horário
+Abre ao escolher Bloquear.
+Conteúdo:
+- horário;
+- nome opcional;
+- Cancelar;
+- Bloquear.
+
+6. Novo agendamento
+Modal grande/bottom sheet.
+Conteúdo:
+- data;
+- horário;
+- nome do cliente;
+- sugestões de clientes;
+- serviços selecionáveis;
+- observação opcional;
+- completar cadastro opcional.
+
+7. Usar cliente existente ou criar novo
+Aparece se o nome digitado for igual ao de cliente existente e o cliente não tiver sido selecionado.
+Conteúdo:
+- mensagem;
+- Usar existente;
+- Criar novo.
+
+8. Finalizar atendimento
+Modal grande/bottom sheet.
+Conteúdo:
+- cliente editável;
+- serviços editáveis;
+- observação;
+- foi pago? Sim/Não.
+
+Se pago:
+- formas de pagamento;
+- valor por forma.
+
+Se não pago:
+- valor pendente obrigatório;
+- aviso de que entrará em Pendentes.
+
+9. Editar realizado
+Modal grande/bottom sheet.
+Conteúdo:
+- cliente;
+- serviços;
+- observação;
+- status de pagamento;
+- formas e valores ou valor pendente;
+- salvar alterações.
+
+10. Calendário
+Conteúdo:
+- mês/ano;
+- dias;
+- navegar mês anterior/próximo;
+- selecionar data.
+
+11. Compartilhar horários WhatsApp
+Conteúdo:
+- dias;
+- prévia dos horários disponíveis;
+- mensagem gerada;
+- enviar no WhatsApp;
+- fechar.
+
+------------------------------------------------------------
+10.2 Modais de cadastro e gestão
+------------------------------------------------------------
+
+1. Novo cliente
+- nome;
+- telefone;
+- aniversário;
+- observação;
+- salvar.
+
+2. Editar cliente
+- nome;
+- telefone;
+- aniversário;
+- observação;
+- salvar;
+- mover para lixeira.
+
+3. Novo serviço
+- nome;
+- valor opcional;
+- salvar.
+
+4. Editar/excluir serviço
+- nome;
+- valor;
+- salvar;
+- excluir.
+
+5. Nova forma de pagamento
+- nome;
+- tipo obrigatório;
+- taxa opcional;
+- salvar.
+
+6. Editar/excluir forma de pagamento
+- nome;
+- tipo;
+- taxa;
+- salvar;
+- excluir.
+
+7. Novo intervalo
+- nome;
+- dias da semana;
+- horário inicial;
+- horário final;
+- salvar.
+
+8. Editar/excluir intervalo
+- nome;
+- dias;
+- horário inicial;
+- horário final;
+- salvar;
+- excluir.
+
+9. Confirmação
+Usado para ações importantes.
+Conteúdo:
+- título curto;
+- texto da consequência;
+- cancelar;
+- confirmar.
+
+============================================================
+11. DADOS E LOCALSTORAGE
+============================================================
+
+Todos os dados da primeira versão real devem usar prefixo agendaV3.
+
+Chaves oficiais:
+
+agendaV3:config
+Configurações gerais do app.
+
+agendaV3:clientes
+Clientes ativos.
+
+agendaV3:clientesLixeira
+Clientes movidos para lixeira.
+
+agendaV3:servicos
+Serviços cadastrados.
+
+agendaV3:formasPagamento
+Formas de pagamento.
+
+agendaV3:agendamentos
+Agendamentos, realizados e pendentes.
+
+agendaV3:bloqueiosFixos
+Intervalos e bloqueios recorrentes.
+
+agendaV3:historicoPendentes
+Histórico simples de pendentes quitados, se necessário.
+
+agendaV3:whatsapp
+Número e mensagens padrão.
+
+agendaV3:onboarding
+Status e dados do onboarding.
+
+agendaV3:meta
+Metadados do app.
+
+------------------------------------------------------------
+11.1 Formatos básicos
+------------------------------------------------------------
+
+ID:
+- string;
+- com prefixo da entidade;
+- não usar posição do array.
+
+Datas:
+- YYYY-MM-DD.
+
+Horários:
+- HH:mm.
+
+Valores:
+- número;
+- não salvar "R$ 45,00".
+
+Telefone:
+- string.
+
+Status:
+- strings padronizadas.
+
+------------------------------------------------------------
+11.2 Entidades principais
+------------------------------------------------------------
+
+Cliente:
+- id;
+- nome;
+- telefone;
+- aniversarioDia;
+- aniversarioMes;
+- aniversarioAno opcional;
+- observacao;
+- criadoEm;
+- atualizadoEm;
+- ativo.
+
+Serviço:
+- id;
+- nome;
+- valorOpcional;
+- ativo;
+- criadoEm;
+- atualizadoEm.
+
+Forma de pagamento:
+- id;
+- nome;
+- tipo;
+- taxaPercentual opcional;
+- ativo.
+
+Agendamento:
+- id;
+- data;
+- hora;
+- clienteId opcional;
+- nomeCliente;
+- servicosIds;
+- observacao;
+- status.
+
+Status possíveis:
+- agendado;
+- realizado_pago;
+- realizado_pendente;
+- cancelado;
+- bloqueado.
+
+Realizado dentro do agendamento:
+- realizadoEm;
+- valorTotal;
+- pago;
+- pagamentos;
+- valorPendente;
+- observacaoRealizado.
+
+Pagamento:
+- formaPagamentoId;
+- tipo;
+- valor;
+- taxaPercentual;
+- taxaValor.
+
+Bloqueio fixo:
+- id;
+- nome;
+- diasSemana;
+- horaInicio;
+- horaFim;
+- ativo.
+
+Config:
+- tema;
+- corPrincipal;
+- horaInicio;
+- horaFim;
+- intervaloGrade;
+- tempoPadraoAtendimento;
+- modoCompartilhamento;
+- assinaturaStatus.
+
+WhatsApp:
+- numero;
+- mensagemHorarios;
+- mensagemLembrete;
+- mensagemAniversario;
+- mensagemEndereco.
+
+============================================================
+12. FLUXOS PRINCIPAIS
+============================================================
+
+------------------------------------------------------------
+12.1 Fluxo: criar agendamento
+------------------------------------------------------------
+
+1. Usuário toca em horário livre.
+2. Abre modal Horário livre.
+3. Usuário toca em Agendar.
+4. Abre modal Novo agendamento.
+5. Usuário digita nome do cliente.
+6. App sugere clientes existentes.
+7. Usuário seleciona cliente existente ou mantém nome novo.
+8. Usuário seleciona serviços, se quiser.
+9. Usuário adiciona observação, se quiser.
+10. Usuário salva.
+11. App cria registro em agendaV3:agendamentos com status agendado.
+12. Agenda atualiza o horário como agendado.
+
+------------------------------------------------------------
+12.2 Fluxo: bloquear horário livre
+------------------------------------------------------------
+
+1. Usuário toca em horário livre.
+2. Abre modal Horário livre.
+3. Usuário toca em Bloquear.
+4. Abre modal Bloquear horário.
+5. Usuário informa nome opcional.
+6. Usuário confirma.
+7. App cria bloqueio pontual em agendaV3:agendamentos com status bloqueado.
+8. Agenda atualiza o horário.
+
+------------------------------------------------------------
+12.3 Fluxo: marcar agendamento como realizado
+------------------------------------------------------------
+
+1. Usuário toca em horário agendado.
+2. Abre modal Horário agendado.
+3. Usuário toca em Realizado.
+4. Abre modal Finalizar atendimento.
+5. Usuário confere/edita cliente e serviços.
+6. Usuário informa se foi pago.
+
+Se foi pago:
+7. Usuário seleciona uma ou mais formas de pagamento.
+8. Usuário informa valor em cada forma.
+9. App soma o valor total.
+10. App salva status realizado_pago.
+
+Se não foi pago:
+7. Usuário informa valor pendente.
+8. App salva status realizado_pendente.
+9. Atendimento aparece em Pendentes.
+
+Resultado:
+- agendaV3:agendamentos é atualizado;
+- relatório considera o atendimento no dia realizado;
+- pendentes aparece se não pago.
+
+------------------------------------------------------------
+12.4 Fluxo: editar realizado
+------------------------------------------------------------
+
+1. Usuário toca em horário realizado.
+2. Abre modal Horário realizado.
+3. Usuário toca em Editar realizado.
+4. Abre modal Editar realizado.
+5. Usuário altera cliente, serviços, valores ou status.
+6. Usuário salva.
+7. App atualiza agendaV3:agendamentos.
+8. Relatório e pendentes refletem a alteração.
+
+------------------------------------------------------------
+12.5 Fluxo: receber pendente
+------------------------------------------------------------
+
+1. Usuário entra em Pendentes.
+2. Toca em Receber.
+3. App leva para a agenda no dia do atendimento.
+4. Usuário abre o realizado pendente.
+5. Usuário edita realizado e marca como pago.
+6. App remove da lista de pendentes.
+7. Relatório continua considerando o atendimento no dia original.
+
+------------------------------------------------------------
+12.6 Fluxo: criar cliente
+------------------------------------------------------------
+
+1. Usuário entra em Clientes.
+2. Toca no botão +.
+3. Abre modal Novo cliente.
+4. Usuário informa nome e dados opcionais.
+5. Salva.
+6. App cria cliente em agendaV3:clientes.
+
+Também pode ocorrer dentro do Novo agendamento, se o nome digitado não existir.
+
+------------------------------------------------------------
+12.7 Fluxo: mover cliente para lixeira
+------------------------------------------------------------
+
+1. Usuário abre Detalhe do cliente.
+2. Toca em Editar.
+3. Toca em Mover para lixeira.
+4. Abre confirmação.
+5. Usuário confirma.
+6. Cliente sai de agendaV3:clientes.
+7. Cliente entra em agendaV3:clientesLixeira.
+8. Histórico de atendimentos permanece.
+
+------------------------------------------------------------
+12.8 Fluxo: cadastrar serviço
+------------------------------------------------------------
+
+1. Usuário entra em Serviços.
+2. Toca em +.
+3. Abre modal Novo serviço.
+4. Informa nome e valor opcional.
+5. Salva.
+6. App cria serviço em agendaV3:servicos.
+
+------------------------------------------------------------
+12.9 Fluxo: cadastrar forma de pagamento
+------------------------------------------------------------
+
+1. Usuário entra em Formas de pagamento.
+2. Toca em +.
+3. Abre modal Nova forma de pagamento.
+4. Informa nome.
+5. Escolhe tipo obrigatório.
+6. Informa taxa opcional.
+7. Salva.
+8. App cria forma em agendaV3:formasPagamento.
+
+------------------------------------------------------------
+12.10 Fluxo: cadastrar intervalo fixo
+------------------------------------------------------------
+
+1. Usuário entra em Intervalos.
+2. Toca em +.
+3. Abre modal Novo intervalo.
+4. Informa nome.
+5. Escolhe dias da semana.
+6. Define horário inicial e final.
+7. Salva.
+8. App cria bloqueio em agendaV3:bloqueiosFixos.
+9. Agenda usa esses bloqueios para exibir horários bloqueados.
+
+------------------------------------------------------------
+12.11 Fluxo: compartilhar horários WhatsApp
+------------------------------------------------------------
+
+1. Usuário toca no botão WhatsApp da Agenda.
+2. Abre modal Compartilhar horários.
+3. Usuário escolhe dia ou dias.
+4. App calcula horários livres com base em:
+   - configurações da agenda;
+   - agendamentos;
+   - realizados;
+   - bloqueios pontuais;
+   - bloqueios fixos.
+5. App gera mensagem.
+6. Usuário toca em Enviar no WhatsApp.
+7. App abre WhatsApp com a mensagem preenchida.
+8. Usuário confirma o envio manualmente.
+
+------------------------------------------------------------
+12.12 Fluxo: relatório
+------------------------------------------------------------
+
+1. Usuário entra em Relatório.
+2. Escolhe Dia, Semana, Mês ou Ano.
+3. App lê agendaV3:agendamentos.
+4. Filtra atendimentos realizados no período.
+5. Calcula:
+   - faturamento;
+   - atendimentos;
+   - ticket médio;
+   - recebimentos por tipo;
+   - taxas;
+   - pendentes.
+6. Exibe resultado.
+
+------------------------------------------------------------
+12.13 Fluxo: backup
+------------------------------------------------------------
+
+Exportar:
+1. Usuário entra em Backup.
+2. Toca em Exportar.
+3. App junta as chaves agendaV3.
+4. Gera arquivo JSON.
+5. Usuário salva no dispositivo.
+
+Importar:
+1. Usuário toca em Importar.
+2. Escolhe arquivo.
+3. App valida estrutura.
+4. Mostra confirmação.
+5. Se confirmado, substitui dados atuais pelas informações do backup.
+
+============================================================
+13. ESTADOS VAZIOS
+============================================================
+
+Estados vazios devem ser simples e úteis.
+
+Exemplos:
+- Agenda: "Nenhum agendamento neste dia."
+- Clientes: "Nenhum cliente cadastrado."
+- Pendentes: "Nenhum pendente no momento."
+- Serviços: "Nenhum serviço cadastrado."
+- Relatório: "Sem dados para este período."
+
+Visual:
+- ícone discreto;
+- texto curto;
+- ação principal quando fizer sentido.
+
+============================================================
+14. REGRAS DE RESPOSTA DO CLAUDE
+============================================================
+
+Ao entregar qualquer etapa, o Claude deve responder com:
+
+1. Resumo do que foi feito.
+2. Arquivos criados ou alterados.
+3. Como testar.
+4. O que está funcional.
+5. O que ainda está estático ou pendente.
+6. Próximo passo recomendado.
+
+Ao receber pedido novo:
+- conferir se está neste documento;
+- se estiver, implementar conforme a fase;
+- se não estiver, avisar e perguntar antes.
+
+Regra: para não acumular várias alterações na mesma conversa, o Claude recomendará quando iniciar um novo chat dentro do projeto, a fim de facilitar o desenvolvimento do app.
+
+NOTA (2026-06-24): o desenvolvimento passou a ocorrer via Claude Code (não claude.ai). O código persiste em disco entre conversas, então "novo chat por fase" é apenas uma conveniência opcional do usuário, não uma necessidade técnica. Ver docs internos do Claude Code para mais contexto.
+
+============================================================
+15. PRIMEIRA ENTREGA RECOMENDADA
+============================================================
+
+Primeira entrega ideal:
+
+Criar a estrutura base do projeto agenda-v3 com:
+
+- tokens.css;
+- base.css;
+- layout.css;
+- components.css;
+- modals.css;
+- menu inferior;
+- tema escuro;
+- tema claro preparado;
+- cor principal preparada;
+- páginas visuais estáticas;
+- dados fictícios.
+
+Ordem sugerida para criar visual:
+
+1. Design system base
+2. Menu inferior
+3. Serviços
+4. Formas de pagamento
+5. Clientes
+6. Detalhe do cliente
+7. Pendentes
+8. Relatório
+9. Intervalos
+10. WhatsApp
+11. Configurações
+12. Agenda
+13. Modais
+14. Onboarding
+15. Login/Cadastro/Assinatura
+16. Ajuda/Backup/Perfil
+
+Observação:
+Também é possível pedir todas as telas visuais em uma primeira etapa, desde que a entrega continue estática e organizada.
+
+============================================================
+16. FRASE FINAL DE REFERÊNCIA
+============================================================
+
+A Agenda V3 deve ser uma agenda profissional simples, mobile-first, visualmente moderna e tecnicamente organizada.
+
+Primeiro criar a aparência.
+Depois validar no celular.
+Depois implementar as funções.
+Depois pensar em backend.
+
+FIM DO DOCUMENTO.

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sem retornar — Agenda V3</title>
+  <link rel="stylesheet" href="css/tokens.css" />
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="css/components.css" />
+</head>
+<body data-page="clientes" data-titulo="Sem retornar">
+  <div class="app">
+    <main class="page">
+      <div id="js-header-mount"></div>
+
+      <p class="text-secondary section">Clientes que estão há muito tempo sem voltar para atendimento.</p>
+
+      <div class="card card--destaque section row" style="justify-content:space-between;">
+        <div>
+          <p><span style="font-size:var(--text-xl);font-weight:800;" id="js-semretornar-contagem"></span> <span style="font-weight:800;">clientes</span></p>
+          <p class="text-primary-accent" style="font-weight:800;font-size:var(--text-lg);">sem retornar</p>
+          <p class="text-secondary" style="margin-top:6px;">Acompanhe quem está há mais tempo sem atendimento.</p>
+        </div>
+        <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.5" style="flex-shrink:0;"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4M16 16l2 2 3-3"/></svg>
+      </div>
+
+      <p class="text-secondary" style="font-size:var(--text-sm);margin-bottom:10px;">Filtrar por dias sem retornar</p>
+      <div class="chip-scroll section" data-chips="single" id="js-semretornar-filtro">
+        <span class="chip" data-dias="20">20+ dias</span>
+        <span class="chip chip--ativo" data-dias="30">30+ dias</span>
+        <span class="chip" data-dias="45">45+ dias</span>
+        <span class="chip" data-dias="60">60+ dias</span>
+        <span class="chip" data-dias="90">90+ dias</span>
+      </div>
+
+      <div class="table-header-row row--between" style="display:flex;">
+        <span>Cliente</span>
+        <span>Última visita</span>
+        <span class="text-primary-accent">Sem retornar ▾</span>
+      </div>
+
+      <div class="card" id="js-semretornar-lista"></div>
+      <div class="empty-state is-hidden" id="js-semretornar-vazio"><p class="empty-state__title">Nenhum cliente nesse filtro</p></div>
+
+      <div class="card row section" style="margin-top:var(--space-5);">
+        <span style="font-size:22px;">💜</span>
+        <p class="text-secondary">Uma mensagem pode ser o convite que seu cliente precisava para voltar.</p>
+      </div>
+    </main>
+
+    <div id="js-bottom-nav-mount"></div>
+  </div>
+
+  <script src="js/utils.js"></script>
+  <script src="js/menu.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/tema.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/chips.js"></script>
+  <script src="js/clientes-derivadas.js"></script>
+</body>
+</html>

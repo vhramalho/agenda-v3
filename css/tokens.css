@@ -1,0 +1,137 @@
+/* ============================================================
+   AGENDA V3 — Design Tokens
+   Tema escuro é o padrão. Tema claro é selecionado via
+   <html data-theme="light">. Cor principal é selecionada via
+   <html data-accent="roxo|azul|ciano|verde|rosa|vermelho|dourado">.
+   ============================================================ */
+
+:root,
+:root[data-theme="dark"] {
+  /* Fundos */
+  --bg: #0B0B10;
+  --bg-secondary: #11111A;
+  --card: #171724;
+  --card-elevated: #1E1E2E;
+  --border: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.14);
+  --overlay: rgba(0, 0, 0, 0.6);
+
+  /* Textos */
+  --text-primary: #F4F4F5;
+  --text-secondary: #A1A1AA;
+  --text-muted: #71717A;
+  --text-on-primary: #FFFFFF;
+
+  /* Estados (fixos — não seguem a cor principal) */
+  --success: #22C55E;
+  --success-soft: rgba(34, 197, 94, 0.16);
+  --warning: #F59E0B;
+  --warning-soft: rgba(245, 158, 11, 0.16);
+  --danger: #EF4444;
+  --danger-soft: rgba(239, 68, 68, 0.16);
+
+  --shadow-card: 0 4px 16px rgba(0, 0, 0, 0.35);
+  --shadow-modal: 0 -8px 32px rgba(0, 0, 0, 0.45);
+}
+
+:root[data-theme="light"] {
+  --bg: #F4F4F7;
+  --bg-secondary: #FFFFFF;
+  --card: #FFFFFF;
+  --card-elevated: #FFFFFF;
+  --border: rgba(0, 0, 0, 0.08);
+  --border-strong: rgba(0, 0, 0, 0.14);
+  --overlay: rgba(0, 0, 0, 0.4);
+
+  --text-primary: #18181B;
+  --text-secondary: #52525B;
+  --text-muted: #A1A1AA;
+  --text-on-primary: #FFFFFF;
+
+  --success: #16A34A;
+  --success-soft: rgba(22, 163, 74, 0.12);
+  --warning: #D97706;
+  --warning-soft: rgba(217, 119, 6, 0.12);
+  --danger: #DC2626;
+  --danger-soft: rgba(220, 38, 38, 0.12);
+
+  --shadow-card: 0 2px 12px rgba(0, 0, 0, 0.08);
+  --shadow-modal: 0 -8px 24px rgba(0, 0, 0, 0.12);
+}
+
+/* Cor principal — padrão roxo. Trocada via data-accent no <html>.
+   Nunca reaproveita os tons de success/warning/danger acima. */
+:root,
+:root[data-accent="roxo"] {
+  --primary: #7C3AED;
+  --primary-strong: #8B5CF6;
+  --primary-soft: rgba(124, 58, 237, 0.18);
+}
+
+:root[data-accent="azul"] {
+  --primary: #2563EB;
+  --primary-strong: #3B82F6;
+  --primary-soft: rgba(37, 99, 235, 0.18);
+}
+
+:root[data-accent="ciano"] {
+  --primary: #0891B2;
+  --primary-strong: #06B6D4;
+  --primary-soft: rgba(8, 145, 178, 0.18);
+}
+
+:root[data-accent="verde"] {
+  --primary: #15803D;
+  --primary-strong: #16A34A;
+  --primary-soft: rgba(21, 128, 61, 0.18);
+}
+
+:root[data-accent="rosa"] {
+  --primary: #DB2777;
+  --primary-strong: #EC4899;
+  --primary-soft: rgba(219, 39, 119, 0.18);
+}
+
+:root[data-accent="vermelho"] {
+  /* Tom diferente do --danger, para nunca colidir com ação de excluir */
+  --primary: #B91C1C;
+  --primary-strong: #DC2626;
+  --primary-soft: rgba(185, 28, 28, 0.18);
+}
+
+:root[data-accent="dourado"] {
+  --primary: #B45309;
+  --primary-strong: #D97706;
+  --primary-soft: rgba(180, 83, 9, 0.18);
+}
+
+:root {
+  /* Espaçamento */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+
+  /* Raio */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-full: 999px;
+
+  /* Tipografia */
+  --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --text-xs: 12px;
+  --text-sm: 13px;
+  --text-base: 15px;
+  --text-md: 17px;
+  --text-lg: 20px;
+  --text-xl: 28px;
+
+  /* Altura do menu inferior e área segura */
+  --bottom-nav-height: 64px;
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}

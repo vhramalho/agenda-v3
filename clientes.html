@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Clientes — Agenda V3</title>
+  <link rel="stylesheet" href="css/tokens.css" />
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="css/components.css" />
+</head>
+<body data-page="clientes">
+  <div class="app">
+    <main class="page">
+      <div class="page-header-principal">
+        <h1 class="page-header-principal__titulo">Clientes</h1>
+        <button class="fab" aria-label="Novo cliente" id="js-btn-novo-cliente">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+        </button>
+      </div>
+
+      <div class="input-icon section">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+        <input class="input" placeholder="Buscar cliente" id="js-busca-cliente" />
+      </div>
+
+      <a href="ranking.html" class="card card--destaque section" style="display:block;text-decoration:none;color:inherit;">
+        <div class="row row--between" style="margin-bottom:12px;">
+          <div class="row">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.8"><path d="M8 21h8M12 17v4M5 4h14l-1 5a6 6 0 0 1-12 0L5 4zM5 4H3v2a3 3 0 0 0 3 3M19 4h2v2a3 3 0 0 1-3 3"/></svg>
+            <span style="font-weight:700;">Ranking</span>
+          </div>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
+        </div>
+        <div class="stack" style="gap:10px;" id="js-ranking-top3"></div>
+        <p class="text-primary-accent" style="text-align:center;font-weight:600;margin-top:12px;">Ver ranking</p>
+      </a>
+
+      <div class="grid-2 section">
+        <a href="aniversariantes.html" class="card" style="text-decoration:none;color:inherit;">
+          <div class="icon-circle" style="margin-bottom:8px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 21V11h16v10M2 11l2-4h16l2 4M9 7V4M12 7V3M15 7V4"/></svg>
+          </div>
+          <p style="font-weight:700;">Aniversariantes</p>
+          <p class="text-primary-accent" style="font-size:var(--text-sm);" id="js-aniversariantes-contagem"></p>
+        </a>
+        <a href="sem-retornar.html" class="card" style="text-decoration:none;color:inherit;">
+          <div class="icon-circle" style="margin-bottom:8px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+          </div>
+          <p style="font-weight:700;">Sem retornar</p>
+          <p class="text-primary-accent" style="font-size:var(--text-sm);" id="js-sem-retornar-contagem"></p>
+        </a>
+      </div>
+
+      <section class="section">
+        <div class="row row--between" style="margin-bottom:12px;">
+          <h2 class="section__title" style="margin-bottom:0;">Todos os clientes</h2>
+          <span class="text-secondary" style="font-size:var(--text-sm);font-weight:600;">A-Z</span>
+        </div>
+        <div class="card" id="js-lista-clientes"></div>
+        <div class="empty-state is-hidden" id="js-clientes-vazio">
+          <p class="empty-state__title">Nenhum cliente encontrado</p>
+          <p class="text-muted">Toque no + acima para cadastrar o primeiro.</p>
+        </div>
+      </section>
+    </main>
+
+    <div id="js-bottom-nav-mount"></div>
+
+    <!-- Modal de cliente. Editar cliente e Mover para lixeira moraram em cliente-detalhe.html -->
+    <div class="modal-overlay is-hidden" id="modal-novo-cliente">
+      <div class="modal-sheet">
+        <div class="modal-sheet__header"><p class="modal-sheet__title">Novo cliente</p><button class="modal-close">✕</button></div>
+        <div class="field"><label class="field__label">Nome</label><input class="input" placeholder="Digite o nome do cliente" id="js-novo-cliente-nome"/></div>
+        <div class="field"><label class="field__label">Telefone</label><input class="input" placeholder="(00) 00000-0000" id="js-novo-cliente-telefone"/></div>
+        <div class="field"><label class="field__label">Aniversário</label><input class="input" placeholder="DD/MM" id="js-novo-cliente-aniversario"/></div>
+        <div class="field"><label class="field__label">Observação</label><textarea class="textarea" placeholder="Alguma informação importante sobre o cliente..." id="js-novo-cliente-observacao"></textarea></div>
+        <div class="btn-row"><button class="btn btn--secondary" data-fechar-modal>Cancelar</button><button class="btn btn--primary" id="js-novo-cliente-salvar">Salvar</button></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/utils.js"></script>
+  <script src="js/menu.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/tema.js"></script>
+  <script src="js/modal.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/clientes.js"></script>
+</body>
+</html>

@@ -1,0 +1,755 @@
+/* ============================================================
+   AGENDA V3 — Componentes
+   Botões, cards, chips, badges, inputs, lista, menu inferior,
+   header, ícone circular, estado vazio.
+   ============================================================ */
+
+/* ---------- Botão ícone circular (voltar, calendário, whatsapp...) ---------- */
+.icon-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-full);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--card);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  flex-shrink: 0;
+}
+
+.icon-btn svg {
+  width: 20px;
+  height: 20px;
+}
+
+.icon-btn--accent {
+  background: var(--primary-soft);
+  color: var(--primary);
+  border: none;
+}
+
+/* ---------- Botões ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  width: 100%;
+  padding: 14px var(--space-5);
+  border-radius: var(--radius-md);
+  border: none;
+  font-size: var(--text-base);
+  font-weight: 600;
+  transition: opacity 0.15s ease, transform 0.05s ease;
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+.btn--primary {
+  background: var(--primary);
+  color: var(--text-on-primary);
+}
+
+.btn--secondary {
+  background: var(--card-elevated);
+  color: var(--text-primary);
+  border: 1px solid var(--border-strong);
+}
+
+.btn--ghost {
+  background: transparent;
+  color: var(--primary);
+  border: 1px solid var(--primary);
+}
+
+.btn--danger {
+  background: transparent;
+  color: var(--danger);
+  border: 1px solid var(--danger);
+}
+
+.btn--sm {
+  width: auto;
+  padding: 8px 16px;
+  font-size: var(--text-sm);
+  border-radius: var(--radius-sm);
+}
+
+.fab {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-md);
+  background: var(--primary);
+  color: var(--text-on-primary);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  flex-shrink: 0;
+}
+
+.fab svg {
+  width: 22px;
+  height: 22px;
+}
+
+/* ---------- Card ---------- */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+}
+
+.card--elevado {
+  background: var(--card-elevated);
+}
+
+.card--destaque {
+  background: linear-gradient(180deg, var(--primary-soft), transparent);
+  border: 1px solid var(--border);
+}
+
+.card-metrica {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+}
+
+.card-metrica__label {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  margin-bottom: var(--space-2);
+}
+
+.card-metrica__valor {
+  font-size: var(--text-lg);
+  font-weight: 800;
+}
+
+/* ---------- Chip ---------- */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 14px;
+  border-radius: var(--radius-full);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  background: var(--card-elevated);
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+  white-space: nowrap;
+}
+
+.chip--ativo {
+  background: var(--primary);
+  color: var(--text-on-primary);
+  border-color: var(--primary);
+}
+
+.chip--outline-ativo {
+  background: var(--primary-soft);
+  color: var(--primary);
+  border-color: var(--primary);
+}
+
+.chip--dia {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  min-width: 0;
+  height: 44px;
+  padding: 0;
+  gap: 1px;
+  line-height: 1.1;
+}
+
+.chip--dia .chip-dia__label {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.chip--dia .chip-dia__numero {
+  font-size: var(--text-sm);
+  font-weight: 700;
+}
+
+.chip-scroll {
+  display: flex;
+  gap: var(--space-2);
+  overflow-x: auto;
+  padding-bottom: 2px;
+}
+
+/* ---------- Badge de status ---------- */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  font-size: var(--text-xs);
+  font-weight: 700;
+}
+
+.badge--sucesso {
+  background: var(--success-soft);
+  color: var(--success);
+}
+
+.badge--alerta {
+  background: var(--warning-soft);
+  color: var(--warning);
+}
+
+.badge--perigo {
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+
+.badge--neutro {
+  background: var(--card-elevated);
+  color: var(--text-secondary);
+}
+
+/* ---------- Inputs ---------- */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+}
+
+.field__label {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.input,
+.textarea,
+.select {
+  width: 100%;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  padding: 14px var(--space-4);
+  color: var(--text-primary);
+}
+
+.input::placeholder,
+.textarea::placeholder {
+  color: var(--text-muted);
+}
+
+.textarea {
+  resize: none;
+  min-height: 80px;
+}
+
+.input-icon {
+  position: relative;
+}
+
+.input-icon .input {
+  padding-left: 44px;
+}
+
+.input-icon svg {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 18px;
+  height: 18px;
+  color: var(--text-muted);
+}
+
+/* ---------- Lista compacta / item de agenda ---------- */
+.list-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.list-item:last-child {
+  border-bottom: none;
+}
+
+.list-item__avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-full);
+  background: var(--primary-soft);
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.list-item__body {
+  flex: 1;
+  min-width: 0;
+}
+
+.list-item__title {
+  font-weight: 600;
+}
+
+.list-item__subtitle {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+
+.list-item__trailing {
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.list-item__chevron {
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+/* Avatar com indicador de status (ponto verde = visita recente) */
+.avatar-wrap {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.avatar-status-dot {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  width: 12px;
+  height: 12px;
+  border-radius: var(--radius-full);
+  background: var(--success);
+  border: 2px solid var(--card);
+}
+
+.list-item__avatar--lg {
+  width: 64px;
+  height: 64px;
+  font-size: var(--text-lg);
+}
+
+/* Variações de cor de avatar, só para dar identidade visual à lista */
+.list-item__avatar--c2 { background: rgba(59, 130, 246, 0.18); color: #3B82F6; }
+.list-item__avatar--c3 { background: rgba(236, 72, 153, 0.18); color: #EC4899; }
+.list-item__avatar--c4 { background: rgba(245, 158, 11, 0.18); color: #F59E0B; }
+.list-item__avatar--c5 { background: var(--success-soft); color: var(--success); }
+
+/* ---------- Controle segmentado (abas de filtro) ---------- */
+.segmented {
+  display: flex;
+  gap: var(--space-2);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 4px;
+}
+
+.segmented__item {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 8px;
+  border-radius: var(--radius-sm);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.segmented__item svg {
+  width: 16px;
+  height: 16px;
+}
+
+.segmented__item.is-active {
+  background: var(--primary);
+  color: var(--text-on-primary);
+}
+
+/* ---------- Pódio do ranking ---------- */
+.podio {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: var(--space-3);
+  align-items: end;
+  margin-bottom: var(--space-5);
+}
+
+.podio-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-3);
+  text-align: center;
+}
+
+.podio-card--ouro {
+  padding-top: var(--space-5);
+  background: linear-gradient(180deg, var(--primary-soft), var(--card) 70%);
+  border-color: var(--border-strong);
+}
+
+.podio-card__medalha {
+  font-size: 20px;
+  margin-bottom: 4px;
+}
+
+.podio-card__nome {
+  font-weight: 700;
+  font-size: var(--text-sm);
+  margin-top: var(--space-2);
+}
+
+.podio-card__valor {
+  color: var(--primary);
+  font-weight: 800;
+  margin: 2px 0;
+}
+
+.podio-card__visitas {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
+/* ---------- Linha de cabeçalho de tabela simples ---------- */
+.table-header-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: 0 0 var(--space-2);
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+
+/* ---------- Select-like (ex.: seletor de mês) ---------- */
+.select-like {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  padding: 12px var(--space-4);
+}
+
+.select-like svg:first-child {
+  color: var(--primary);
+  width: 18px;
+  height: 18px;
+}
+
+.select-like span {
+  flex: 1;
+  font-weight: 600;
+}
+
+.select-like svg:last-child {
+  color: var(--text-muted);
+  width: 16px;
+  height: 16px;
+}
+
+/* ---------- Ícone circular de identificação (serviço, forma de pagamento, intervalo) ---------- */
+.icon-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background: var(--primary-soft);
+  color: var(--primary);
+}
+
+.icon-circle svg {
+  width: 20px;
+  height: 20px;
+}
+
+.icon-circle--teal { background: rgba(45, 212, 191, 0.18); color: #2DD4BF; }
+.icon-circle--green { background: var(--success-soft); color: var(--success); }
+.icon-circle--blue { background: rgba(59, 130, 246, 0.18); color: #3B82F6; }
+.icon-circle--gray { background: var(--card-elevated); color: var(--text-secondary); }
+
+/* ---------- Cabeçalho de tela principal (título grande + ação) ---------- */
+.page-header-principal {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-5);
+}
+
+.page-header-principal__titulo {
+  font-size: var(--text-xl);
+  font-weight: 800;
+}
+
+/* ---------- Swatch de cor principal (Onboarding e Configurações) ---------- */
+.cor-swatch {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-full);
+  border: 2px solid transparent;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.cor-swatch.is-selecionada {
+  border-color: var(--text-primary);
+}
+
+.cor-swatch.is-selecionada::after {
+  content: "✓";
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.cor-swatch--sm {
+  width: 18px;
+  height: 18px;
+}
+
+/* ---------- Seletor de horário (dropdown, sem digitação) ---------- */
+.time-select {
+  position: relative;
+  flex: 1;
+}
+
+.time-select__trigger {
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+}
+
+.time-select__menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  max-height: 220px;
+  overflow-y: auto;
+  background: var(--card-elevated);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  z-index: 50;
+}
+
+.time-select__option {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 10px 14px;
+  background: none;
+  border: none;
+  color: var(--text-primary);
+  font-size: var(--text-base);
+}
+
+.time-select__option.is-ativo {
+  background: var(--primary-soft);
+  color: var(--primary);
+  font-weight: 700;
+}
+
+/* ---------- Estado vazio ---------- */
+.empty-state {
+  text-align: center;
+  padding: var(--space-8) var(--space-4);
+  color: var(--text-secondary);
+}
+
+.empty-state__icon {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto var(--space-3);
+  color: var(--text-muted);
+}
+
+.empty-state__title {
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--space-1);
+}
+
+/* ---------- Header de página ---------- */
+.app-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4);
+}
+
+.app-header__title {
+  flex: 1;
+  text-align: center;
+  font-weight: 700;
+  font-size: var(--text-md);
+}
+
+/* ---------- Menu inferior ---------- */
+.bottom-nav__item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.bottom-nav__item svg {
+  width: 22px;
+  height: 22px;
+}
+
+.bottom-nav__item.is-active {
+  color: var(--primary);
+}
+
+/* ---------- Modal / bottom sheet ---------- */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--overlay);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 200;
+}
+
+.modal-overlay.is-hidden {
+  display: none;
+}
+
+.modal-sheet {
+  width: 100%;
+  max-width: 480px;
+  max-height: 90vh;
+  overflow-y: auto;
+  background: var(--card-elevated);
+  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+  box-shadow: var(--shadow-modal);
+  padding: var(--space-5);
+  padding-bottom: calc(var(--space-6) + var(--safe-bottom));
+}
+
+.modal-overlay--centro {
+  align-items: center;
+  padding: var(--space-5);
+}
+
+.modal-sheet--centro {
+  border-radius: var(--radius-xl);
+  padding-bottom: var(--space-5);
+  max-width: 360px;
+  box-shadow: var(--shadow-card);
+}
+
+.modal-sheet__title {
+  font-size: var(--text-lg);
+  font-weight: 800;
+  margin-bottom: var(--space-4);
+}
+
+.modal-sheet__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-4);
+}
+
+.modal-sheet__header .modal-sheet__title {
+  margin-bottom: 0;
+}
+
+.modal-close {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-full);
+  background: var(--card);
+  border: none;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* Botão de perigo sólido — para confirmações destrutivas (Confirmar exclusão) */
+.btn--danger-solid {
+  background: var(--danger);
+  color: white;
+  border: none;
+}
+
+/* Par de botões lado a lado (Cancelar / Salvar, Sim / Não) */
+.btn-row {
+  display: flex;
+  gap: var(--space-3);
+}
+
+.btn-row .btn {
+  flex: 1;
+}
+
+/* Grade de calendário */
+.cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+  text-align: center;
+}
+
+.cal-grid__weekday {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  font-weight: 700;
+  padding-bottom: 6px;
+}
+
+.cal-grid__day {
+  padding: 8px 0;
+  border-radius: var(--radius-sm);
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+
+.cal-grid__day--fora {
+  color: var(--text-muted);
+  opacity: 0.4;
+}
+
+.cal-grid__day--ativo {
+  background: var(--primary);
+  color: var(--text-on-primary);
+}

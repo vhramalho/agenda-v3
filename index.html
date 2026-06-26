@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Agenda — Agenda V3</title>
+  <link rel="stylesheet" href="css/tokens.css" />
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/agenda.css" />
+</head>
+<body data-page="index">
+  <div class="app">
+    <main class="page">
+      <div class="agenda-topo">
+        <button class="btn-hoje" id="js-btn-hoje">Hoje</button>
+        <h1 class="agenda-topo__titulo">Agenda</h1>
+        <div class="agenda-topo__acoes">
+          <button class="icon-btn" aria-label="Calendário" data-abrir-modal="modal-calendario">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/></svg>
+          </button>
+          <button class="icon-btn icon-btn--accent" aria-label="Compartilhar horários no WhatsApp" id="js-btn-compartilhar-whatsapp">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <p class="agenda-mes" id="js-agenda-mes"></p>
+
+      <div class="week-carousel" id="js-week-carousel"></div>
+
+      <div class="agenda-lista" id="js-agenda-lista"></div>
+    </main>
+
+    <div id="js-bottom-nav-mount"></div>
+
+    <!--
+      Modais da Agenda. Abrem/fecham de verdade (Fase 2, via js/modal.js).
+      Os botões de ação dentro deles (Salvar, Confirmar, Bloquear...) só
+      fecham o modal por enquanto — salvar dados de verdade é Fase 3.
+    -->
+    <div class="modal-overlay is-hidden" id="modal-horario-livre">
+      <div class="modal-sheet" style="text-align:center;">
+        <p class="text-secondary" style="margin-bottom:4px;">Horário</p>
+        <p style="font-weight:800;font-size:var(--text-xl);margin-bottom:20px;" id="js-horario-livre-hora"></p>
+        <p style="font-weight:700;margin-bottom:16px;">O que deseja fazer?</p>
+        <div class="stack">
+          <button class="btn btn--primary" data-trocar-modal="modal-novo-agendamento">Agendar cliente</button>
+          <button class="btn btn--secondary" data-trocar-modal="modal-bloquear-horario">Bloquear horário</button>
+          <button class="btn btn--ghost" data-fechar-modal>Cancelar</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-overlay is-hidden" id="modal-horario-agendado">
+      <div class="modal-sheet">
+        <div class="row" style="margin-bottom:20px;">
+          <div class="list-item__avatar" id="js-agendado-avatar"></div>
+          <div>
+            <p style="font-weight:700;" id="js-agendado-nome"></p>
+            <p class="text-secondary" id="js-agendado-info"></p>
+          </div>
+        </div>
+        <div class="stack">
+          <button class="btn btn--primary" id="js-btn-realizar">Realizado</button>
+          <button class="btn btn--secondary" id="js-btn-editar-agendamento">Editar</button>
+          <button class="btn btn--ghost" id="js-btn-lembrete">Enviar lembrete</button>
+          <button class="btn btn--danger" data-trocar-modal="modal-confirmar-exclusao-agendamento">Excluir</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-overlay is-hidden" id="modal-horario-bloqueado">
+      <div class="modal-sheet">
+        <div class="row" style="margin-bottom:20px;">
+          <div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="11" width="14" height="9" rx="1"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></div>
+          <div>
+            <p style="font-weight:700;" id="js-bloqueado-nome"></p>
+            <p class="text-secondary" id="js-bloqueado-info"></p>
+          </div>
+        </div>
+        <p class="text-secondary is-hidden" id="js-bloqueado-aviso-fixo" style="margin-bottom:12px;">Este horário vem de um intervalo fixo. Pra mudar, edite em <a href="intervalos.html" class="text-primary-accent">Intervalos</a>.</p>
+        <div class="stack" id="js-bloqueado-acoes-pontual">
+          <button class="btn btn--primary" id="js-btn-desbloquear">Desbloquear</button>
+          <button class="btn btn--secondary" id="js-btn-editar-bloqueio">Editar nome</button>
+          <button class="btn btn--ghost" data-fechar-modal>Fechar</button>
+        </div>
+        <div class="stack is-hidden" id="js-bloqueado-acoes-fixo">
+          <button class="btn btn--ghost" data-fechar-modal>Fechar</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-overlay is-hidden" id="modal-bloquear-horario">
+      <div class="modal-sheet">
+        <p class="modal-sheet__title">Bloquear horário</p>
+        <p class="text-secondary" style="margin-bottom:16px;margin-top:-12px;" id="js-bloquear-hora"></p>
+        <div class="field"><input class="input" placeholder="Nome do bloqueio (opcional)" id="js-bloquear-nome" /></div>
+        <div class="btn-row"><button class="btn btn--secondary" data-fechar-modal>Cancelar</button><button class="btn btn--primary" id="js-bloquear-salvar">Bloquear</button></div>
+      </div>
+    </div>
+
+    <div class="modal-overlay is-hidden" id="modal-adicionar-cliente-novo">
+      <div class="modal-sheet" style="text-align:center;">
+        <div class="icon-circle" style="margin:0 auto 12px;width:48px;height:48px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="8" r="3"/><path d="M3 19c0-3 2.5-5 6-5"/><path d="M16 8h4M18 6v4"/></svg></div>
+        <p style="margin-bottom:20px;"><strong id="js-adicionar-cliente-nome"></strong> ainda não está na sua lista de clientes. Adicionar?</p>
+        <div class="stack">
+          <button class="btn btn--primary" id="js-adicionar-cliente-sim">Adicionar aos clientes</button>
+          <button class="btn btn--secondary" id="js-adicionar-cliente-avulso">Não, é avulso</button>
+          <button class="btn btn--ghost" data-fechar-modal>Cancelar</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-overlay is-hidden" id="modal-confirmar-exclusao-agendamento">
+      <div class="modal-sheet" style="text-align:center;">
+        <p style="font-size:32px;margin-bottom:8px;">⚠️</p>
+        <p class="modal-sheet__title" style="margin-bottom:8px;">Excluir agendamento?</p>
+        <p class="text-secondary" style="margin-bottom:20px;">Esta ação não pode ser desfeita. O agendamento será removido da sua agenda.</p>
+        <div class="btn-row"><button class="btn btn--secondary" data-fechar-modal>Cancelar</button><button class="btn btn--danger-solid" id="js-confirmar-exclusao-agendamento">Confirmar</button></div>
+      </div>
+    </div>
+
+    <div class="modal-overlay is-hidden modal-overlay--centro" id="modal-calendario">
+      <div class="modal-sheet modal-sheet--centro">
+        <div class="row row--between" style="margin-bottom:16px;">
+          <button class="icon-btn" id="js-cal-anterior" aria-label="Mês anterior"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
+          <p style="font-weight:700;" id="js-cal-mes-label">Julho 2026</p>
+          <button class="icon-btn" id="js-cal-proximo" aria-label="Próximo mês"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></button>
+        </div>
+        <div class="cal-grid" style="margin-bottom:4px;">
+          <span class="cal-grid__weekday">D</span><span class="cal-grid__weekday">S</span><span class="cal-grid__weekday">T</span><span class="cal-grid__weekday">Q</span><span class="cal-grid__weekday">Q</span><span class="cal-grid__weekday">S</span><span class="cal-grid__weekday">S</span>
+        </div>
+        <div class="cal-grid" id="js-cal-dias"></div>
+      </div>
+    </div>
+
+    <div class="modal-overlay is-hidden modal-overlay--centro" id="modal-compartilhar-whatsapp">
+      <div class="modal-sheet modal-sheet--centro">
+        <p class="modal-sheet__title">Compartilhar horários</p>
+        <p class="text-secondary" style="margin-bottom:12px;">Selecione os dias para compartilhar</p>
+        <div class="row" style="gap:6px;margin-bottom:20px;flex-wrap:wrap;" data-chips="multi" id="js-whatsapp-dias"></div>
+        <div class="btn-row"><button class="btn btn--secondary" data-fechar-modal>Fechar</button><button class="btn btn--primary" id="js-whatsapp-enviar">Enviar no WhatsApp</button></div>
+      </div>
+    </div>
+
+    <div class="modal-overlay is-hidden" id="modal-novo-agendamento">
+      <div class="modal-sheet">
+        <p class="modal-sheet__title" id="js-novo-agendamento-titulo">Novo agendamento</p>
+        <p class="text-primary-accent" style="font-weight:600;margin-bottom:16px;margin-top:-12px;" id="js-novo-agendamento-data-hora"></p>
+        <div class="field" style="position:relative;">
+          <label class="field__label">Nome do cliente</label>
+          <input class="input" placeholder="Buscar ou digitar nome" id="js-novo-agendamento-nome" />
+          <div class="card is-hidden" id="js-novo-agendamento-resultados" style="position:absolute;z-index:5;width:100%;max-height:180px;overflow-y:auto;margin-top:4px;"></div>
+        </div>
+        <div class="card row is-hidden" id="js-novo-agendamento-cliente-card" style="margin-bottom:16px;">
+          <div class="list-item__avatar" id="js-novo-agendamento-cliente-avatar"></div>
+          <div style="flex:1;">
+            <p style="font-weight:700;" id="js-novo-agendamento-cliente-nome"></p>
+            <p class="text-secondary" style="font-size:var(--text-sm);" id="js-novo-agendamento-cliente-info"></p>
+          </div>
+        </div>
+        <div class="field">
+          <label class="field__label">Serviços</label>
+          <div class="row" style="flex-wrap:wrap;gap:8px;" data-chips="multi" id="js-novo-agendamento-servicos"></div>
+        </div>
+        <div class="field">
+          <label class="field__label">Observação (opcional)</label>
+          <textarea class="textarea" placeholder="Alguma observação sobre o atendimento..." id="js-novo-agendamento-observacao"></textarea>
+        </div>
+        <div class="btn-row"><button class="btn btn--secondary" data-fechar-modal>Cancelar</button><button class="btn btn--primary" id="js-novo-agendamento-salvar">Salvar</button></div>
+      </div>
+    </div>
+
+    <div class="modal-overlay is-hidden" id="modal-finalizar-atendimento">
+      <div class="modal-sheet">
+        <p class="modal-sheet__title">Finalizar atendimento</p>
+        <div class="field">
+          <label class="field__label">Nome do cliente</label>
+          <div class="card row"><div class="list-item__avatar" id="js-finalizar-avatar"></div><span style="flex:1;font-weight:700;" id="js-finalizar-nome"></span></div>
+        </div>
+        <div class="field"><label class="field__label">Serviços</label><div class="row" style="gap:8px;flex-wrap:wrap;" data-chips="multi" id="js-finalizar-servicos"></div></div>
+        <div class="field"><label class="field__label">Observação (opcional)</label><textarea class="textarea" placeholder="Como foi o atendimento?" id="js-finalizar-observacao"></textarea></div>
+        <div class="field">
+          <label class="field__label">Foi pago?</label>
+          <div class="btn-row">
+            <button class="btn btn--primary" data-pago="sim">Sim</button>
+            <button class="btn btn--secondary" data-pago="nao">Não</button>
+          </div>
+        </div>
+        <div class="field" data-campo-pago="sim">
+          <label class="field__label">Forma de pagamento</label>
+          <p class="text-secondary" style="font-size:var(--text-sm);margin-bottom:8px;">Toque em uma ou mais formas usadas pelo cliente.</p>
+          <div class="row" style="gap:8px;flex-wrap:wrap;" data-chips="multi" id="js-finalizar-formas"></div>
+          <div class="stack" data-linhas-pagamento style="margin-top:12px;gap:8px;" id="js-finalizar-linhas-pagamento"></div>
+        </div>
+        <div class="field is-hidden" data-campo-pago="nao">
+          <label class="field__label" style="color:var(--danger);">Valor pendente *</label>
+          <input class="input" placeholder="R$ 0,00" id="js-finalizar-valor-pendente" />
+          <p class="text-warning" style="font-size:var(--text-sm);">Esse valor entrará em Pendentes.</p>
+        </div>
+        <div class="btn-row"><button class="btn btn--secondary" data-fechar-modal>Cancelar</button><button class="btn btn--primary" id="js-finalizar-confirmar">Confirmar</button></div>
+      </div>
+    </div>
+
+    <div class="modal-overlay is-hidden" id="modal-horario-realizado">
+      <div class="modal-sheet">
+        <div class="row" style="margin-bottom:20px;">
+          <span class="icon-circle icon-circle--green"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></svg></span>
+          <div>
+            <p style="font-weight:700;" id="js-realizado-nome"></p>
+            <p class="text-secondary" id="js-realizado-info"></p>
+          </div>
+        </div>
+        <div class="stack">
+          <button class="btn btn--primary" id="js-btn-editar-realizado">Editar realizado</button>
+          <button class="btn btn--danger" data-trocar-modal="modal-confirmar-exclusao-realizado">Excluir realizado</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-overlay is-hidden" id="modal-confirmar-exclusao-realizado">
+      <div class="modal-sheet" style="text-align:center;">
+        <p style="font-size:32px;margin-bottom:8px;">⚠️</p>
+        <p class="modal-sheet__title" style="margin-bottom:8px;">Excluir atendimento realizado?</p>
+        <p class="text-secondary" style="margin-bottom:20px;">Esta ação não pode ser desfeita. O atendimento será removido do histórico e do relatório.</p>
+        <div class="btn-row"><button class="btn btn--secondary" data-fechar-modal>Cancelar</button><button class="btn btn--danger-solid" id="js-confirmar-exclusao-realizado">Confirmar</button></div>
+      </div>
+    </div>
+
+    <div class="modal-overlay is-hidden" id="modal-editar-realizado">
+      <div class="modal-sheet">
+        <p class="modal-sheet__title">Editar atendimento</p>
+        <div class="field">
+          <label class="field__label">Nome</label>
+          <div class="card row"><div class="list-item__avatar" id="js-editar-realizado-avatar"></div><span style="flex:1;font-weight:700;" id="js-editar-realizado-nome"></span></div>
+        </div>
+        <div class="field"><label class="field__label">Serviços</label><div class="row" style="gap:8px;flex-wrap:wrap;" data-chips="multi" id="js-editar-realizado-servicos"></div></div>
+        <div class="field"><label class="field__label">Observação (opcional)</label><textarea class="textarea" id="js-editar-realizado-observacao"></textarea></div>
+        <div class="card row section" id="js-editar-realizado-status-pago" style="background:var(--success-soft);border-color:var(--success);">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></svg>
+          <div><p class="text-success" style="font-weight:700;">Pago</p><p class="text-secondary" style="font-size:var(--text-sm);" id="js-editar-realizado-pago-em"></p></div>
+        </div>
+        <div class="field is-hidden" id="js-editar-realizado-campo-formas">
+          <label class="field__label">Formas de pagamento</label>
+          <div class="row" style="gap:8px;flex-wrap:wrap;" data-chips="multi" id="js-editar-realizado-formas"></div>
+          <div class="stack" data-linhas-pagamento style="margin-top:12px;gap:8px;" id="js-editar-realizado-linhas-pagamento"></div>
+        </div>
+        <div class="field is-hidden" id="js-editar-realizado-campo-pendente">
+          <label class="field__label" style="color:var(--danger);">Valor pendente</label>
+          <input class="input" id="js-editar-realizado-valor-pendente" />
+        </div>
+        <div class="btn-row"><button class="btn btn--secondary" data-fechar-modal>Cancelar</button><button class="btn btn--primary" id="js-editar-realizado-salvar">Salvar alterações</button></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/utils.js"></script>
+  <script src="js/menu.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/tema.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/chips.js"></script>
+  <script src="js/modal.js"></script>
+  <script src="js/calendario.js"></script>
+  <script src="js/acoes-simuladas.js"></script>
+  <script src="js/agenda.js"></script>
+</body>
+</html>

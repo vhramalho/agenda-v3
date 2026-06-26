@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Formas de pagamento — Agenda V3</title>
+  <link rel="stylesheet" href="css/tokens.css" />
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="css/components.css" />
+</head>
+<body data-page="mais">
+  <div class="app">
+    <main class="page">
+      <div class="page-header-principal">
+        <h1 class="page-header-principal__titulo">Formas de pagamento</h1>
+        <button class="fab" aria-label="Nova forma de pagamento" id="js-btn-nova-forma">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+        </button>
+      </div>
+
+      <div class="card card--destaque section row row--between is-hidden" id="js-forma-destaque">
+        <div>
+          <p class="text-primary-accent" style="font-weight:700;font-size:var(--text-sm);margin-bottom:8px;">Mais utilizada</p>
+          <p style="font-weight:800;font-size:var(--text-xl);" id="js-forma-destaque-nome"></p>
+          <p class="text-secondary" id="js-forma-destaque-percentual"></p>
+        </div>
+        <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.5"><path d="M12 2l4 4-4 4-4-4 4-4zM12 14l4 4-4 4-4-4 4-4zM2 12l4-4 4 4-4 4-4-4zM14 12l4-4 4 4-4 4-4-4z"/></svg>
+      </div>
+
+      <section class="section">
+        <h2 class="section__title">Minhas formas de pagamento</h2>
+        <div class="card" id="js-lista-formas"></div>
+        <div class="empty-state is-hidden" id="js-formas-vazio">
+          <p class="empty-state__title">Nenhuma forma cadastrada</p>
+          <p class="text-muted">Toque no + acima para criar a primeira.</p>
+        </div>
+      </section>
+    </main>
+
+    <div id="js-bottom-nav-mount"></div>
+
+    <!-- Modais de forma de pagamento — ligados de verdade ao localStorage (Fase 3) -->
+    <div class="modal-overlay is-hidden" id="modal-nova-forma">
+      <div class="modal-sheet">
+        <div class="modal-sheet__header"><p class="modal-sheet__title">Nova forma de pagamento</p><button class="modal-close">✕</button></div>
+        <div class="field"><label class="field__label">Nome</label><input class="input" id="js-nova-forma-nome" placeholder="Ex.: Cartão de crédito"/></div>
+        <div class="field">
+          <label class="field__label">Tipo</label>
+          <div class="row" style="gap:8px;flex-wrap:wrap;" data-chips="single" id="js-nova-forma-tipo">
+            <span class="chip" data-tipo="dinheiro">Dinheiro</span><span class="chip" data-tipo="pix">Pix</span><span class="chip chip--ativo" data-tipo="credito">Crédito</span><span class="chip" data-tipo="debito">Débito</span><span class="chip" data-tipo="outras">Outras</span>
+          </div>
+        </div>
+        <div class="field"><label class="field__label">Taxa opcional</label><input class="input" id="js-nova-forma-taxa" placeholder="Ex.: 2,99"/></div>
+        <div class="btn-row"><button class="btn btn--secondary" data-fechar-modal>Cancelar</button><button class="btn btn--primary" id="js-nova-forma-salvar">Salvar</button></div>
+      </div>
+    </div>
+
+    <div class="modal-overlay is-hidden" id="modal-editar-forma">
+      <div class="modal-sheet">
+        <div class="modal-sheet__header"><p class="modal-sheet__title">Editar forma de pagamento</p><button class="modal-close">✕</button></div>
+        <div class="field"><label class="field__label">Nome</label><input class="input" id="js-editar-forma-nome"/></div>
+        <div class="field">
+          <label class="field__label">Tipo</label>
+          <div class="row" style="gap:8px;flex-wrap:wrap;" data-chips="single" id="js-editar-forma-tipo">
+            <span class="chip" data-tipo="dinheiro">Dinheiro</span><span class="chip" data-tipo="pix">Pix</span><span class="chip" data-tipo="credito">Crédito</span><span class="chip" data-tipo="debito">Débito</span><span class="chip" data-tipo="outras">Outras</span>
+          </div>
+        </div>
+        <div class="field"><label class="field__label">Taxa opcional</label><input class="input" id="js-editar-forma-taxa"/></div>
+        <div class="btn-row"><button class="btn btn--primary" id="js-editar-forma-salvar">Salvar</button><button class="btn btn--danger" data-trocar-modal="modal-confirmar-exclusao-forma">Excluir</button></div>
+      </div>
+    </div>
+
+    <div class="modal-overlay is-hidden" id="modal-confirmar-exclusao-forma">
+      <div class="modal-sheet" style="text-align:center;">
+        <div class="modal-sheet__header" style="text-align:left;"><p class="modal-sheet__title">Excluir forma de pagamento?</p><button class="modal-close">✕</button></div>
+        <p class="text-secondary" style="margin-bottom:20px;">Tem certeza que deseja excluir esta forma de pagamento? Essa ação não pode ser desfeita.</p>
+        <div class="btn-row"><button class="btn btn--secondary" data-fechar-modal>Cancelar</button><button class="btn btn--danger-solid" id="js-confirmar-exclusao-forma">Confirmar</button></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/utils.js"></script>
+  <script src="js/menu.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/tema.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/chips.js"></script>
+  <script src="js/modal.js"></script>
+  <script src="js/pagamentos.js"></script>
+</body>
+</html>

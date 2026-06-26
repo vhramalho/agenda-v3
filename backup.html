@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Backup — Agenda V3</title>
+  <link rel="stylesheet" href="css/tokens.css" />
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="css/components.css" />
+</head>
+<body data-page="mais" data-titulo="Backup">
+  <div class="app">
+    <main class="page">
+      <div id="js-header-mount"></div>
+
+      <div class="card card--destaque section">
+        <div class="row" style="align-items:flex-start;margin-bottom:14px;">
+          <div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z"/><path d="M9 12l2 2 4-4"/></svg></div>
+          <div>
+            <p style="font-weight:800;">Seus dados protegidos</p>
+            <p class="text-secondary">Faça backups regularmente e mantenha suas informações sempre seguras.</p>
+          </div>
+        </div>
+        <div class="row row--between" style="border-top:1px solid var(--border);padding-top:12px;">
+          <p class="row text-secondary"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/></svg>Último backup: <span class="text-primary" style="font-weight:700;" id="js-backup-ultimo">Nenhum backup ainda</span></p>
+          <span class="badge badge--sucesso is-hidden" id="js-backup-badge">Concluído</span>
+        </div>
+      </div>
+
+      <div class="card section">
+        <div class="row" style="align-items:flex-start;">
+          <div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14"/></svg></div>
+          <div style="flex:1;">
+            <p style="font-weight:700;">Exportar dados</p>
+            <p class="text-secondary" style="margin-bottom:12px;">Baixe uma cópia completa dos seus dados em um arquivo local.</p>
+            <button class="btn btn--ghost" id="js-backup-exportar">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14"/></svg>
+              Gerar e baixar backup
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card section">
+        <div class="row" style="align-items:flex-start;">
+          <div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21V9m0 0l-4 4m4-4l4 4M5 3h14"/></svg></div>
+          <div style="flex:1;">
+            <p style="font-weight:700;">Importar backup</p>
+            <p class="text-secondary" style="margin-bottom:12px;">Restaure seus dados a partir de um arquivo de backup.</p>
+            <button class="btn btn--ghost" id="js-backup-importar-btn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 7l3-4h12l3 4M3 7v12a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7M3 7h18"/></svg>
+              Selecionar arquivo de backup
+            </button>
+            <input type="file" accept="application/json" id="js-backup-importar-arquivo" class="is-hidden" />
+          </div>
+        </div>
+      </div>
+
+      <div class="card section" style="background:var(--warning-soft);border-color:var(--warning);">
+        <div class="row" style="align-items:flex-start;">
+          <span style="font-size:20px;">⚠️</span>
+          <div>
+            <p class="text-warning" style="font-weight:700;">Cuidado ao importar</p>
+            <p class="text-secondary">A importação pode substituir seus dados atuais. O app sempre pedirá confirmação antes de continuar.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <p style="font-weight:700;margin-bottom:14px;">Informações incluídas no backup</p>
+        <div class="row row--between" style="text-align:center;">
+          <div style="flex:1;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.8" style="margin:0 auto 6px;"><circle cx="9" cy="8" r="3"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17" cy="9" r="2.5"/><path d="M15.5 14c2.6.4 4.5 2.4 4.5 6"/></svg>
+            <p class="text-secondary" style="font-size:var(--text-xs);">Clientes</p>
+          </div>
+          <div style="flex:1;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.8" style="margin:0 auto 6px;"><circle cx="6" cy="6" r="2.5"/><circle cx="6" cy="18" r="2.5"/><path d="M8 7.5L20 18M8 16.5L20 6"/></svg>
+            <p class="text-secondary" style="font-size:var(--text-xs);">Serviços</p>
+          </div>
+          <div style="flex:1;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.8" style="margin:0 auto 6px;"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/></svg>
+            <p class="text-secondary" style="font-size:var(--text-xs);">Agendamentos</p>
+          </div>
+          <div style="flex:1;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.8" style="margin:0 auto 6px;"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+            <p class="text-secondary" style="font-size:var(--text-xs);">Pagamentos</p>
+          </div>
+          <div style="flex:1;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.8" style="margin:0 auto 6px;"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 0 0-.2-1.6l2-1.5-2-3.4-2.3.9a7 7 0 0 0-2.7-1.6L13.5 2h-3l-.3 2.8a7 7 0 0 0-2.7 1.6l-2.3-.9-2 3.4 2 1.5A7 7 0 0 0 5 12c0 .5 0 1.1.2 1.6l-2 1.5 2 3.4 2.3-.9a7 7 0 0 0 2.7 1.6l.3 2.8h3l.3-2.8a7 7 0 0 0 2.7-1.6l2.3.9 2-3.4-2-1.5c.1-.5.2-1.1.2-1.6z"/></svg>
+            <p class="text-secondary" style="font-size:var(--text-xs);">Configurações</p>
+          </div>
+        </div>
+      </div>
+
+      <p class="text-muted row section" style="justify-content:center;font-size:var(--text-sm);">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="11" width="14" height="9" rx="1"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+        Seus dados ficam salvos neste dispositivo.
+      </p>
+    </main>
+
+    <div id="js-bottom-nav-mount"></div>
+
+    <div class="modal-overlay is-hidden" id="modal-confirmar-importar-backup">
+      <div class="modal-sheet" style="text-align:center;">
+        <div class="modal-sheet__header" style="text-align:left;"><p class="modal-sheet__title" style="color:var(--warning);">Cuidado ao importar</p><button class="modal-close">✕</button></div>
+        <p class="text-secondary" style="margin-bottom:20px;">Isso vai substituir TODOS os seus dados atuais pelos dados do arquivo selecionado. Essa ação não pode ser desfeita.</p>
+        <div class="btn-row"><button class="btn btn--secondary" data-fechar-modal>Cancelar</button><button class="btn btn--danger-solid" id="js-confirmar-importar-backup">Substituir e importar</button></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/utils.js"></script>
+  <script src="js/menu.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/tema.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/modal.js"></script>
+  <script src="js/backup.js"></script>
+</body>
+</html>

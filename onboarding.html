@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Configuração inicial — Agenda V3</title>
+  <link rel="stylesheet" href="css/tokens.css" />
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/onboarding.css" />
+</head>
+<body data-page="onboarding">
+  <div class="app">
+    <main class="page page--secundaria">
+
+      <!-- Passo 0: Boas-vindas -->
+      <section class="onboarding-step is-active">
+        <div class="onboarding-topo">
+          <span></span>
+          <button class="onboarding-pular" data-ir-para="5">Pular</button>
+        </div>
+
+        <div class="onboarding-ilustracao">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/><circle cx="17" cy="16" r="4" fill="var(--bg)"/><path d="M17 14.3v1.7l1.2 1.2"/></svg>
+        </div>
+
+        <p style="text-align:center;font-weight:800;font-size:var(--text-lg);">Agenda <span class="text-primary-accent">V3</span></p>
+        <p class="onboarding-titulo" style="margin-top:8px;">Vamos configurar<br/>sua agenda</p>
+        <p class="onboarding-subtitulo">Em poucos passos, deixamos o app pronto para o seu jeito de trabalhar.</p>
+
+        <p class="section__title" style="text-align:center;">O que vamos configurar</p>
+        <div class="card section">
+          <div class="onboarding-resumo-item">
+            <span class="onboarding-resumo-numero">1</span>
+            <div><p style="font-weight:700;">Perfil</p><p class="text-secondary" style="font-size:var(--text-sm);">Nome, WhatsApp e endereço</p></div>
+          </div>
+          <div class="onboarding-resumo-item">
+            <span class="onboarding-resumo-numero">2</span>
+            <div><p style="font-weight:700;">Aparência</p><p class="text-secondary" style="font-size:var(--text-sm);">Tema e cor principal</p></div>
+          </div>
+          <div class="onboarding-resumo-item">
+            <span class="onboarding-resumo-numero">3</span>
+            <div><p style="font-weight:700;">Agenda</p><p class="text-secondary" style="font-size:var(--text-sm);">Horários, visualização e tempo padrão</p></div>
+          </div>
+          <div class="onboarding-resumo-item">
+            <span class="onboarding-resumo-numero">4</span>
+            <div><p style="font-weight:700;">Organização</p><p class="text-secondary" style="font-size:var(--text-sm);">Bloqueios, pagamentos e serviços</p></div>
+          </div>
+          <div class="onboarding-resumo-item">
+            <span class="onboarding-resumo-numero">5</span>
+            <div><p style="font-weight:700;">Tudo pronto</p><p class="text-secondary" style="font-size:var(--text-sm);">Sua agenda configurada</p></div>
+          </div>
+        </div>
+
+        <button class="btn btn--primary" data-proximo>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 3l1.5 3.5L10 8l-3.5 1.5L5 13l-1.5-3.5L0 8l3.5-1.5L5 3z"/></svg>
+          Vamos começar
+        </button>
+        <div class="onboarding-dots">
+          <span class="onboarding-dot is-active"></span><span class="onboarding-dot"></span><span class="onboarding-dot"></span><span class="onboarding-dot"></span><span class="onboarding-dot"></span><span class="onboarding-dot"></span>
+        </div>
+      </section>
+
+      <!-- Passo 1: Perfil -->
+      <section class="onboarding-step">
+        <div class="onboarding-topo">
+          <button class="onboarding-voltar" data-anterior>‹ Voltar</button>
+          <button class="onboarding-pular" data-ir-para="5">Pular</button>
+        </div>
+        <p class="onboarding-passo-label">Passo 1 de 5</p>
+        <p class="onboarding-titulo">Sobre o seu negócio</p>
+        <p class="onboarding-subtitulo">Vamos começar com as informações básicas do seu estabelecimento.</p>
+
+        <div class="field"><label class="field__label">Nome do estabelecimento</label><input class="input" placeholder="Ex.: Primos Barbearia" id="js-ob-estabelecimento"/></div>
+        <div class="field"><label class="field__label">Nome do profissional</label><input class="input" placeholder="Seu nome" id="js-ob-profissional"/></div>
+        <div class="field"><label class="field__label">WhatsApp</label><input class="input" placeholder="(00) 00000-0000" id="js-ob-whatsapp"/></div>
+        <div class="field"><label class="field__label">Endereço (opcional)</label><input class="input" placeholder="Rua, número, bairro" id="js-ob-endereco"/></div>
+
+        <button class="btn btn--primary" data-proximo>Continuar</button>
+        <div class="onboarding-dots">
+          <span class="onboarding-dot"></span><span class="onboarding-dot is-active"></span><span class="onboarding-dot"></span><span class="onboarding-dot"></span><span class="onboarding-dot"></span><span class="onboarding-dot"></span>
+        </div>
+      </section>
+
+      <!-- Passo 2: Aparência -->
+      <section class="onboarding-step">
+        <div class="onboarding-topo">
+          <button class="onboarding-voltar" data-anterior>‹ Voltar</button>
+          <button class="onboarding-pular" data-ir-para="5">Pular</button>
+        </div>
+        <p class="onboarding-passo-label">Passo 2 de 5</p>
+        <p class="onboarding-titulo">Personalize o visual</p>
+        <p class="onboarding-subtitulo">Escolha o tema e a cor principal do app.</p>
+
+        <div class="field">
+          <label class="field__label">Tema</label>
+          <div class="row" style="gap:12px;">
+            <div class="opcao-card is-selecionada" data-tema="escuro">
+              <div class="opcao-card__amostra" style="background:#0B0B10;border:1px solid var(--border-strong);"></div>
+              <p style="font-weight:600;">Escuro</p>
+            </div>
+            <div class="opcao-card" data-tema="claro">
+              <div class="opcao-card__amostra" style="background:#F4F4F7;border:1px solid var(--border-strong);"></div>
+              <p style="font-weight:600;">Claro</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="field__label">Cor principal</label>
+          <div class="row" style="gap:12px;flex-wrap:wrap;">
+            <span class="cor-swatch is-selecionada" data-cor="roxo" style="background:#7C3AED;"></span>
+            <span class="cor-swatch" data-cor="azul" style="background:#2563EB;"></span>
+            <span class="cor-swatch" data-cor="ciano" style="background:#0891B2;"></span>
+            <span class="cor-swatch" data-cor="verde" style="background:#15803D;"></span>
+            <span class="cor-swatch" data-cor="rosa" style="background:#DB2777;"></span>
+            <span class="cor-swatch" data-cor="vermelho" style="background:#B91C1C;"></span>
+            <span class="cor-swatch" data-cor="dourado" style="background:#B45309;"></span>
+          </div>
+        </div>
+
+        <button class="btn btn--primary" data-proximo>Continuar</button>
+        <div class="onboarding-dots">
+          <span class="onboarding-dot"></span><span class="onboarding-dot"></span><span class="onboarding-dot is-active"></span><span class="onboarding-dot"></span><span class="onboarding-dot"></span><span class="onboarding-dot"></span>
+        </div>
+      </section>
+
+      <!-- Passo 3: Agenda -->
+      <section class="onboarding-step">
+        <div class="onboarding-topo">
+          <button class="onboarding-voltar" data-anterior>‹ Voltar</button>
+          <button class="onboarding-pular" data-ir-para="5">Pular</button>
+        </div>
+        <p class="onboarding-passo-label">Passo 3 de 5</p>
+        <p class="onboarding-titulo">Configure sua agenda</p>
+        <p class="onboarding-subtitulo">Defina o horário de funcionamento e como a grade aparece.</p>
+
+        <div class="row" style="gap:12px;">
+          <div class="field" style="flex:1;"><label class="field__label">Primeiro horário</label><input class="input" value="08:00" id="js-ob-hora-inicio"/></div>
+          <div class="field" style="flex:1;"><label class="field__label">Último horário</label><input class="input" value="20:30" id="js-ob-hora-fim"/></div>
+        </div>
+        <div class="field">
+          <label class="field__label">Visualização da grade</label>
+          <button class="select-like" id="js-ob-grade" data-valor="30" style="width:100%;text-align:left;background:none;border:1px solid var(--border);cursor:pointer;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/></svg><span>30 minutos</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></button>
+          <p class="text-muted" style="font-size:var(--text-xs);margin-top:4px;">Toque para alternar entre 15, 30 e 60 minutos.</p>
+        </div>
+        <div class="field">
+          <label class="field__label">Tempo padrão de atendimento</label>
+          <button class="select-like" id="js-ob-tempo-padrao" data-valor="60" style="width:100%;text-align:left;background:none;border:1px solid var(--border);cursor:pointer;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg><span>60 minutos</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></button>
+          <p class="text-muted" style="font-size:var(--text-xs);margin-top:4px;">Toque para alternar entre 15, 30, 45, 60, 90 e 120 minutos.</p>
+        </div>
+
+        <button class="btn btn--primary" data-proximo>Continuar</button>
+        <div class="onboarding-dots">
+          <span class="onboarding-dot"></span><span class="onboarding-dot"></span><span class="onboarding-dot"></span><span class="onboarding-dot is-active"></span><span class="onboarding-dot"></span><span class="onboarding-dot"></span>
+        </div>
+      </section>
+
+      <!-- Passo 4: Organização -->
+      <section class="onboarding-step">
+        <div class="onboarding-topo">
+          <button class="onboarding-voltar" data-anterior>‹ Voltar</button>
+          <button class="onboarding-pular" data-ir-para="5">Pular</button>
+        </div>
+        <p class="onboarding-passo-label">Passo 4 de 5</p>
+        <p class="onboarding-titulo">Organize seu dia a dia</p>
+        <p class="onboarding-subtitulo">Esses passos são opcionais — você pode configurar agora ou depois, em "Mais".</p>
+
+        <div class="card stack">
+          <a href="intervalos.html" class="list-item" style="text-decoration:none;color:inherit;">
+            <div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></div>
+            <div class="list-item__body"><p class="list-item__title">Bloqueios fixos</p><p class="list-item__subtitle">Almoço, folgas, intervalos recorrentes</p></div>
+            <span class="badge badge--neutro">Opcional</span>
+          </a>
+          <a href="pagamentos.html" class="list-item" style="text-decoration:none;color:inherit;">
+            <div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg></div>
+            <div class="list-item__body"><p class="list-item__title">Formas de pagamento</p><p class="list-item__subtitle">Pix, dinheiro, cartões...</p></div>
+            <span class="badge badge--neutro">Opcional</span>
+          </a>
+          <a href="servicos.html" class="list-item" style="text-decoration:none;color:inherit;">
+            <div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="6" cy="6" r="2.5"/><circle cx="6" cy="18" r="2.5"/><path d="M8 7.5L20 18M8 16.5L20 6"/></svg></div>
+            <div class="list-item__body"><p class="list-item__title">Serviços</p><p class="list-item__subtitle">Corte, barba, e outros</p></div>
+            <span class="badge badge--neutro">Opcional</span>
+          </a>
+        </div>
+        <p class="text-muted" style="font-size:var(--text-sm);text-align:center;margin-top:12px;">Você poderá cadastrar tudo isso com calma depois, em "Mais".</p>
+
+        <button class="btn btn--primary section" data-proximo>Continuar</button>
+        <div class="onboarding-dots">
+          <span class="onboarding-dot"></span><span class="onboarding-dot"></span><span class="onboarding-dot"></span><span class="onboarding-dot"></span><span class="onboarding-dot is-active"></span><span class="onboarding-dot"></span>
+        </div>
+      </section>
+
+      <!-- Passo 5: Tudo pronto -->
+      <section class="onboarding-step">
+        <div class="onboarding-ilustracao" style="background:var(--success-soft);color:var(--success);">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></svg>
+        </div>
+        <p class="onboarding-titulo">Tudo pronto!</p>
+        <p class="onboarding-subtitulo">Sua agenda está configurada e pronta para uso.</p>
+
+        <a href="index.html" class="btn btn--primary">
+          Ir para a Agenda
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+        <div class="onboarding-dots">
+          <span class="onboarding-dot"></span><span class="onboarding-dot"></span><span class="onboarding-dot"></span><span class="onboarding-dot"></span><span class="onboarding-dot"></span><span class="onboarding-dot is-active"></span>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script src="js/utils.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/tema.js"></script>
+  <script src="js/onboarding.js"></script>
+</body>
+</html>

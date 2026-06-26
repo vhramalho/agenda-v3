@@ -1,0 +1,83 @@
+/* ============================================================
+   AGENDA V3 — Autenticação (login, cadastro)
+   ============================================================ */
+
+.auth-marca {
+  text-align: center;
+  margin: var(--space-6) 0 var(--space-5);
+}
+
+.auth-marca__icone {
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(160deg, var(--primary-strong), var(--primary));
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto var(--space-3);
+}
+
+.auth-marca__nome {
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+
+.auth-titulo {
+  text-align: center;
+  font-size: var(--text-xl);
+  font-weight: 800;
+  margin-bottom: var(--space-2);
+}
+
+.auth-subtitulo {
+  text-align: center;
+  color: var(--text-secondary);
+  margin-bottom: var(--space-6);
+}
+
+.input-icon__trailing {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 18px;
+  height: 18px;
+  color: var(--text-muted);
+  background: none;
+  border: none;
+  padding: 0;
+}
+
+.input-icon .input--senha {
+  padding-right: 44px;
+}
+
+.auth-divisor {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+  margin: var(--space-5) 0;
+}
+
+.auth-divisor::before,
+.auth-divisor::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+.auth-rodape {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+  margin-top: var(--space-6);
+}

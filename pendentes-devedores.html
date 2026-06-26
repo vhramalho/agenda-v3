@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Clientes que mais ficam devendo — Agenda V3</title>
+  <link rel="stylesheet" href="css/tokens.css" />
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="css/components.css" />
+</head>
+<body data-page="pendentes" data-titulo="Clientes que mais ficam devendo">
+  <div class="app">
+    <main class="page">
+      <div id="js-header-mount"></div>
+
+      <p class="text-secondary section">Ranking de clientes que mais demoram ou mais vezes ficaram com pagamento pendente.</p>
+
+      <div class="card" id="js-devedores-lista-completa"></div>
+      <div class="empty-state is-hidden" id="js-devedores-vazio-completo"><p class="empty-state__title">Nenhum cliente com pendência no momento</p></div>
+    </main>
+
+    <div id="js-bottom-nav-mount"></div>
+  </div>
+
+  <script src="js/utils.js"></script>
+  <script src="js/menu.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/tema.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/pendentes.js"></script>
+</body>
+</html>

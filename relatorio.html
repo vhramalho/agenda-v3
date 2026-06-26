@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Relatório — Agenda V3</title>
+  <link rel="stylesheet" href="css/tokens.css" />
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="css/components.css" />
+</head>
+<body data-page="relatorio">
+  <div class="app">
+    <main class="page">
+      <div class="page-header-principal">
+        <h1 class="page-header-principal__titulo">Relatório</h1>
+        <button class="icon-btn" aria-label="Calendário" data-abrir-modal="modal-calendario">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/></svg>
+        </button>
+      </div>
+
+      <div class="segmented section">
+        <span class="segmented__item">Dia</span>
+        <span class="segmented__item is-active">Semana</span>
+        <span class="segmented__item">Mês</span>
+        <span class="segmented__item">Ano</span>
+      </div>
+
+      <div class="card row row--between section" style="padding:10px 14px;">
+        <button class="icon-btn" id="js-periodo-anterior" aria-label="Período anterior" style="width:32px;height:32px;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <span id="js-periodo-label" style="font-weight:700;"></span>
+        <button class="icon-btn" id="js-periodo-proximo" aria-label="Próximo período" style="width:32px;height:32px;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+      </div>
+
+      <div class="card section">
+        <p class="text-secondary">Faturamento</p>
+        <div class="row row--between" style="align-items:baseline;margin-bottom:8px;">
+          <p style="font-weight:800;font-size:var(--text-xl);" id="js-relatorio-faturamento"></p>
+          <p style="font-weight:600;font-size:var(--text-sm);" id="js-relatorio-faturamento-comparacao"></p>
+        </div>
+        <svg viewBox="0 0 300 150" style="width:100%;height:130px;">
+          <defs>
+            <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="var(--primary)" stop-opacity="0.35"/>
+              <stop offset="100%" stop-color="var(--primary)" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          <line x1="10" y1="20" x2="290" y2="20" stroke="var(--border)" stroke-width="1"/>
+          <line x1="10" y1="60" x2="290" y2="60" stroke="var(--border)" stroke-width="1"/>
+          <line x1="10" y1="100" x2="290" y2="100" stroke="var(--border)" stroke-width="1"/>
+          <line x1="10" y1="140" x2="290" y2="140" stroke="var(--border)" stroke-width="1"/>
+          <polygon id="js-relatorio-grafico-area" points="" fill="url(#areaGrad)"/>
+          <polyline id="js-relatorio-grafico-linha" points="" fill="none" stroke="var(--primary)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <g id="js-relatorio-grafico-pontos"></g>
+        </svg>
+        <div class="row row--between text-muted" style="font-size:var(--text-xs);padding:0 4px;">
+          <span>Dom</span><span>Seg</span><span>Ter</span><span>Qua</span><span>Qui</span><span>Sex</span><span>Sáb</span>
+        </div>
+      </div>
+
+      <div class="grid-2 section">
+        <div class="card">
+          <div class="row row--between" style="margin-bottom:8px;">
+            <span class="text-secondary">Atendimentos</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.8"><circle cx="9" cy="8" r="3"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/></svg>
+          </div>
+          <p style="font-weight:800;font-size:var(--text-lg);" id="js-relatorio-atendimentos"></p>
+          <p style="font-size:var(--text-sm);font-weight:600;" id="js-relatorio-atendimentos-comparacao"></p>
+        </div>
+        <div class="card">
+          <div class="row row--between" style="margin-bottom:8px;">
+            <span class="text-secondary">Ticket médio</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M9 9.5c0-1.5 1.5-2 3-2s3 .8 3 2-1.5 2-3 2-3 .5-3 2 1.5 2 3 2 3-.5 3-2"/></svg>
+          </div>
+          <p style="font-weight:800;font-size:var(--text-lg);" id="js-relatorio-ticket"></p>
+          <p style="font-size:var(--text-sm);font-weight:600;" id="js-relatorio-ticket-comparacao"></p>
+        </div>
+      </div>
+
+      <div class="card section">
+        <p style="font-weight:700;margin-bottom:4px;">Recebimentos</p>
+        <p class="text-secondary" style="margin-bottom:16px;" id="js-relatorio-total-recebido"></p>
+        <div class="row" style="align-items:center;gap:24px;">
+          <div class="stack" style="flex:1;gap:10px;" id="js-relatorio-formas"></div>
+          <svg width="100" height="100" viewBox="0 0 120 120" style="flex-shrink:0;">
+            <g transform="rotate(-90 60 60)" id="js-relatorio-pizza"></g>
+          </svg>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="row row--between" style="margin-bottom:4px;">
+          <span class="text-secondary">Taxas do cartão</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.8"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+        </div>
+        <p style="font-weight:800;font-size:var(--text-lg);" id="js-relatorio-taxas"></p>
+        <p style="font-size:var(--text-sm);font-weight:600;" id="js-relatorio-taxas-comparacao"></p>
+      </div>
+    </main>
+
+    <div id="js-bottom-nav-mount"></div>
+
+    <div class="modal-overlay is-hidden modal-overlay--centro" id="modal-calendario">
+      <div class="modal-sheet modal-sheet--centro">
+        <div class="row row--between" style="margin-bottom:16px;">
+          <button class="icon-btn" id="js-cal-anterior" aria-label="Mês anterior"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
+          <p style="font-weight:700;" id="js-cal-mes-label">Julho 2026</p>
+          <button class="icon-btn" id="js-cal-proximo" aria-label="Próximo mês"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></button>
+        </div>
+        <div class="cal-grid" style="margin-bottom:4px;">
+          <span class="cal-grid__weekday">D</span><span class="cal-grid__weekday">S</span><span class="cal-grid__weekday">T</span><span class="cal-grid__weekday">Q</span><span class="cal-grid__weekday">Q</span><span class="cal-grid__weekday">S</span><span class="cal-grid__weekday">S</span>
+        </div>
+        <div class="cal-grid" id="js-cal-dias"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/utils.js"></script>
+  <script src="js/menu.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/tema.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/chips.js"></script>
+  <script src="js/modal.js"></script>
+  <script src="js/calendario.js"></script>
+  <script src="js/relatorio.js"></script>
+</body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quem deve — Agenda V3</title>
+  <link rel="stylesheet" href="css/tokens.css" />
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="css/components.css" />
+</head>
+<body data-page="pendentes" data-titulo="Quem deve">
+  <div class="app">
+    <main class="page">
+      <div id="js-header-mount"></div>
+
+      <div class="card card--destaque section">
+        <p class="text-secondary">A receber</p>
+        <p style="font-weight:800;font-size:var(--text-xl);margin:4px 0;" id="js-pendentes-valor"></p>
+        <p class="text-primary-accent" style="font-weight:600;font-size:var(--text-sm);" id="js-pendentes-contagem"></p>
+      </div>
+
+      <div class="card" id="js-quem-deve-lista"></div>
+      <div class="empty-state is-hidden" id="js-quem-deve-vazio"><p class="empty-state__title">Nenhuma cobrança pendente</p></div>
+
+      <p class="text-muted section" style="text-align:center;font-size:var(--text-sm);" id="js-quem-deve-rodape"></p>
+    </main>
+
+    <div id="js-bottom-nav-mount"></div>
+  </div>
+
+  <script src="js/utils.js"></script>
+  <script src="js/menu.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/tema.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/pendentes.js"></script>
+</body>
+</html>

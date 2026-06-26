@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Meu perfil — Agenda V3</title>
+  <link rel="stylesheet" href="css/tokens.css" />
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="css/components.css" />
+</head>
+<body data-page="mais" data-titulo="Meu perfil">
+  <div class="app">
+    <main class="page">
+      <div id="js-header-mount"></div>
+
+      <div class="card section row" style="align-items:flex-start;">
+        <div class="avatar-wrap">
+          <div class="list-item__avatar list-item__avatar--lg" style="border:2px solid var(--primary);">VH</div>
+          <span style="position:absolute;bottom:-2px;right:-2px;width:24px;height:24px;border-radius:50%;background:var(--primary);display:flex;align-items:center;justify-content:center;border:2px solid var(--card);">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+          </span>
+        </div>
+        <div>
+          <p style="font-weight:800;font-size:var(--text-lg);">Victor Henrique</p>
+          <p class="text-primary-accent" style="font-weight:600;">Primos Barbearia</p>
+          <p class="text-secondary row" style="font-size:var(--text-sm);margin-top:4px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/></svg>Membro desde jan/2025</p>
+        </div>
+      </div>
+
+      <section class="section">
+        <h2 class="section__title">Negócio</h2>
+        <div class="card">
+          <a href="#" class="list-item" style="text-decoration:none;color:inherit;">
+            <div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l1-5h16l1 5M4 9v10h16V9M4 9a2 2 0 1 0 4 0M8 9a2 2 0 1 0 4 0M12 9a2 2 0 1 0 4 0M16 9a2 2 0 1 0 4 0"/></svg></div>
+            <div class="list-item__body">
+              <p class="list-item__title">Nome da barbearia</p>
+              <p class="list-item__subtitle">Primos Barbearia</p>
+            </div>
+            <svg class="list-item__chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
+          </a>
+          <a href="#" class="list-item" style="text-decoration:none;color:inherit;">
+            <div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-7 8-7s8 3 8 7"/></svg></div>
+            <div class="list-item__body">
+              <p class="list-item__title">Nome do profissional</p>
+              <p class="list-item__subtitle">Victor Henrique</p>
+            </div>
+            <svg class="list-item__chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
+          </a>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2 class="section__title">Contato</h2>
+        <div class="card">
+          <a href="#" class="list-item" style="text-decoration:none;color:inherit;">
+            <div class="icon-circle icon-circle--teal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></div>
+            <div class="list-item__body">
+              <p class="list-item__title">WhatsApp</p>
+              <p class="list-item__subtitle">(32) 99999-9999</p>
+            </div>
+            <svg class="list-item__chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
+          </a>
+          <a href="#" class="list-item" style="text-decoration:none;color:inherit;">
+            <div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></div>
+            <div class="list-item__body">
+              <p class="list-item__title">E-mail</p>
+              <p class="list-item__subtitle">victor@email.com</p>
+            </div>
+            <svg class="list-item__chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
+          </a>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2 class="section__title">Assinatura</h2>
+        <div class="card">
+          <a href="assinatura.html" class="list-item" style="text-decoration:none;color:inherit;">
+            <div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2l2.5 5.5L20 8l-4 4 1 6-5-3-5 3 1-6-4-4 5.5-.5L12 2z"/></svg></div>
+            <div class="list-item__body">
+              <p class="list-item__title">Plano atual</p>
+              <p class="text-primary-accent" style="font-weight:700;">Agenda Pro</p>
+              <span class="badge badge--sucesso" style="margin-top:4px;">Ativo</span>
+            </div>
+            <svg class="list-item__chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
+          </a>
+          <div class="list-item">
+            <div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/></svg></div>
+            <div class="list-item__body">
+              <p class="list-item__title">Renovação em</p>
+              <p class="list-item__subtitle">15/07/2026</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2 class="section__title">Conta</h2>
+        <div class="card">
+          <a href="#" class="list-item" style="text-decoration:none;color:inherit;">
+            <div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="11" width="14" height="9" rx="1"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></div>
+            <div class="list-item__body">
+              <p class="list-item__title">Alterar senha</p>
+              <p class="list-item__subtitle">Atualize sua senha de acesso</p>
+            </div>
+            <svg class="list-item__chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
+          </a>
+          <a href="#" class="list-item" style="text-decoration:none;color:var(--danger);">
+            <div class="icon-circle" style="background:var(--danger-soft);color:var(--danger);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg></div>
+            <div class="list-item__body">
+              <p class="list-item__title">Sair da conta</p>
+              <p class="list-item__subtitle" style="color:var(--danger);opacity:0.8;">Encerre sua sessão neste dispositivo</p>
+            </div>
+          </a>
+        </div>
+      </section>
+
+      <p class="text-secondary" style="text-align:center;font-size:var(--text-sm);">
+        Ao continuar, você concorda com nossos
+        <a href="termos.html" class="text-primary-accent">Termos de uso</a> e
+        <a href="privacidade.html" class="text-primary-accent">Política de privacidade</a>.
+      </p>
+    </main>
+
+    <div id="js-bottom-nav-mount"></div>
+  </div>
+
+  <script src="js/utils.js"></script>
+  <script src="js/menu.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/tema.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

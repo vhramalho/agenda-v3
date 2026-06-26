@@ -1,0 +1,93 @@
+/* ============================================================
+   AGENDA V3 — Layout
+   Estrutura mobile-first: container central, área de conteúdo
+   com espaço reservado para o menu inferior fixo.
+   ============================================================ */
+
+.app {
+  min-height: 100vh;
+  max-width: 480px;
+  margin: 0 auto;
+  position: relative;
+  background: var(--bg);
+}
+
+/* Toda página com menu inferior usa esta classe na <main> */
+.page {
+  padding: var(--space-5) var(--space-4);
+  padding-bottom: calc(var(--bottom-nav-height) + var(--safe-bottom) + var(--space-6));
+}
+
+/* Páginas secundárias (com botão voltar, sem menu inferior) */
+.page--secundaria {
+  padding-bottom: var(--space-8);
+}
+
+.page-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-5);
+}
+
+.page-header__title {
+  font-size: var(--text-md);
+  font-weight: 700;
+  flex: 1;
+}
+
+.page-header--titulo-grande .page-header__title {
+  font-size: var(--text-xl);
+  font-weight: 800;
+}
+
+.section {
+  margin-bottom: var(--space-6);
+}
+
+.section__title {
+  font-size: var(--text-sm);
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: var(--space-3);
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.row--between {
+  justify-content: space-between;
+}
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3);
+}
+
+/* Menu inferior fixo */
+.bottom-nav {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  max-width: 480px;
+  margin: 0 auto;
+  height: calc(var(--bottom-nav-height) + var(--safe-bottom));
+  padding-bottom: var(--safe-bottom);
+  background: var(--bg-secondary);
+  border-top: 1px solid var(--border);
+  display: flex;
+  z-index: 100;
+}

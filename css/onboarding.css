@@ -1,0 +1,138 @@
+/* ============================================================
+   AGENDA V3 — Onboarding
+   Fluxo de 6 telas internas (boas-vindas + 5 passos), trocadas
+   via js/onboarding.js. Sem menu inferior (não é tela principal).
+   ============================================================ */
+
+.onboarding-topo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 32px;
+  margin-bottom: var(--space-4);
+}
+
+.onboarding-voltar,
+.onboarding-pular {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--text-secondary);
+  background: none;
+  border: none;
+}
+
+.onboarding-pular {
+  color: var(--text-muted);
+}
+
+.onboarding-step {
+  display: none;
+}
+
+.onboarding-step.is-active {
+  display: block;
+}
+
+.onboarding-ilustracao {
+  width: 96px;
+  height: 96px;
+  margin: var(--space-4) auto var(--space-5);
+  border-radius: var(--radius-xl);
+  background: linear-gradient(160deg, var(--primary-soft), transparent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary);
+}
+
+.onboarding-titulo {
+  font-size: var(--text-xl);
+  font-weight: 800;
+  text-align: center;
+  margin-bottom: var(--space-2);
+}
+
+.onboarding-subtitulo {
+  text-align: center;
+  color: var(--text-secondary);
+  margin-bottom: var(--space-6);
+}
+
+.onboarding-passo-label {
+  text-align: center;
+  color: var(--primary);
+  font-weight: 700;
+  font-size: var(--text-sm);
+  margin-bottom: var(--space-2);
+}
+
+.onboarding-resumo-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.onboarding-resumo-item:last-child {
+  border-bottom: none;
+}
+
+.onboarding-resumo-numero {
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-full);
+  background: var(--primary);
+  color: var(--text-on-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: var(--text-sm);
+  flex-shrink: 0;
+}
+
+.onboarding-dots {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  margin-top: var(--space-5);
+}
+
+.onboarding-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-full);
+  background: var(--border-strong);
+  transition: all 0.15s ease;
+}
+
+.onboarding-dot.is-active {
+  width: 22px;
+  background: var(--primary);
+}
+
+/* Cartões de seleção (tema) */
+.opcao-card {
+  flex: 1;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+  text-align: center;
+  background: var(--card);
+}
+
+.opcao-card.is-selecionada {
+  border-color: var(--primary);
+  background: var(--primary-soft);
+}
+
+.opcao-card__amostra {
+  width: 100%;
+  height: 48px;
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-3);
+}
+
+/* .cor-swatch mudou para css/components.css (reaproveitado em Configurações) */

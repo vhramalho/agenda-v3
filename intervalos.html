@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Intervalos — Agenda V3</title>
+  <link rel="stylesheet" href="css/tokens.css" />
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="css/components.css" />
+</head>
+<body data-page="mais">
+  <div class="app">
+    <main class="page">
+      <div class="page-header-principal">
+        <h1 class="page-header-principal__titulo">Intervalos</h1>
+        <button class="fab" aria-label="Novo intervalo" id="js-btn-novo-intervalo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+        </button>
+      </div>
+
+      <div class="chip-scroll section" data-chips="single" id="js-filtro-dia">
+        <span class="chip chip--ativo" data-dia="todos">Todos</span>
+        <span class="chip" data-dia="seg">Seg</span>
+        <span class="chip" data-dia="ter">Ter</span>
+        <span class="chip" data-dia="qua">Qua</span>
+        <span class="chip" data-dia="qui">Qui</span>
+        <span class="chip" data-dia="sex">Sex</span>
+        <span class="chip" data-dia="sab">Sáb</span>
+        <span class="chip" data-dia="dom">Dom</span>
+      </div>
+
+      <div class="stack section" id="js-lista-intervalos"></div>
+      <div class="empty-state is-hidden section" id="js-intervalos-vazio">
+        <p class="empty-state__title">Nenhum intervalo cadastrado</p>
+        <p class="text-muted">Toque no + acima para criar o primeiro.</p>
+      </div>
+
+      <div class="card grid-2">
+        <div style="text-align:center;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.8" style="margin:0 auto 6px;"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+          <p class="text-secondary" style="font-size:var(--text-sm);">Total bloqueado</p>
+          <p style="font-weight:800;font-size:var(--text-lg);" id="js-intervalos-total"></p>
+          <p class="text-muted" style="font-size:var(--text-xs);">por semana</p>
+        </div>
+        <div style="text-align:center;border-left:1px solid var(--border);">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.8" style="margin:0 auto 6px;"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zM12 2v10l6 3"/></svg>
+          <p class="text-secondary" style="font-size:var(--text-sm);">Média por dia</p>
+          <p style="font-weight:800;font-size:var(--text-lg);" id="js-intervalos-media"></p>
+          <p class="text-muted" style="font-size:var(--text-xs);">bloqueadas</p>
+        </div>
+      </div>
+    </main>
+
+    <div id="js-bottom-nav-mount"></div>
+
+    <!-- Modais de intervalo (Fase 1: markup visual, ainda ocultos — abertura real é Fase 2) -->
+    <div class="modal-overlay is-hidden" id="modal-novo-intervalo">
+      <div class="modal-sheet">
+        <div class="modal-sheet__header"><p class="modal-sheet__title">Novo intervalo</p><button class="modal-close">✕</button></div>
+        <div class="field"><label class="field__label">Nome</label><input class="input" placeholder="Ex.: Almoço" id="js-novo-intervalo-nome"/></div>
+        <div class="field">
+          <label class="field__label">Dias da semana</label>
+          <div class="row" style="gap:8px;flex-wrap:wrap;" data-chips="multi" id="js-novo-intervalo-dias">
+            <span class="chip" data-dia="seg">Seg</span><span class="chip" data-dia="ter">Ter</span><span class="chip" data-dia="qua">Qua</span><span class="chip" data-dia="qui">Qui</span><span class="chip" data-dia="sex">Sex</span><span class="chip" data-dia="sab">Sáb</span><span class="chip" data-dia="dom">Dom</span>
+          </div>
+        </div>
+        <div class="field">
+          <label class="field__label">Horários bloqueados</label>
+          <p class="text-secondary" style="font-size:var(--text-sm);margin-bottom:8px;">Toque em todos os horários que ficarão bloqueados.</p>
+          <div class="row" style="gap:8px;flex-wrap:wrap;" data-chips="multi" id="js-novo-intervalo-horarios"></div>
+        </div>
+        <div class="btn-row"><button class="btn btn--secondary" data-fechar-modal>Cancelar</button><button class="btn btn--primary" id="js-novo-intervalo-salvar">Salvar</button></div>
+      </div>
+    </div>
+
+    <div class="modal-overlay is-hidden" id="modal-editar-intervalo">
+      <div class="modal-sheet">
+        <div class="modal-sheet__header"><p class="modal-sheet__title">Editar intervalo</p><button class="modal-close">✕</button></div>
+        <div class="field"><label class="field__label">Nome</label><input class="input" id="js-editar-intervalo-nome"/></div>
+        <div class="field">
+          <label class="field__label">Dias da semana</label>
+          <div class="row" style="gap:8px;flex-wrap:wrap;" data-chips="multi" id="js-editar-intervalo-dias">
+            <span class="chip" data-dia="seg">Seg</span><span class="chip" data-dia="ter">Ter</span><span class="chip" data-dia="qua">Qua</span><span class="chip" data-dia="qui">Qui</span><span class="chip" data-dia="sex">Sex</span><span class="chip" data-dia="sab">Sáb</span><span class="chip" data-dia="dom">Dom</span>
+          </div>
+        </div>
+        <div class="field">
+          <label class="field__label">Horários bloqueados</label>
+          <p class="text-secondary" style="font-size:var(--text-sm);margin-bottom:8px;">Toque em todos os horários que ficarão bloqueados.</p>
+          <div class="row" style="gap:8px;flex-wrap:wrap;" data-chips="multi" id="js-editar-intervalo-horarios"></div>
+        </div>
+        <div class="btn-row" style="margin-top:16px;"><button class="btn btn--primary" id="js-editar-intervalo-salvar">Salvar</button><button class="btn btn--danger" data-trocar-modal="modal-confirmar-exclusao-intervalo">Excluir</button></div>
+      </div>
+    </div>
+
+    <div class="modal-overlay is-hidden" id="modal-confirmar-exclusao-intervalo">
+      <div class="modal-sheet" style="text-align:center;">
+        <div class="modal-sheet__header" style="text-align:left;"><p class="modal-sheet__title">Excluir intervalo?</p><button class="modal-close">✕</button></div>
+        <p class="text-secondary" style="margin-bottom:20px;">Tem certeza que deseja excluir este intervalo? Essa ação não pode ser desfeita.</p>
+        <div class="btn-row"><button class="btn btn--secondary" data-fechar-modal>Cancelar</button><button class="btn btn--danger-solid" id="js-confirmar-exclusao-intervalo">Confirmar</button></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/utils.js"></script>
+  <script src="js/menu.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/tema.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/chips.js"></script>
+  <script src="js/modal.js"></script>
+  <script src="js/intervalos.js"></script>
+</body>
+</html>
