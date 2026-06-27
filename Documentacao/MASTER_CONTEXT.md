@@ -228,9 +228,11 @@ Todas as 10 perguntas resolvidas em `docs/LOGICA_E_FLUXO_DE_DADOS.md` seção 7,
 
 **Fase 4 informal** — rodadas de revisão de UX e correção de bugs encontrados pelo usuário testando no celular via GitHub Pages (https://vhramalho.github.io/agenda-v3/). Publicado no GitHub em https://github.com/vhramalho/agenda-v3.
 
+**Página Agenda (`index.html`) considerada ajustada por enquanto** (2026-06-26, 5 rodadas de revisão concluídas) — usuário disse "todos ajustes na página de agenda feitos. No decorrer do uso, se aparecer mais a gente ajusta." Não é uma fase formalmente "fechada", só uma pausa — pode voltar a receber ajustes se surgir algo no uso real.
+
 ## 23. Próxima etapa
 
-Continuar recebendo e aplicando rodadas de ajuste do usuário (padrão: ele lista os problemas, conversamos para alinhar entendimento, eu implemento, testo, e comitamos — depois ele testa de novo e manda a próxima rodada).
+Usuário vai escolher outra tela do app para a próxima rodada de revisão (a definir). Mesmo padrão de trabalho: ele lista os problemas, conversamos para alinhar entendimento antes de codar, eu implemento, testo via screenshot headless, e comitamos — depois ele testa de novo no celular e manda a próxima rodada.
 
 ## 24. Pendências
 
@@ -241,3 +243,4 @@ Continuar recebendo e aplicando rodadas de ajuste do usuário (padrão: ele list
 - **Chips de serviços/formas de pagamento nos modais de Agendar e Finalizar atendimento continuam "desorganizados" visualmente** (CSS `.chip-group` ajudou mas não resolveu de verdade) — usuário pediu explicitamente para deixar para uma modificação futura, "pra não estragar o funcionamento". Não tocar nisso sem pedido explícito.
 - **Modais com campos de texto estão ocupando quase a tela inteira quando o teclado abre no celular** — usuário observou isso en passant (2026-06-26) e pediu para anotar como possível ajuste futuro, sem decisão tomada ainda. Possíveis caminhos a explorar quando for revisitar: reduzir o espaçamento vertical entre campos nos modais, ou tornar o modal scrollável com altura máxima quando o teclado está aberto. Não implementar sem o usuário pedir.
 - **Zoom automático do navegador desativado em 2026-06-26** (`maximum-scale=1.0, user-scalable=no` no viewport de todas as telas + `font-size:16px` em `.input/.textarea/.select`) — decisão deliberada pra parecer mais "nativo", trocando a possibilidade de zoom por pinça/duplo-toque. Usuário confirmou que topa essa troca; se no futuro for necessário, considerar implementar um controle de "tamanho do texto" dentro do próprio app como alternativa ao zoom do navegador.
+- **Fluxo de "Agendar cliente" ficou mais lento depois das correções de nome duplicado/cliente preso** (2026-06-26) — usuário sentiu o fluxo mais pesado mesmo com os bugs corrigidos. Ideias em aberto, **nenhuma decisão tomada ainda**, usuário vai pensar e trazer depois: (a) talvez eliminar o conceito de "avulso" (cliente não cadastrado) do app; (b) talvez colocar "Avulso" como uma opção dentro do próprio dropdown de sugestões (junto com "+ Cadastrar novo"), eliminando a necessidade do modal "Adicionar aos clientes?" pro caso de nome sem nenhuma correspondência; (c) outra solução ainda não pensada. Não implementar nenhuma dessas opções sem o usuário decidir e confirmar explicitamente.
