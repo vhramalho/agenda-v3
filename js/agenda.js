@@ -342,6 +342,7 @@ function adicionarGestoSwipe(elemento, aoArrastarEsquerda, aoArrastarDireita, ao
 let clienteSelecionadoId = null;
 let agendamentoEditandoId = null;
 let pendenteAgendamentoNome = null;
+let pendenteClienteExistenteId = null;
 
 function montarServicosChips(containerId, selecionadosIds) {
   const container = qs(`#${containerId}`);
@@ -477,11 +478,31 @@ function infoVisitaCliente(clienteId) {
 
 function mostrarClienteCard(cliente) {
   const card = qs("#js-novo-agendamento-cliente-card");
-  if (!cliente) { card.classList.add("is-hidden"); return; }
+  const nomeWrap = qs("#js-novo-agendamento-nome-wrap");
+  if (!cliente) {
+    card.classList.add("is-hidden");
+    nomeWrap.classList.remove("is-hidden");
+    return;
+  }
   qs("#js-novo-agendamento-cliente-avatar").textContent = iniciaisCliente(cliente.nome);
   qs("#js-novo-agendamento-cliente-nome").textContent = cliente.nome;
   qs("#js-novo-agendamento-cliente-info").textContent = infoVisitaCliente(cliente.id);
   card.classList.remove("is-hidden");
+  nomeWrap.classList.add("is-hidden");
+}
+
+function removerSelecaoCliente() {
+  clienteSelecionadoId = null;
+  mostrarClienteCard(null);
+  qs("#js-novo-agendamento-nome").focus();
+}
+
+function proximoNomeDisponivel(nomeBase) {
+  const clientes = obterClientes();
+  if (!clientes.some((c) => c.nome === nomeBase)) return nomeBase;
+  let n = 2;
+  while (clientes.some((c) => c.nome === `${nomeBase} ${n}`)) n++;
+  return `${nomeBase} ${n}`;
 }
 
 function limparCompletarCadastro() {
@@ -582,6 +603,7 @@ function finalizarCriacaoOuEdicaoAgendamento(clienteId, nome) {
   agendamentoEditandoId = null;
   fecharModal("modal-novo-agendamento");
   fecharModal("modal-adicionar-cliente-novo");
+  fecharModal("modal-nome-duplicado");
   renderizarAgendaLista();
   mostrarSucesso();
 }
@@ -764,6 +786,8 @@ document.addEventListener("DOMContentLoaded", () => {
     qs("#js-novo-agendamento-completar-campos").classList.toggle("is-hidden");
   });
 
+  qs("#js-novo-agendamento-cliente-remover").addEventListener("click", removerSelecaoCliente);
+
   qs("#js-novo-agendamento-salvar").addEventListener("click", () => {
     const nome = qs("#js-novo-agendamento-nome").value.trim();
     if (!nome) return;
@@ -771,11 +795,17 @@ document.addEventListener("DOMContentLoaded", () => {
       finalizarCriacaoOuEdicaoAgendamento(clienteSelecionadoId, nome);
       return;
     }
-    const matchExato = obterClientes().find((c) => c.ativo && c.nome.toLowerCase() === nome.toLowerCase());
-    if (matchExato) {
-      finalizarCriacaoOuEdicaoAgendamento(matchExato.id, nome);
+
+    const existente = obterClientes().find((c) => c.ativo && c.nome.toLowerCase() === nome.toLowerCase());
+    if (existente) {
+      pendenteAgendamentoNome = nome;
+      pendenteClienteExistenteId = existente.id;
+      qs("#js-nome-duplicado-nome").textContent = nome;
+      fecharModal("modal-novo-agendamento");
+      abrirModal("modal-nome-duplicado");
       return;
     }
+
     const telefoneCompletar = qs("#js-novo-agendamento-completar-telefone").value.trim();
     const { dia: diaCompletar, mes: mesCompletar } = extrairAniversario(qs("#js-novo-agendamento-completar-aniversario").value);
     const observacaoCompletar = qs("#js-novo-agendamento-completar-observacao").value.trim();
@@ -809,6 +839,24 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   qs("#js-adicionar-cliente-avulso").addEventListener("click", () => {
+    finalizarCriacaoOuEdicaoAgendamento(null, pendenteAgendamentoNome);
+  });
+
+  qs("#js-nome-duplicado-usar-existente").addEventListener("click", () => {
+    finalizarCriacaoOuEdicaoAgendamento(pendenteClienteExistenteId, pendenteAgendamentoNome);
+  });
+
+  qs("#js-nome-duplicado-criar-novo").addEventListener("click", () => {
+    const nomeFinal = proximoNomeDisponivel(pendenteAgendamentoNome);
+    const hoje = hojeIso();
+    const clientes = obterClientes();
+    const novoCliente = { id: gerarId("cli"), nome: nomeFinal, telefone: "", aniversarioDia: null, aniversarioMes: null, aniversarioAno: null, observacao: "", criadoEm: hoje, atualizadoEm: hoje, ativo: true };
+    clientes.push(novoCliente);
+    salvarClientes(clientes);
+    finalizarCriacaoOuEdicaoAgendamento(novoCliente.id, nomeFinal);
+  });
+
+  qs("#js-nome-duplicado-avulso").addEventListener("click", () => {
     finalizarCriacaoOuEdicaoAgendamento(null, pendenteAgendamentoNome);
   });
 

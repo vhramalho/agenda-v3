@@ -114,6 +114,19 @@
       </div>
     </div>
 
+    <div class="modal-overlay is-hidden" id="modal-nome-duplicado">
+      <div class="modal-sheet" style="text-align:center;">
+        <div class="icon-circle" style="margin:0 auto 12px;width:48px;height:48px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="8" r="3"/><path d="M3 19c0-3 2.5-5 6-5"/><circle cx="18" cy="8" r="3"/><path d="M14 14c2.8.3 6 2 6 5"/></svg></div>
+        <p style="margin-bottom:20px;">Já existe um cliente chamado <strong id="js-nome-duplicado-nome"></strong>. O que você quer fazer?</p>
+        <div class="stack">
+          <button class="btn btn--primary" id="js-nome-duplicado-usar-existente">Usar cliente existente</button>
+          <button class="btn btn--secondary" id="js-nome-duplicado-criar-novo">Criar novo cadastro</button>
+          <button class="btn btn--secondary" id="js-nome-duplicado-avulso">Não, é avulso</button>
+          <button class="btn btn--ghost" data-fechar-modal>Cancelar</button>
+        </div>
+      </div>
+    </div>
+
     <div class="modal-overlay is-hidden" id="modal-confirmar-exclusao-agendamento">
       <div class="modal-sheet" style="text-align:center;">
         <p style="font-size:32px;margin-bottom:8px;">⚠️</p>
@@ -150,7 +163,7 @@
       <div class="modal-sheet">
         <p class="modal-sheet__title" id="js-novo-agendamento-titulo">Novo agendamento</p>
         <p class="text-primary-accent" style="font-weight:600;margin-bottom:16px;margin-top:-12px;" id="js-novo-agendamento-data-hora"></p>
-        <div class="field" style="position:relative;">
+        <div class="field" style="position:relative;" id="js-novo-agendamento-nome-wrap">
           <label class="field__label">Nome do cliente</label>
           <input class="input" placeholder="Buscar ou digitar nome" id="js-novo-agendamento-nome" />
           <div class="card is-hidden" id="js-novo-agendamento-resultados" style="position:absolute;top:100%;left:0;z-index:5;width:100%;max-height:150px;overflow-y:auto;margin-top:4px;padding:4px 12px;"></div>
@@ -161,6 +174,9 @@
             <p style="font-weight:700;" id="js-novo-agendamento-cliente-nome"></p>
             <p class="text-secondary" style="font-size:var(--text-sm);" id="js-novo-agendamento-cliente-info"></p>
           </div>
+          <button type="button" id="js-novo-agendamento-cliente-remover" class="icon-btn" aria-label="Remover seleção" style="background:none;flex-shrink:0;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+          </button>
         </div>
         <div class="field is-hidden" id="js-novo-agendamento-completar-wrap" style="margin-top:-8px;">
           <button type="button" id="js-novo-agendamento-completar-toggle" class="text-primary-accent" style="font-weight:600;font-size:var(--text-sm);background:none;border:none;text-align:left;padding:0;cursor:pointer;">Completar cadastro (opcional)</button>
