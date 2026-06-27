@@ -101,7 +101,7 @@ Definido em `css/tokens.css`.
 **Dois tipos de cabeçalho:**
 - **Tipo A** (`page-header-principal`: título à esquerda + botão de ação à direita, sem voltar) — usado só nas telas-raiz alcançadas direto pela barra inferior (Agenda, Clientes, Relatório, Pendentes) e na raiz do hub "Mais". Não tem botão de voltar porque o usuário não veio de lugar nenhum dentro do app.
 - **Tipo B** (`js-header-mount`: voltar + título centralizado) — usado em qualquer tela alcançada por navegação (tocou em algo pra chegar ali): Ranking, Aniversariantes, Sem retornar, Cliente-detalhe, as telas "ver todos" de Pendentes, `clientes-todos.html`, Configurações, WhatsApp, Perfil, etc.
-- **Pendência conhecida:** Serviços, Formas de pagamento e Intervalos hoje usam Tipo A por engano (deveriam ser Tipo B, já que só são alcançadas via "Mais") — usam Tipo A só porque precisam de um botão "+" de criar, e o Tipo B hoje não tem um terceiro slot de ação (só um espaçador invisível). Antes de migrar essas 3 telas pro Tipo B, o componente `components/header.html` precisa ganhar esse terceiro slot opcional (ver como `cliente-detalhe.html` já faz manualmente com "✎ Editar"). Não implementado ainda — decisão tomada, aguardando execução.
+- **Resolvido em 2026-06-27:** Serviços, Formas de pagamento e Intervalos foram migradas pro Tipo B. Em vez de alterar o componente compartilhado `components/header.html`, cada uma passou a montar o cabeçalho manualmente (mesmo padrão que `cliente-detalhe.html` já usava): `<header class="app-header">` com botão voltar (`onclick="window.history.back()"`), título centralizado e o botão "+" reaproveitado como `icon-btn icon-btn--accent` no terceiro slot (em vez do antigo `.fab`). Os IDs dos botões de ação não mudaram, então nenhum JS precisou ser alterado.
 
 **Quatro arquétipos de página:**
 1. **Resumo com card principal** (Pendentes, Relatório) — responde "qual é o número que importa agora". Ordem: card principal → lista(s) secundária(s) com "Ver todos" → insight(s) por último, pequenos. Sem busca.
@@ -117,12 +117,12 @@ Agenda (`index.html`) e o hub "Mais" ficam fora desse esquema: Agenda é uma gra
 |---|---|---|---|---|---|---|---|
 | Agenda | sui generis | bespoke | não | grade do dia | — | carrossel de semana | não |
 | Clientes | 2 | A | não | até 5, A-Z | → `clientes-todos.html` | busca | Aniversariantes/Sem retornar + Ranking (pódio) |
-| Relatório | 1 | A | Faturamento + gráfico | não | — | abas período + prev/next (hoje grandes demais — pendência) | Atendimentos, Ticket médio, Taxas (hoje grandes demais — pendência) |
+| Relatório | 1 | A | Faturamento + gráfico | não | — | abas período + prev/next, compacta (ajustado 2026-06-27) | Atendimentos, Ticket médio, Taxas como `.insight-card` no rodapé (ajustado 2026-06-27) |
 | Pendentes | 1 | A | A receber | Quem deve + Pagos recentes | cada uma → página própria | não | Devedores |
 | Mais | hub | A simplificado | não | menu de links | — | não | não |
-| Serviços | 3 (header pendente) | A *(deveria ser B)* | não | todos, sem cap | não precisa | não | "Mais realizado" *(deveria ir pro fim, menor — pendência)* |
-| Formas de pagamento | 3 (header pendente) | A *(deveria ser B)* | não | todos, sem cap | não precisa | não | "Mais utilizada" *(deveria ir pro fim, menor — pendência)* |
-| Intervalos | 3 (header pendente) | A *(deveria ser B)* | não | todos, sem cap | não precisa | chips por dia | card de totais no fim (posição já correta) |
+| Serviços | 3 | B (migrado 2026-06-27) | não | todos, sem cap | não precisa | não | "Mais realizado" como `.insight-card` no fim (movido 2026-06-27) |
+| Formas de pagamento | 3 | B (migrado 2026-06-27) | não | todos, sem cap | não precisa | não | "Mais utilizada" como `.insight-card` no fim (movido 2026-06-27) |
+| Intervalos | 3 | B (migrado 2026-06-27) | não | todos, sem cap | não precisa | chips por dia | card de totais no fim (posição já era correta) |
 | Ranking | 4 | B | pódio | 4º colocado em diante | — | abas por métrica | é o próprio insight |
 | Aniversariantes | 4 | B | contagem do mês | lista do mês | — | navegação por mês | não |
 | Sem retornar | 4 | B | contagem total | lista filtrada | — | chips por dias | não |

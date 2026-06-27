@@ -12,12 +12,15 @@
 <body data-page="mais">
   <div class="app">
     <main class="page">
-      <div class="page-header-principal">
-        <h1 class="page-header-principal__titulo">Intervalos</h1>
-        <button class="fab" aria-label="Novo intervalo" id="js-btn-novo-intervalo">
+      <header class="app-header" style="padding:0;margin-bottom:var(--space-5);">
+        <button class="icon-btn" onclick="window.history.back()" aria-label="Voltar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <h1 class="app-header__title">Intervalos</h1>
+        <button class="icon-btn icon-btn--accent" aria-label="Novo intervalo" id="js-btn-novo-intervalo">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
         </button>
-      </div>
+      </header>
 
       <div class="chip-scroll section" data-chips="single" id="js-filtro-dia">
         <span class="chip chip--ativo" data-dia="todos">Todos</span>
