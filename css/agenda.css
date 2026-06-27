@@ -32,6 +32,10 @@
   font-size: var(--text-sm);
 }
 
+.btn-hoje.is-invisivel {
+  visibility: hidden;
+}
+
 .agenda-mes {
   color: var(--text-secondary);
   margin-bottom: var(--space-3);

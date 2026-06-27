@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Agenda — Agenda V3</title>
   <link rel="stylesheet" href="css/tokens.css" />
   <link rel="stylesheet" href="css/base.css" />
@@ -163,7 +163,8 @@
           </div>
         </div>
         <div class="field is-hidden" id="js-novo-agendamento-completar-wrap" style="margin-top:-8px;">
-          <div style="margin-top:4px;">
+          <button type="button" id="js-novo-agendamento-completar-toggle" class="text-primary-accent" style="font-weight:600;font-size:var(--text-sm);background:none;border:none;text-align:left;padding:0;cursor:pointer;">Completar cadastro (opcional)</button>
+          <div class="is-hidden" id="js-novo-agendamento-completar-campos" style="margin-top:12px;">
             <div class="field"><label class="field__label">Telefone</label><input class="input" id="js-novo-agendamento-completar-telefone" placeholder="(00) 00000-0000"/></div>
             <div class="field"><label class="field__label">Aniversário</label><input class="input" id="js-novo-agendamento-completar-aniversario" placeholder="DD/MM"/></div>
             <div class="field"><label class="field__label">Observação sobre o cliente</label><textarea class="textarea" id="js-novo-agendamento-completar-observacao" placeholder="Alguma informação importante sobre o cliente..."></textarea></div>
@@ -246,9 +247,12 @@
         </div>
         <div class="field"><label class="field__label">Serviços</label><div class="chip-group" id="js-editar-realizado-servicos"></div></div>
         <div class="field"><label class="field__label">Observação (opcional)</label><textarea class="textarea" id="js-editar-realizado-observacao"></textarea></div>
-        <div class="card row section" id="js-editar-realizado-status-pago" style="background:var(--success-soft);border-color:var(--success);">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></svg>
-          <div><p class="text-success" style="font-weight:700;">Pago</p><p class="text-secondary" style="font-size:var(--text-sm);" id="js-editar-realizado-pago-em"></p></div>
+        <div class="field">
+          <label class="field__label">Situação do pagamento</label>
+          <div class="btn-row">
+            <button class="btn" data-pago-editar="sim">Pago</button>
+            <button class="btn" data-pago-editar="nao">Pendente</button>
+          </div>
         </div>
         <div class="field is-hidden" id="js-editar-realizado-campo-formas">
           <label class="field__label">Formas de pagamento</label>

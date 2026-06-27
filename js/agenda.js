@@ -246,7 +246,7 @@ function selecionarData(iso) {
   renderizarCabecalho();
   renderizarSemana();
   renderizarAgendaLista();
-  qs("#js-btn-hoje").classList.toggle("is-hidden", dataSelecionada === hojeIso());
+  qs("#js-btn-hoje").classList.toggle("is-invisivel", dataSelecionada === hojeIso());
   if (typeof window.irParaMesCalendarioAgenda === "function") {
     const d = isoParaDate(iso);
     window.irParaMesCalendarioAgenda(d.getFullYear(), d.getMonth(), d.getDate());
@@ -488,6 +488,7 @@ function limparCompletarCadastro() {
   qs("#js-novo-agendamento-completar-telefone").value = "";
   qs("#js-novo-agendamento-completar-aniversario").value = "";
   qs("#js-novo-agendamento-completar-observacao").value = "";
+  qs("#js-novo-agendamento-completar-campos").classList.add("is-hidden");
   qs("#js-novo-agendamento-completar-wrap").classList.add("is-hidden");
 }
 
@@ -522,13 +523,14 @@ function prepararEdicaoAgendamento(agendamento) {
 function renderizarResultadosBusca(termo) {
   const resultados = qs("#js-novo-agendamento-resultados");
   resultados.innerHTML = "";
-  if (!termo || agendamentoEditandoId) { resultados.classList.add("is-hidden"); return; }
+  if (!termo) { resultados.classList.add("is-hidden"); return; }
 
   const linhaCadastrar = document.createElement("div");
   linhaCadastrar.className = "list-item";
   linhaCadastrar.style.cursor = "pointer";
   linhaCadastrar.style.padding = "8px 0";
   linhaCadastrar.innerHTML = `<div class="list-item__body"><p class="list-item__title text-primary-accent" style="font-weight:600;font-size:var(--text-sm);">+ Cadastrar novo (opcional)</p></div>`;
+  linhaCadastrar.addEventListener("mousedown", (e) => e.preventDefault());
   linhaCadastrar.addEventListener("click", () => {
     resultados.classList.add("is-hidden");
     qs("#js-novo-agendamento-completar-wrap").classList.remove("is-hidden");
@@ -544,6 +546,7 @@ function renderizarResultadosBusca(termo) {
     linha.innerHTML = `<div class="list-item__avatar list-item__avatar--sm"></div><div class="list-item__body"><p class="list-item__title" style="font-size:var(--text-sm);"></p></div>`;
     linha.querySelector(".list-item__avatar").textContent = iniciaisCliente(cliente.nome);
     linha.querySelector(".list-item__title").textContent = cliente.nome;
+    linha.addEventListener("mousedown", (e) => e.preventDefault());
     linha.addEventListener("click", () => {
       clienteSelecionadoId = cliente.id;
       qs("#js-novo-agendamento-nome").value = cliente.nome;
@@ -604,20 +607,25 @@ function prepararFinalizarAtendimento(agendamento) {
 
 /* ---------- Editar realizado ---------- */
 
+function definirPagoEditarRealizado(pago) {
+  const modal = qs("#modal-editar-realizado");
+  qsa("[data-pago-editar]", modal).forEach((b) => {
+    const ehSim = b.dataset.pagoEditar === "sim";
+    b.classList.toggle("btn--primary", ehSim === pago);
+    b.classList.toggle("btn--secondary", ehSim !== pago);
+  });
+  qs("#js-editar-realizado-campo-formas").classList.toggle("is-hidden", !pago);
+  qs("#js-editar-realizado-campo-pendente").classList.toggle("is-hidden", pago);
+}
+
 function prepararEditarRealizado(agendamento) {
   qs("#js-editar-realizado-avatar").textContent = iniciaisCliente(agendamento.nomeCliente);
   qs("#js-editar-realizado-nome").textContent = agendamento.nomeCliente;
   montarServicosChips("js-editar-realizado-servicos", agendamento.servicosIds || []);
   qs("#js-editar-realizado-observacao").value = agendamento.observacao || "";
   const pago = agendamento.status === "realizado_pago";
-  qs("#js-editar-realizado-status-pago").classList.toggle("is-hidden", !pago);
-  qs("#js-editar-realizado-campo-formas").classList.toggle("is-hidden", !pago);
-  qs("#js-editar-realizado-campo-pendente").classList.toggle("is-hidden", pago);
+  definirPagoEditarRealizado(pago);
   if (pago) {
-    const dataHora = agendamento.realizadoEm ? new Date(agendamento.realizadoEm) : null;
-    qs("#js-editar-realizado-pago-em").textContent = dataHora
-      ? `Pago em ${formatarDataCurta(agendamento.data)} às ${String(dataHora.getHours()).padStart(2, "0")}:${String(dataHora.getMinutes()).padStart(2, "0")}`
-      : "Pago";
     const valoresPorNome = {};
     const nomesSelecionados = [];
     const formas = obterFormasPagamento();
@@ -626,7 +634,9 @@ function prepararEditarRealizado(agendamento) {
       if (forma) { nomesSelecionados.push(forma.nome); valoresPorNome[forma.nome] = p.valor; }
     });
     montarFormasChips("js-editar-realizado-formas", "js-editar-realizado-linhas-pagamento", nomesSelecionados, valoresPorNome);
+    qs("#js-editar-realizado-valor-pendente").value = "";
   } else {
+    montarFormasChips("js-editar-realizado-formas", "js-editar-realizado-linhas-pagamento", [], {});
     qs("#js-editar-realizado-valor-pendente").value = agendamento.valorPendente != null ? formatarMoeda(agendamento.valorPendente) : "";
   }
 }
@@ -742,6 +752,18 @@ document.addEventListener("DOMContentLoaded", () => {
     renderizarResultadosBusca(e.target.value.trim());
   });
 
+  qs("#js-novo-agendamento-nome").addEventListener("focus", (e) => {
+    renderizarResultadosBusca(e.target.value.trim());
+  });
+
+  qs("#js-novo-agendamento-nome").addEventListener("blur", () => {
+    setTimeout(() => qs("#js-novo-agendamento-resultados").classList.add("is-hidden"), 150);
+  });
+
+  qs("#js-novo-agendamento-completar-toggle").addEventListener("click", () => {
+    qs("#js-novo-agendamento-completar-campos").classList.toggle("is-hidden");
+  });
+
   qs("#js-novo-agendamento-salvar").addEventListener("click", () => {
     const nome = qs("#js-novo-agendamento-nome").value.trim();
     if (!nome) return;
@@ -827,6 +849,12 @@ document.addEventListener("DOMContentLoaded", () => {
     abrirModal("modal-editar-realizado");
   });
 
+  qs("#modal-editar-realizado").addEventListener("click", (evento) => {
+    const botao = evento.target.closest("[data-pago-editar]");
+    if (!botao) return;
+    definirPagoEditarRealizado(botao.dataset.pagoEditar === "sim");
+  });
+
   qs("#js-editar-realizado-salvar").addEventListener("click", () => {
     const agendamento = agendamentoModalAtual;
     if (!agendamento) return;
@@ -835,14 +863,21 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!ag) return;
     ag.servicosIds = idsSelecionados("js-editar-realizado-servicos");
     ag.observacao = qs("#js-editar-realizado-observacao").value.trim();
-    if (ag.status === "realizado_pago") {
+    const pagoEscolhido = qs("[data-pago-editar].btn--primary", qs("#modal-editar-realizado")).dataset.pagoEditar === "sim";
+    if (pagoEscolhido) {
       const pagamentos = lerPagamentosDeLinhas("js-editar-realizado-linhas-pagamento");
+      ag.status = "realizado_pago";
+      ag.pago = true;
       ag.pagamentos = pagamentos;
       ag.valorTotal = pagamentos.reduce((s, p) => s + p.valor, 0);
+      delete ag.valorPendente;
     } else {
       const valorPendente = extrairValor(qs("#js-editar-realizado-valor-pendente").value) || 0;
+      ag.status = "realizado_pendente";
+      ag.pago = false;
       ag.valorPendente = valorPendente;
       ag.valorTotal = valorPendente;
+      delete ag.pagamentos;
     }
     salvarAgendamentos(lista);
     fecharModal("modal-editar-realizado");
