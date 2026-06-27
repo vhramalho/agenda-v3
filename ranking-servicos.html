@@ -3,23 +3,23 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Clientes que mais ficam devendo — Agenda V3</title>
+  <title>Ranking de serviços — Agenda V3</title>
   <link rel="stylesheet" href="css/tokens.css" />
   <link rel="stylesheet" href="css/base.css" />
   <link rel="stylesheet" href="css/layout.css" />
   <link rel="stylesheet" href="css/components.css" />
 </head>
-<body data-page="pendentes" data-titulo="Clientes que mais ficam devendo">
+<body data-page="mais" data-titulo="Ranking de serviços">
   <div class="app">
     <main class="page">
       <div id="js-header-mount"></div>
 
-      <p class="text-secondary section">Ranking de clientes que mais vezes ficaram com pagamento pendente nos últimos 6 meses.</p>
+      <p class="text-secondary section">Veja quais serviços você mais realiza.</p>
 
-      <div class="podio" id="js-devedores-podio"></div>
+      <div class="podio" id="js-ranking-servicos-podio"></div>
 
-      <div class="card section" id="js-devedores-lista-completa"></div>
-      <div class="empty-state is-hidden" id="js-devedores-vazio-completo"><p class="empty-state__title">Nenhum cliente com pendência no momento</p></div>
+      <div class="card section" id="js-ranking-servicos-tabela"></div>
+      <div class="empty-state is-hidden" id="js-ranking-servicos-vazio"><p class="empty-state__title">Ainda não há atendimentos realizados</p></div>
     </main>
 
     <div id="js-bottom-nav-mount"></div>
@@ -30,6 +30,6 @@
   <script src="js/storage.js"></script>
   <script src="js/tema.js"></script>
   <script src="js/app.js"></script>
-  <script src="js/pendentes.js"></script>
+  <script src="js/ranking-servicos.js"></script>
 </body>
 </html>

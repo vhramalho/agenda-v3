@@ -90,6 +90,16 @@ function formatarComparacao(atual, anterior, rotuloPeriodo) {
   return { texto: `${seta} ${Math.abs(variacao).toFixed(1).replace(".", ",")}% vs ${rotuloPeriodo} anterior`, classe };
 }
 
+const DIAS_ABREV_RELATORIO = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
+
+function formatarEixoY(v) {
+  if (v >= 1000) {
+    const milhares = v / 1000;
+    return `${milhares % 1 === 0 ? milhares : milhares.toFixed(1)}k`;
+  }
+  return String(Math.round(v));
+}
+
 function montarGraficoSemana(refData) {
   const inicio = inicioDaSemanaRelatorio(refData);
   const valores = [];
@@ -100,14 +110,16 @@ function montarGraficoSemana(refData) {
     valores.push(agendamentosDoDia.reduce((soma, a) => soma + (a.valorTotal || 0), 0));
   }
   const maximo = Math.max(...valores, 1);
-  const xs = [10, 56.7, 103.3, 150, 196.7, 243.3, 290];
-  const pontos = valores.map((v, i) => {
-    const y = 140 - (v / maximo) * 110;
-    return [xs[i], y];
-  });
+  const plotTop = 14;
+  const plotBottom = 126;
+  const plotLeft = 34;
+  const plotRight = 292;
+  const xs = valores.map((_, i) => plotLeft + (i * (plotRight - plotLeft)) / 6);
+  const pontos = valores.map((v, i) => [xs[i], plotBottom - (v / maximo) * (plotBottom - plotTop)]);
   const pontosTexto = pontos.map((p) => p.join(",")).join(" ");
   qs("#js-relatorio-grafico-linha").setAttribute("points", pontosTexto);
-  qs("#js-relatorio-grafico-area").setAttribute("points", `${pontosTexto} 290,140 10,140`);
+  qs("#js-relatorio-grafico-area").setAttribute("points", `${pontosTexto} ${plotRight},${plotBottom} ${plotLeft},${plotBottom}`);
+
   const grupoPontos = qs("#js-relatorio-grafico-pontos");
   grupoPontos.innerHTML = "";
   pontos.forEach(([x, y]) => {
@@ -118,6 +130,19 @@ function montarGraficoSemana(refData) {
     circulo.setAttribute("fill", "var(--primary)");
     grupoPontos.appendChild(circulo);
   });
+
+  const grupoDias = qs("#js-relatorio-grafico-dias");
+  grupoDias.innerHTML = "";
+  xs.forEach((x, i) => {
+    const texto = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    texto.setAttribute("x", x);
+    texto.setAttribute("y", "143");
+    texto.textContent = DIAS_ABREV_RELATORIO[i];
+    grupoDias.appendChild(texto);
+  });
+
+  qs("#js-relatorio-eixo-max").textContent = formatarEixoY(maximo);
+  qs("#js-relatorio-eixo-meio").textContent = formatarEixoY(maximo / 2);
 }
 
 function montarRecebimentos(resumo) {
@@ -142,11 +167,9 @@ function montarRecebimentos(resumo) {
     linha.innerHTML = `
       <span class="row" style="gap:8px;"><span style="width:8px;height:8px;border-radius:50%;background:${cor};display:inline-block;"></span><span class="js-nome-forma"></span></span>
       <span class="js-valor-forma" style="font-weight:600;"></span>
-      <span class="text-muted js-percentual-forma" style="width:44px;text-align:right;"></span>
     `;
     linha.querySelector(".js-nome-forma").textContent = forma.nome;
     linha.querySelector(".js-valor-forma").textContent = formatarMoeda(valor);
-    linha.querySelector(".js-percentual-forma").textContent = `${percentual.toFixed(1).replace(".", ",")}%`;
     container.appendChild(linha);
 
     if (valor > 0) {

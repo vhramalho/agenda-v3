@@ -96,23 +96,33 @@ function rankingDevedores(meses) {
   return Object.values(contagem).sort((a, b) => b.vezes - a.vezes);
 }
 
-function montarLinhaDevedorCompleta(item, indice) {
+function montarPodioCardDevedor(item, posicaoVisual) {
+  const medalhas = ["🥈", "🥇", "🥉"];
+  const card = document.createElement("div");
+  card.className = "podio-card" + (posicaoVisual === 1 ? " podio-card--ouro" : "");
+  const tamanho = posicaoVisual === 1 ? "width:56px;height:56px;font-size:var(--text-md);" : "";
+  card.innerHTML = `
+    <p class="podio-card__medalha">${medalhas[posicaoVisual]}</p>
+    <div class="list-item__avatar" style="margin:0 auto;${tamanho}"></div>
+    <p class="podio-card__nome"></p>
+    <p class="podio-card__valor"></p>
+  `;
+  card.querySelector(".list-item__avatar").textContent = iniciaisCliente(item.nome);
+  card.querySelector(".podio-card__nome").textContent = item.nome;
+  card.querySelector(".podio-card__valor").textContent = `${item.vezes} ${item.vezes === 1 ? "vez" : "vezes"}`;
+  return card;
+}
+
+function montarLinhaDevedorCompleta(item, posicao) {
   const linha = document.createElement("div");
   linha.className = "list-item";
-  const cores = [
-    { background: "#F59E0B", color: "#1a1200" },
-    null,
-    { background: "#B45309", color: "#1a1200" },
-  ];
-  const cor = cores[indice];
   linha.innerHTML = `
-    <span class="badge ${cor ? "" : "badge--neutro"}"${cor ? ` style="background:${cor.background};color:${cor.color};"` : ""}></span>
+    <span style="width:24px;color:var(--text-secondary);font-weight:700;">${posicao}º</span>
     <div class="list-item__body"><p class="list-item__title"></p></div>
-    <span class="badge badge--alerta"></span>
+    <span class="text-primary-accent" style="font-weight:700;"></span>
   `;
-  linha.querySelector(".badge").textContent = indice + 1;
   linha.querySelector(".list-item__title").textContent = item.nome;
-  linha.querySelector(".badge--alerta").textContent = `${item.vezes} ${item.vezes === 1 ? "vez" : "vezes"}`;
+  linha.querySelector(".text-primary-accent").textContent = `${item.vezes} ${item.vezes === 1 ? "vez" : "vezes"}`;
   return linha;
 }
 
@@ -169,16 +179,25 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (qs("#js-devedores-lista-completa")) {
     const ranking = rankingDevedores(6);
+    const podio = qs("#js-devedores-podio");
     const container = qs("#js-devedores-lista-completa");
     const vazio = qs("#js-devedores-vazio-completo");
+    podio.innerHTML = "";
     container.innerHTML = "";
     if (ranking.length === 0) {
+      podio.classList.add("is-hidden");
       container.classList.add("is-hidden");
       vazio.classList.remove("is-hidden");
     } else {
+      podio.classList.remove("is-hidden");
       container.classList.remove("is-hidden");
       vazio.classList.add("is-hidden");
-      ranking.forEach((item, i) => container.appendChild(montarLinhaDevedorCompleta(item, i)));
+      const top3 = ranking.slice(0, 3);
+      [top3[1], top3[0], top3[2]].forEach((item, posicaoVisual) => {
+        if (!item) return;
+        podio.appendChild(montarPodioCardDevedor(item, posicaoVisual));
+      });
+      ranking.slice(3).forEach((item, i) => container.appendChild(montarLinhaDevedorCompleta(item, i + 4)));
     }
   }
 });

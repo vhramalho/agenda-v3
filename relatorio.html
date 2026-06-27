@@ -36,30 +36,30 @@
         </button>
       </div>
 
-      <div class="card section">
+      <div class="card card--destaque section">
         <p class="text-secondary">Faturamento</p>
         <div class="row row--between" style="align-items:baseline;margin-bottom:8px;">
           <p style="font-weight:800;font-size:var(--text-xl);" id="js-relatorio-faturamento"></p>
           <p style="font-weight:600;font-size:var(--text-sm);" id="js-relatorio-faturamento-comparacao"></p>
         </div>
-        <svg viewBox="0 0 300 150" style="width:100%;height:130px;">
+        <svg viewBox="0 0 300 150" style="width:100%;height:140px;">
           <defs>
             <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
               <stop offset="0%" stop-color="var(--primary)" stop-opacity="0.35"/>
               <stop offset="100%" stop-color="var(--primary)" stop-opacity="0"/>
             </linearGradient>
           </defs>
-          <line x1="10" y1="20" x2="290" y2="20" stroke="var(--border)" stroke-width="1"/>
-          <line x1="10" y1="60" x2="290" y2="60" stroke="var(--border)" stroke-width="1"/>
-          <line x1="10" y1="100" x2="290" y2="100" stroke="var(--border)" stroke-width="1"/>
-          <line x1="10" y1="140" x2="290" y2="140" stroke="var(--border)" stroke-width="1"/>
+          <line x1="34" y1="14" x2="292" y2="14" stroke="var(--border)" stroke-width="1"/>
+          <line x1="34" y1="70" x2="292" y2="70" stroke="var(--border)" stroke-width="1"/>
+          <line x1="34" y1="126" x2="292" y2="126" stroke="var(--border)" stroke-width="1"/>
+          <text x="30" y="17" text-anchor="end" font-size="9" fill="var(--text-muted)" id="js-relatorio-eixo-max"></text>
+          <text x="30" y="73" text-anchor="end" font-size="9" fill="var(--text-muted)" id="js-relatorio-eixo-meio"></text>
+          <text x="30" y="129" text-anchor="end" font-size="9" fill="var(--text-muted)">0</text>
           <polygon id="js-relatorio-grafico-area" points="" fill="url(#areaGrad)"/>
           <polyline id="js-relatorio-grafico-linha" points="" fill="none" stroke="var(--primary)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
           <g id="js-relatorio-grafico-pontos"></g>
+          <g id="js-relatorio-grafico-dias" font-size="9" fill="var(--text-muted)" text-anchor="middle"></g>
         </svg>
-        <div class="row row--between text-muted" style="font-size:var(--text-xs);padding:0 4px;">
-          <span>Dom</span><span>Seg</span><span>Ter</span><span>Qua</span><span>Qui</span><span>Sex</span><span>Sáb</span>
-        </div>
       </div>
 
       <div class="card section">
