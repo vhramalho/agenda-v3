@@ -94,6 +94,45 @@ Definido em `css/tokens.css`.
 - Mobile-first; não há breakpoints para desktop documentados — o app é pensado pra ser usado no celular.
 - **Convenção de UI (2026-06-26): setinha `>` (`.list-item__chevron`) indica "linha/card inteiro é tocável"**, substituindo botões de texto tipo "Receber" dentro de linhas de lista. Quando uma linha já leva o usuário pra algum lugar ao tocar em qualquer ponto dela, ela deve ser um único elemento clicável (`<a>`) com a setinha como indicador visual, em vez de um botão isolado dentro da linha. Aplicar esse padrão **pontualmente**, conforme cada tela for sendo revisada — não é pra sair trocando tudo de uma vez, só quando a tela em questão estiver sendo ajustada.
 
+### 8.1. Padrão de hierarquia visual das telas (definido em 2026-06-27)
+
+**Regra de ouro: cada tela só tem UM protagonista visual** — ou é um card-resumo numérico, ou é uma lista/diretório, ou é um pódio/contagem de destino final. Insight (card pequeno tipo Aniversariantes/Sem retornar/Devedores) nunca é protagonista — é sempre o elemento mais discreto da tela e sempre fica por último.
+
+**Dois tipos de cabeçalho:**
+- **Tipo A** (`page-header-principal`: título à esquerda + botão de ação à direita, sem voltar) — usado só nas telas-raiz alcançadas direto pela barra inferior (Agenda, Clientes, Relatório, Pendentes) e na raiz do hub "Mais". Não tem botão de voltar porque o usuário não veio de lugar nenhum dentro do app.
+- **Tipo B** (`js-header-mount`: voltar + título centralizado) — usado em qualquer tela alcançada por navegação (tocou em algo pra chegar ali): Ranking, Aniversariantes, Sem retornar, Cliente-detalhe, as telas "ver todos" de Pendentes, `clientes-todos.html`, Configurações, WhatsApp, Perfil, etc.
+- **Pendência conhecida:** Serviços, Formas de pagamento e Intervalos hoje usam Tipo A por engano (deveriam ser Tipo B, já que só são alcançadas via "Mais") — usam Tipo A só porque precisam de um botão "+" de criar, e o Tipo B hoje não tem um terceiro slot de ação (só um espaçador invisível). Antes de migrar essas 3 telas pro Tipo B, o componente `components/header.html` precisa ganhar esse terceiro slot opcional (ver como `cliente-detalhe.html` já faz manualmente com "✎ Editar"). Não implementado ainda — decisão tomada, aguardando execução.
+
+**Quatro arquétipos de página:**
+1. **Resumo com card principal** (Pendentes, Relatório) — responde "qual é o número que importa agora". Ordem: card principal → lista(s) secundária(s) com "Ver todos" → insight(s) por último, pequenos. Sem busca.
+2. **Diretório com busca** (Clientes) — coleção de itens sem um "número único". Ordem: busca → lista compacta (até 5) com "Ver todos" → insights pequenos → ranking/destaque por último. "Ver todos" sempre leva a uma página irmã dedicada, porque a coleção pode crescer sem limite.
+3. **Lista de cadastro simples** (Serviços, Formas de pagamento, Intervalos) — a lista é o próprio conteúdo, sem card numérico nem busca (raramente cresce o suficiente pra precisar). Ordem: lista no topo, sem cap nem "Ver todos" (mostra tudo) → insight pequeno (se houver) por último, nunca no topo. Filtros por chip (não busca textual) ficam acima da lista quando existem (ex.: Intervalos por dia da semana).
+4. **Página-destino "Ver todos" / filtro único** (Ranking, Aniversariantes, Sem retornar, as 3 páginas `pendentes-*`, `clientes-todos`) — fim da linha: pode ter card de contexto e navegação/filtro (mês, dias, métrica), mas nunca outro "Ver todos" nem insight.
+
+Agenda (`index.html`) e o hub "Mais" ficam fora desse esquema: Agenda é uma grade de horários (produto principal do app, não é lista/card/insight); "Mais" é um menu de navegação (cards são atalhos, não dados).
+
+**Tabela de referência (telas já avaliadas, 2026-06-27):**
+
+| Tela | Arquétipo | Header | Card principal | Lista | Ver todos | Busca/nav | Insight |
+|---|---|---|---|---|---|---|---|
+| Agenda | sui generis | bespoke | não | grade do dia | — | carrossel de semana | não |
+| Clientes | 2 | A | não | até 5, A-Z | → `clientes-todos.html` | busca | Aniversariantes/Sem retornar + Ranking (pódio) |
+| Relatório | 1 | A | Faturamento + gráfico | não | — | abas período + prev/next (hoje grandes demais — pendência) | Atendimentos, Ticket médio, Taxas (hoje grandes demais — pendência) |
+| Pendentes | 1 | A | A receber | Quem deve + Pagos recentes | cada uma → página própria | não | Devedores |
+| Mais | hub | A simplificado | não | menu de links | — | não | não |
+| Serviços | 3 (header pendente) | A *(deveria ser B)* | não | todos, sem cap | não precisa | não | "Mais realizado" *(deveria ir pro fim, menor — pendência)* |
+| Formas de pagamento | 3 (header pendente) | A *(deveria ser B)* | não | todos, sem cap | não precisa | não | "Mais utilizada" *(deveria ir pro fim, menor — pendência)* |
+| Intervalos | 3 (header pendente) | A *(deveria ser B)* | não | todos, sem cap | não precisa | chips por dia | card de totais no fim (posição já correta) |
+| Ranking | 4 | B | pódio | 4º colocado em diante | — | abas por métrica | é o próprio insight |
+| Aniversariantes | 4 | B | contagem do mês | lista do mês | — | navegação por mês | não |
+| Sem retornar | 4 | B | contagem total | lista filtrada | — | chips por dias | não |
+| pendentes-quem-deve/pagos/devedores | 4 | B | (quem-deve tem) | lista completa | — | não | não |
+| clientes-todos | 4 | B | não | lista completa | — | busca própria | não |
+| Cliente-detalhe | detalhe de item | bespoke (voltar+título+editar) | stats da pessoa | histórico de atendimentos | — | não | não |
+| Configurações/WhatsApp/Perfil/Backup/Ajuda | menu/formulário | B | não | menu de opções ou campos | — | não | não |
+
+**Como aplicar dali pra frente:** esse padrão já está em vigor — qualquer alteração visual nova deve seguir ele. Se o usuário pedir uma alteração visual pontual que destoe do padrão, alertar antes de implementar (é proposital ou vai gerar nova inconsistência?) em vez de simplesmente aplicar. Aplicação tela por tela, no mesmo ritmo de revisão já estabelecido — não é pra sair reformulando todas de uma vez.
+
 ## 9. Convenções de código
 
 - Nomes de funções, variáveis, ids e classes **em português** (`obterClientes`, `salvarAgendamentos`, `js-btn-novo-cliente`), exceto palavras-chave da linguagem e nomes de propriedades de bibliotecas/CSS padrão.
