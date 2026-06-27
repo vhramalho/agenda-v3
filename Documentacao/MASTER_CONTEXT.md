@@ -176,6 +176,8 @@ Ver `docs/LOGICA_E_FLUXO_DE_DADOS.md` seção 3 para os esquemas completos. Resu
 
 Todas em `docs/AGENDA_V3_DOCUMENTO_MESTRE.txt` seção 6. Lista: Agenda (`index.html`), Clientes, Cliente-detalhe, Relatório, Pendentes (+ 3 telas "ver todos" criadas como extensão formalizada: `pendentes-quem-deve.html`, `pendentes-pagos.html`, `pendentes-devedores.html`), Serviços, Formas de pagamento, Intervalos, Mais (hub), Configurações, Assinatura, Onboarding, WhatsApp, Perfil, Ranking, Aniversariantes, Sem retornar, Login, Cadastro, Assinatura vencida, Backup, Ajuda, Termos, Privacidade.
 
+**Tela extra criada na revisão pós-publicação (2026-06-27):** `clientes-todos.html` — diretório completo de clientes com busca própria, sem limite de 5; é o destino do "Ver todos" da lista resumida em `clientes.html` (mesmo padrão das telas "ver todos" do Pendentes).
+
 ## 17. Funcionalidades existentes (real, ligado a dados — não apenas visual)
 
 - Tema escuro/claro + cor principal (Fase 2).

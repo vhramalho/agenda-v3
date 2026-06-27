@@ -24,17 +24,17 @@
         <input class="input" placeholder="Buscar cliente" id="js-busca-cliente" />
       </div>
 
-      <a href="ranking.html" class="card card--destaque section" style="display:block;text-decoration:none;color:inherit;">
+      <section class="section">
         <div class="row row--between" style="margin-bottom:12px;">
-          <div class="row">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.8"><path d="M8 21h8M12 17v4M5 4h14l-1 5a6 6 0 0 1-12 0L5 4zM5 4H3v2a3 3 0 0 0 3 3M19 4h2v2a3 3 0 0 1-3 3"/></svg>
-            <span style="font-weight:700;">Ranking</span>
-          </div>
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
+          <h2 class="section__title" style="margin-bottom:0;">Todos os clientes</h2>
+          <a href="clientes-todos.html" class="text-primary-accent" style="font-size:var(--text-sm);font-weight:600;">Ver todos</a>
         </div>
-        <div class="stack" style="gap:10px;" id="js-ranking-top3"></div>
-        <p class="text-primary-accent" style="text-align:center;font-weight:600;margin-top:12px;">Ver ranking</p>
-      </a>
+        <div class="card" id="js-lista-clientes"></div>
+        <div class="empty-state is-hidden" id="js-clientes-vazio">
+          <p class="empty-state__title">Nenhum cliente encontrado</p>
+          <p class="text-muted">Toque no + acima para cadastrar o primeiro.</p>
+        </div>
+      </section>
 
       <div class="grid-2 section">
         <a href="aniversariantes.html" class="card" style="text-decoration:none;color:inherit;">
@@ -53,17 +53,17 @@
         </a>
       </div>
 
-      <section class="section">
+      <a href="ranking.html" class="card card--destaque section" style="display:block;text-decoration:none;color:inherit;">
         <div class="row row--between" style="margin-bottom:12px;">
-          <h2 class="section__title" style="margin-bottom:0;">Todos os clientes</h2>
-          <span class="text-secondary" style="font-size:var(--text-sm);font-weight:600;">A-Z</span>
+          <div class="row">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.8"><path d="M8 21h8M12 17v4M5 4h14l-1 5a6 6 0 0 1-12 0L5 4zM5 4H3v2a3 3 0 0 0 3 3M19 4h2v2a3 3 0 0 1-3 3"/></svg>
+            <span style="font-weight:700;">Ranking</span>
+          </div>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
         </div>
-        <div class="card" id="js-lista-clientes"></div>
-        <div class="empty-state is-hidden" id="js-clientes-vazio">
-          <p class="empty-state__title">Nenhum cliente encontrado</p>
-          <p class="text-muted">Toque no + acima para cadastrar o primeiro.</p>
-        </div>
-      </section>
+        <div class="podio" id="js-ranking-top3"></div>
+        <p class="text-primary-accent" style="text-align:center;font-weight:600;margin-top:12px;">Ver ranking completo</p>
+      </a>
     </main>
 
     <div id="js-bottom-nav-mount"></div>

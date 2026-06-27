@@ -4,45 +4,24 @@
    calculados a partir de clientes + agendamentos.
    ============================================================ */
 
-function montarLinhaCliente(cliente, indice) {
-  const stats = estatisticasCliente(cliente.id);
-  const linha = document.createElement("a");
-  linha.href = `cliente-detalhe.html?id=${cliente.id}`;
-  linha.className = "list-item";
-  linha.style.textDecoration = "none";
-  linha.style.color = "inherit";
-  linha.innerHTML = `
-    <div class="avatar-wrap">
-      <div class="list-item__avatar ${classeAvatarPorIndice(indice)}"></div>
-    </div>
-    <div class="list-item__body">
-      <p class="list-item__title"></p>
-      <p class="list-item__subtitle"></p>
-    </div>
-    <div class="list-item__trailing">
-      <p style="font-weight:700;"></p>
-      <p class="text-muted" style="font-size:var(--text-xs);"></p>
-    </div>
+function montarPodioCardResumo(item, posicaoVisual) {
+  const medalhas = ["🥈", "🥇", "🥉"];
+  const card = document.createElement("div");
+  card.className = "podio-card" + (posicaoVisual === 1 ? " podio-card--ouro" : "");
+  const tamanho = posicaoVisual === 1 ? "width:56px;height:56px;font-size:var(--text-md);" : "";
+  card.innerHTML = `
+    <p class="podio-card__medalha">${medalhas[posicaoVisual]}</p>
+    <div class="list-item__avatar" style="margin:0 auto;${tamanho}"></div>
+    <p class="podio-card__nome"></p>
+    <p class="podio-card__valor"></p>
   `;
-  linha.querySelector(".list-item__avatar").textContent = iniciaisCliente(cliente.nome);
-  linha.querySelector(".list-item__title").textContent = cliente.nome;
-  linha.querySelector(".list-item__subtitle").textContent =
-    stats.ultimaVisitaDias === null
-      ? "ainda sem atendimentos"
-      : stats.ultimaVisitaDias === 0
-      ? "última visita hoje"
-      : `última visita há ${stats.ultimaVisitaDias} dia${stats.ultimaVisitaDias === 1 ? "" : "s"}`;
-  linha.querySelector(".list-item__trailing p").textContent = formatarMoeda(stats.totalGasto);
-  linha.querySelector(".list-item__trailing .text-muted").textContent = `${stats.visitas} visita${stats.visitas === 1 ? "" : "s"}`;
-  return linha;
+  card.querySelector(".list-item__avatar").textContent = iniciaisCliente(item.cliente.nome);
+  card.querySelector(".podio-card__nome").textContent = item.cliente.nome;
+  card.querySelector(".podio-card__valor").textContent = formatarMoeda(item.totalGasto);
+  return card;
 }
 
 function renderizarRankingTop3(clientesAtivos) {
-  const cores = [
-    { background: "#F59E0B", color: "#1a1200" },
-    null,
-    { background: "#B45309", color: "#1a1200" },
-  ];
   const ranqueados = clientesAtivos
     .map((c) => ({ cliente: c, totalGasto: estatisticasCliente(c.id).totalGasto }))
     .filter((r) => r.totalGasto > 0)
@@ -55,17 +34,9 @@ function renderizarRankingTop3(clientesAtivos) {
     container.innerHTML = `<p class="text-secondary" style="text-align:center;">Ainda não há atendimentos realizados.</p>`;
     return;
   }
-  ranqueados.forEach((r, indice) => {
-    const linha = document.createElement("div");
-    linha.className = "row row--between";
-    const corBadge = cores[indice];
-    linha.innerHTML = `
-      <div class="row"><span class="badge ${corBadge ? "" : "badge--neutro"}"${corBadge ? ` style="background:${corBadge.background};color:${corBadge.color};"` : ""}>${indice + 1}</span><span></span></div>
-      <span class="text-primary-accent" style="font-weight:700;"></span>
-    `;
-    linha.querySelector(".row span:last-child").textContent = r.cliente.nome;
-    linha.querySelector(".text-primary-accent").textContent = formatarMoeda(r.totalGasto);
-    container.appendChild(linha);
+  [ranqueados[1], ranqueados[0], ranqueados[2]].forEach((item, posicaoVisual) => {
+    if (!item) return;
+    container.appendChild(montarPodioCardResumo(item, posicaoVisual));
   });
 }
 
@@ -92,6 +63,7 @@ function renderizarClientes() {
   renderizarAniversariantesESemRetornar(clientesAtivos);
 
   const filtrados = termo ? clientesAtivos.filter((c) => c.nome.toLowerCase().includes(termo)) : clientesAtivos;
+  const visiveis = termo ? filtrados : filtrados.slice(0, 5);
 
   const container = qs("#js-lista-clientes");
   const vazio = qs("#js-clientes-vazio");
@@ -103,7 +75,7 @@ function renderizarClientes() {
   } else {
     container.classList.remove("is-hidden");
     vazio.classList.add("is-hidden");
-    filtrados.forEach((cliente, indice) => container.appendChild(montarLinhaCliente(cliente, indice)));
+    visiveis.forEach((cliente, indice) => container.appendChild(montarLinhaCliente(cliente, indice)));
   }
 }
 
