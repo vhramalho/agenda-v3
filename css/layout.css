@@ -76,6 +76,12 @@
   gap: var(--space-3);
 }
 
+.grid-3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: var(--space-3);
+}
+
 /* Menu inferior fixo */
 .bottom-nav {
   position: fixed;

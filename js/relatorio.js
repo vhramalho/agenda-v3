@@ -217,17 +217,17 @@ document.addEventListener("DOMContentLoaded", () => {
     qs("#js-relatorio-atendimentos").textContent = resumo.atendimentos;
     const compAtendimentos = formatarComparacao(resumo.atendimentos, resumoAnterior.atendimentos, rotuloComparacao);
     qs("#js-relatorio-atendimentos-comparacao").textContent = compAtendimentos.texto;
-    qs("#js-relatorio-atendimentos-comparacao").className = compAtendimentos.classe;
+    qs("#js-relatorio-atendimentos-comparacao").className = `insight-card__comparacao ${compAtendimentos.classe}`;
 
     qs("#js-relatorio-ticket").textContent = formatarMoeda(ticketMedio);
     const compTicket = formatarComparacao(ticketMedio, ticketMedioAnterior, rotuloComparacao);
     qs("#js-relatorio-ticket-comparacao").textContent = compTicket.texto;
-    qs("#js-relatorio-ticket-comparacao").className = compTicket.classe;
+    qs("#js-relatorio-ticket-comparacao").className = `insight-card__comparacao ${compTicket.classe}`;
 
     qs("#js-relatorio-taxas").textContent = formatarMoeda(resumo.taxas);
     const compTaxas = formatarComparacao(resumo.taxas, resumoAnterior.taxas, rotuloComparacao);
     qs("#js-relatorio-taxas-comparacao").textContent = compTaxas.texto;
-    qs("#js-relatorio-taxas-comparacao").className = compTaxas.classe;
+    qs("#js-relatorio-taxas-comparacao").className = `insight-card__comparacao ${compTaxas.classe}`;
 
     montarRecebimentos(resumo);
     montarGraficoSemana(refData);
