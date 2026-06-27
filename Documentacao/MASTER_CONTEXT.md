@@ -92,6 +92,7 @@ Definido em `css/tokens.css`.
 - Espaçamento em escala de 4px (`--space-1` a `--space-8`).
 - Raio de borda em 4 níveis (`--radius-sm` a `--radius-full`).
 - Mobile-first; não há breakpoints para desktop documentados — o app é pensado pra ser usado no celular.
+- **Convenção de UI (2026-06-26): setinha `>` (`.list-item__chevron`) indica "linha/card inteiro é tocável"**, substituindo botões de texto tipo "Receber" dentro de linhas de lista. Quando uma linha já leva o usuário pra algum lugar ao tocar em qualquer ponto dela, ela deve ser um único elemento clicável (`<a>`) com a setinha como indicador visual, em vez de um botão isolado dentro da linha. Aplicar esse padrão **pontualmente**, conforme cada tela for sendo revisada — não é pra sair trocando tudo de uma vez, só quando a tela em questão estiver sendo ajustada.
 
 ## 9. Convenções de código
 

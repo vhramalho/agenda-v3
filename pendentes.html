@@ -38,15 +38,18 @@
         <div class="empty-state is-hidden" id="js-pagos-vazio"><p class="empty-state__title">Nenhum pagamento recente</p></div>
       </section>
 
-      <div class="card section">
-        <div class="row" style="margin-bottom:12px;">
-          <span style="font-size:18px;">⚠️</span>
-          <p style="font-weight:700;">Clientes que mais ficam devendo</p>
+      <a href="pendentes-devedores.html" class="card section" style="display:block;text-decoration:none;color:inherit;">
+        <div class="row row--between" style="margin-bottom:12px;">
+          <div class="row">
+            <span style="font-size:18px;">⚠️</span>
+            <span style="font-weight:700;">Clientes que mais ficam devendo</span>
+          </div>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
         </div>
         <div class="stack" style="gap:10px;margin-bottom:12px;" id="js-devedores-lista"></div>
         <p class="text-secondary is-hidden" id="js-devedores-vazio">Nenhum cliente com pendência no momento.</p>
-        <a href="pendentes-devedores.html" class="text-primary-accent" style="display:block;text-align:center;font-weight:600;">Ver todos</a>
-      </div>
+        <p class="text-primary-accent" style="text-align:center;font-weight:600;">Ver todos</p>
+      </a>
     </main>
 
     <div id="js-bottom-nav-mount"></div>

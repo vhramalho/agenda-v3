@@ -35,26 +35,28 @@ function formatarPagoEm(agendamento) {
 }
 
 function montarLinhaPendente(agendamento, indice) {
-  const linha = document.createElement("div");
+  const linha = document.createElement("a");
+  linha.href = `index.html?data=${agendamento.data}`;
   linha.className = "list-item";
+  linha.style.textDecoration = "none";
+  linha.style.color = "inherit";
   const dias = diasEmAberto(agendamento.data);
   linha.innerHTML = `
     <div class="list-item__avatar ${classeAvatarPorIndice(indice)}"></div>
     <div class="list-item__body">
       <p class="list-item__title"></p>
-      <p class="list-item__subtitle">📅 <span class="js-data"></span> · <span class="text-danger js-dias"></span></p>
+      <p class="list-item__subtitle"><span class="js-data"></span> · <span class="text-danger js-dias"></span></p>
     </div>
-    <div class="list-item__trailing" style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;">
+    <div class="list-item__trailing">
       <p style="font-weight:700;" class="js-valor"></p>
-      <a class="btn btn--ghost btn--sm js-receber">Receber</a>
     </div>
+    <svg class="list-item__chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
   `;
   linha.querySelector(".list-item__avatar").textContent = iniciaisCliente(agendamento.nomeCliente);
   linha.querySelector(".list-item__title").textContent = agendamento.nomeCliente;
   linha.querySelector(".js-data").textContent = formatarDataCurta(agendamento.data).slice(0, 5);
   linha.querySelector(".js-dias").textContent = dias === 0 ? "hoje" : `${dias} dia${dias === 1 ? "" : "s"} em aberto`;
   linha.querySelector(".js-valor").textContent = formatarMoeda(agendamento.valorPendente || agendamento.valorTotal || 0);
-  linha.querySelector(".js-receber").href = `index.html?data=${agendamento.data}`;
   return linha;
 }
 
@@ -158,7 +160,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (qs("#js-pagos-lista")) {
     const pagos = listaPagosRecentes();
     const ehResumo = !window.location.pathname.includes("pendentes-pagos.html");
-    const visiveis = ehResumo ? pagos.slice(0, 2) : pagos;
+    const visiveis = pagos.slice(0, ehResumo ? 2 : 5);
     const container = qs("#js-pagos-lista");
     const vazio = qs("#js-pagos-vazio");
     container.innerHTML = "";
