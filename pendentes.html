@@ -38,17 +38,17 @@
         <div class="empty-state is-hidden" id="js-pagos-vazio"><p class="empty-state__title">Nenhum pagamento recente</p></div>
       </section>
 
-      <a href="pendentes-devedores.html" class="card section" style="display:block;text-decoration:none;color:inherit;">
-        <div class="row row--between" style="margin-bottom:12px;">
-          <div class="row">
-            <span style="font-size:18px;">⚠️</span>
-            <span style="font-weight:700;">Clientes que mais ficam devendo</span>
+      <a href="pendentes-devedores.html" class="card section row row--between" style="text-decoration:none;color:inherit;">
+        <div class="row">
+          <div class="icon-circle">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4M12 17h.01"/></svg>
           </div>
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
+          <div>
+            <p style="font-weight:700;">Devedores</p>
+            <p class="text-primary-accent" style="font-size:var(--text-sm);" id="js-devedores-contagem"></p>
+          </div>
         </div>
-        <div class="stack" style="gap:10px;margin-bottom:12px;" id="js-devedores-lista"></div>
-        <p class="text-secondary is-hidden" id="js-devedores-vazio">Nenhum cliente com pendência no momento.</p>
-        <p class="text-primary-accent" style="text-align:center;font-weight:600;">Ver todos</p>
+        <svg class="list-item__chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
       </a>
     </main>
 

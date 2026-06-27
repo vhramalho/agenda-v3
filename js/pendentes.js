@@ -79,33 +79,21 @@ function montarLinhaPago(agendamento) {
   return linha;
 }
 
-function rankingDevedores() {
+function rankingDevedores(meses) {
+  const limiteIso = (() => {
+    const limite = isoParaDate(hojeIso());
+    limite.setMonth(limite.getMonth() - meses);
+    return limite.toISOString().slice(0, 10);
+  })();
   const contagem = {};
-  listaPendentes().forEach((a) => {
-    const chave = a.clienteId || `avulso:${a.nomeCliente}`;
-    if (!contagem[chave]) contagem[chave] = { nome: a.nomeCliente, vezes: 0 };
-    contagem[chave].vezes += 1;
-  });
+  listaPendentes()
+    .filter((a) => !meses || a.data >= limiteIso)
+    .forEach((a) => {
+      const chave = a.clienteId || `avulso:${a.nomeCliente}`;
+      if (!contagem[chave]) contagem[chave] = { nome: a.nomeCliente, vezes: 0 };
+      contagem[chave].vezes += 1;
+    });
   return Object.values(contagem).sort((a, b) => b.vezes - a.vezes);
-}
-
-function montarLinhaDevedor(item, indice) {
-  const cores = [
-    { background: "#F59E0B", color: "#1a1200" },
-    null,
-    { background: "#B45309", color: "#1a1200" },
-  ];
-  const cor = cores[indice];
-  const linha = document.createElement("div");
-  linha.className = "row row--between";
-  linha.innerHTML = `
-    <div class="row"><span class="badge ${cor ? "" : "badge--neutro"}"${cor ? ` style="background:${cor.background};color:${cor.color};"` : ""}></span><span></span></div>
-    <span class="badge badge--alerta"></span>
-  `;
-  linha.querySelector(".badge").textContent = indice + 1;
-  linha.querySelector(".row span:last-child").textContent = item.nome;
-  linha.querySelector(".badge--alerta").textContent = `${item.vezes} ${item.vezes === 1 ? "vez" : "vezes"}`;
-  return linha;
 }
 
 function montarLinhaDevedorCompleta(item, indice) {
@@ -174,23 +162,13 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  if (qs("#js-devedores-lista")) {
-    const ranking = rankingDevedores().slice(0, 3);
-    const container = qs("#js-devedores-lista");
-    const vazio = qs("#js-devedores-vazio");
-    container.innerHTML = "";
-    if (ranking.length === 0) {
-      container.classList.add("is-hidden");
-      vazio.classList.remove("is-hidden");
-    } else {
-      container.classList.remove("is-hidden");
-      vazio.classList.add("is-hidden");
-      ranking.forEach((item, i) => container.appendChild(montarLinhaDevedor(item, i)));
-    }
+  if (qs("#js-devedores-contagem")) {
+    const ranking6m = rankingDevedores(6);
+    qs("#js-devedores-contagem").textContent = `${ranking6m.length} nos últimos 6 meses`;
   }
 
   if (qs("#js-devedores-lista-completa")) {
-    const ranking = rankingDevedores();
+    const ranking = rankingDevedores(6);
     const container = qs("#js-devedores-lista-completa");
     const vazio = qs("#js-devedores-vazio-completo");
     container.innerHTML = "";
