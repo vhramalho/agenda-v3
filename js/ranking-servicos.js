@@ -35,19 +35,21 @@ function montarLinhaRankingServico(item, posicao) {
   return linha;
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  const ranking = calcularRankingServicos();
-  const tabela = qs("#js-ranking-servicos-tabela");
-  const vazio = qs("#js-ranking-servicos-vazio");
-  tabela.innerHTML = "";
+if (qs("#js-ranking-servicos-tabela")) {
+  document.addEventListener("DOMContentLoaded", () => {
+    const ranking = calcularRankingServicos();
+    const tabela = qs("#js-ranking-servicos-tabela");
+    const vazio = qs("#js-ranking-servicos-vazio");
+    tabela.innerHTML = "";
 
-  if (ranking.length === 0) {
-    tabela.classList.add("is-hidden");
-    vazio.classList.remove("is-hidden");
-    return;
-  }
-  tabela.classList.remove("is-hidden");
-  vazio.classList.add("is-hidden");
+    if (ranking.length === 0) {
+      tabela.classList.add("is-hidden");
+      vazio.classList.remove("is-hidden");
+      return;
+    }
+    tabela.classList.remove("is-hidden");
+    vazio.classList.add("is-hidden");
 
-  ranking.forEach((item, i) => tabela.appendChild(montarLinhaRankingServico(item, i + 1)));
-});
+    ranking.forEach((item, i) => tabela.appendChild(montarLinhaRankingServico(item, i + 1)));
+  });
+}

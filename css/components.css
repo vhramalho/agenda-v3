@@ -13,7 +13,7 @@
   align-items: center;
   justify-content: center;
   background: var(--card);
-  border: 1px solid var(--border);
+  border: none;
   color: var(--text-primary);
   flex-shrink: 0;
 }
@@ -56,19 +56,19 @@
 .btn--secondary {
   background: var(--card-elevated);
   color: var(--text-primary);
-  border: 1px solid var(--border-strong);
+  border: none;
 }
 
 .btn--ghost {
-  background: transparent;
+  background: var(--primary-soft);
   color: var(--primary);
-  border: 1px solid var(--primary);
+  border: none;
 }
 
 .btn--danger {
-  background: transparent;
+  background: var(--danger-soft);
   color: var(--danger);
-  border: 1px solid var(--danger);
+  border: none;
 }
 
 .btn--sm {
@@ -99,7 +99,7 @@
 /* ---------- Card ---------- */
 .card {
   background: var(--card);
-  border: 1px solid var(--border);
+  border: none;
   border-radius: var(--radius-lg);
   padding: var(--space-4);
 }
@@ -110,12 +110,12 @@
 
 .card--destaque {
   background: linear-gradient(180deg, var(--primary-soft), transparent);
-  border: 1px solid var(--border);
+  border: none;
 }
 
 .card-metrica {
   background: var(--card);
-  border: 1px solid var(--border);
+  border: none;
   border-radius: var(--radius-lg);
   padding: var(--space-4);
 }
@@ -292,10 +292,6 @@
   align-items: center;
   gap: var(--space-3);
   padding: var(--space-3) 0;
-  border-bottom: 1px solid var(--border);
-}
-
-.list-item:last-child {
   border-bottom: none;
 }
 
@@ -379,9 +375,10 @@
 /* ---------- Controle segmentado (abas de filtro) ---------- */
 .segmented {
   display: flex;
+  align-items: center;
   gap: var(--space-2);
   background: var(--card);
-  border: 1px solid var(--border);
+  border: none;
   border-radius: var(--radius-md);
   padding: 4px;
 }
@@ -494,7 +491,7 @@
 /* ---------- Insight (estatística secundária, sempre o elemento mais discreto da tela) ---------- */
 .insight-card {
   background: var(--card);
-  border: 1px solid var(--border);
+  border: none;
   border-radius: var(--radius-md);
   padding: var(--space-3);
 }

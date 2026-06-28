@@ -24,28 +24,16 @@ function montarLinhaServico(servico) {
   return linha;
 }
 
-function calcularMaisRealizado(servicosAtivos) {
-  const contagem = {};
-  obterAgendamentos().forEach((agendamento) => {
-    if (!agendamento.status || !agendamento.status.startsWith("realizado_")) return;
-    (agendamento.servicosIds || []).forEach((id) => {
-      contagem[id] = (contagem[id] || 0) + 1;
-    });
-  });
-  let melhorId = null;
-  let melhorContagem = 0;
-  Object.entries(contagem).forEach(([id, qtd]) => {
-    if (qtd > melhorContagem) { melhorContagem = qtd; melhorId = id; }
-  });
+function calcularMaisRealizado() {
+  const ranking = calcularRankingServicos().slice(0, 3);
   const destaque = qs("#js-servico-destaque");
-  if (!melhorId || melhorContagem === 0) {
+  if (ranking.length === 0) {
     destaque.classList.add("is-hidden");
     return;
   }
-  const servico = servicosAtivos.find((s) => s.id === melhorId);
-  if (!servico) { destaque.classList.add("is-hidden"); return; }
-  qs("#js-servico-destaque-nome").textContent = servico.nome;
-  qs("#js-servico-destaque-contagem").textContent = `${melhorContagem} atendimento${melhorContagem === 1 ? "" : "s"}`;
+  const container = qs("#js-servico-top3");
+  container.innerHTML = "";
+  ranking.forEach((item, i) => container.appendChild(montarLinhaRankingServico(item, i + 1)));
   destaque.classList.remove("is-hidden");
 }
 
@@ -64,7 +52,7 @@ function renderizarServicos() {
     servicosAtivos.forEach((servico) => container.appendChild(montarLinhaServico(servico)));
   }
 
-  calcularMaisRealizado(servicosAtivos);
+  calcularMaisRealizado();
 }
 
 function abrirNovoServico() {
