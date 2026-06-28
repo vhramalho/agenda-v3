@@ -283,9 +283,9 @@ if (qs("#js-semretornar-lista")) {
     }
 
     qs("#js-semretornar-filtro").addEventListener("click", (evento) => {
-      const chip = evento.target.closest(".chip");
-      if (!chip) return;
-      renderizarSemRetornar(parseInt(chip.dataset.dias, 10));
+      const item = evento.target.closest(".segmented__item");
+      if (!item) return;
+      renderizarSemRetornar(parseInt(item.dataset.dias, 10));
     });
 
     renderizarSemRetornar(30);

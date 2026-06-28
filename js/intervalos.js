@@ -160,9 +160,9 @@ document.addEventListener("DOMContentLoaded", () => {
   renderizarIntervalos();
 
   qs("#js-filtro-dia").addEventListener("click", (evento) => {
-    const chip = evento.target.closest(".chip");
-    if (!chip) return;
-    filtroDiaAtual = chip.dataset.dia;
+    const item = evento.target.closest(".segmented__item");
+    if (!item) return;
+    filtroDiaAtual = item.dataset.dia;
     renderizarIntervalos();
   });
 

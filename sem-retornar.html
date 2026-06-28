@@ -16,22 +16,19 @@
 
       <p class="text-secondary section">Clientes que estão há muito tempo sem voltar para atendimento.</p>
 
-      <div class="card card--destaque section row" style="justify-content:space-between;">
-        <div>
-          <p><span style="font-size:var(--text-xl);font-weight:800;" id="js-semretornar-contagem"></span> <span style="font-weight:800;">clientes</span></p>
-          <p class="text-primary-accent" style="font-weight:800;font-size:var(--text-lg);">sem retornar</p>
-          <p class="text-secondary" style="margin-top:6px;">Acompanhe quem está há mais tempo sem atendimento.</p>
-        </div>
-        <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.5" style="flex-shrink:0;"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4M16 16l2 2 3-3"/></svg>
+      <div class="insight-card section">
+        <p class="insight-card__label"><span>Sem retornar</span></p>
+        <p class="insight-card__valor" id="js-semretornar-contagem"></p>
+        <p class="insight-card__comparacao text-secondary">clientes acompanhados</p>
       </div>
 
       <p class="text-secondary" style="font-size:var(--text-sm);margin-bottom:10px;">Filtrar por dias sem retornar</p>
-      <div class="chip-scroll section" data-chips="single" id="js-semretornar-filtro">
-        <span class="chip" data-dias="20">20+ dias</span>
-        <span class="chip chip--ativo" data-dias="30">30+ dias</span>
-        <span class="chip" data-dias="45">45+ dias</span>
-        <span class="chip" data-dias="60">60+ dias</span>
-        <span class="chip" data-dias="90">90+ dias</span>
+      <div class="segmented section" id="js-semretornar-filtro">
+        <span class="segmented__item" data-dias="20">20+</span>
+        <span class="segmented__item is-active" data-dias="30">30+</span>
+        <span class="segmented__item" data-dias="45">45+</span>
+        <span class="segmented__item" data-dias="60">60+</span>
+        <span class="segmented__item" data-dias="90">90+</span>
       </div>
 
       <div class="card section" id="js-semretornar-lista"></div>
