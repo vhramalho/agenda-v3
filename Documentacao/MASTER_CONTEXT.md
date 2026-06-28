@@ -93,6 +93,7 @@ Definido em `css/tokens.css`.
 - Raio de borda em 4 níveis (`--radius-sm` a `--radius-full`).
 - Mobile-first; não há breakpoints para desktop documentados — o app é pensado pra ser usado no celular.
 - **Convenção de UI (2026-06-26): setinha `>` (`.list-item__chevron`) indica "linha/card inteiro é tocável"**, substituindo botões de texto tipo "Receber" dentro de linhas de lista. Quando uma linha já leva o usuário pra algum lugar ao tocar em qualquer ponto dela, ela deve ser um único elemento clicável (`<a>`) com a setinha como indicador visual, em vez de um botão isolado dentro da linha. Aplicar esse padrão **pontualmente**, conforme cada tela for sendo revisada — não é pra sair trocando tudo de uma vez, só quando a tela em questão estiver sendo ajustada.
+- **Sem bordas (definido em 2026-06-28):** `.card`, `.card--destaque`, `.card-metrica`, `.insight-card`, `.icon-btn`, `.segmented` e o separador entre `.list-item` não têm mais `border`. A distinção visual entre elementos vem só da diferença de cor de fundo (`--card` vs `--bg`) e do espaçamento — nunca mais de contorno. `.btn--secondary`/`.btn--ghost`/`.btn--danger` (que eram "outline", fundo transparente + borda colorida) ganharam um fundo levemente tintado (`--card-elevated` ou `--primary-soft`/`--danger-soft`) no lugar da borda, pra continuarem visíveis sem contorno.
 
 ### 8.1. Padrão de hierarquia visual das telas (definido em 2026-06-27)
 
