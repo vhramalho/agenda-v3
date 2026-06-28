@@ -264,8 +264,8 @@ Todas em `docs/AGENDA_V3_DOCUMENTO_MESTRE.txt` seção 6. Lista: Agenda (`index.
 
 Todas as 10 perguntas resolvidas em `docs/LOGICA_E_FLUXO_DE_DADOS.md` seção 7, mais:
 - Modal "Usar existente ou criar novo" (Fase 1/2) foi **substituído** por busca ao vivo + modal "Adicionar aos clientes?" — decisão tomada na Etapa 6, já implementada.
-- "Sem retornar" (cálculo): cliente sem nenhum atendimento OU sem atendimento há mais de 30 dias — limiar escolhido pelo desenvolvedor, sem confirmação explícita do usuário ainda. **A confirmar.**
-- "Faturados"/Ranking somam valor de atendimentos `realizado_pendente` também, não só `realizado_pago` — interpretação do desenvolvedor, **a confirmar** com o usuário se for sentido diferente do esperado.
+- **"Sem retornar" (confirmado em 2026-06-28):** cliente com atendimento anterior E última visita há mais dias que o filtro selecionado (20/30/45/60/90, padrão 30). Cliente **nunca atendido NÃO entra** nessa lista — corrigido em 2026-06-28 (antes incluía por engano; era `dias === null || dias >= limite`, virou `dias !== null && dias >= limite`, em `js/clientes-derivadas.js` e `js/clientes.js`).
+- **"Faturados"/Ranking somam `realizado_pendente` também (confirmado em 2026-06-28):** comportamento já implementado, usuário confirmou que é o esperado. Não é mais "a confirmar".
 - `nomeEstabelecimento`/`nomeProfissional`/`endereco` (coletados no Onboarding) vivem dentro de `agendaV3:config`, não numa chave/entidade de "perfil" própria — decisão de baixo risco pra não criar uma 10ª chave antes da Fase 5 desenhar o modelo de conta de verdade.
 
 ## 20. Itens que não devem ser alterados sem nova autorização
@@ -291,14 +291,14 @@ Todas as 10 perguntas resolvidas em `docs/LOGICA_E_FLUXO_DE_DADOS.md` seção 7,
 
 ## 23. Próxima etapa
 
-Usuário vai escolher outra tela do app para a próxima rodada de revisão (a definir). Mesmo padrão de trabalho: ele lista os problemas, conversamos para alinhar entendimento antes de codar, eu implemento, testo via screenshot headless, e comitamos — depois ele testa de novo no celular e manda a próxima rodada.
+**Usuário vai mandar um documento com perguntas pra formalizar a Fase 4 (refinamento geral)** (2026-06-28) — objetivo: avaliar se o app está "encaminhando bem" e estruturar o que falta da fase, em vez de continuar só reagindo rodada a rodada. Aguardando esse documento antes de propor um plano de etapas formal pra Fase 4. Até lá, mesmo padrão de trabalho de sempre se surgir algum ajuste pontual.
 
 ## 24. Pendências
 
 - Publicar o projeto no GitHub + GitHub Pages — ✅ feito em 2026-06-26 (repo público https://github.com/vhramalho/agenda-v3, Pages ativado pelo usuário via Settings > Pages, branch main).
-- Validar com o usuário as duas interpretações marcadas como "a confirmar" na seção 19.
-- Decidir onde mora o botão de `mensagemEndereco` (Pergunta 7, deliberadamente em espera).
-- Testar em tela a importação real de um arquivo de backup (só a exportação foi confirmada por screenshot).
+- Decidir onde mora o botão de `mensagemEndereco` (Pergunta 7) — usuário disse "ainda vou definir" (2026-06-28), continua em espera.
+- Ideia parada do conceito de "avulso" no fluxo de Agendar — usuário disse "vamos planejar ainda" (2026-06-28), não implementar sem planejamento explícito.
+- **Resolvidas em 2026-06-28:** critério de "sem retornar" confirmado e corrigido no código; `realizado_pendente` no faturamento/Ranking confirmado como esperado; backup (exportar/importar) confirmado funcionando pelo usuário; `perfil.html` decorativo confirmado como aceitável até a Fase 5.
 - **Chips de serviços/formas de pagamento nos modais de Agendar e Finalizar atendimento continuam "desorganizados" visualmente** (CSS `.chip-group` ajudou mas não resolveu de verdade) — usuário pediu explicitamente para deixar para uma modificação futura, "pra não estragar o funcionamento". Não tocar nisso sem pedido explícito.
 - **Modais com campos de texto estão ocupando quase a tela inteira quando o teclado abre no celular** — usuário observou isso en passant (2026-06-26) e pediu para anotar como possível ajuste futuro, sem decisão tomada ainda. Possíveis caminhos a explorar quando for revisitar: reduzir o espaçamento vertical entre campos nos modais, ou tornar o modal scrollável com altura máxima quando o teclado está aberto. Não implementar sem o usuário pedir.
 - **Zoom automático do navegador desativado em 2026-06-26** (`maximum-scale=1.0, user-scalable=no` no viewport de todas as telas + `font-size:16px` em `.input/.textarea/.select`) — decisão deliberada pra parecer mais "nativo", trocando a possibilidade de zoom por pinça/duplo-toque. Usuário confirmou que topa essa troca; se no futuro for necessário, considerar implementar um controle de "tamanho do texto" dentro do próprio app como alternativa ao zoom do navegador.

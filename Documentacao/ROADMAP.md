@@ -36,6 +36,12 @@
 
 ## Pendências em aberto (rastreadas, não bloqueantes)
 
-- Validar com o usuário: critério de "sem retornar" (30 dias) e inclusão de `realizado_pendente` no total "faturados"/Ranking — ambas são interpretações do desenvolvedor, marcadas como "a confirmar" no `MASTER_CONTEXT.md`.
-- Testar em tela a importação real de um arquivo de backup (Etapa 10) — só a exportação foi confirmada por screenshot.
-- `perfil.html` não reflete os campos coletados no Onboarding (`nomeEstabelecimento`/`nomeProfissional`) — fica pra quando a Fase 5 desenhar o modelo de conta de verdade.
+- `mensagemEndereco`: onde mora o botão de enviar endereço — usuário disse "ainda vou definir" (2026-06-28). Continua deliberadamente em espera.
+- Ideia parada do fluxo "Agendar cliente"/conceito de avulso (ver seção 24 do `MASTER_CONTEXT.md`) — usuário disse "vamos planejar ainda" (2026-06-28). Não implementar sem planejamento explícito.
+- Usuário vai mandar um documento com perguntas pra formalizar a Fase 4 (refinamento geral) — ainda não recebido (2026-06-28).
+
+## Decididas em 2026-06-28 (não mais pendentes)
+
+- Critério de "sem retornar" confirmado (30 dias padrão, nunca-atendido excluído — corrigido no código) e inclusão de `realizado_pendente` no faturamento/Ranking confirmada como esperada.
+- Backup: exportar e importar confirmados funcionando pelo usuário.
+- `perfil.html` continua decorativo "por enquanto", aguardando o modelo de conta da Fase 5 — decisão confirmada, não é mais uma pendência a resolver agora.
