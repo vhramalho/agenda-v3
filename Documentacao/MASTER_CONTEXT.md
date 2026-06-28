@@ -133,6 +133,20 @@ Agenda (`index.html`) e o hub "Mais" ficam fora desse esquema: Agenda é uma gra
 
 **Como aplicar dali pra frente:** esse padrão já está em vigor — qualquer alteração visual nova deve seguir ele. Se o usuário pedir uma alteração visual pontual que destoe do padrão, alertar antes de implementar (é proposital ou vai gerar nova inconsistência?) em vez de simplesmente aplicar. Aplicação tela por tela, no mesmo ritmo de revisão já estabelecido — não é pra sair reformulando todas de uma vez.
 
+### 8.2. Componentes visuais reutilizáveis (definido em 2026-06-27)
+
+Tudo isso vive em CSS compartilhado (`css/components.css`/`css/layout.css`) — nenhuma página deve reinventar o estilo desses componentes com `style=` inline além do que for genuinamente específico daquela tela. São 9 componentes oficiais:
+
+1. **Card principal** (`.card.card--destaque`): rótulo pequeno → valor grande → texto secundário, fundo em degradê, layout vertical. Único uso real hoje: "A receber" (Pendentes) e "Faturamento" (Relatório). **Não inclui** os cards promocionais (Ajuda, Backup, Assinatura, Assinatura vencida, plano no hub Mais) — esses continuam com seu visual próprio (ícone+texto+botão), são um tipo de card à parte, fora dos 9 padrões, e não devem ser forçados nesse molde.
+2. **Lista** (`.card` + `.list-item`): avatar/ícone, título, subtítulo (texto secundário, ou especial vermelho/verde quando aplicável), conteúdo à direita (valor, ou nada) e setinha (`.list-item__chevron`) quando a linha leva a algum lugar. Mesmo visual em listas de dados (Clientes, Pendentes) e listas de menu (hub Mais, Configurações, Perfil) — a diferença é só o conteúdo, nunca o tamanho/fonte/padding. Listas de coleção (que podem crescer) mostram até 5 com "Ver todos"; listas de cadastro/menu (tamanho fixo, poucos itens) mostram tudo.
+3. **Insight** (`.insight-card`): título pequeno (rótulo) → valor → comparação opcional, e setinha (`.list-item__chevron`) **fora** do bloco de texto, como elemento irmão, quando o card inteiro leva a outra página. Um único formato para todos os casos — inclusive os que antes usavam um ícone circular grande (Devedores, os teasers de Aniversariantes/Sem retornar dentro de Clientes, e os próprios cards de topo de Aniversariantes/Sem retornar, que encolheram desse tamanho de card principal pro tamanho de insight).
+4. **Título com botão de ação** (Tipo A, `page-header-principal`): ver seção 8.1.
+5. **Título com botão de voltar e ação** (Tipo B, `app-header`): ver seção 8.1.
+6. **Card de ranking**: card destacado com pódio (`.podio`/`.podio-card`) e "Ver ranking completo" no rodapé — hoje só em Clientes (teaser pro `ranking.html`). Modelo único pra qualquer teaser de ranking futuro.
+7. **Campo de busca** (`.input-icon` + `.input`): simples, usado em Clientes/Clientes-todos.
+8. **Card de seleção** (`.segmented`/`.segmented__item`): abas de largura igual, sem rolagem, fundo único com pílula ativa. Usado em Relatório (Dia/Semana/Mês/Ano), Ranking (Faturamento/Visitas/Ticket médio), Sem retornar (20+/30+/45+/60+/90+ dias) e Intervalos (Todos + 7 dias da semana — rótulos abreviados pra caber sem rolagem). Não usar mais `.chip-scroll`/`.chip` pra filtros de seleção única — isso fica reservado pra outros usos (ex.: seleção de horários em modais).
+9. **Card de troca (botão)**: caixa com borda (`.select-like`), ícone à esquerda, rótulo central, setas anterior/próximo nas pontas (`icon-btn`, 32×32). Usado em Relatório (trocar período) e Aniversariantes (trocar mês) — modelo único pros dois. **Atenção ao implementar:** o ícone do meio precisa de `width`/`height` explícitos no próprio `<svg>` (a regra CSS `.select-like svg:first-child` só pega o ícone se ele for de fato o primeiro filho — quando há um botão "anterior" antes dele, essa regra não se aplica e o ícone sem tamanho explícito estoura o card).
+
 ## 9. Convenções de código
 
 - Nomes de funções, variáveis, ids e classes **em português** (`obterClientes`, `salvarAgendamentos`, `js-btn-novo-cliente`), exceto palavras-chave da linguagem e nomes de propriedades de bibliotecas/CSS padrão.
