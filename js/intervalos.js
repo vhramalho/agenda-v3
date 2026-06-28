@@ -66,38 +66,27 @@ function descreverHorario(bloqueio) {
 }
 
 function montarLinhaIntervalo(bloqueio, indice) {
-  const card = document.createElement("div");
-  card.className = "card";
-  card.style.cursor = "pointer";
+  const linha = document.createElement("div");
+  linha.className = "list-item";
+  linha.style.cursor = "pointer";
   const icone = bloqueio.diasSemana.length === 1 && bloqueio.diasSemana[0] === "dom"
     ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/></svg>'
     : (bloqueio.diasSemana.length === 1 ? ICONE_FOLGA : ICONES_INTERVALO[indice % ICONES_INTERVALO.length]);
 
-  card.innerHTML = `
-    <div class="row row--between" style="margin-bottom:10px;">
-      <div class="row">
-        <div class="icon-circle">${icone}</div>
-        <p style="font-weight:700;"></p>
-      </div>
-      <svg class="list-item__chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
+  linha.innerHTML = `
+    <div class="icon-circle">${icone}</div>
+    <div class="list-item__body">
+      <p class="list-item__title"></p>
+      <p class="list-item__subtitle js-intervalo-dias"></p>
+      <p class="list-item__terciario js-intervalo-horario"></p>
     </div>
-    <div class="row" style="margin-bottom:10px;flex-wrap:wrap;"></div>
-    <div class="row text-secondary">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
-      <span></span>
-    </div>
+    <svg class="list-item__chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
   `;
-  card.querySelector("p").textContent = bloqueio.nome;
-  const diasContainer = card.querySelector(".row:nth-child(2)");
-  bloqueio.diasSemana.forEach((dia) => {
-    const chip = document.createElement("span");
-    chip.className = "chip chip--outline-ativo";
-    chip.textContent = DIAS_LABEL[dia];
-    diasContainer.appendChild(chip);
-  });
-  card.querySelector(".text-secondary span").textContent = descreverHorario(bloqueio);
-  card.addEventListener("click", () => abrirEdicaoIntervalo(bloqueio.id));
-  return card;
+  linha.querySelector(".list-item__title").textContent = bloqueio.nome;
+  linha.querySelector(".js-intervalo-dias").textContent = bloqueio.diasSemana.map((dia) => DIAS_LABEL[dia]).join(", ");
+  linha.querySelector(".js-intervalo-horario").textContent = descreverHorario(bloqueio);
+  linha.addEventListener("click", () => abrirEdicaoIntervalo(bloqueio.id));
+  return linha;
 }
 
 function calcularTotaisBloqueados(bloqueios) {

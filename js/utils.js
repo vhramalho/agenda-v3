@@ -106,6 +106,13 @@ function mostrarSucesso() {
   setTimeout(() => overlay.remove(), 900);
 }
 
+function classePosicaoRanking(posicao) {
+  if (posicao === 1) return "ranking-posicao--ouro";
+  if (posicao === 2) return "ranking-posicao--prata";
+  if (posicao === 3) return "ranking-posicao--bronze";
+  return "";
+}
+
 function classeAvatarPorIndice(indice) {
   const classes = ["", "list-item__avatar--c2", "list-item__avatar--c3", "list-item__avatar--c4", "list-item__avatar--c5"];
   return classes[indice % classes.length];

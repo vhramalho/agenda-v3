@@ -4,28 +4,11 @@
    calculados a partir de clientes + agendamentos.
    ============================================================ */
 
-function montarPodioCardResumo(item, posicaoVisual) {
-  const medalhas = ["🥈", "🥇", "🥉"];
-  const card = document.createElement("div");
-  card.className = "podio-card" + (posicaoVisual === 1 ? " podio-card--ouro" : "");
-  const tamanho = posicaoVisual === 1 ? "width:56px;height:56px;font-size:var(--text-md);" : "";
-  card.innerHTML = `
-    <p class="podio-card__medalha">${medalhas[posicaoVisual]}</p>
-    <div class="list-item__avatar" style="margin:0 auto;${tamanho}"></div>
-    <p class="podio-card__nome"></p>
-    <p class="podio-card__valor"></p>
-  `;
-  card.querySelector(".list-item__avatar").textContent = iniciaisCliente(item.cliente.nome);
-  card.querySelector(".podio-card__nome").textContent = item.cliente.nome;
-  card.querySelector(".podio-card__valor").textContent = formatarMoeda(item.totalGasto);
-  return card;
-}
-
 function renderizarRankingTop3(clientesAtivos) {
   const ranqueados = clientesAtivos
-    .map((c) => ({ cliente: c, totalGasto: estatisticasCliente(c.id).totalGasto }))
-    .filter((r) => r.totalGasto > 0)
-    .sort((a, b) => b.totalGasto - a.totalGasto)
+    .map((c) => ({ cliente: c, stats: estatisticasRanking(c.id) }))
+    .filter((r) => r.stats.visitas > 0)
+    .sort((a, b) => b.stats.totalGasto - a.stats.totalGasto)
     .slice(0, 3);
 
   const container = qs("#js-ranking-top3");
@@ -34,10 +17,7 @@ function renderizarRankingTop3(clientesAtivos) {
     container.innerHTML = `<p class="text-secondary" style="text-align:center;">Ainda não há atendimentos realizados.</p>`;
     return;
   }
-  [ranqueados[1], ranqueados[0], ranqueados[2]].forEach((item, posicaoVisual) => {
-    if (!item) return;
-    container.appendChild(montarPodioCardResumo(item, posicaoVisual));
-  });
+  ranqueados.forEach((item, indice) => container.appendChild(montarLinhaRanking(item, indice, indice + 1, "faturamento")));
 }
 
 function renderizarAniversariantesESemRetornar(clientesAtivos) {

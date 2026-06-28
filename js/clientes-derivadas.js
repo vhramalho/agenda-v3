@@ -37,23 +37,6 @@ function formatarValorMetrica(valor, metrica) {
   return metrica === "visitas" ? String(valor) : formatarMoeda(valor);
 }
 
-function montarPodioCard(item, indice, posicaoVisual, metrica) {
-  const medalhas = ["🥈", "🥇", "🥉"];
-  const card = document.createElement("div");
-  card.className = "podio-card" + (posicaoVisual === 1 ? " podio-card--ouro" : "");
-  const tamanho = posicaoVisual === 1 ? "width:56px;height:56px;font-size:var(--text-md);" : "";
-  card.innerHTML = `
-    <p class="podio-card__medalha">${medalhas[posicaoVisual]}</p>
-    <div class="list-item__avatar ${classeAvatarPorIndice(indice)}" style="margin:0 auto;${tamanho}"></div>
-    <p class="podio-card__nome"></p>
-    <p class="podio-card__valor"></p>
-  `;
-  card.querySelector(".list-item__avatar").textContent = iniciaisCliente(item.cliente.nome);
-  card.querySelector(".podio-card__nome").textContent = item.cliente.nome;
-  card.querySelector(".podio-card__valor").textContent = formatarValorMetrica(valorPorMetrica(item.stats, metrica), metrica);
-  return card;
-}
-
 function montarLinhaRanking(item, indice, posicao, metrica) {
   const linha = document.createElement("a");
   linha.href = `cliente-detalhe.html?id=${item.cliente.id}`;
@@ -61,7 +44,7 @@ function montarLinhaRanking(item, indice, posicao, metrica) {
   linha.style.textDecoration = "none";
   linha.style.color = "inherit";
   linha.innerHTML = `
-    <span style="width:24px;color:var(--text-secondary);font-weight:700;">${posicao}º</span>
+    <span class="ranking-posicao ${classePosicaoRanking(posicao)}">${posicao}</span>
     <div class="list-item__avatar ${classeAvatarPorIndice(indice)}"></div>
     <div class="list-item__body"><p class="list-item__title"></p></div>
     <span class="text-primary-accent" style="font-weight:700;"></span>
@@ -79,33 +62,22 @@ function renderizarRanking(metrica) {
     .filter((r) => r.stats.visitas > 0)
     .sort((a, b) => valorPorMetrica(b.stats, metrica) - valorPorMetrica(a.stats, metrica));
 
-  const podio = qs("#js-ranking-podio");
   const tabela = qs("#js-ranking-tabela");
   const vazio = qs("#js-ranking-vazio");
-  podio.innerHTML = "";
   tabela.innerHTML = "";
 
   if (linhas.length === 0) {
-    podio.classList.add("is-hidden");
     tabela.classList.add("is-hidden");
     vazio.classList.remove("is-hidden");
     return;
   }
-  podio.classList.remove("is-hidden");
   tabela.classList.remove("is-hidden");
   vazio.classList.add("is-hidden");
 
-  const top3 = linhas.slice(0, 3);
-  [top3[1], top3[0], top3[2]].forEach((item, posicaoVisual) => {
-    if (!item) return;
-    const indiceOriginal = top3.indexOf(item);
-    podio.appendChild(montarPodioCard(item, indiceOriginal, posicaoVisual, metrica));
-  });
-
-  linhas.slice(3).forEach((item, i) => tabela.appendChild(montarLinhaRanking(item, i + 3, i + 4, metrica)));
+  linhas.forEach((item, i) => tabela.appendChild(montarLinhaRanking(item, i, i + 1, metrica)));
 }
 
-if (qs("#js-ranking-podio")) {
+if (qs("#js-ranking-tabela")) {
   document.addEventListener("DOMContentLoaded", () => {
     renderizarRanking("faturamento");
     qsa(".segmented__item[data-metrica]").forEach((item) => {

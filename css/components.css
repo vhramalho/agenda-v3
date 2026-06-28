@@ -326,6 +326,11 @@
   color: var(--text-secondary);
 }
 
+.list-item__terciario {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
 .list-item__trailing {
   text-align: right;
   flex-shrink: 0;
@@ -405,50 +410,24 @@
   color: var(--text-on-primary);
 }
 
-/* ---------- Pódio do ranking ---------- */
-.podio {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: var(--space-3);
-  align-items: end;
-  margin-bottom: var(--space-5);
-}
-
-.podio-card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: var(--space-3);
-  text-align: center;
-}
-
-.podio-card--ouro {
-  padding-top: var(--space-5);
-  background: linear-gradient(180deg, var(--primary-soft), var(--card) 70%);
-  border-color: var(--border-strong);
-}
-
-.podio-card__medalha {
-  font-size: 20px;
-  margin-bottom: 4px;
-}
-
-.podio-card__nome {
+/* ---------- Card de ranking: lista top 3 com leve destaque ouro/prata/bronze ---------- */
+.ranking-posicao {
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-weight: 700;
   font-size: var(--text-sm);
-  margin-top: var(--space-2);
+  background: var(--card-elevated);
+  color: var(--text-secondary);
+  flex-shrink: 0;
 }
 
-.podio-card__valor {
-  color: var(--primary);
-  font-weight: 800;
-  margin: 2px 0;
-}
-
-.podio-card__visitas {
-  font-size: var(--text-xs);
-  color: var(--text-muted);
-}
+.ranking-posicao--ouro { background: #F59E0B; color: #1a1200; }
+.ranking-posicao--prata { background: #94A3B8; color: #0f172a; }
+.ranking-posicao--bronze { background: #B45309; color: #1a1200; }
 
 /* ---------- Linha de cabeçalho de tabela simples ---------- */
 .table-header-row {
@@ -554,7 +533,7 @@
 }
 
 .page-header-principal__titulo {
-  font-size: var(--text-xl);
+  font-size: var(--text-md);
   font-weight: 800;
 }
 

@@ -96,31 +96,16 @@ function rankingDevedores(meses) {
   return Object.values(contagem).sort((a, b) => b.vezes - a.vezes);
 }
 
-function montarPodioCardDevedor(item, posicaoVisual) {
-  const medalhas = ["🥈", "🥇", "🥉"];
-  const card = document.createElement("div");
-  card.className = "podio-card" + (posicaoVisual === 1 ? " podio-card--ouro" : "");
-  const tamanho = posicaoVisual === 1 ? "width:56px;height:56px;font-size:var(--text-md);" : "";
-  card.innerHTML = `
-    <p class="podio-card__medalha">${medalhas[posicaoVisual]}</p>
-    <div class="list-item__avatar" style="margin:0 auto;${tamanho}"></div>
-    <p class="podio-card__nome"></p>
-    <p class="podio-card__valor"></p>
-  `;
-  card.querySelector(".list-item__avatar").textContent = iniciaisCliente(item.nome);
-  card.querySelector(".podio-card__nome").textContent = item.nome;
-  card.querySelector(".podio-card__valor").textContent = `${item.vezes} ${item.vezes === 1 ? "vez" : "vezes"}`;
-  return card;
-}
-
-function montarLinhaDevedorCompleta(item, posicao) {
+function montarLinhaDevedorCompleta(item, indice, posicao) {
   const linha = document.createElement("div");
   linha.className = "list-item";
   linha.innerHTML = `
-    <span style="width:24px;color:var(--text-secondary);font-weight:700;">${posicao}º</span>
+    <span class="ranking-posicao ${classePosicaoRanking(posicao)}">${posicao}</span>
+    <div class="list-item__avatar ${classeAvatarPorIndice(indice)}"></div>
     <div class="list-item__body"><p class="list-item__title"></p></div>
     <span class="text-primary-accent" style="font-weight:700;"></span>
   `;
+  linha.querySelector(".list-item__avatar").textContent = iniciaisCliente(item.nome);
   linha.querySelector(".list-item__title").textContent = item.nome;
   linha.querySelector(".text-primary-accent").textContent = `${item.vezes} ${item.vezes === 1 ? "vez" : "vezes"}`;
   return linha;
@@ -172,32 +157,29 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  if (qs("#js-devedores-contagem")) {
-    const ranking6m = rankingDevedores(6);
-    qs("#js-devedores-contagem").textContent = `${ranking6m.length} nos últimos 6 meses`;
+  if (qs("#js-devedores-top3")) {
+    const top3 = rankingDevedores(6).slice(0, 3);
+    const container = qs("#js-devedores-top3");
+    container.innerHTML = "";
+    if (top3.length === 0) {
+      container.innerHTML = `<p class="text-secondary" style="text-align:center;">Nenhum cliente com pendência no momento.</p>`;
+    } else {
+      top3.forEach((item, i) => container.appendChild(montarLinhaDevedorCompleta(item, i, i + 1)));
+    }
   }
 
   if (qs("#js-devedores-lista-completa")) {
     const ranking = rankingDevedores(6);
-    const podio = qs("#js-devedores-podio");
     const container = qs("#js-devedores-lista-completa");
     const vazio = qs("#js-devedores-vazio-completo");
-    podio.innerHTML = "";
     container.innerHTML = "";
     if (ranking.length === 0) {
-      podio.classList.add("is-hidden");
       container.classList.add("is-hidden");
       vazio.classList.remove("is-hidden");
     } else {
-      podio.classList.remove("is-hidden");
       container.classList.remove("is-hidden");
       vazio.classList.add("is-hidden");
-      const top3 = ranking.slice(0, 3);
-      [top3[1], top3[0], top3[2]].forEach((item, posicaoVisual) => {
-        if (!item) return;
-        podio.appendChild(montarPodioCardDevedor(item, posicaoVisual));
-      });
-      ranking.slice(3).forEach((item, i) => container.appendChild(montarLinhaDevedorCompleta(item, i + 4)));
+      ranking.forEach((item, i) => container.appendChild(montarLinhaDevedorCompleta(item, i, i + 1)));
     }
   }
 });

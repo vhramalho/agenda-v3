@@ -31,13 +31,15 @@
         </div>
       </section>
 
-      <a href="ranking-servicos.html" class="insight-card row row--between is-hidden" id="js-servico-destaque" style="text-decoration:none;color:inherit;">
-        <div>
-          <p class="insight-card__label"><span>Mais realizado</span></p>
-          <p class="insight-card__valor" id="js-servico-destaque-nome"></p>
-          <p class="insight-card__comparacao text-secondary" id="js-servico-destaque-contagem"></p>
+      <a href="ranking-servicos.html" class="card card--destaque is-hidden" id="js-servico-destaque" style="display:block;text-decoration:none;color:inherit;">
+        <div class="row row--between">
+          <div>
+            <p class="text-secondary">Mais realizado</p>
+            <p style="font-weight:800;font-size:var(--text-xl);margin:4px 0;" id="js-servico-destaque-nome"></p>
+            <p class="text-primary-accent" style="font-weight:600;font-size:var(--text-sm);" id="js-servico-destaque-contagem"></p>
+          </div>
+          <svg class="list-item__chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
         </div>
-        <svg class="list-item__chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
       </a>
     </main>
 
