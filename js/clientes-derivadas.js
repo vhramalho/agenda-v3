@@ -236,8 +236,8 @@ if (qs("#js-semretornar-lista")) {
       const linhas = obterClientes()
         .filter((c) => c.ativo)
         .map((c) => ({ cliente: c, info: ultimaVisitaInfo(c.id) }))
-        .filter((r) => r.info.dias === null || r.info.dias >= limiteDias)
-        .sort((a, b) => (b.info.dias === null ? Infinity : b.info.dias) - (a.info.dias === null ? Infinity : a.info.dias));
+        .filter((r) => r.info.dias !== null && r.info.dias >= limiteDias)
+        .sort((a, b) => b.info.dias - a.info.dias);
 
       qs("#js-semretornar-contagem").textContent = linhas.length;
 
