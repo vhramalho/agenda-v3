@@ -280,18 +280,18 @@ Todas as 10 perguntas resolvidas em `docs/LOGICA_E_FLUXO_DE_DADOS.md` seção 7,
 - **Fase 1** (estrutura e visual estático): ✅ concluída.
 - **Fase 2** (interações, sem dados reais): ✅ concluída.
 - **Fase 3** (dados reais via localStorage): ✅ **concluída (todas as 11 etapas)**.
-- **Fase 4** (refinamento): 🔶 em andamento de forma informal — usuário está testando o app publicado (GitHub Pages) e mandando rodadas de ajustes de UX/bugs, cada rodada termina em commit. Sem plano de etapas formal ainda, é ajuste reativo ao uso real.
+- **Fase 4** (auditoria, validação e refinamento): 🔶 **formalizada em 2026-06-28** — ver `Documentacao/04_FASE_4.md`. Processo e checklist definidos; execução (percorrer as telas) em andamento.
 - **Fase 5** (backend): não iniciada.
 
 ## 22. Fase atual
 
-**Fase 4 informal** — rodadas de revisão de UX e correção de bugs encontrados pelo usuário testando no celular via GitHub Pages (https://vhramalho.github.io/agenda-v3/). Publicado no GitHub em https://github.com/vhramalho/agenda-v3.
+**Fase 4 formal** — processo definido em `Documentacao/04_FASE_4.md`: achar o problema real antes da solução, pesquisar referência (Booksy/Fresha/Google e Apple Calendar/Mercado Pago) quando houver dúvida de fluxo, Claude age como analista antes de implementar, checklist único por tela. App publicado e testável em https://vhramalho.github.io/agenda-v3/ (repo https://github.com/vhramalho/agenda-v3).
 
 **Página Agenda (`index.html`) considerada ajustada por enquanto** (2026-06-26, 5 rodadas de revisão concluídas) — usuário disse "todos ajustes na página de agenda feitos. No decorrer do uso, se aparecer mais a gente ajusta." Não é uma fase formalmente "fechada", só uma pausa — pode voltar a receber ajustes se surgir algo no uso real.
 
 ## 23. Próxima etapa
 
-**Usuário vai mandar um documento com perguntas pra formalizar a Fase 4 (refinamento geral)** (2026-06-28) — objetivo: avaliar se o app está "encaminhando bem" e estruturar o que falta da fase, em vez de continuar só reagindo rodada a rodada. Aguardando esse documento antes de propor um plano de etapas formal pra Fase 4. Até lá, mesmo padrão de trabalho de sempre se surgir algum ajuste pontual.
+Percorrer as telas que ainda não passaram pelo checklist da Fase 4 (seção 6 de `04_FASE_4.md`), na ordem da seção 7 desse documento. Mesmo padrão de trabalho de sempre: usuário lista o que observa no uso real, Claude aplica o filtro "qual é o problema real" antes de propor solução, e só implementa depois de alinhar entendimento.
 
 ## 24. Pendências
 

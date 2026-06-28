@@ -5,7 +5,7 @@
 1. **Fase 1 — Estrutura e visual estático** — ✅ concluída (2026-06-24)
 2. **Fase 2 — Interações, sem dados reais** — ✅ concluída (2026-06-25)
 3. **Fase 3 — Dados reais via localStorage** — ✅ **concluída (2026-06-26, todas as 11 etapas)**
-4. **Fase 4 — Refinamento geral** — ⬜ próxima (plano de etapas a definir)
+4. **Fase 4 — Auditoria, validação e refinamento** — 🔶 **formalizada em 2026-06-28**, ver `Documentacao/04_FASE_4.md`. Sem etapas numeradas fixas — processo orientado por tela/problema real, na ordem da seção 7 desse documento.
 5. **Fase 5 — Backend real (login, sincronização entre dispositivos)** — ⬜ não iniciada
 
 ## Fase 3 — Etapas (plano de 11 etapas) — concluída
@@ -38,7 +38,7 @@
 
 - `mensagemEndereco`: onde mora o botão de enviar endereço — usuário disse "ainda vou definir" (2026-06-28). Continua deliberadamente em espera.
 - Ideia parada do fluxo "Agendar cliente"/conceito de avulso (ver seção 24 do `MASTER_CONTEXT.md`) — usuário disse "vamos planejar ainda" (2026-06-28). Não implementar sem planejamento explícito.
-- Usuário vai mandar um documento com perguntas pra formalizar a Fase 4 (refinamento geral) — ainda não recebido (2026-06-28).
+- Percorrer todas as telas pelo checklist da Fase 4 (`Documentacao/04_FASE_4.md` seção 6) — trabalho em andamento, ordem definida na seção 7 desse documento.
 
 ## Decididas em 2026-06-28 (não mais pendentes)
 
