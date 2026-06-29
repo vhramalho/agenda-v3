@@ -223,6 +223,7 @@ Ver `docs/LOGICA_E_FLUXO_DE_DADOS.md` seção 3 para os esquemas completos. Resu
 ## 15. Fluxos principais
 
 - **Realizar atendimento**: Agendado → toca → "Realizado" → preenche serviços/pagamento → o **mesmo registro** muda de status pra `realizado_pago`/`realizado_pendente` (nunca cria um novo registro).
+- **Finalizar atendimento / Editar realizado (simplificado em 2026-06-28):** observação do agendamento é herdada automaticamente (antes sempre abria vazia — era bug). Serviços mostram só os selecionados por padrão (ícone de lápis revela todos pra editar). Nome do cliente tem ícone de lápis — editar aqui **atualiza o cadastro do cliente de verdade** (nome do `Cliente`, não só o texto do agendamento), quando há `clienteId` vinculado.
 - **Quitar pendente**: botão "Receber" em Pendentes leva para `index.html?data=AAAA-MM-DD` — a Agenda abre exatamente naquele dia (implementado na Etapa 7).
 - **Cliente novo digitado em Novo Agendamento (2026-06-28):** busca ao vivo sugere clientes existentes ao digitar; selecionou sugestão → vincula direto; não bate com nada → cria cliente automaticamente ao salvar (nome + telefone opcional); bate com nome exatamente igual sem selecionar a sugestão → modal "Usar existente / Criar novo cadastro".
 - **Mover cliente pra lixeira**: remove de `clientes`, insere em `clientesLixeira` — agendamentos antigos não são apagados nem alterados.
