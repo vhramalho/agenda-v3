@@ -223,22 +223,31 @@ function renderizarCabecalho() {
   qs("#js-agenda-mes").textContent = `${meses[d.getMonth()]} ${d.getFullYear()}`;
 }
 
-function renderizarSemana() {
-  const container = qs("#js-week-carousel");
-  container.innerHTML = "";
-  const inicio = inicioDaSemana(dataSelecionada);
-  const mesSelecionado = isoParaDate(dataSelecionada).getMonth();
+function montarDiasSemana(isoAtivo) {
+  const inicio = inicioDaSemana(isoAtivo);
+  const mesAtivo = isoParaDate(isoAtivo).getMonth();
+  const dias = [];
   for (let i = 0; i < 7; i++) {
     const iso = somarDias(inicio, i);
     const d = isoParaDate(iso);
     const el = document.createElement("div");
     el.className = "week-day"
-      + (iso === dataSelecionada ? " is-active" : "")
-      + (d.getMonth() !== mesSelecionado ? " is-outro-mes" : "");
+      + (iso === isoAtivo ? " is-active" : "")
+      + (d.getMonth() !== mesAtivo ? " is-outro-mes" : "");
     el.innerHTML = `<span class="week-day__label">${DIAS_SEMANA_LABEL[d.getDay()]}</span><span class="week-day__numero">${String(d.getDate()).padStart(2, "0")}</span>`;
-    el.addEventListener("click", () => selecionarData(iso));
-    container.appendChild(el);
+    el.dataset.iso = iso;
+    dias.push(el);
   }
+  return dias;
+}
+
+function renderizarSemana() {
+  const container = qs("#js-week-carousel");
+  container.innerHTML = "";
+  montarDiasSemana(dataSelecionada).forEach((el) => {
+    el.addEventListener("click", () => selecionarData(el.dataset.iso));
+    container.appendChild(el);
+  });
 }
 
 function selecionarData(iso) {
@@ -258,18 +267,18 @@ window.aoSelecionarDiaCalendarioAgenda = (ano, mes, dia) => {
   selecionarData(iso);
 };
 
-function aplicarProgressoCarrossel(deltaX) {
+function aplicarProgressoCarrossel(deltaX, comprometido) {
   const carrossel = qs("#js-week-carousel");
   const ativo = qs(".week-day.is-active", carrossel);
   if (!ativo) return;
-  if (!deltaX) {
+  if (!deltaX && !comprometido) {
     qsa(".week-day", carrossel).forEach((el) => {
       el.classList.remove("week-day--preview");
       el.style.opacity = "";
     });
     return;
   }
-  const progresso = Math.min(Math.abs(deltaX) / 100, 1);
+  const progresso = comprometido ? 1 : Math.min(Math.abs(deltaX) / 100, 1);
   const vizinho = deltaX < 0 ? ativo.nextElementSibling : ativo.previousElementSibling;
   ativo.style.opacity = String(1 - progresso);
   qsa(".week-day", carrossel).forEach((el) => { if (el !== ativo && el !== vizinho) el.classList.remove("week-day--preview"); });
@@ -277,6 +286,35 @@ function aplicarProgressoCarrossel(deltaX) {
     vizinho.classList.add("week-day--preview");
     vizinho.style.opacity = String(progresso);
   }
+}
+
+function aplicarProgressoSemana(deltaX, comprometido) {
+  const wrap = qs("#js-week-carousel-wrap");
+  const preview = qs("#js-week-carousel-preview");
+  if (comprometido) {
+    preview.style.transition = "transform 200ms ease";
+    preview.style.transform = "translateX(0)";
+    return;
+  }
+  if (!deltaX) {
+    preview.classList.add("is-hidden");
+    preview.innerHTML = "";
+    preview.style.transition = "none";
+    preview.style.transform = "";
+    return;
+  }
+  const largura = wrap.offsetWidth;
+  if (preview.classList.contains("is-hidden")) {
+    const indoParaEsquerda = deltaX < 0;
+    const isoVizinho = somarDias(dataSelecionada, indoParaEsquerda ? 7 : -7);
+    preview.innerHTML = "";
+    montarDiasSemana(isoVizinho).forEach((el) => preview.appendChild(el));
+    preview.classList.remove("is-hidden");
+    preview.dataset.lado = indoParaEsquerda ? "esquerda" : "direita";
+    preview.style.transition = "none";
+  }
+  const offset = preview.dataset.lado === "esquerda" ? largura : -largura;
+  preview.style.transform = `translateX(${offset + deltaX}px)`;
 }
 
 function adicionarGestoSwipe(elemento, aoArrastarEsquerda, aoArrastarDireita, aoProgresso) {
@@ -318,17 +356,19 @@ function adicionarGestoSwipe(elemento, aoArrastarEsquerda, aoArrastarDireita, ao
     if (!arrastando) return;
     arrastando = false;
     elemento.style.transition = "transform 200ms ease";
-    if (aoProgresso) aoProgresso(0);
     if (horizontal && Math.abs(deltaX) > 60) {
       const indoParaEsquerda = deltaX < 0;
       elemento.style.transform = `translateX(${indoParaEsquerda ? "-24px" : "24px"})`;
+      if (aoProgresso) aoProgresso(deltaX, true);
       setTimeout(() => {
         elemento.style.transition = "none";
         elemento.style.transform = "translateX(0)";
         if (indoParaEsquerda) aoArrastarEsquerda(); else aoArrastarDireita();
+        if (aoProgresso) aoProgresso(0);
       }, 130);
     } else {
       elemento.style.transform = "translateX(0)";
+      if (aoProgresso) aoProgresso(0);
     }
   });
 }
@@ -701,7 +741,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   adicionarGestoSwipe(qs("#js-week-carousel"),
     () => selecionarData(somarDias(dataSelecionada, 7)),
-    () => selecionarData(somarDias(dataSelecionada, -7)));
+    () => selecionarData(somarDias(dataSelecionada, -7)),
+    aplicarProgressoSemana);
   adicionarGestoSwipe(qs("#js-agenda-lista"),
     () => selecionarData(somarDias(dataSelecionada, 1)),
     () => selecionarData(somarDias(dataSelecionada, -1)),

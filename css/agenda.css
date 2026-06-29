@@ -42,6 +42,27 @@
 }
 
 /* ---------- Carrossel semanal ---------- */
+.week-carousel-wrap {
+  position: relative;
+  overflow: hidden;
+  margin-bottom: var(--space-5);
+}
+
+.week-carousel-wrap .week-carousel {
+  margin-bottom: 0;
+}
+
+.week-carousel--preview {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+}
+
+.week-carousel--preview.is-hidden {
+  display: none;
+}
+
 .week-carousel {
   display: flex;
   gap: var(--space-2);
