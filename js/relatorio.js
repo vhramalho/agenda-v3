@@ -95,9 +95,9 @@ const DIAS_ABREV_RELATORIO = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
 function formatarEixoY(v) {
   if (v >= 1000) {
     const milhares = v / 1000;
-    return `${milhares % 1 === 0 ? milhares : milhares.toFixed(1)}k`;
+    return `R$${milhares % 1 === 0 ? milhares : milhares.toFixed(1)}k`;
   }
-  return String(Math.round(v));
+  return `R$${Math.round(v)}`;
 }
 
 function horaParaFracaoRelatorio(horaStr) {
