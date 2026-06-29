@@ -108,41 +108,20 @@ function horaParaFracaoRelatorio(horaStr) {
 function calcularPontosGrafico(tipoPeriodo, refData) {
   if (tipoPeriodo === "dia") {
     const config = obterConfig();
-    const inicioHora = horaParaFracaoRelatorio(config.horaInicio || "08:00");
-    const fimHora = horaParaFracaoRelatorio(config.horaFim || "20:00");
+    const inicioHora = Math.floor(horaParaFracaoRelatorio(config.horaInicio || "08:00"));
+    const fimHora = Math.ceil(horaParaFracaoRelatorio(config.horaFim || "20:00"));
     const iso = dataLocalParaIso(refData);
-    const ags = obterAgendamentos()
-      .filter((a) => a.data === iso && a.status && a.status.startsWith("realizado_"))
-      .sort((a, b) => a.hora.localeCompare(b.hora));
+    const ags = obterAgendamentos().filter((a) => a.data === iso && a.status && a.status.startsWith("realizado_"));
 
-    const pontosReais = ags.map((a) => ({
-      frac: Math.min(Math.max((horaParaFracaoRelatorio(a.hora) - inicioHora) / (fimHora - inicioHora || 1), 0), 1),
-      valor: a.valorTotal || 0,
-      marcado: true,
-    }));
-
-    const pontos = [{ frac: 0, valor: 0, marcado: false }];
-    let cursorZero = 0;
-    pontosReais.forEach((p, i) => {
-      pontos.push(p);
-      const duracaoSubida = p.frac - cursorZero;
-      const fimDescidaIdeal = p.frac + duracaoSubida;
-      const limiteProximo = i === pontosReais.length - 1 ? 1 : pontosReais[i + 1].frac;
-      if (fimDescidaIdeal <= limiteProximo) {
-        pontos.push({ frac: fimDescidaIdeal, valor: 0, marcado: false });
-        cursorZero = fimDescidaIdeal;
-      } else {
-        cursorZero = p.frac;
-      }
-    });
-    if (pontos[pontos.length - 1].frac < 1) {
-      pontos.push({ frac: 1, valor: 0, marcado: false });
-    }
-
+    const pontos = [];
     const rotulos = [];
-    const inicioArred = Math.ceil(inicioHora / 2) * 2;
-    for (let h = inicioArred; h <= fimHora; h += 2) {
-      rotulos.push({ frac: (h - inicioHora) / (fimHora - inicioHora || 1), texto: `${String(h).padStart(2, "0")}h` });
+    for (let h = inicioHora; h <= fimHora; h++) {
+      const valor = ags
+        .filter((a) => Math.floor(horaParaFracaoRelatorio(a.hora)) === h)
+        .reduce((s, a) => s + (a.valorTotal || 0), 0);
+      const frac = (h - inicioHora) / (fimHora - inicioHora || 1);
+      pontos.push({ frac, valor, marcado: true });
+      rotulos.push({ frac, texto: `${String(h).padStart(2, "0")}h` });
     }
     return { pontos, rotulos };
   }
