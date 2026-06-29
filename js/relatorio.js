@@ -121,9 +121,7 @@ function calcularPontosGrafico(tipoPeriodo, refData) {
       marcado: true,
     }));
 
-    const pontos = pontosReais.length === 0
-      ? [{ frac: 0, valor: 0, marcado: false }, { frac: 1, valor: 0, marcado: false }]
-      : [{ frac: 0, valor: pontosReais[0].valor, marcado: false }, ...pontosReais, { frac: 1, valor: pontosReais[pontosReais.length - 1].valor, marcado: false }];
+    const pontos = [{ frac: 0, valor: 0, marcado: false }, ...pontosReais, { frac: 1, valor: 0, marcado: false }];
 
     const rotulos = [];
     const inicioArred = Math.ceil(inicioHora / 2) * 2;
@@ -305,7 +303,7 @@ document.addEventListener("DOMContentLoaded", () => {
     qs("#js-relatorio-faturamento-comparacao").textContent = compFaturamento.texto;
     qs("#js-relatorio-faturamento-comparacao").className = compFaturamento.classe;
     qs("#js-relatorio-faturamento-comparacao").style.fontWeight = "600";
-    qs("#js-relatorio-faturamento-comparacao").style.fontSize = "var(--text-sm)";
+    qs("#js-relatorio-faturamento-comparacao").style.fontSize = "var(--text-2xs)";
 
     qs("#js-relatorio-atendimentos").textContent = resumo.atendimentos;
     const compAtendimentos = formatarComparacao(resumo.atendimentos, resumoAnterior.atendimentos, rotuloComparacao);

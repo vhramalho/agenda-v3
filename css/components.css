@@ -520,6 +520,11 @@
   font-weight: 600;
 }
 
+.insight-card__comparacao.text-success,
+.insight-card__comparacao.text-danger {
+  font-size: var(--text-2xs);
+}
+
 /* ---------- Cabeçalho de tela principal (título grande + ação) ---------- */
 .page-header-principal {
   display: flex;
