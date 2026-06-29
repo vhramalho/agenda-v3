@@ -4,7 +4,12 @@
       "PowerShell(netsh http show*)",
       "PowerShell(netsh advfirewall firewall show*)",
       "Bash(curl -s * http://127.0.0.1:8743/*)",
-      "Bash(curl -s * http://192.168.1.101:8743/*)"
+      "Bash(curl -s * http://192.168.1.101:8743/*)",
+      "Bash(\"/c/Program Files (x86)/Microsoft/Edge/Application/msedge.exe\"*)",
+      "Bash(curl *)",
+      "Bash(taskkill //F //IM msedge.exe*)",
+      "PowerShell(Start-Process powershell*)",
+      "PowerShell(& \"C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe\"*)"
     ]
   }
 }
