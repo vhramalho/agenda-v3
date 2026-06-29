@@ -30,7 +30,10 @@
         <button class="icon-btn" id="js-periodo-anterior" aria-label="Período anterior">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
         </button>
-        <span id="js-periodo-label" style="flex:1;text-align:center;font-weight:700;"></span>
+        <span id="js-periodo-label" style="flex:1;text-align:center;">
+          <span id="js-periodo-principal" style="display:block;font-weight:700;font-size:var(--text-sm);"></span>
+          <span id="js-periodo-secundario" style="display:block;font-size:var(--text-xs);color:var(--text-secondary);margin-top:1px;"></span>
+        </span>
         <button class="icon-btn" id="js-periodo-proximo" aria-label="Próximo período">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
         </button>
@@ -62,17 +65,6 @@
         </svg>
       </div>
 
-      <div class="card section">
-        <p style="font-weight:700;margin-bottom:4px;">Recebimentos</p>
-        <p class="text-secondary" style="margin-bottom:16px;" id="js-relatorio-total-recebido"></p>
-        <div class="row" style="align-items:center;gap:24px;">
-          <div class="stack" style="flex:1;gap:10px;" id="js-relatorio-formas"></div>
-          <svg width="100" height="100" viewBox="0 0 120 120" style="flex-shrink:0;">
-            <g transform="rotate(-90 60 60)" id="js-relatorio-pizza"></g>
-          </svg>
-        </div>
-      </div>
-
       <div class="grid-3 section">
         <div class="insight-card">
           <div class="insight-card__label">
@@ -97,6 +89,17 @@
           </div>
           <p class="insight-card__valor" id="js-relatorio-taxas"></p>
           <p class="insight-card__comparacao" id="js-relatorio-taxas-comparacao"></p>
+        </div>
+      </div>
+
+      <div class="card section">
+        <p class="text-secondary" style="margin-bottom:4px;">Recebimentos</p>
+        <p class="text-secondary" style="margin-bottom:16px;" id="js-relatorio-total-recebido"></p>
+        <div class="row" style="align-items:center;gap:24px;">
+          <div class="stack" style="flex:1;gap:10px;" id="js-relatorio-formas"></div>
+          <svg width="100" height="100" viewBox="0 0 120 120" style="flex-shrink:0;">
+            <g transform="rotate(-90 60 60)" id="js-relatorio-pizza"></g>
+          </svg>
         </div>
       </div>
     </main>

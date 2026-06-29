@@ -10,7 +10,7 @@
 
 const MESES_NOME_RELATORIO = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
 const MESES_ABREV_RELATORIO = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"];
-const CORES_FORMA = { pix: "var(--primary)", dinheiro: "var(--success)", credito: "#F59E0B", debito: "#3B82F6", outras: "var(--text-muted)" };
+const CORES_FORMA = { pix: "#3B82F6", dinheiro: "#22C55E", credito: "#EC4899", debito: "#EAB308", outras: "#94A3B8" };
 
 function dataLocalParaIso(date) {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
@@ -99,6 +99,7 @@ function formatarComparacao(atual, anterior, rotuloPeriodo, tipo = "valor") {
 }
 
 const DIAS_ABREV_RELATORIO = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
+const DIAS_SEMANA_RELATORIO = ["domingo", "segunda-feira", "terça-feira", "quarta-feira", "quinta-feira", "sexta-feira", "sábado"];
 
 function formatarEixoY(v) {
   if (v >= 1000) {
@@ -212,7 +213,7 @@ function montarRecebimentos(resumo) {
     linha.className = "row row--between";
     linha.innerHTML = `
       <span class="row" style="gap:8px;"><span style="width:8px;height:8px;border-radius:50%;background:${cor};display:inline-block;"></span><span class="js-nome-forma"></span></span>
-      <span class="js-valor-forma" style="font-weight:600;"></span>
+      <span class="js-valor-forma" style="color:var(--text-secondary);"></span>
     `;
     linha.querySelector(".js-nome-forma").textContent = forma.nome;
     linha.querySelector(".js-valor-forma").textContent = formatarMoeda(valor);
@@ -238,6 +239,8 @@ function montarRecebimentos(resumo) {
 document.addEventListener("DOMContentLoaded", () => {
   const rotulo = qs("#js-periodo-label");
   if (!rotulo) return;
+  const labelPrincipal = qs("#js-periodo-principal");
+  const labelSecundario = qs("#js-periodo-secundario");
 
   let refData = new Date();
   let tipoPeriodo = "semana";
@@ -249,16 +252,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function atualizarRotuloPeriodo() {
     if (tipoPeriodo === "dia") {
-      rotulo.textContent = `${String(refData.getDate()).padStart(2, "0")} de ${MESES_NOME_RELATORIO[refData.getMonth()].toLowerCase()} de ${refData.getFullYear()}`;
+      labelPrincipal.textContent = `${String(refData.getDate()).padStart(2, "0")} de ${MESES_NOME_RELATORIO[refData.getMonth()].toLowerCase()}`;
+      labelSecundario.textContent = DIAS_SEMANA_RELATORIO[refData.getDay()];
     } else if (tipoPeriodo === "semana") {
       const ini = inicioDaSemanaRelatorio(refData);
       const fim = new Date(ini);
       fim.setDate(fim.getDate() + 6);
-      rotulo.textContent = `${formatarCurto(ini)} – ${formatarCurto(fim)}`;
+      labelPrincipal.textContent = `${formatarCurto(ini)} – ${formatarCurto(fim)}`;
+      labelSecundario.textContent = "domingo à sábado";
     } else if (tipoPeriodo === "mes") {
-      rotulo.textContent = `${MESES_NOME_RELATORIO[refData.getMonth()]} ${refData.getFullYear()}`;
+      labelPrincipal.textContent = `${MESES_NOME_RELATORIO[refData.getMonth()]} ${refData.getFullYear()}`;
+      labelSecundario.textContent = "";
     } else {
-      rotulo.textContent = `${refData.getFullYear()}`;
+      labelPrincipal.textContent = `${refData.getFullYear()}`;
+      labelSecundario.textContent = "";
     }
   }
 
