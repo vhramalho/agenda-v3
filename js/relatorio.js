@@ -121,7 +121,23 @@ function calcularPontosGrafico(tipoPeriodo, refData) {
       marcado: true,
     }));
 
-    const pontos = [{ frac: 0, valor: 0, marcado: false }, ...pontosReais, { frac: 1, valor: 0, marcado: false }];
+    const pontos = [{ frac: 0, valor: 0, marcado: false }];
+    let cursorZero = 0;
+    pontosReais.forEach((p, i) => {
+      pontos.push(p);
+      const duracaoSubida = p.frac - cursorZero;
+      const fimDescidaIdeal = p.frac + duracaoSubida;
+      const limiteProximo = i === pontosReais.length - 1 ? 1 : pontosReais[i + 1].frac;
+      if (fimDescidaIdeal <= limiteProximo) {
+        pontos.push({ frac: fimDescidaIdeal, valor: 0, marcado: false });
+        cursorZero = fimDescidaIdeal;
+      } else {
+        cursorZero = p.frac;
+      }
+    });
+    if (pontos[pontos.length - 1].frac < 1) {
+      pontos.push({ frac: 1, valor: 0, marcado: false });
+    }
 
     const rotulos = [];
     const inicioArred = Math.ceil(inicioHora / 2) * 2;
