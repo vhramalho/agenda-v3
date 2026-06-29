@@ -612,12 +612,37 @@ function finalizarCriacaoOuEdicaoAgendamento(clienteId, nome) {
 
 /* ---------- Finalizar atendimento ---------- */
 
+function resetarEdicaoNome(idCard, idInput) {
+  qs(`#${idCard}`).classList.remove("is-hidden");
+  qs(`#${idInput}`).classList.add("is-hidden");
+  qs(`#${idInput}`).value = "";
+}
+
+function aplicarEdicaoNome(ag, idInput) {
+  const input = qs(`#${idInput}`);
+  if (input.classList.contains("is-hidden")) return;
+  const novoNome = input.value.trim();
+  if (!novoNome || novoNome === ag.nomeCliente) return;
+  ag.nomeCliente = novoNome;
+  if (ag.clienteId) {
+    const clientes = obterClientes();
+    const cliente = clientes.find((c) => c.id === ag.clienteId);
+    if (cliente) {
+      cliente.nome = novoNome;
+      cliente.atualizadoEm = hojeIso();
+      salvarClientes(clientes);
+    }
+  }
+}
+
 function prepararFinalizarAtendimento(agendamento) {
   const modal = qs("#modal-finalizar-atendimento");
   qs("#js-finalizar-avatar").textContent = iniciaisCliente(agendamento.nomeCliente);
   qs("#js-finalizar-nome").textContent = agendamento.nomeCliente;
+  resetarEdicaoNome("js-finalizar-nome-card", "js-finalizar-nome-input");
   montarServicosChips("js-finalizar-servicos", agendamento.servicosIds || []);
-  prepararObservacaoWrap("js-finalizar-observacao", "js-finalizar-observacao-toggle", "");
+  qs("#js-finalizar-servicos").classList.add("is-resumo");
+  prepararObservacaoWrap("js-finalizar-observacao", "js-finalizar-observacao-toggle", agendamento.observacao || "");
   qsa("[data-pago]", modal).forEach((b) => {
     b.classList.toggle("btn--primary", b.dataset.pago === "sim");
     b.classList.toggle("btn--secondary", b.dataset.pago !== "sim");
@@ -645,7 +670,9 @@ function definirPagoEditarRealizado(pago) {
 function prepararEditarRealizado(agendamento) {
   qs("#js-editar-realizado-avatar").textContent = iniciaisCliente(agendamento.nomeCliente);
   qs("#js-editar-realizado-nome").textContent = agendamento.nomeCliente;
+  resetarEdicaoNome("js-editar-realizado-nome-card", "js-editar-realizado-nome-input");
   montarServicosChips("js-editar-realizado-servicos", agendamento.servicosIds || []);
+  qs("#js-editar-realizado-servicos").classList.add("is-resumo");
   prepararObservacaoWrap("js-editar-realizado-observacao", "js-editar-realizado-observacao-toggle", agendamento.observacao || "");
   const pago = agendamento.status === "realizado_pago";
   definirPagoEditarRealizado(pago);
@@ -809,6 +836,28 @@ document.addEventListener("DOMContentLoaded", () => {
     qs("#js-editar-realizado-observacao").focus();
   });
 
+  qs("#js-finalizar-nome-editar").addEventListener("click", () => {
+    qs("#js-finalizar-nome-input").value = qs("#js-finalizar-nome").textContent;
+    qs("#js-finalizar-nome-card").classList.add("is-hidden");
+    qs("#js-finalizar-nome-input").classList.remove("is-hidden");
+    qs("#js-finalizar-nome-input").focus();
+  });
+
+  qs("#js-finalizar-servicos-editar").addEventListener("click", () => {
+    qs("#js-finalizar-servicos").classList.remove("is-resumo");
+  });
+
+  qs("#js-editar-realizado-nome-editar").addEventListener("click", () => {
+    qs("#js-editar-realizado-nome-input").value = qs("#js-editar-realizado-nome").textContent;
+    qs("#js-editar-realizado-nome-card").classList.add("is-hidden");
+    qs("#js-editar-realizado-nome-input").classList.remove("is-hidden");
+    qs("#js-editar-realizado-nome-input").focus();
+  });
+
+  qs("#js-editar-realizado-servicos-editar").addEventListener("click", () => {
+    qs("#js-editar-realizado-servicos").classList.remove("is-resumo");
+  });
+
   qs("#js-novo-agendamento-cliente-remover").addEventListener("click", removerSelecaoCliente);
 
   qs("#js-novo-agendamento-salvar").addEventListener("click", () => {
@@ -862,6 +911,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const lista = obterAgendamentos();
     const ag = lista.find((a) => a.id === agendamento.id);
     if (!ag) return;
+    aplicarEdicaoNome(ag, "js-finalizar-nome-input");
     ag.servicosIds = idsSelecionados("js-finalizar-servicos");
     ag.observacao = qs("#js-finalizar-observacao").value.trim();
     ag.realizadoEm = new Date().toISOString();
@@ -905,6 +955,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const lista = obterAgendamentos();
     const ag = lista.find((a) => a.id === agendamento.id);
     if (!ag) return;
+    aplicarEdicaoNome(ag, "js-editar-realizado-nome-input");
     ag.servicosIds = idsSelecionados("js-editar-realizado-servicos");
     ag.observacao = qs("#js-editar-realizado-observacao").value.trim();
     const pagoEscolhido = qs("[data-pago-editar].btn--primary", qs("#modal-editar-realizado")).dataset.pagoEditar === "sim";
