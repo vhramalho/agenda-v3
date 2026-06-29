@@ -289,11 +289,13 @@ function aplicarProgressoCarrossel(deltaX, comprometido) {
 }
 
 function aplicarProgressoSemana(deltaX, comprometido) {
+  const GAP_ENTRE_SEMANAS = 8; // mesmo valor de --space-2, o gap interno dos chips
   const wrap = qs("#js-week-carousel-wrap");
   const preview = qs("#js-week-carousel-preview");
   if (comprometido) {
-    preview.style.transition = "transform 200ms ease";
+    preview.style.transition = "transform 220ms ease, opacity 220ms ease";
     preview.style.transform = "translateX(0)";
+    preview.style.opacity = "1";
     return;
   }
   if (!deltaX) {
@@ -301,9 +303,10 @@ function aplicarProgressoSemana(deltaX, comprometido) {
     preview.innerHTML = "";
     preview.style.transition = "none";
     preview.style.transform = "";
+    preview.style.opacity = "";
     return;
   }
-  const largura = wrap.offsetWidth;
+  const largura = wrap.offsetWidth + GAP_ENTRE_SEMANAS;
   if (preview.classList.contains("is-hidden")) {
     const indoParaEsquerda = deltaX < 0;
     const isoVizinho = somarDias(dataSelecionada, indoParaEsquerda ? 7 : -7);
@@ -315,9 +318,10 @@ function aplicarProgressoSemana(deltaX, comprometido) {
   }
   const offset = preview.dataset.lado === "esquerda" ? largura : -largura;
   preview.style.transform = `translateX(${offset + deltaX}px)`;
+  preview.style.opacity = String(Math.min(Math.abs(deltaX) / 100, 1));
 }
 
-function adicionarGestoSwipe(elemento, aoArrastarEsquerda, aoArrastarDireita, aoProgresso) {
+function adicionarGestoSwipe(elemento, aoArrastarEsquerda, aoArrastarDireita, aoProgresso, distanciaFlick = 24, duracaoComprometido = 130) {
   let inicioX = 0;
   let inicioY = 0;
   let deltaX = 0;
@@ -358,14 +362,14 @@ function adicionarGestoSwipe(elemento, aoArrastarEsquerda, aoArrastarDireita, ao
     elemento.style.transition = "transform 200ms ease";
     if (horizontal && Math.abs(deltaX) > 60) {
       const indoParaEsquerda = deltaX < 0;
-      elemento.style.transform = `translateX(${indoParaEsquerda ? "-24px" : "24px"})`;
+      elemento.style.transform = `translateX(${indoParaEsquerda ? -distanciaFlick : distanciaFlick}px)`;
       if (aoProgresso) aoProgresso(deltaX, true);
       setTimeout(() => {
         elemento.style.transition = "none";
         elemento.style.transform = "translateX(0)";
         if (indoParaEsquerda) aoArrastarEsquerda(); else aoArrastarDireita();
         if (aoProgresso) aoProgresso(0);
-      }, 130);
+      }, duracaoComprometido);
     } else {
       elemento.style.transform = "translateX(0)";
       if (aoProgresso) aoProgresso(0);
@@ -742,7 +746,8 @@ document.addEventListener("DOMContentLoaded", () => {
   adicionarGestoSwipe(qs("#js-week-carousel"),
     () => selecionarData(somarDias(dataSelecionada, 7)),
     () => selecionarData(somarDias(dataSelecionada, -7)),
-    aplicarProgressoSemana);
+    aplicarProgressoSemana,
+    500, 220);
   adicionarGestoSwipe(qs("#js-agenda-lista"),
     () => selecionarData(somarDias(dataSelecionada, 1)),
     () => selecionarData(somarDias(dataSelecionada, -1)),
