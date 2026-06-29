@@ -189,20 +189,15 @@
 }
 
 .chip-group {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px 8px;
-  align-items: center;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+  gap: 8px;
 }
 
 .chip-group .chip {
-  min-width: 64px;
   justify-content: center;
   text-align: center;
-}
-
-.chip-group.is-resumo .chip:not(.chip--ativo) {
-  display: none;
+  width: 100%;
 }
 
 /* ---------- Badge de status ---------- */

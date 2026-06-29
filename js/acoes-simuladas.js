@@ -14,8 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const escolha = botao.dataset.pago;
 
       qsa("[data-pago]", grupo).forEach((b) => {
-        b.classList.toggle("btn--primary", b === botao);
-        b.classList.toggle("btn--secondary", b !== botao);
+        b.classList.toggle("chip--ativo", b === botao);
       });
 
       qsa("[data-campo-pago]", modal).forEach((campo) => {

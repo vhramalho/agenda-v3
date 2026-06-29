@@ -524,8 +524,8 @@ function prepararObservacaoWrap(idTextarea, idToggle, texto) {
   const textarea = qs(`#${idTextarea}`);
   const toggle = qs(`#${idToggle}`);
   textarea.value = texto || "";
-  textarea.classList.toggle("is-hidden", !texto);
-  toggle.classList.toggle("is-hidden", !!texto);
+  textarea.classList.add("is-hidden");
+  toggle.classList.remove("is-hidden");
 }
 
 function prepararNovoAgendamento() {
@@ -641,11 +641,9 @@ function prepararFinalizarAtendimento(agendamento) {
   qs("#js-finalizar-nome").textContent = agendamento.nomeCliente;
   resetarEdicaoNome("js-finalizar-nome-card", "js-finalizar-nome-input");
   montarServicosChips("js-finalizar-servicos", agendamento.servicosIds || []);
-  qs("#js-finalizar-servicos").classList.add("is-resumo");
   prepararObservacaoWrap("js-finalizar-observacao", "js-finalizar-observacao-toggle", agendamento.observacao || "");
   qsa("[data-pago]", modal).forEach((b) => {
-    b.classList.toggle("btn--primary", b.dataset.pago === "sim");
-    b.classList.toggle("btn--secondary", b.dataset.pago !== "sim");
+    b.classList.toggle("chip--ativo", b.dataset.pago === "sim");
   });
   qsa("[data-campo-pago]", modal).forEach((campo) => {
     campo.classList.toggle("is-hidden", campo.dataset.campoPago !== "sim");
@@ -659,9 +657,7 @@ function prepararFinalizarAtendimento(agendamento) {
 function definirPagoEditarRealizado(pago) {
   const modal = qs("#modal-editar-realizado");
   qsa("[data-pago-editar]", modal).forEach((b) => {
-    const ehSim = b.dataset.pagoEditar === "sim";
-    b.classList.toggle("btn--primary", ehSim === pago);
-    b.classList.toggle("btn--secondary", ehSim !== pago);
+    b.classList.toggle("chip--ativo", (b.dataset.pagoEditar === "sim") === pago);
   });
   qs("#js-editar-realizado-campo-formas").classList.toggle("is-hidden", !pago);
   qs("#js-editar-realizado-campo-pendente").classList.toggle("is-hidden", pago);
@@ -672,7 +668,6 @@ function prepararEditarRealizado(agendamento) {
   qs("#js-editar-realizado-nome").textContent = agendamento.nomeCliente;
   resetarEdicaoNome("js-editar-realizado-nome-card", "js-editar-realizado-nome-input");
   montarServicosChips("js-editar-realizado-servicos", agendamento.servicosIds || []);
-  qs("#js-editar-realizado-servicos").classList.add("is-resumo");
   prepararObservacaoWrap("js-editar-realizado-observacao", "js-editar-realizado-observacao-toggle", agendamento.observacao || "");
   const pago = agendamento.status === "realizado_pago";
   definirPagoEditarRealizado(pago);
@@ -843,19 +838,11 @@ document.addEventListener("DOMContentLoaded", () => {
     qs("#js-finalizar-nome-input").focus();
   });
 
-  qs("#js-finalizar-servicos-editar").addEventListener("click", () => {
-    qs("#js-finalizar-servicos").classList.remove("is-resumo");
-  });
-
   qs("#js-editar-realizado-nome-editar").addEventListener("click", () => {
     qs("#js-editar-realizado-nome-input").value = qs("#js-editar-realizado-nome").textContent;
     qs("#js-editar-realizado-nome-card").classList.add("is-hidden");
     qs("#js-editar-realizado-nome-input").classList.remove("is-hidden");
     qs("#js-editar-realizado-nome-input").focus();
-  });
-
-  qs("#js-editar-realizado-servicos-editar").addEventListener("click", () => {
-    qs("#js-editar-realizado-servicos").classList.remove("is-resumo");
   });
 
   qs("#js-novo-agendamento-cliente-remover").addEventListener("click", removerSelecaoCliente);
@@ -915,7 +902,7 @@ document.addEventListener("DOMContentLoaded", () => {
     ag.servicosIds = idsSelecionados("js-finalizar-servicos");
     ag.observacao = qs("#js-finalizar-observacao").value.trim();
     ag.realizadoEm = new Date().toISOString();
-    const pagoEscolha = qs("[data-pago].btn--primary", qs("#modal-finalizar-atendimento")).dataset.pago;
+    const pagoEscolha = qs("[data-pago].chip--ativo", qs("#modal-finalizar-atendimento")).dataset.pago;
     if (pagoEscolha === "sim") {
       const pagamentos = lerPagamentosDeLinhas("js-finalizar-linhas-pagamento");
       ag.status = "realizado_pago";
@@ -958,7 +945,7 @@ document.addEventListener("DOMContentLoaded", () => {
     aplicarEdicaoNome(ag, "js-editar-realizado-nome-input");
     ag.servicosIds = idsSelecionados("js-editar-realizado-servicos");
     ag.observacao = qs("#js-editar-realizado-observacao").value.trim();
-    const pagoEscolhido = qs("[data-pago-editar].btn--primary", qs("#modal-editar-realizado")).dataset.pagoEditar === "sim";
+    const pagoEscolhido = qs("[data-pago-editar].chip--ativo", qs("#modal-editar-realizado")).dataset.pagoEditar === "sim";
     if (pagoEscolhido) {
       const pagamentos = lerPagamentosDeLinhas("js-editar-realizado-linhas-pagamento");
       ag.status = "realizado_pago";
