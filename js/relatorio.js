@@ -79,15 +79,23 @@ function calcularResumo(agendamentos) {
   return { faturamento, atendimentos, totalRecebido, taxas, porFormaValor };
 }
 
-function formatarComparacao(atual, anterior, rotuloPeriodo) {
-  if (anterior === 0) {
-    if (atual === 0) return { texto: `sem variação vs ${rotuloPeriodo} anterior`, classe: "text-secondary" };
-    return { texto: `▲ novo vs ${rotuloPeriodo} anterior`, classe: "text-success" };
+function formatarComparacao(atual, anterior, rotuloPeriodo, tipo = "valor") {
+  const diff = atual - anterior;
+  if (diff === 0) return { texto: `sem variação vs ${rotuloPeriodo} anterior`, classe: "text-secondary" };
+
+  const seta = diff > 0 ? "▲" : "▼";
+  const classe = diff > 0 ? "text-success" : "text-danger";
+
+  if (tipo === "contagem") {
+    return { texto: `${seta}${Math.abs(diff)} vs ${rotuloPeriodo} anterior`, classe };
   }
-  const variacao = ((atual - anterior) / anterior) * 100;
-  const seta = variacao >= 0 ? "▲" : "▼";
-  const classe = variacao >= 0 ? "text-success" : "text-danger";
-  return { texto: `${seta} ${Math.abs(variacao).toFixed(1).replace(".", ",")}% vs ${rotuloPeriodo} anterior`, classe };
+
+  // tipo "valor" (dinheiro)
+  if (anterior === 0) {
+    return { texto: `${seta}${formatarMoeda(Math.abs(diff))} vs ${rotuloPeriodo} anterior`, classe };
+  }
+  const pct = Math.round(Math.abs((diff / anterior) * 100));
+  return { texto: `${seta}${formatarMoeda(Math.abs(diff))} (${pct}%) vs ${rotuloPeriodo} anterior`, classe };
 }
 
 const DIAS_ABREV_RELATORIO = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
@@ -269,24 +277,24 @@ document.addEventListener("DOMContentLoaded", () => {
     const ticketMedioAnterior = resumoAnterior.atendimentos > 0 ? resumoAnterior.faturamento / resumoAnterior.atendimentos : 0;
 
     qs("#js-relatorio-faturamento").textContent = formatarMoeda(resumo.faturamento);
-    const compFaturamento = formatarComparacao(resumo.faturamento, resumoAnterior.faturamento, rotuloComparacao);
+    const compFaturamento = formatarComparacao(resumo.faturamento, resumoAnterior.faturamento, rotuloComparacao, "valor");
     qs("#js-relatorio-faturamento-comparacao").textContent = compFaturamento.texto;
     qs("#js-relatorio-faturamento-comparacao").className = compFaturamento.classe;
     qs("#js-relatorio-faturamento-comparacao").style.fontWeight = "600";
     qs("#js-relatorio-faturamento-comparacao").style.fontSize = "var(--text-2xs)";
 
     qs("#js-relatorio-atendimentos").textContent = resumo.atendimentos;
-    const compAtendimentos = formatarComparacao(resumo.atendimentos, resumoAnterior.atendimentos, rotuloComparacao);
+    const compAtendimentos = formatarComparacao(resumo.atendimentos, resumoAnterior.atendimentos, rotuloComparacao, "contagem");
     qs("#js-relatorio-atendimentos-comparacao").textContent = compAtendimentos.texto;
     qs("#js-relatorio-atendimentos-comparacao").className = `insight-card__comparacao ${compAtendimentos.classe}`;
 
     qs("#js-relatorio-ticket").textContent = formatarMoeda(ticketMedio);
-    const compTicket = formatarComparacao(ticketMedio, ticketMedioAnterior, rotuloComparacao);
+    const compTicket = formatarComparacao(ticketMedio, ticketMedioAnterior, rotuloComparacao, "valor");
     qs("#js-relatorio-ticket-comparacao").textContent = compTicket.texto;
     qs("#js-relatorio-ticket-comparacao").className = `insight-card__comparacao ${compTicket.classe}`;
 
     qs("#js-relatorio-taxas").textContent = formatarMoeda(resumo.taxas);
-    const compTaxas = formatarComparacao(resumo.taxas, resumoAnterior.taxas, rotuloComparacao);
+    const compTaxas = formatarComparacao(resumo.taxas, resumoAnterior.taxas, rotuloComparacao, "valor");
     qs("#js-relatorio-taxas-comparacao").textContent = compTaxas.texto;
     qs("#js-relatorio-taxas-comparacao").className = `insight-card__comparacao ${compTaxas.classe}`;
 

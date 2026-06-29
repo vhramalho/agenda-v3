@@ -516,13 +516,8 @@
 }
 
 .insight-card__comparacao {
-  font-size: var(--text-xs);
-  font-weight: 600;
-}
-
-.insight-card__comparacao.text-success,
-.insight-card__comparacao.text-danger {
   font-size: var(--text-2xs);
+  font-weight: 600;
 }
 
 /* ---------- Cabeçalho de tela principal (título grande + ação) ---------- */
