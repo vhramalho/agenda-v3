@@ -476,12 +476,19 @@ function infoVisitaCliente(clienteId) {
   return dias === 0 ? "última visita hoje" : `última visita há ${dias} dia${dias === 1 ? "" : "s"}`;
 }
 
+function atualizarTelefoneWrap() {
+  const wrap = qs("#js-novo-agendamento-telefone-wrap");
+  const temNome = qs("#js-novo-agendamento-nome").value.trim().length > 0;
+  wrap.classList.toggle("is-hidden", !!clienteSelecionadoId || !temNome);
+}
+
 function mostrarClienteCard(cliente) {
   const card = qs("#js-novo-agendamento-cliente-card");
   const nomeWrap = qs("#js-novo-agendamento-nome-wrap");
   if (!cliente) {
     card.classList.add("is-hidden");
     nomeWrap.classList.remove("is-hidden");
+    atualizarTelefoneWrap();
     return;
   }
   qs("#js-novo-agendamento-cliente-avatar").textContent = iniciaisCliente(cliente.nome);
@@ -489,6 +496,7 @@ function mostrarClienteCard(cliente) {
   qs("#js-novo-agendamento-cliente-info").textContent = infoVisitaCliente(cliente.id);
   card.classList.remove("is-hidden");
   nomeWrap.classList.add("is-hidden");
+  atualizarTelefoneWrap();
 }
 
 function removerSelecaoCliente() {
@@ -505,12 +513,19 @@ function proximoNomeDisponivel(nomeBase) {
   return `${nomeBase} ${n}`;
 }
 
-function limparCompletarCadastro() {
-  qs("#js-novo-agendamento-completar-telefone").value = "";
-  qs("#js-novo-agendamento-completar-aniversario").value = "";
-  qs("#js-novo-agendamento-completar-observacao").value = "";
-  qs("#js-novo-agendamento-completar-campos").classList.add("is-hidden");
-  qs("#js-novo-agendamento-completar-wrap").classList.add("is-hidden");
+function limparTelefoneNovo() {
+  qs("#js-novo-agendamento-telefone").value = "";
+  qs("#js-novo-agendamento-telefone").classList.add("is-hidden");
+  qs("#js-novo-agendamento-telefone-toggle").classList.remove("is-hidden");
+  qs("#js-novo-agendamento-telefone-wrap").classList.add("is-hidden");
+}
+
+function prepararObservacaoWrap(idTextarea, idToggle, texto) {
+  const textarea = qs(`#${idTextarea}`);
+  const toggle = qs(`#${idToggle}`);
+  textarea.value = texto || "";
+  textarea.classList.toggle("is-hidden", !texto);
+  toggle.classList.toggle("is-hidden", !!texto);
 }
 
 function prepararNovoAgendamento() {
@@ -520,10 +535,10 @@ function prepararNovoAgendamento() {
   qs("#js-novo-agendamento-data-hora").textContent = `${formatarDataLonga(dataSelecionada)} — ${horaModalAtual}`;
   qs("#js-novo-agendamento-nome").value = "";
   qs("#js-novo-agendamento-resultados").classList.add("is-hidden");
+  limparTelefoneNovo();
   mostrarClienteCard(null);
-  limparCompletarCadastro();
   montarServicosChips("js-novo-agendamento-servicos", []);
-  qs("#js-novo-agendamento-observacao").value = "";
+  prepararObservacaoWrap("js-novo-agendamento-observacao", "js-novo-agendamento-observacao-toggle", "");
 }
 
 function prepararEdicaoAgendamento(agendamento) {
@@ -534,11 +549,11 @@ function prepararEdicaoAgendamento(agendamento) {
   qs("#js-novo-agendamento-data-hora").textContent = `${formatarDataLonga(agendamento.data)} — ${agendamento.hora}`;
   qs("#js-novo-agendamento-nome").value = agendamento.nomeCliente;
   qs("#js-novo-agendamento-resultados").classList.add("is-hidden");
+  limparTelefoneNovo();
   const cliente = agendamento.clienteId ? obterClientes().find((c) => c.id === agendamento.clienteId) : null;
   mostrarClienteCard(cliente);
-  limparCompletarCadastro();
   montarServicosChips("js-novo-agendamento-servicos", agendamento.servicosIds || []);
-  qs("#js-novo-agendamento-observacao").value = agendamento.observacao || "";
+  prepararObservacaoWrap("js-novo-agendamento-observacao", "js-novo-agendamento-observacao-toggle", agendamento.observacao || "");
 }
 
 function renderizarResultadosBusca(termo) {
@@ -546,19 +561,8 @@ function renderizarResultadosBusca(termo) {
   resultados.innerHTML = "";
   if (!termo) { resultados.classList.add("is-hidden"); return; }
 
-  const linhaCadastrar = document.createElement("div");
-  linhaCadastrar.className = "list-item";
-  linhaCadastrar.style.cursor = "pointer";
-  linhaCadastrar.style.padding = "8px 0";
-  linhaCadastrar.innerHTML = `<div class="list-item__body"><p class="list-item__title text-primary-accent" style="font-weight:600;font-size:var(--text-sm);">+ Cadastrar novo (opcional)</p></div>`;
-  linhaCadastrar.addEventListener("mousedown", (e) => e.preventDefault());
-  linhaCadastrar.addEventListener("click", () => {
-    resultados.classList.add("is-hidden");
-    qs("#js-novo-agendamento-completar-wrap").classList.remove("is-hidden");
-  });
-  resultados.appendChild(linhaCadastrar);
-
   const encontrados = obterClientes().filter((c) => c.ativo && c.nome.toLowerCase().includes(termo.toLowerCase())).slice(0, 5);
+  if (encontrados.length === 0) { resultados.classList.add("is-hidden"); return; }
   encontrados.forEach((cliente) => {
     const linha = document.createElement("div");
     linha.className = "list-item";
@@ -573,7 +577,6 @@ function renderizarResultadosBusca(termo) {
       qs("#js-novo-agendamento-nome").value = cliente.nome;
       mostrarClienteCard(cliente);
       resultados.classList.add("is-hidden");
-      qs("#js-novo-agendamento-completar-wrap").classList.add("is-hidden");
     });
     resultados.appendChild(linha);
   });
@@ -602,7 +605,6 @@ function finalizarCriacaoOuEdicaoAgendamento(clienteId, nome) {
   salvarAgendamentos(lista);
   agendamentoEditandoId = null;
   fecharModal("modal-novo-agendamento");
-  fecharModal("modal-adicionar-cliente-novo");
   fecharModal("modal-nome-duplicado");
   renderizarAgendaLista();
   mostrarSucesso();
@@ -615,7 +617,7 @@ function prepararFinalizarAtendimento(agendamento) {
   qs("#js-finalizar-avatar").textContent = iniciaisCliente(agendamento.nomeCliente);
   qs("#js-finalizar-nome").textContent = agendamento.nomeCliente;
   montarServicosChips("js-finalizar-servicos", agendamento.servicosIds || []);
-  qs("#js-finalizar-observacao").value = "";
+  prepararObservacaoWrap("js-finalizar-observacao", "js-finalizar-observacao-toggle", "");
   qsa("[data-pago]", modal).forEach((b) => {
     b.classList.toggle("btn--primary", b.dataset.pago === "sim");
     b.classList.toggle("btn--secondary", b.dataset.pago !== "sim");
@@ -644,7 +646,7 @@ function prepararEditarRealizado(agendamento) {
   qs("#js-editar-realizado-avatar").textContent = iniciaisCliente(agendamento.nomeCliente);
   qs("#js-editar-realizado-nome").textContent = agendamento.nomeCliente;
   montarServicosChips("js-editar-realizado-servicos", agendamento.servicosIds || []);
-  qs("#js-editar-realizado-observacao").value = agendamento.observacao || "";
+  prepararObservacaoWrap("js-editar-realizado-observacao", "js-editar-realizado-observacao-toggle", agendamento.observacao || "");
   const pago = agendamento.status === "realizado_pago";
   definirPagoEditarRealizado(pago);
   if (pago) {
@@ -772,6 +774,7 @@ document.addEventListener("DOMContentLoaded", () => {
   qs("#js-novo-agendamento-nome").addEventListener("input", (e) => {
     clienteSelecionadoId = null;
     renderizarResultadosBusca(e.target.value.trim());
+    atualizarTelefoneWrap();
   });
 
   qs("#js-novo-agendamento-nome").addEventListener("focus", (e) => {
@@ -782,8 +785,28 @@ document.addEventListener("DOMContentLoaded", () => {
     setTimeout(() => qs("#js-novo-agendamento-resultados").classList.add("is-hidden"), 150);
   });
 
-  qs("#js-novo-agendamento-completar-toggle").addEventListener("click", () => {
-    qs("#js-novo-agendamento-completar-campos").classList.toggle("is-hidden");
+  qs("#js-novo-agendamento-telefone-toggle").addEventListener("click", () => {
+    qs("#js-novo-agendamento-telefone").classList.remove("is-hidden");
+    qs("#js-novo-agendamento-telefone-toggle").classList.add("is-hidden");
+    qs("#js-novo-agendamento-telefone").focus();
+  });
+
+  qs("#js-novo-agendamento-observacao-toggle").addEventListener("click", () => {
+    qs("#js-novo-agendamento-observacao").classList.remove("is-hidden");
+    qs("#js-novo-agendamento-observacao-toggle").classList.add("is-hidden");
+    qs("#js-novo-agendamento-observacao").focus();
+  });
+
+  qs("#js-finalizar-observacao-toggle").addEventListener("click", () => {
+    qs("#js-finalizar-observacao").classList.remove("is-hidden");
+    qs("#js-finalizar-observacao-toggle").classList.add("is-hidden");
+    qs("#js-finalizar-observacao").focus();
+  });
+
+  qs("#js-editar-realizado-observacao-toggle").addEventListener("click", () => {
+    qs("#js-editar-realizado-observacao").classList.remove("is-hidden");
+    qs("#js-editar-realizado-observacao-toggle").classList.add("is-hidden");
+    qs("#js-editar-realizado-observacao").focus();
   });
 
   qs("#js-novo-agendamento-cliente-remover").addEventListener("click", removerSelecaoCliente);
@@ -806,40 +829,17 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    const telefoneCompletar = qs("#js-novo-agendamento-completar-telefone").value.trim();
-    const { dia: diaCompletar, mes: mesCompletar } = extrairAniversario(qs("#js-novo-agendamento-completar-aniversario").value);
-    const observacaoCompletar = qs("#js-novo-agendamento-completar-observacao").value.trim();
-    if (telefoneCompletar || diaCompletar || observacaoCompletar) {
-      const hoje = hojeIso();
-      const clientes = obterClientes();
-      const novoCliente = {
-        id: gerarId("cli"), nome, telefone: telefoneCompletar,
-        aniversarioDia: diaCompletar, aniversarioMes: mesCompletar, aniversarioAno: null,
-        observacao: observacaoCompletar, criadoEm: hoje, atualizadoEm: hoje, ativo: true,
-      };
-      clientes.push(novoCliente);
-      salvarClientes(clientes);
-      finalizarCriacaoOuEdicaoAgendamento(novoCliente.id, nome);
-      return;
-    }
-    pendenteAgendamentoNome = nome;
-    qs("#js-adicionar-cliente-nome").textContent = nome;
-    fecharModal("modal-novo-agendamento");
-    abrirModal("modal-adicionar-cliente-novo");
-  });
-
-  qs("#js-adicionar-cliente-sim").addEventListener("click", () => {
-    const nome = pendenteAgendamentoNome;
+    const telefoneNovo = qs("#js-novo-agendamento-telefone").value.trim();
     const hoje = hojeIso();
     const clientes = obterClientes();
-    const novoCliente = { id: gerarId("cli"), nome, telefone: "", aniversarioDia: null, aniversarioMes: null, aniversarioAno: null, observacao: "", criadoEm: hoje, atualizadoEm: hoje, ativo: true };
+    const novoCliente = {
+      id: gerarId("cli"), nome, telefone: telefoneNovo,
+      aniversarioDia: null, aniversarioMes: null, aniversarioAno: null,
+      observacao: "", criadoEm: hoje, atualizadoEm: hoje, ativo: true,
+    };
     clientes.push(novoCliente);
     salvarClientes(clientes);
     finalizarCriacaoOuEdicaoAgendamento(novoCliente.id, nome);
-  });
-
-  qs("#js-adicionar-cliente-avulso").addEventListener("click", () => {
-    finalizarCriacaoOuEdicaoAgendamento(null, pendenteAgendamentoNome);
   });
 
   qs("#js-nome-duplicado-usar-existente").addEventListener("click", () => {
@@ -854,10 +854,6 @@ document.addEventListener("DOMContentLoaded", () => {
     clientes.push(novoCliente);
     salvarClientes(clientes);
     finalizarCriacaoOuEdicaoAgendamento(novoCliente.id, nomeFinal);
-  });
-
-  qs("#js-nome-duplicado-avulso").addEventListener("click", () => {
-    finalizarCriacaoOuEdicaoAgendamento(null, pendenteAgendamentoNome);
   });
 
   qs("#js-finalizar-confirmar").addEventListener("click", () => {

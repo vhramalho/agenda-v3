@@ -102,18 +102,6 @@
       </div>
     </div>
 
-    <div class="modal-overlay is-hidden" id="modal-adicionar-cliente-novo">
-      <div class="modal-sheet" style="text-align:center;">
-        <div class="icon-circle" style="margin:0 auto 12px;width:48px;height:48px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="8" r="3"/><path d="M3 19c0-3 2.5-5 6-5"/><path d="M16 8h4M18 6v4"/></svg></div>
-        <p style="margin-bottom:20px;"><strong id="js-adicionar-cliente-nome"></strong> ainda não está na sua lista de clientes. Adicionar?</p>
-        <div class="stack">
-          <button class="btn btn--primary" id="js-adicionar-cliente-sim">Adicionar aos clientes</button>
-          <button class="btn btn--secondary" id="js-adicionar-cliente-avulso">Não, é avulso</button>
-          <button class="btn btn--ghost" data-fechar-modal>Cancelar</button>
-        </div>
-      </div>
-    </div>
-
     <div class="modal-overlay is-hidden" id="modal-nome-duplicado">
       <div class="modal-sheet" style="text-align:center;">
         <div class="icon-circle" style="margin:0 auto 12px;width:48px;height:48px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="8" r="3"/><path d="M3 19c0-3 2.5-5 6-5"/><circle cx="18" cy="8" r="3"/><path d="M14 14c2.8.3 6 2 6 5"/></svg></div>
@@ -121,7 +109,6 @@
         <div class="stack">
           <button class="btn btn--primary" id="js-nome-duplicado-usar-existente">Usar cliente existente</button>
           <button class="btn btn--secondary" id="js-nome-duplicado-criar-novo">Criar novo cadastro</button>
-          <button class="btn btn--secondary" id="js-nome-duplicado-avulso">Não, é avulso</button>
           <button class="btn btn--ghost" data-fechar-modal>Cancelar</button>
         </div>
       </div>
@@ -178,21 +165,17 @@
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
           </button>
         </div>
-        <div class="field is-hidden" id="js-novo-agendamento-completar-wrap" style="margin-top:-8px;">
-          <button type="button" id="js-novo-agendamento-completar-toggle" class="text-primary-accent" style="font-weight:600;font-size:var(--text-sm);background:none;border:none;text-align:left;padding:0;cursor:pointer;">Completar cadastro (opcional)</button>
-          <div class="is-hidden" id="js-novo-agendamento-completar-campos" style="margin-top:12px;">
-            <div class="field"><label class="field__label">Telefone</label><input class="input" id="js-novo-agendamento-completar-telefone" placeholder="(00) 00000-0000"/></div>
-            <div class="field"><label class="field__label">Aniversário</label><input class="input" id="js-novo-agendamento-completar-aniversario" placeholder="DD/MM"/></div>
-            <div class="field"><label class="field__label">Observação sobre o cliente</label><textarea class="textarea" id="js-novo-agendamento-completar-observacao" placeholder="Alguma informação importante sobre o cliente..."></textarea></div>
-          </div>
+        <div class="field is-hidden" id="js-novo-agendamento-telefone-wrap" style="margin-top:-8px;">
+          <button type="button" id="js-novo-agendamento-telefone-toggle" class="text-primary-accent" style="font-weight:600;font-size:var(--text-sm);background:none;border:none;text-align:left;padding:0;cursor:pointer;">+ Adicionar telefone</button>
+          <input class="input is-hidden" style="margin-top:8px;" id="js-novo-agendamento-telefone" placeholder="(00) 00000-0000"/>
         </div>
         <div class="field">
           <label class="field__label">Serviços</label>
           <div class="chip-group" data-chips="multi" id="js-novo-agendamento-servicos"></div>
         </div>
         <div class="field">
-          <label class="field__label">Observação (opcional)</label>
-          <textarea class="textarea" placeholder="Alguma observação sobre o atendimento..." id="js-novo-agendamento-observacao"></textarea>
+          <button type="button" id="js-novo-agendamento-observacao-toggle" class="text-primary-accent" style="font-weight:600;font-size:var(--text-sm);background:none;border:none;text-align:left;padding:0;cursor:pointer;">+ Adicionar observação</button>
+          <textarea class="textarea is-hidden" placeholder="Alguma observação sobre o atendimento..." id="js-novo-agendamento-observacao"></textarea>
         </div>
         <div class="btn-row"><button class="btn btn--secondary" data-fechar-modal>Cancelar</button><button class="btn btn--primary" id="js-novo-agendamento-salvar">Salvar</button></div>
       </div>
@@ -206,7 +189,10 @@
           <div class="card row"><div class="list-item__avatar" id="js-finalizar-avatar"></div><span style="flex:1;font-weight:700;" id="js-finalizar-nome"></span></div>
         </div>
         <div class="field"><label class="field__label">Serviços</label><div class="chip-group" data-chips="multi" id="js-finalizar-servicos"></div></div>
-        <div class="field"><label class="field__label">Observação (opcional)</label><textarea class="textarea" placeholder="Como foi o atendimento?" id="js-finalizar-observacao"></textarea></div>
+        <div class="field">
+          <button type="button" id="js-finalizar-observacao-toggle" class="text-primary-accent" style="font-weight:600;font-size:var(--text-sm);background:none;border:none;text-align:left;padding:0;cursor:pointer;">+ Adicionar observação</button>
+          <textarea class="textarea is-hidden" placeholder="Como foi o atendimento?" id="js-finalizar-observacao"></textarea>
+        </div>
         <div class="field">
           <label class="field__label">Foi pago?</label>
           <div class="btn-row">
@@ -262,7 +248,10 @@
           <div class="card row"><div class="list-item__avatar" id="js-editar-realizado-avatar"></div><span style="flex:1;font-weight:700;" id="js-editar-realizado-nome"></span></div>
         </div>
         <div class="field"><label class="field__label">Serviços</label><div class="chip-group" id="js-editar-realizado-servicos"></div></div>
-        <div class="field"><label class="field__label">Observação (opcional)</label><textarea class="textarea" id="js-editar-realizado-observacao"></textarea></div>
+        <div class="field">
+          <button type="button" id="js-editar-realizado-observacao-toggle" class="text-primary-accent" style="font-weight:600;font-size:var(--text-sm);background:none;border:none;text-align:left;padding:0;cursor:pointer;">+ Adicionar observação</button>
+          <textarea class="textarea is-hidden" id="js-editar-realizado-observacao"></textarea>
+        </div>
         <div class="field">
           <label class="field__label">Situação do pagamento</label>
           <div class="btn-row">
