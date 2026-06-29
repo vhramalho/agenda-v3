@@ -259,8 +259,8 @@ Todas em `docs/AGENDA_V3_DOCUMENTO_MESTRE.txt` seção 6. Lista: Agenda (`index.
 
 - `mensagemEndereco`: onde mora o botão de enviar endereço — decisão **deliberadamente em espera**, ver `docs/LOGICA_E_FLUXO_DE_DADOS.md` Pergunta 7.
 - `perfil.html` continua decorativo (nome/e-mail/senha/plano estáticos) — é conceitualmente "conta logada", fica pra Fase 5.
-- Fase 4 (refinamento geral) e Fase 5 (backend real, login real, sincronização) — ainda não iniciadas, sem plano de etapas definido.
-- Publicar o projeto no GitHub + GitHub Pages — solicitado pelo usuário, repositório público confirmado, execução ainda pendente.
+- Fase 5 (backend real, login real, sincronização) — ainda não iniciada.
+- **Adicionar horário extra na Agenda, só naquele dia (registrado em 2026-06-29, não implementar ainda):** botão discreto acima do primeiro horário do dia e abaixo do último (ex.: agenda configurada 9:00–17:30 → botão "+ adicionar mais 1 hora" em cima do 9:00 e embaixo do 17:30). Ao tocar, libera mais 1 hora de horários pra agendar **só naquele dia específico** (não altera `horaInicio`/`horaFim` da configuração geral). A quantidade de novos slots liberados depende do `intervaloGrade` (15/20/30/40min etc.) — sempre o equivalente a 1 hora cheia, não um slot fixo. No exemplo dado pelo usuário (grade que termina em 17:30), tocar no botão de cima libera o 8:00, e no de baixo libera o 18:30.
 
 ## 19. Decisões definitivas (não voltar atrás sem confirmação explícita)
 
@@ -289,7 +289,7 @@ Todas as 10 perguntas resolvidas em `docs/LOGICA_E_FLUXO_DE_DADOS.md` seção 7,
 
 **Fase 4 formal** — processo definido em `Documentacao/04_FASE_4.md`: achar o problema real antes da solução, pesquisar referência (Booksy/Fresha/Google e Apple Calendar/Mercado Pago) quando houver dúvida de fluxo, Claude age como analista antes de implementar, checklist único por tela. App publicado e testável em https://vhramalho.github.io/agenda-v3/ (repo https://github.com/vhramalho/agenda-v3).
 
-**Página Agenda (`index.html`) considerada ajustada por enquanto** (2026-06-26, 5 rodadas de revisão concluídas) — usuário disse "todos ajustes na página de agenda feitos. No decorrer do uso, se aparecer mais a gente ajusta." Não é uma fase formalmente "fechada", só uma pausa — pode voltar a receber ajustes se surgir algo no uso real.
+**Página Agenda (`index.html`) encerrada nesta rodada da Fase 4** (2026-06-29) — passou pelo checklist da seção 6 de `04_FASE_4.md`: padronização visual (sessões anteriores), simplificação do fluxo de cliente nos modais, animação de troca de dia/semana corrigida, botões redundantes de Cancelar/Fechar removidos. Usuário confirmou "acho que encerramos a página de agenda". Única pendência registrada pra depois: a funcionalidade de "adicionar horário extra só no dia" (seção 18). Não é definitivo — pode voltar a receber ajustes se surgir algo no uso real, mas não é mais o foco ativo.
 
 ## 23. Próxima etapa
 
