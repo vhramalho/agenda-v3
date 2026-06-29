@@ -91,11 +91,7 @@ function formatarComparacao(atual, anterior, rotuloPeriodo, tipo = "valor") {
   }
 
   // tipo "valor" (dinheiro)
-  if (anterior === 0) {
-    return { texto: `${seta}${formatarMoeda(Math.abs(diff))} vs ${rotuloPeriodo} anterior`, classe };
-  }
-  const pct = Math.round(Math.abs((diff / anterior) * 100));
-  return { texto: `${seta}${formatarMoeda(Math.abs(diff))} (${pct}%) vs ${rotuloPeriodo} anterior`, classe };
+  return { texto: `${seta}${formatarMoeda(Math.abs(diff))} vs ${rotuloPeriodo} anterior`, classe };
 }
 
 const DIAS_ABREV_RELATORIO = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
@@ -199,7 +195,6 @@ function montarRecebimentos(resumo) {
   container.innerHTML = "";
   pizza.innerHTML = "";
 
-  qs("#js-relatorio-total-recebido").textContent = `Total recebido: ${formatarMoeda(resumo.totalRecebido)}`;
 
   const circunferencia = 2 * Math.PI * 45;
   let acumulado = 0;
