@@ -100,32 +100,7 @@ function formatarEixoY(v) {
   return `R$${Math.round(v)}`;
 }
 
-function horaParaFracaoRelatorio(horaStr) {
-  const [h, m] = horaStr.split(":").map(Number);
-  return h + m / 60;
-}
-
 function calcularPontosGrafico(tipoPeriodo, refData) {
-  if (tipoPeriodo === "dia") {
-    const config = obterConfig();
-    const inicioHora = Math.floor(horaParaFracaoRelatorio(config.horaInicio || "08:00"));
-    const fimHora = Math.ceil(horaParaFracaoRelatorio(config.horaFim || "20:00"));
-    const iso = dataLocalParaIso(refData);
-    const ags = obterAgendamentos().filter((a) => a.data === iso && a.status && a.status.startsWith("realizado_"));
-
-    const pontos = [];
-    const rotulos = [];
-    for (let h = inicioHora; h <= fimHora; h++) {
-      const valor = ags
-        .filter((a) => Math.floor(horaParaFracaoRelatorio(a.hora)) === h)
-        .reduce((s, a) => s + (a.valorTotal || 0), 0);
-      const frac = (h - inicioHora) / (fimHora - inicioHora || 1);
-      pontos.push({ frac, valor, marcado: true });
-      rotulos.push({ frac, texto: `${String(h).padStart(2, "0")}h` });
-    }
-    return { pontos, rotulos };
-  }
-
   if (tipoPeriodo === "mes") {
     const ultimoDia = new Date(refData.getFullYear(), refData.getMonth() + 1, 0).getDate();
     const pontos = [];
@@ -316,7 +291,14 @@ document.addEventListener("DOMContentLoaded", () => {
     qs("#js-relatorio-taxas-comparacao").className = `insight-card__comparacao ${compTaxas.classe}`;
 
     montarRecebimentos(resumo);
-    montarGraficoSemana(tipoPeriodo, refData);
+
+    const svgGrafico = qs("#js-relatorio-grafico-svg");
+    if (tipoPeriodo === "dia") {
+      svgGrafico.classList.add("is-hidden");
+    } else {
+      svgGrafico.classList.remove("is-hidden");
+      montarGraficoSemana(tipoPeriodo, refData);
+    }
   }
 
   function avancarPeriodo(direcao) {
