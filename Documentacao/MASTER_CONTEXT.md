@@ -128,7 +128,7 @@ Agenda (`index.html`) e o hub "Mais" ficam fora desse esquema: Agenda é uma gra
 | Ranking de serviços | 4 | B | não | lista única, top 3 com destaque (2026-06-28) | — | não | é o próprio card de ranking |
 | Aniversariantes | 4 | B | não (virou insight, 2026-06-28) | lista do mês | — | card de botão (mês) | hero da própria página |
 | Sem retornar | 4 | B | não (virou insight, 2026-06-28) | lista filtrada | — | segmented por dias (2026-06-28) | hero da própria página |
-| pendentes-quem-deve/pagos | 4 | B | (quem-deve tem) | lista completa | — | não | não |
+| pendentes-quem-deve/pagos | removidas 2026-06-29 — listas agora expandem in-place em pendentes.html | | | | | | |
 | pendentes-devedores | 4 | B | não | lista única, top 3 com destaque (2026-06-28) | — | não | é o próprio card de ranking |
 | clientes-todos | 4 | B | não | lista completa | — | busca própria | não |
 | Cliente-detalhe | detalhe de item | bespoke (voltar+título+editar) | stats da pessoa | histórico de atendimentos | — | não | não |
@@ -231,7 +231,7 @@ Ver `docs/LOGICA_E_FLUXO_DE_DADOS.md` seção 3 para os esquemas completos. Resu
 
 ## 16. Telas existentes (23 telas oficiais + hub "Mais")
 
-Todas em `docs/AGENDA_V3_DOCUMENTO_MESTRE.txt` seção 6. Lista: Agenda (`index.html`), Clientes, Cliente-detalhe, Relatório, Pendentes (+ 3 telas "ver todos" criadas como extensão formalizada: `pendentes-quem-deve.html`, `pendentes-pagos.html`, `pendentes-devedores.html`), Serviços, Formas de pagamento, Intervalos, Mais (hub), Configurações, Assinatura, Onboarding, WhatsApp, Perfil, Ranking, Aniversariantes, Sem retornar, Login, Cadastro, Assinatura vencida, Backup, Ajuda, Termos, Privacidade.
+Todas em `docs/AGENDA_V3_DOCUMENTO_MESTRE.txt` seção 6. Lista: Agenda (`index.html`), Clientes, Cliente-detalhe, Relatório, Pendentes (+ 1 tela "ver todos" ainda existente: `pendentes-devedores.html`; `pendentes-quem-deve.html` e `pendentes-pagos.html` removidas em 2026-06-29), Serviços, Formas de pagamento, Intervalos, Mais (hub), Configurações, Assinatura, Onboarding, WhatsApp, Perfil, Ranking, Aniversariantes, Sem retornar, Login, Cadastro, Assinatura vencida, Backup, Ajuda, Termos, Privacidade.
 
 **Tela extra criada na revisão pós-publicação (2026-06-27):** `clientes-todos.html` — diretório completo de clientes com busca própria, sem limite de 5; é o destino do "Ver todos" da lista resumida em `clientes.html` (mesmo padrão das telas "ver todos" do Pendentes).
 
@@ -247,7 +247,7 @@ Todas em `docs/AGENDA_V3_DOCUMENTO_MESTRE.txt` seção 6. Lista: Agenda (`index.
 - Configurações: horários/grade/tempo padrão/modo de compartilhamento reais; Limpar agenda / Apagar todos os dados / Redefinir onboarding funcionais (Etapa 5).
 - Agenda completa (Etapa 6): navegação real por dia/semana/calendário, algoritmo de encaixe, CRUD de agendamentos, realizar atendimento com pagamento dividido, editar/excluir realizado, bloqueio pontual vs. fixo, busca de cliente ao vivo, botão "Enviar lembrete", Compartilhar horários via WhatsApp.
 - **Gesto de arrastar (ajustado em 2026-06-29):** `adicionarGestoSwipe()` (`js/agenda.js`) tem um callback de progresso opcional com 2 parâmetros — `(deltaX, comprometido)`. `comprometido=true` é passado no instante em que o dedo solta E o arraste vai resultar em troca (passou do limiar de 60px) — força a transição visual a completar 100% imediatamente, sem voltar ao estado original antes de trocar. Usado por `aplicarProgressoCarrossel` (troca de dia, esmaece a cor do dia ativo pro vizinho) e `aplicarProgressoSemana` (troca de semana, desliza a semana seguinte/anterior por uma segunda faixa de chips posicionada de forma absoluta sobre `#js-week-carousel-wrap`, escondida quando não está em uso).
-- Pendentes: as 4 telas com dados reais, "Receber" leva à data exata do pendente na Agenda (Etapa 7).
+- Pendentes: as 4 telas com dados reais, "Receber" leva à data exata do pendente na Agenda (Etapa 7). **Ajustado em 2026-06-29:** `pendentes-quem-deve.html` e `pendentes-pagos.html` removidos — as listas agora expandem na própria `pendentes.html`. "Quem deve" mostra 5 por padrão; se houver mais, o título vira "Quem deve (N)" e aparece "Ver todos"/"Ver menos". "Pagos recentemente" usa só os 5 últimos (`.slice(0,5)`), mostra 2 por padrão, "Ver todos"/"Ver menos" quando há mais de 2.
 - Relatório: todos os números reais por período (Dia/Semana/Mês/Ano), com comparação vs. período anterior (Etapa 8).
 - **Gráfico de faturamento do Relatório (corrigido em 2026-06-29):** antes sempre mostrava a semana atual (Dom-Sáb) independente da aba selecionada — agora `calcularPontosGrafico()` (`js/relatorio.js`) calcula de verdade por período: Dia = gráfico oculto (removido 2026-06-29); Semana = um ponto por dia; Mês = um ponto por dia do mês; Ano = um ponto por mês.
 - **Textos de variação do Relatório (ajustado em 2026-06-29):** `formatarComparacao()` aceita parâmetro `tipo`: `"valor"` (faturamento, ticket médio, taxas) exibe `▲R$X,XX (Y%) vs período anterior` sem casas decimais no %; `"contagem"` (atendimentos) exibe `▲N vs período anterior`. "Sem variação vs … anterior" ficou no mesmo tamanho (`--text-2xs`) que os textos verde/vermelho — era `--text-xs` antes (CSS `insight-card__comparacao`).
