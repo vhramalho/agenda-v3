@@ -29,6 +29,58 @@ function extrairAniversarioCliente(texto) {
   return { dia: isNaN(dia) ? null : dia, mes: isNaN(mes) ? null : mes };
 }
 
+let historicoExpandido = false;
+
+function renderizarHistorico() {
+  const id = obterIdClienteDaUrl();
+  const servicos = obterServicos();
+  const realizados = obterAgendamentos()
+    .filter((a) => a.clienteId === id && a.status && a.status.startsWith("realizado_"))
+    .sort((a, b) => (a.data + a.hora < b.data + b.hora ? 1 : -1));
+
+  const historico = qs("#js-cliente-historico");
+  const historicoVazio = qs("#js-cliente-historico-vazio");
+  const toggle = qs("#js-cliente-historico-toggle");
+  historico.innerHTML = "";
+
+  if (realizados.length === 0) {
+    historico.classList.add("is-hidden");
+    historicoVazio.classList.remove("is-hidden");
+    toggle.classList.add("is-hidden");
+    return;
+  }
+
+  historico.classList.remove("is-hidden");
+  historicoVazio.classList.add("is-hidden");
+
+  (historicoExpandido ? realizados : realizados.slice(0, 5)).forEach((a) => {
+    const nomesServicos = (a.servicosIds || [])
+      .map((sid) => (servicos.find((s) => s.id === sid) || {}).nome)
+      .filter(Boolean)
+      .join(" + ");
+    const linha = document.createElement("div");
+    linha.className = "list-item";
+    linha.innerHTML = `
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.8"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/></svg>
+      <div class="list-item__body">
+        <p class="list-item__title">${formatarDataCurta(a.data)} <span class="text-muted" style="font-weight:400;">${a.hora}</span></p>
+        <p class="list-item__subtitle"></p>
+      </div>
+      <p class="text-success" style="font-weight:700;"></p>
+    `;
+    linha.querySelector(".list-item__subtitle").textContent = nomesServicos || "—";
+    linha.querySelector(".text-success").textContent = formatarMoeda(a.valorTotal || 0);
+    historico.appendChild(linha);
+  });
+
+  if (realizados.length > 5) {
+    toggle.textContent = historicoExpandido ? "Ver menos" : `Ver todos (${realizados.length})`;
+    toggle.classList.remove("is-hidden");
+  } else {
+    toggle.classList.add("is-hidden");
+  }
+}
+
 function renderizarPagina() {
   const id = obterIdClienteDaUrl();
   const cliente = obterClientes().find((c) => c.id === id);
@@ -74,36 +126,7 @@ function renderizarPagina() {
 
   qs("#js-cliente-observacao").textContent = cliente.observacao || "Nenhuma observação registrada.";
 
-  const servicos = obterServicos();
-  const historico = qs("#js-cliente-historico");
-  const historicoVazio = qs("#js-cliente-historico-vazio");
-  historico.innerHTML = "";
-  if (realizados.length === 0) {
-    historico.classList.add("is-hidden");
-    historicoVazio.classList.remove("is-hidden");
-  } else {
-    historico.classList.remove("is-hidden");
-    historicoVazio.classList.add("is-hidden");
-    realizados.slice(0, 5).forEach((a) => {
-      const nomesServicos = (a.servicosIds || [])
-        .map((sid) => (servicos.find((s) => s.id === sid) || {}).nome)
-        .filter(Boolean)
-        .join(" + ");
-      const linha = document.createElement("div");
-      linha.className = "list-item";
-      linha.innerHTML = `
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.8"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/></svg>
-        <div class="list-item__body">
-          <p class="list-item__title">${formatarDataCurta(a.data)} <span class="text-muted" style="font-weight:400;">${a.hora}</span></p>
-          <p class="list-item__subtitle"></p>
-        </div>
-        <p class="text-success" style="font-weight:700;"></p>
-      `;
-      linha.querySelector(".list-item__subtitle").textContent = nomesServicos || "—";
-      linha.querySelector(".text-success").textContent = formatarMoeda(a.valorTotal || 0);
-      historico.appendChild(linha);
-    });
-  }
+  renderizarHistorico();
 
   const whatsapp = qs("#js-cliente-whatsapp");
   if (cliente.telefone) {
@@ -151,6 +174,11 @@ document.addEventListener("DOMContentLoaded", () => {
     salvarClientes(lista);
     fecharModal("modal-editar-cliente");
     renderizarPagina();
+  });
+
+  qs("#js-cliente-historico-toggle").addEventListener("click", () => {
+    historicoExpandido = !historicoExpandido;
+    renderizarHistorico();
   });
 
   qs("#js-confirmar-mover-lixeira").addEventListener("click", () => {

@@ -520,6 +520,10 @@
   font-weight: 600;
 }
 
+[data-page="relatorio"] .insight-card__comparacao {
+  font-size: calc(var(--text-2xs) + 2px);
+}
+
 /* ---------- Cabeçalho de tela principal (título grande + ação) ---------- */
 .page-header-principal {
   display: flex;
