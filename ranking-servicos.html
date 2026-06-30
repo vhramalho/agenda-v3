@@ -9,10 +9,16 @@
   <link rel="stylesheet" href="css/layout.css" />
   <link rel="stylesheet" href="css/components.css" />
 </head>
-<body data-page="mais" data-titulo="Ranking de serviços">
+<body data-page="mais">
   <div class="app">
     <main class="page">
-      <div id="js-header-mount"></div>
+      <header class="app-header" style="padding:0;margin-bottom:var(--space-5);">
+        <button class="icon-btn" onclick="voltarOuInicio()" aria-label="Voltar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <h1 class="app-header__title">Ranking de serviços</h1>
+        <div class="icon-btn" style="visibility:hidden" aria-hidden="true"></div>
+      </header>
 
       <div class="segmented section">
         <button class="icon-btn" id="js-ano-anterior" aria-label="Ano anterior">

@@ -12,14 +12,10 @@ function destacarItemMenuAtivo() {
   });
 }
 
-function configurarBotaoVoltar() {
-  const botaoVoltar = qs("#js-btn-voltar");
-  if (!botaoVoltar) return;
-  botaoVoltar.addEventListener("click", () => {
-    if (window.history.length > 1) {
-      window.history.back();
-    } else {
-      window.location.href = "index.html";
-    }
-  });
+function voltarOuInicio() {
+  if (window.history.length > 1) {
+    window.history.back();
+  } else {
+    window.location.href = "index.html";
+  }
 }
