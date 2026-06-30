@@ -214,7 +214,7 @@ function montarLinhaSemRetornar(item, indice) {
   `;
   linha.querySelector(".list-item__avatar").textContent = iniciaisCliente(item.cliente.nome);
   linha.querySelector(".list-item__title").textContent = item.cliente.nome;
-  linha.querySelector(".js-sr-data").textContent = item.info.data ? `📅 ${formatarDataCurta(item.info.data)} · última visita` : "Nunca atendido";
+  linha.querySelector(".js-sr-data").textContent = item.info.data ? `última visita em ${formatarDataCurta(item.info.data)}` : "Nunca atendido";
   linha.querySelector(".js-sr-dias").textContent = item.info.dias === null ? "—" : `${item.info.dias} dias`;
 
   if (item.cliente.telefone) {
