@@ -34,7 +34,6 @@ function renderizarAniversariantesESemRetornar(clientesAtivos) {
 }
 
 function renderizarClientes() {
-  const termo = (qs("#js-busca-cliente").value || "").trim().toLowerCase();
   const clientesAtivos = obterClientes()
     .filter((c) => c.ativo)
     .sort((a, b) => a.nome.localeCompare(b.nome, "pt-BR"));
@@ -42,14 +41,15 @@ function renderizarClientes() {
   renderizarRankingTop3(clientesAtivos);
   renderizarAniversariantesESemRetornar(clientesAtivos);
 
-  const filtrados = termo ? clientesAtivos.filter((c) => c.nome.toLowerCase().includes(termo)) : clientesAtivos;
-  const visiveis = termo ? filtrados : filtrados.slice(0, 5);
+  qs("#js-clientes-titulo").textContent = `Todos os clientes (${clientesAtivos.length})`;
+
+  const visiveis = clientesAtivos.slice(0, 5);
 
   const container = qs("#js-lista-clientes");
   const vazio = qs("#js-clientes-vazio");
   container.innerHTML = "";
 
-  if (filtrados.length === 0) {
+  if (clientesAtivos.length === 0) {
     container.classList.add("is-hidden");
     vazio.classList.remove("is-hidden");
   } else {
@@ -61,8 +61,6 @@ function renderizarClientes() {
 
 document.addEventListener("DOMContentLoaded", () => {
   renderizarClientes();
-
-  qs("#js-busca-cliente").addEventListener("input", renderizarClientes);
 
   qs("#js-btn-novo-cliente").addEventListener("click", () => {
     qs("#js-novo-cliente-nome").value = "";

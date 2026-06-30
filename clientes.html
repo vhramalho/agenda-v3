@@ -19,22 +19,13 @@
         </button>
       </div>
 
-      <div class="input-icon section">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
-        <input class="input" placeholder="Buscar cliente" id="js-busca-cliente" />
-      </div>
-
-      <section class="section">
+      <a href="ranking.html" class="card card--destaque section" style="display:block;text-decoration:none;color:inherit;">
         <div class="row row--between" style="margin-bottom:12px;">
-          <h2 class="section__title" style="margin-bottom:0;">Todos os clientes</h2>
-          <a href="clientes-todos.html" class="text-primary-accent" style="font-size:var(--text-sm);font-weight:600;">Ver todos</a>
+          <span style="font-weight:700;">Ranking</span>
         </div>
-        <div class="card" id="js-lista-clientes"></div>
-        <div class="empty-state is-hidden" id="js-clientes-vazio">
-          <p class="empty-state__title">Nenhum cliente encontrado</p>
-          <p class="text-muted">Toque no + acima para cadastrar o primeiro.</p>
-        </div>
-      </section>
+        <div id="js-ranking-top3"></div>
+        <p class="text-primary-accent" style="text-align:center;font-weight:600;margin-top:12px;">Ver ranking completo</p>
+      </a>
 
       <div class="grid-2 section">
         <a href="aniversariantes.html" class="insight-card row row--between" style="text-decoration:none;color:inherit;">
@@ -53,13 +44,17 @@
         </a>
       </div>
 
-      <a href="ranking.html" class="card card--destaque section" style="display:block;text-decoration:none;color:inherit;">
+      <section class="section">
         <div class="row row--between" style="margin-bottom:12px;">
-          <span style="font-weight:700;">Ranking</span>
+          <h2 class="section__title" style="margin-bottom:0;" id="js-clientes-titulo">Todos os clientes</h2>
+          <a href="clientes-todos.html" class="text-primary-accent" style="font-size:var(--text-sm);font-weight:600;">Ver todos</a>
         </div>
-        <div id="js-ranking-top3"></div>
-        <p class="text-primary-accent" style="text-align:center;font-weight:600;margin-top:12px;">Ver ranking completo</p>
-      </a>
+        <div class="card" id="js-lista-clientes"></div>
+        <div class="empty-state is-hidden" id="js-clientes-vazio">
+          <p class="empty-state__title">Nenhum cliente encontrado</p>
+          <p class="text-muted">Toque no + acima para cadastrar o primeiro.</p>
+        </div>
+      </section>
     </main>
 
     <div id="js-bottom-nav-mount"></div>
