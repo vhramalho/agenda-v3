@@ -113,7 +113,7 @@ function montarLinhaAniversariante(cliente, indice) {
   if (cliente.telefone) {
     const tel = linha.querySelector(".js-aniv-telefone");
     tel.className = "text-secondary js-aniv-telefone";
-    tel.textContent = `📞 ${cliente.telefone}`;
+    tel.textContent = cliente.telefone;
     const botao = document.createElement("a");
     botao.className = "icon-btn icon-btn--accent";
     botao.setAttribute("aria-label", "WhatsApp");
