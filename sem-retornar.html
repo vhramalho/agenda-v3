@@ -9,10 +9,16 @@
   <link rel="stylesheet" href="css/layout.css" />
   <link rel="stylesheet" href="css/components.css" />
 </head>
-<body data-page="clientes" data-titulo="Sem retornar">
+<body data-page="clientes">
   <div class="app">
     <main class="page">
-      <div id="js-header-mount"></div>
+      <header class="app-header" style="padding:0;margin-bottom:var(--space-5);">
+        <button class="icon-btn" onclick="window.history.back()" aria-label="Voltar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <h1 class="app-header__title">Sem retornar</h1>
+        <a href="#" class="text-primary-accent" style="font-weight:600;font-size:var(--text-sm);" id="js-btn-editar-semretornar">✎ Editar</a>
+      </header>
 
       <div class="segmented section" id="js-semretornar-filtro">
         <span class="segmented__item" data-dias="20" style="flex-direction:column;gap:0;line-height:1.3;"><span>+20</span><span style="font-size:var(--text-2xs);">dias</span></span>
@@ -32,6 +38,21 @@
     </main>
 
     <div id="js-bottom-nav-mount"></div>
+
+    <div class="modal-overlay is-hidden" id="modal-editar-semretornar">
+      <div class="modal-sheet">
+        <div class="modal-sheet__header"><p class="modal-sheet__title">Editar Sem retornar</p><button class="modal-close">✕</button></div>
+        <p class="text-secondary" style="margin-bottom:var(--space-3);">Escolha quais filtros de dias contam na contagem do insight "Sem retornar" da tela Clientes.</p>
+        <div class="chip-group" data-chips="multi" id="js-editar-semretornar-buckets">
+          <span class="chip" data-dias="20">+20 dias</span>
+          <span class="chip" data-dias="30">+30 dias</span>
+          <span class="chip" data-dias="45">+45 dias</span>
+          <span class="chip" data-dias="60">+60 dias</span>
+          <span class="chip" data-dias="90">+90 dias</span>
+        </div>
+        <div class="btn-row" style="margin-top:var(--space-4);"><button class="btn btn--primary" id="js-editar-semretornar-salvar">Salvar</button></div>
+      </div>
+    </div>
   </div>
 
   <script src="js/utils.js"></script>
@@ -40,6 +61,7 @@
   <script src="js/tema.js"></script>
   <script src="js/app.js"></script>
   <script src="js/chips.js"></script>
+  <script src="js/modal.js"></script>
   <script src="js/clientes-derivadas.js"></script>
 </body>
 </html>

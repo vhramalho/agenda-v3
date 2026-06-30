@@ -269,5 +269,22 @@ if (qs("#js-semretornar-lista")) {
     });
 
     renderizarSemRetornar(30);
+
+    qs("#js-btn-editar-semretornar").addEventListener("click", (evento) => {
+      evento.preventDefault();
+      const bucketsInsight = obterConfig().semRetornarBucketsInsight || [20, 30, 45];
+      qsa(".chip", qs("#js-editar-semretornar-buckets")).forEach((chip) => {
+        chip.classList.toggle("chip--ativo", bucketsInsight.includes(parseInt(chip.dataset.dias, 10)));
+      });
+      abrirModal("modal-editar-semretornar");
+    });
+
+    qs("#js-editar-semretornar-salvar").addEventListener("click", () => {
+      const bucketsInsight = qsa(".chip--ativo", qs("#js-editar-semretornar-buckets")).map((chip) => parseInt(chip.dataset.dias, 10));
+      const config = obterConfig();
+      config.semRetornarBucketsInsight = bucketsInsight;
+      salvarConfig(config);
+      fecharModal("modal-editar-semretornar");
+    });
   });
 }

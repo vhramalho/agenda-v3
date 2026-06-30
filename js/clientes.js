@@ -26,11 +26,12 @@ function renderizarAniversariantesESemRetornar(clientesAtivos) {
   const aniversariantes = clientesAtivos.filter((c) => c.aniversarioMes === mesAtual);
   qs("#js-aniversariantes-contagem").textContent = `${aniversariantes.length} este mês`;
 
+  const bucketsInsight = obterConfig().semRetornarBucketsInsight || [20, 30, 45];
   const semRetornar = clientesAtivos.filter((c) => {
     const stats = estatisticasCliente(c.id);
     if (stats.ultimaVisitaDias === null) return false;
     const bucket = bucketDiasSemRetornar(stats.ultimaVisitaDias);
-    return bucket === 20 || bucket === 30 || bucket === 45;
+    return bucketsInsight.includes(bucket);
   });
   qs("#js-sem-retornar-contagem").textContent = `${semRetornar.length} cliente${semRetornar.length === 1 ? "" : "s"}`;
 }

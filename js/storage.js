@@ -271,6 +271,7 @@ function seedConfig() {
     tempoPadraoAtendimento: 60,
     modoCompartilhamento: "estrategico",
     assinaturaStatus: "gratuito",
+    semRetornarBucketsInsight: [20, 30, 45],
   };
 }
 
