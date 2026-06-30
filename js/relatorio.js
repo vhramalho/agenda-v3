@@ -283,7 +283,7 @@ document.addEventListener("DOMContentLoaded", () => {
     qs("#js-relatorio-faturamento-comparacao").textContent = compFaturamento.texto;
     qs("#js-relatorio-faturamento-comparacao").className = compFaturamento.classe;
     qs("#js-relatorio-faturamento-comparacao").style.fontWeight = "600";
-    qs("#js-relatorio-faturamento-comparacao").style.fontSize = "var(--text-2xs)";
+    qs("#js-relatorio-faturamento-comparacao").style.fontSize = "calc(var(--text-2xs) + 2px)";
 
     qs("#js-relatorio-atendimentos").textContent = resumo.atendimentos;
     const compAtendimentos = formatarComparacao(resumo.atendimentos, resumoAnterior.atendimentos, rotuloComparacao, "contagem");
