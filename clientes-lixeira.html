@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Lixeira — Agenda V3</title>
+  <link rel="stylesheet" href="css/tokens.css" />
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="css/components.css" />
+</head>
+<body data-page="clientes">
+  <div class="app">
+    <main class="page">
+      <header class="app-header" style="padding:0;margin-bottom:var(--space-5);">
+        <button class="icon-btn" onclick="voltarOuInicio()" aria-label="Voltar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <h1 class="app-header__title">Lixeira</h1>
+        <div class="icon-btn" style="visibility:hidden" aria-hidden="true"></div>
+      </header>
+
+      <button class="btn btn--secondary section is-hidden" id="js-lixeira-esvaziar" style="color:var(--danger);">🗑 Esvaziar lixeira</button>
+
+      <div class="card" id="js-lixeira-lista"></div>
+      <div class="empty-state is-hidden" id="js-lixeira-vazio">
+        <p class="empty-state__title">A lixeira está vazia</p>
+      </div>
+    </main>
+
+    <div id="js-bottom-nav-mount"></div>
+
+    <div class="modal-overlay is-hidden" id="modal-lixeira-acoes">
+      <div class="modal-sheet">
+        <div class="modal-sheet__header"><p class="modal-sheet__title" id="js-lixeira-acoes-nome">Cliente</p><button class="modal-close">✕</button></div>
+        <div style="display:flex;flex-direction:column;gap:var(--space-3);">
+          <button class="btn btn--secondary" id="js-lixeira-restaurar">↺ Restaurar cliente</button>
+          <button class="btn btn--danger" data-trocar-modal="modal-lixeira-confirmar-exclusao">🗑 Excluir permanentemente</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-overlay is-hidden" id="modal-lixeira-confirmar-exclusao">
+      <div class="modal-sheet" style="text-align:center;">
+        <div class="modal-sheet__header" style="text-align:left;"><p class="modal-sheet__title" style="color:var(--danger);">Excluir permanentemente</p><button class="modal-close">✕</button></div>
+        <p class="text-secondary" style="margin-bottom:8px;">Tem certeza? Essa ação não pode ser desfeita.</p>
+        <p class="text-muted" style="font-size:var(--text-sm);margin-bottom:20px;">O histórico de atendimentos desse cliente também será apagado.</p>
+        <div class="btn-row"><button class="btn btn--secondary" data-fechar-modal>Cancelar</button><button class="btn btn--danger-solid" id="js-lixeira-confirmar-exclusao">Excluir</button></div>
+      </div>
+    </div>
+
+    <div class="modal-overlay is-hidden" id="modal-lixeira-esvaziar-confirmar">
+      <div class="modal-sheet" style="text-align:center;">
+        <div class="modal-sheet__header" style="text-align:left;"><p class="modal-sheet__title" style="color:var(--danger);">Esvaziar lixeira</p><button class="modal-close">✕</button></div>
+        <p class="text-secondary" style="margin-bottom:8px;">Tem certeza que deseja excluir permanentemente todos os clientes da lixeira?</p>
+        <p class="text-muted" style="font-size:var(--text-sm);margin-bottom:20px;">Essa ação não pode ser desfeita.</p>
+        <div class="btn-row"><button class="btn btn--secondary" data-fechar-modal>Cancelar</button><button class="btn btn--danger-solid" id="js-lixeira-confirmar-esvaziar">Esvaziar</button></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/utils.js"></script>
+  <script src="js/menu.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/tema.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/modal.js"></script>
+  <script src="js/clientes-lixeira.js"></script>
+</body>
+</html>
