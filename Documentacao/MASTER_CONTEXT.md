@@ -131,6 +131,7 @@ Agenda (`index.html`) e o hub "Mais" ficam fora desse esquema: Agenda é uma gra
 | pendentes-quem-deve/pagos | removidas 2026-06-29 — listas agora expandem in-place em pendentes.html | | | | | | |
 | pendentes-devedores | 4 | B | não | lista única, top 3 com destaque (2026-06-28) | — | não | é o próprio card de ranking |
 | clientes-todos | 4 | B | não | lista completa | — | busca própria + segmented de ordenação (A-Z/Z-A/Novos/Antigos, 2026-06-29) | não |
+| (detalhe) clientes-todos | — quando ordenado por Novos/Antigos, o subtítulo de cada linha troca de "última visita · X visitas" pra "desde mês/ano" (`cliente.criadoEm`, 2026-06-29) — só nessa tela, A-Z/Z-A mantêm o subtítulo padrão | | | | | | |
 | Cliente-detalhe | detalhe de item | bespoke (voltar+título+editar) | stats da pessoa | histórico de atendimentos | — | não | não |
 | Configurações/WhatsApp/Perfil/Backup/Ajuda | menu/formulário | B | não | menu de opções ou campos | — | não | não |
 
