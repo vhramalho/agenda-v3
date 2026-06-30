@@ -334,4 +334,15 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   atualizarRelatorio();
+
+  qs('[data-abrir-modal="modal-calendario"]').addEventListener("click", () => {
+    if (typeof window.irParaMesCalendarioAgenda === "function") {
+      window.irParaMesCalendarioAgenda(refData.getFullYear(), refData.getMonth(), refData.getDate());
+    }
+  });
+
+  window.aoSelecionarDiaCalendarioAgenda = (ano, mes, dia) => {
+    refData = new Date(ano, mes, dia);
+    atualizarRelatorio();
+  };
 });
