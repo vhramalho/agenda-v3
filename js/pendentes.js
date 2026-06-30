@@ -79,20 +79,21 @@ function montarLinhaPago(agendamento) {
   return linha;
 }
 
-function rankingDevedores(meses) {
-  const limiteIso = (() => {
-    const limite = isoParaDate(hojeIso());
-    limite.setMonth(limite.getMonth() - meses);
-    return limite.toISOString().slice(0, 10);
-  })();
+function rankingDevedores(meses, ano) {
+  const filtrados = ano
+    ? listaPendentes().filter((a) => a.data.slice(0, 4) === String(ano))
+    : listaPendentes().filter((a) => {
+        if (!meses) return true;
+        const limite = isoParaDate(hojeIso());
+        limite.setMonth(limite.getMonth() - meses);
+        return a.data >= limite.toISOString().slice(0, 10);
+      });
   const contagem = {};
-  listaPendentes()
-    .filter((a) => !meses || a.data >= limiteIso)
-    .forEach((a) => {
-      const chave = a.clienteId || `avulso:${a.nomeCliente}`;
-      if (!contagem[chave]) contagem[chave] = { nome: a.nomeCliente, vezes: 0 };
-      contagem[chave].vezes += 1;
-    });
+  filtrados.forEach((a) => {
+    const chave = a.clienteId || `avulso:${a.nomeCliente}`;
+    if (!contagem[chave]) contagem[chave] = { nome: a.nomeCliente, vezes: 0 };
+    contagem[chave].vezes += 1;
+  });
   return Object.values(contagem).sort((a, b) => b.vezes - a.vezes);
 }
 
@@ -200,17 +201,26 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // ---- Devedores — lista completa (pendentes-devedores.html) ----
   if (qs("#js-devedores-lista-completa")) {
-    const ranking = rankingDevedores(6);
     const container = qs("#js-devedores-lista-completa");
     const vazio = qs("#js-devedores-vazio-completo");
-    container.innerHTML = "";
-    if (ranking.length === 0) {
-      container.classList.add("is-hidden");
-      vazio.classList.remove("is-hidden");
-    } else {
-      container.classList.remove("is-hidden");
-      vazio.classList.add("is-hidden");
-      ranking.forEach((item, i) => container.appendChild(montarLinhaDevedorCompleta(item, i, i + 1)));
+    let anoAtual = new Date().getFullYear();
+
+    function renderDevedoresCompleto() {
+      qs("#js-ano-label").textContent = String(anoAtual);
+      const ranking = rankingDevedores(null, anoAtual);
+      container.innerHTML = "";
+      if (ranking.length === 0) {
+        container.classList.add("is-hidden");
+        vazio.classList.remove("is-hidden");
+      } else {
+        container.classList.remove("is-hidden");
+        vazio.classList.add("is-hidden");
+        ranking.forEach((item, i) => container.appendChild(montarLinhaDevedorCompleta(item, i, i + 1)));
+      }
     }
+
+    qs("#js-ano-anterior").addEventListener("click", () => { anoAtual -= 1; renderDevedoresCompleto(); });
+    qs("#js-ano-proximo").addEventListener("click", () => { anoAtual += 1; renderDevedoresCompleto(); });
+    renderDevedoresCompleto();
   }
 });

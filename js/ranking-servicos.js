@@ -5,11 +5,12 @@
    destaque ouro/prata/bronze.
    ============================================================ */
 
-function calcularRankingServicos() {
+function calcularRankingServicos(ano) {
   const servicosAtivos = obterServicos().filter((s) => s.ativo);
   const contagem = {};
   obterAgendamentos().forEach((agendamento) => {
     if (!agendamento.status || !agendamento.status.startsWith("realizado_")) return;
+    if (ano && agendamento.data.slice(0, 4) !== String(ano)) return;
     (agendamento.servicosIds || []).forEach((id) => {
       contagem[id] = (contagem[id] || 0) + 1;
     });
@@ -35,21 +36,35 @@ function montarLinhaRankingServico(item, posicao) {
   return linha;
 }
 
+function renderizarRankingServicosCompleto(ano) {
+  const ranking = calcularRankingServicos(ano);
+  const tabela = qs("#js-ranking-servicos-tabela");
+  const vazio = qs("#js-ranking-servicos-vazio");
+  tabela.innerHTML = "";
+
+  if (ranking.length === 0) {
+    tabela.classList.add("is-hidden");
+    vazio.classList.remove("is-hidden");
+    return;
+  }
+  tabela.classList.remove("is-hidden");
+  vazio.classList.add("is-hidden");
+
+  ranking.forEach((item, i) => tabela.appendChild(montarLinhaRankingServico(item, i + 1)));
+}
+
 if (qs("#js-ranking-servicos-tabela")) {
   document.addEventListener("DOMContentLoaded", () => {
-    const ranking = calcularRankingServicos();
-    const tabela = qs("#js-ranking-servicos-tabela");
-    const vazio = qs("#js-ranking-servicos-vazio");
-    tabela.innerHTML = "";
+    let anoAtual = new Date().getFullYear();
 
-    if (ranking.length === 0) {
-      tabela.classList.add("is-hidden");
-      vazio.classList.remove("is-hidden");
-      return;
+    function atualizarAnoRankingServicos() {
+      qs("#js-ano-label").textContent = String(anoAtual);
+      renderizarRankingServicosCompleto(anoAtual);
     }
-    tabela.classList.remove("is-hidden");
-    vazio.classList.add("is-hidden");
 
-    ranking.forEach((item, i) => tabela.appendChild(montarLinhaRankingServico(item, i + 1)));
+    atualizarAnoRankingServicos();
+
+    qs("#js-ano-anterior").addEventListener("click", () => { anoAtual -= 1; atualizarAnoRankingServicos(); });
+    qs("#js-ano-proximo").addEventListener("click", () => { anoAtual += 1; atualizarAnoRankingServicos(); });
   });
 }

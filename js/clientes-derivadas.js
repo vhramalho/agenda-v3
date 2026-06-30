@@ -16,11 +16,14 @@ function diasAtras(n) {
 
 /* ---------- Ranking ---------- */
 
-function estatisticasRanking(clienteId) {
-  const limiteIso = isoDeDateLocal(diasAtras(365));
-  const realizados = obterAgendamentos().filter(
-    (a) => a.clienteId === clienteId && a.status && a.status.startsWith("realizado_") && a.data >= limiteIso
-  );
+function estatisticasRanking(clienteId, ano) {
+  const realizados = ano
+    ? obterAgendamentos().filter(
+        (a) => a.clienteId === clienteId && a.status && a.status.startsWith("realizado_") && a.data.slice(0, 4) === String(ano)
+      )
+    : obterAgendamentos().filter(
+        (a) => a.clienteId === clienteId && a.status && a.status.startsWith("realizado_") && a.data >= isoDeDateLocal(diasAtras(365))
+      );
   const visitas = realizados.length;
   const totalGasto = realizados.reduce((s, a) => s + (a.valorTotal || 0), 0);
   const ticket = visitas > 0 ? totalGasto / visitas : 0;
@@ -55,10 +58,10 @@ function montarLinhaRanking(item, indice, posicao, metrica) {
   return linha;
 }
 
-function renderizarRanking(metrica) {
+function renderizarRanking(metrica, ano) {
   const linhas = obterClientes()
     .filter((c) => c.ativo)
-    .map((c) => ({ cliente: c, stats: estatisticasRanking(c.id) }))
+    .map((c) => ({ cliente: c, stats: estatisticasRanking(c.id, ano) }))
     .filter((r) => r.stats.visitas > 0)
     .sort((a, b) => valorPorMetrica(b.stats, metrica) - valorPorMetrica(a.stats, metrica));
 
@@ -79,12 +82,26 @@ function renderizarRanking(metrica) {
 
 if (qs("#js-ranking-tabela")) {
   document.addEventListener("DOMContentLoaded", () => {
-    renderizarRanking("faturamento");
+    let metricaAtual = "faturamento";
+    let anoAtual = new Date().getFullYear();
+
+    function atualizarAnoRanking() {
+      qs("#js-ano-label").textContent = String(anoAtual);
+      qs("#js-ranking-ano-texto").textContent = anoAtual;
+      renderizarRanking(metricaAtual, anoAtual);
+    }
+
+    atualizarAnoRanking();
+
+    qs("#js-ano-anterior").addEventListener("click", () => { anoAtual -= 1; atualizarAnoRanking(); });
+    qs("#js-ano-proximo").addEventListener("click", () => { anoAtual += 1; atualizarAnoRanking(); });
+
     qsa(".segmented__item[data-metrica]").forEach((item) => {
       item.addEventListener("click", () => {
-        qsa(".segmented__item").forEach((i) => i.classList.remove("is-active"));
+        qsa(".segmented__item[data-metrica]").forEach((i) => i.classList.remove("is-active"));
         item.classList.add("is-active");
-        renderizarRanking(item.dataset.metrica);
+        metricaAtual = item.dataset.metrica;
+        renderizarRanking(metricaAtual, anoAtual);
       });
     });
   });
