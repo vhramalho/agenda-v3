@@ -134,6 +134,7 @@ Agenda (`index.html`) e o hub "Mais" ficam fora desse esquema: Agenda é uma gra
 | clientes-todos | 4 | B | não | lista completa | — | busca própria + segmented de ordenação (A-Z/Z-A/Novos/Antigos, 2026-06-29) | não |
 | (detalhe) clientes-todos | — quando ordenado por Novos/Antigos, o subtítulo de cada linha troca de "última visita · X visitas" pra "desde mês/ano" (`cliente.criadoEm`, 2026-06-29) — só nessa tela, A-Z/Z-A mantêm o subtítulo padrão | | | | | | |
 | (detalhe) Sem retornar — buckets exatos (2026-06-29) | a lógica deixou de ser cumulativa (`dias >= limite`) e passou a ser bucket exato via `bucketDiasSemRetornar(dias)` em `js/clientes-derivadas.js`: 20–29 dias → bucket 20, 30–44 → 30, 45–59 → 45, 60–89 → 60, 90+ → 90. Um cliente sumido a 35 dias entra **só** no filtro +30, não aparece mais em +20. O insight "Sem retornar" da tela `clientes.html` (`js/clientes.js`) usa a mesma função mas **exclui** os buckets 60 e 90 da contagem — só soma 20/30/45. | | | | | | |
+| (detalhe) Sem retornar — linha da lista (2026-06-29) | ícone de calendário 📅 removido do subtítulo de cada linha; texto passou de "📅 dd/mm/aaaa · última visita" pra "última visita em dd/mm/aaaa" (`montarLinhaSemRetornar` em `js/clientes-derivadas.js`) | | | | | | |
 | Cliente-detalhe | detalhe de item | bespoke (voltar+título+editar) | stats da pessoa | histórico de atendimentos | — | não | não |
 | Configurações/WhatsApp/Perfil/Backup/Ajuda | menu/formulário | B | não | menu de opções ou campos | — | não | não |
 
