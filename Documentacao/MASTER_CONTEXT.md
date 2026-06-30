@@ -45,12 +45,11 @@ Profissionais autônomos com agenda de atendimentos marcados, sozinhos (sem equi
 ```
 agenda-v3/
 ├── index.html                  (Agenda — tela principal)
-├── clientes.html, cliente-detalhe.html
+├── clientes.html, cliente-detalhe.html, clientes-todos.html, clientes-lixeira.html
 ├── servicos.html, pagamentos.html, intervalos.html
 ├── configuracoes.html, whatsapp.html, backup.html, perfil.html, ajuda.html
-├── relatorio.html, pendentes.html, pendentes-quem-deve.html,
-│   pendentes-pagos.html, pendentes-devedores.html
-├── ranking.html, aniversariantes.html, sem-retornar.html
+├── relatorio.html, pendentes.html, pendentes-devedores.html
+├── ranking.html, ranking-servicos.html, aniversariantes.html, sem-retornar.html
 ├── mais.html                   (hub de navegação)
 ├── onboarding.html
 ├── login.html, cadastro.html, assinatura.html, assinatura-vencida.html
@@ -134,6 +133,8 @@ Agenda (`index.html`) e o hub "Mais" ficam fora desse esquema: Agenda é uma gra
 | (detalhe) cards de período (ano) | nas 3 páginas de ranking completas (Ranking, Ranking de serviços, pendentes-devedores), adicionado em 2026-06-29: filtra por ano calendário (seletor ◀ ano ▶) em vez de janela rolante (12 meses / sem filtro / 6 meses, respectivamente). **Padronizado em 2026-06-29:** os teasers correspondentes (Clientes "Ranking", Serviços "Mais realizados", Pendentes "Devedores") também passaram a usar o ano atual (`new Date().getFullYear()`) como filtro, em vez da janela rolante/sem filtro que tinham antes — agora teaser e página completa usam sempre o mesmo critério de tempo, só o teaser não tem o seletor (sempre mostra o ano corrente) | | | | | | |
 | clientes-todos | 4 | B | não | lista completa | — | busca própria + segmented de ordenação (A-Z/Z-A/Novos/Antigos, 2026-06-29) | não |
 | (detalhe) clientes-todos | — quando ordenado por Novos/Antigos, o subtítulo de cada linha troca de "última visita · X visitas" pra "desde mês/ano" (`cliente.criadoEm`, 2026-06-29) — só nessa tela, A-Z/Z-A mantêm o subtítulo padrão | | | | | | |
+| Clientes-lixeira (nova, 2026-06-29) | 4 | B | não | clientes em `agendaV3:clientesLixeira`, ordenados por mais recente excluído primeiro | — | não | não |
+| (detalhe) Clientes-lixeira | tela nova, acessada por um link discreto "🗑 Lixeira" (vermelho, texto pequeno) no rodapé de `clientes-todos.html` — decisão de design: **não** virou uma 5ª opção do segmented de ordenação (A-Z/Z-A/Novos/Antigos) porque é uma base de dados diferente (clientes inativos), não um critério de ordenação da mesma lista; ficar fora do segmented evita misturar os dois conceitos. Botão "Esvaziar lixeira" (vermelho, soft) fica no topo da lista, antes dos itens. Cada linha tem avatar com tom vermelho suave (`--danger-soft`/`--danger`) e subtítulo "Excluído em dd/mm/aaaa" (`cliente.movidoParaLixeiraEm`) — toque abre modal de ações (`modal-lixeira-acoes`) com "Restaurar cliente" ou "Excluir permanentemente" (este último abre uma 2ª confirmação via `data-trocar-modal`, mesmo padrão do "Mover para lixeira" em Cliente-detalhe). Excluir permanentemente (um a um ou via "Esvaziar lixeira") também apaga os agendamentos desse cliente (`obterAgendamentos().filter(a => a.clienteId !== id)`) — diferente de "mover pra lixeira" (Cliente-detalhe), que preserva o histórico. Restaurar devolve o cliente pra `agendaV3:clientes` com `ativo:true`. | | | | | | |
 | (detalhe) Sem retornar — buckets exatos (2026-06-29) | a lógica deixou de ser cumulativa (`dias >= limite`) e passou a ser bucket exato via `bucketDiasSemRetornar(dias)` em `js/clientes-derivadas.js`: 20–29 dias → bucket 20, 30–44 → 30, 45–59 → 45, 60–89 → 60, 90+ → 90. Um cliente sumido a 35 dias entra **só** no filtro +30, não aparece mais em +20. O insight "Sem retornar" da tela `clientes.html` (`js/clientes.js`) usa a mesma função, mas agora a lista de buckets que contam é configurável (ver linha "Editar" abaixo) — o padrão de fábrica continua 20/30/45. | | | | | | |
 | (detalhe) Sem retornar — "Editar" (2026-06-29) | botão "✎ Editar" no header abre um modal (`modal-editar-semretornar`) com um chip-group multi-seleção (um chip por bucket: +20/+30/+45/+60/+90). A seleção é salva em `obterConfig().semRetornarBucketsInsight` (array de inteiros, ex. `[20,30,45]`) via `salvarConfig()` — chave nova dentro de `agendaV3:config`, com fallback `\|\| [20,30,45]` em todo lugar que lê, então contas antigas sem essa chave continuam funcionando como antes. É essa lista que decide quais buckets contam no insight "Sem retornar" da tela `clientes.html` (substitui a regra fixa "exclui 60 e 90" criada antes nesse mesmo dia). | | | | | | |
 | (detalhe) Sem retornar — miniatura no modal "Editar" (2026-06-29) | a explicação em texto puro do modal foi trocada por uma miniatura visual (HTML/CSS só com componentes do app, sem imagem real): representa a tela Clientes em miniatura (~78% da largura do modal, cantos arredondados, moldura escura tipo celular) com os 2 insight-cards (Aniversariantes / Sem retornar) lado a lado; o card "Sem retornar" tem borda roxa (`var(--primary)`) + glow sutil (`box-shadow`) e uma setinha "↑ conta aqui" logo abaixo apontando pra ele. Texto curto abaixo da miniatura: "Escolha os períodos que deseja acompanhar dos clientes que ainda não retornaram." Chips e botão Salvar não mudaram. | | | | | | |
@@ -235,6 +236,7 @@ Ver `docs/LOGICA_E_FLUXO_DE_DADOS.md` seção 3 para os esquemas completos. Resu
 - **Quitar pendente**: botão "Receber" em Pendentes leva para `index.html?data=AAAA-MM-DD` — a Agenda abre exatamente naquele dia (implementado na Etapa 7).
 - **Cliente novo digitado em Novo Agendamento (2026-06-28):** busca ao vivo sugere clientes existentes ao digitar; selecionou sugestão → vincula direto; não bate com nada → cria cliente automaticamente ao salvar (nome + telefone opcional); bate com nome exatamente igual sem selecionar a sugestão → modal "Usar existente / Criar novo cadastro".
 - **Mover cliente pra lixeira**: remove de `clientes`, insere em `clientesLixeira` — agendamentos antigos não são apagados nem alterados.
+- **Lixeira de clientes — restaurar/excluir permanentemente (2026-06-29):** tela `clientes-lixeira.html`. Restaurar devolve o cliente de `clientesLixeira` pra `clientes` com `ativo:true`, sem mexer nos agendamentos. Excluir permanentemente (um cliente ou via "Esvaziar lixeira") remove de `clientesLixeira` **e também apaga os agendamentos desse cliente** — diferente de "mover pra lixeira", que preserva tudo.
 - **Backup**: exportar baixa um `.json` com as 9 chaves; importar exige confirmação explícita e substitui tudo de uma vez (tudo ou nada, sem merge).
 
 ## 16. Telas existentes (23 telas oficiais + hub "Mais")
@@ -242,6 +244,8 @@ Ver `docs/LOGICA_E_FLUXO_DE_DADOS.md` seção 3 para os esquemas completos. Resu
 Todas em `docs/AGENDA_V3_DOCUMENTO_MESTRE.txt` seção 6. Lista: Agenda (`index.html`), Clientes, Cliente-detalhe, Relatório, Pendentes (+ 1 tela "ver todos" ainda existente: `pendentes-devedores.html`; `pendentes-quem-deve.html` e `pendentes-pagos.html` removidas em 2026-06-29), Serviços, Formas de pagamento, Intervalos, Mais (hub), Configurações, Assinatura, Onboarding, WhatsApp, Perfil, Ranking, Aniversariantes, Sem retornar, Login, Cadastro, Assinatura vencida, Backup, Ajuda, Termos, Privacidade.
 
 **Tela extra criada na revisão pós-publicação (2026-06-27):** `clientes-todos.html` — diretório completo de clientes com busca própria, sem limite de 5; é o destino do "Ver todos" da lista resumida em `clientes.html` (mesmo padrão das telas "ver todos" do Pendentes).
+
+**Tela extra criada em 2026-06-29:** `clientes-lixeira.html` — mostra os clientes movidos pra lixeira, com restaurar/excluir permanentemente. Acessada por um link no rodapé de `clientes-todos.html`, não pela barra inferior nem pelo hub "Mais" (ver detalhe na tabela de referência, seção 8.1).
 
 ## 17. Funcionalidades existentes (real, ligado a dados — não apenas visual)
 
