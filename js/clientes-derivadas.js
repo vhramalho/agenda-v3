@@ -184,6 +184,15 @@ if (qs("#js-aniv-mes-label")) {
 
 /* ---------- Sem retornar ---------- */
 
+function bucketDiasSemRetornar(dias) {
+  if (dias >= 90) return 90;
+  if (dias >= 60) return 60;
+  if (dias >= 45) return 45;
+  if (dias >= 30) return 30;
+  if (dias >= 20) return 20;
+  return null;
+}
+
 function ultimaVisitaInfo(clienteId) {
   const realizados = obterAgendamentos().filter((a) => a.clienteId === clienteId && a.status && a.status.startsWith("realizado_"));
   if (realizados.length === 0) return { dias: null, data: null };
@@ -233,14 +242,12 @@ function montarLinhaSemRetornar(item, indice) {
 
 if (qs("#js-semretornar-lista")) {
   document.addEventListener("DOMContentLoaded", () => {
-    function renderizarSemRetornar(limiteDias) {
+    function renderizarSemRetornar(faixaDias) {
       const linhas = obterClientes()
         .filter((c) => c.ativo)
         .map((c) => ({ cliente: c, info: ultimaVisitaInfo(c.id) }))
-        .filter((r) => r.info.dias !== null && r.info.dias >= limiteDias)
+        .filter((r) => r.info.dias !== null && bucketDiasSemRetornar(r.info.dias) === faixaDias)
         .sort((a, b) => b.info.dias - a.info.dias);
-
-      qs("#js-semretornar-contagem").textContent = linhas.length;
 
       const container = qs("#js-semretornar-lista");
       const vazio = qs("#js-semretornar-vazio");

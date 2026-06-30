@@ -28,7 +28,9 @@ function renderizarAniversariantesESemRetornar(clientesAtivos) {
 
   const semRetornar = clientesAtivos.filter((c) => {
     const stats = estatisticasCliente(c.id);
-    return stats.ultimaVisitaDias !== null && stats.ultimaVisitaDias > 30;
+    if (stats.ultimaVisitaDias === null) return false;
+    const bucket = bucketDiasSemRetornar(stats.ultimaVisitaDias);
+    return bucket === 20 || bucket === 30 || bucket === 45;
   });
   qs("#js-sem-retornar-contagem").textContent = `${semRetornar.length} cliente${semRetornar.length === 1 ? "" : "s"}`;
 }
