@@ -126,7 +126,7 @@ Agenda (`index.html`) e o hub "Mais" ficam fora desse esquema: Agenda é uma gra
 | Intervalos | 3 | B | não | lista (nome/dias/horário, 2026-06-28) | não precisa | segmented por dia (2026-06-28) | card de totais no fim |
 | Ranking | 4 | B | não (pódio removido) | lista única, top 3 com destaque ouro/prata/bronze (2026-06-28) | — | abas por métrica + card de troca de ano (2026-06-29, substitui "últimos 12 meses") | é o próprio card de ranking |
 | Ranking de serviços | 4 | B | não | lista única, top 3 com destaque (2026-06-28) | — | card de troca de ano (2026-06-29, antes era sem filtro de tempo) | é o próprio card de ranking |
-| Aniversariantes | 4 | B | não | lista do mês, sem ícone de calendário na linha (removido 2026-06-29) | — | card de botão (mês) | não (card insight do topo removido em 2026-06-29 — contagem já aparece no título "Aniversariantes (N)") |
+| Aniversariantes | 4 | B | não | lista do mês, sem ícone de calendário 📅 nem de telefone 📞 na linha (removidos 2026-06-29) | — | card de botão (mês) | não (card insight do topo removido em 2026-06-29 — contagem já aparece no título "Aniversariantes (N)") |
 | Sem retornar | 4 | B | não (virou insight, 2026-06-28) | lista filtrada | — | segmented por dias (2026-06-28) | hero da própria página |
 | pendentes-quem-deve/pagos | removidas 2026-06-29 — listas agora expandem in-place em pendentes.html | | | | | | |
 | pendentes-devedores | 4 | B | não | lista única, top 3 com destaque (2026-06-28) | — | card de troca de ano (2026-06-29, antes era fixo em 6 meses) | é o próprio card de ranking |
