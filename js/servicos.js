@@ -25,7 +25,7 @@ function montarLinhaServico(servico) {
 }
 
 function calcularMaisRealizado() {
-  const ranking = calcularRankingServicos(new Date().getFullYear()).slice(0, 3);
+  const ranking = calcularRankingServicos({ tipo: "ano", ano: new Date().getFullYear() }).slice(0, 3);
   const destaque = qs("#js-servico-destaque");
   if (ranking.length === 0) {
     destaque.classList.add("is-hidden");

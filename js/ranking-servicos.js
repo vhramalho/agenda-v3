@@ -5,12 +5,12 @@
    destaque ouro/prata/bronze.
    ============================================================ */
 
-function calcularRankingServicos(ano) {
+function calcularRankingServicos(periodo) {
   const servicosAtivos = obterServicos().filter((s) => s.ativo);
   const contagem = {};
   obterAgendamentos().forEach((agendamento) => {
     if (!agendamento.status || !agendamento.status.startsWith("realizado_")) return;
-    if (agendamento.data.slice(0, 4) !== String(ano)) return;
+    if (!dataNoPeriodo(agendamento.data, periodo)) return;
     (agendamento.servicosIds || []).forEach((id) => {
       contagem[id] = (contagem[id] || 0) + 1;
     });
@@ -36,8 +36,8 @@ function montarLinhaRankingServico(item, posicao) {
   return linha;
 }
 
-function renderizarRankingServicosCompleto(ano) {
-  const ranking = calcularRankingServicos(ano);
+function renderizarRankingServicosCompleto(periodo) {
+  const ranking = calcularRankingServicos(periodo);
   const tabela = qs("#js-ranking-servicos-tabela");
   const vazio = qs("#js-ranking-servicos-vazio");
   tabela.innerHTML = "";
@@ -55,16 +55,23 @@ function renderizarRankingServicosCompleto(ano) {
 
 if (qs("#js-ranking-servicos-tabela")) {
   document.addEventListener("DOMContentLoaded", () => {
-    let anoAtual = new Date().getFullYear();
+    let periodoAtual = { tipo: "ano", ano: new Date().getFullYear() };
 
-    function atualizarAnoRankingServicos() {
-      qs("#js-ano-label").textContent = String(anoAtual);
-      renderizarRankingServicosCompleto(anoAtual);
+    function atualizarRankingServicosPeriodo() {
+      qs("#js-ano-label").textContent = rotuloPeriodo(periodoAtual);
+      qs("#js-ano-anterior").classList.toggle("is-hidden", periodoAtual.tipo === "personalizado");
+      qs("#js-ano-proximo").classList.toggle("is-hidden", periodoAtual.tipo === "personalizado");
+      renderizarRankingServicosCompleto(periodoAtual);
     }
 
-    atualizarAnoRankingServicos();
+    atualizarRankingServicosPeriodo();
 
-    qs("#js-ano-anterior").addEventListener("click", () => { anoAtual -= 1; atualizarAnoRankingServicos(); });
-    qs("#js-ano-proximo").addEventListener("click", () => { anoAtual += 1; atualizarAnoRankingServicos(); });
+    qs("#js-ano-anterior").addEventListener("click", () => { periodoAtual = periodoAnterior(periodoAtual); atualizarRankingServicosPeriodo(); });
+    qs("#js-ano-proximo").addEventListener("click", () => { periodoAtual = periodoProximo(periodoAtual); atualizarRankingServicosPeriodo(); });
+
+    configurarFiltroPeriodo(() => periodoAtual, (novoPeriodo) => {
+      periodoAtual = novoPeriodo;
+      atualizarRankingServicosPeriodo();
+    });
   });
 }

@@ -17,7 +17,9 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
         </button>
         <h1 class="app-header__title">Ranking de serviços</h1>
-        <div class="icon-btn" style="visibility:hidden" aria-hidden="true"></div>
+        <button class="icon-btn icon-btn--accent" id="js-btn-filtrar" aria-label="Filtrar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h18l-7 8v6l-4-2v-4z"/></svg>
+        </button>
       </header>
 
       <div class="segmented section">
@@ -35,6 +37,49 @@
     </main>
 
     <div id="js-bottom-nav-mount"></div>
+
+    <div class="modal-overlay is-hidden" id="modal-filtrar-periodo">
+      <div class="modal-sheet">
+        <div class="modal-sheet__header"><p class="modal-sheet__title">Filtrar período</p><button class="modal-close">✕</button></div>
+
+        <div class="segmented section" id="js-filtro-tipo">
+          <span class="segmented__item is-active" data-tipo="ano">Ano</span>
+          <span class="segmented__item" data-tipo="mes">Mês</span>
+          <span class="segmented__item" data-tipo="personalizado">Personalizado</span>
+        </div>
+
+        <div id="js-filtro-campo-ano">
+          <div class="segmented">
+            <button class="icon-btn" id="js-filtro-ano-anterior" aria-label="Ano anterior">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+            </button>
+            <span id="js-filtro-ano-label" style="flex:1;text-align:center;font-weight:700;"></span>
+            <button class="icon-btn" id="js-filtro-ano-proximo" aria-label="Próximo ano">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <div id="js-filtro-campo-mes" class="is-hidden">
+          <div class="segmented">
+            <button class="icon-btn" id="js-filtro-mes-anterior" aria-label="Mês anterior">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+            </button>
+            <span id="js-filtro-mes-label" style="flex:1;text-align:center;font-weight:700;"></span>
+            <button class="icon-btn" id="js-filtro-mes-proximo" aria-label="Próximo mês">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <div id="js-filtro-campo-personalizado" class="is-hidden">
+          <div class="field"><label class="field__label">De</label><input type="date" class="input" id="js-filtro-data-inicio"/></div>
+          <div class="field"><label class="field__label">Até</label><input type="date" class="input" id="js-filtro-data-fim"/></div>
+        </div>
+
+        <div class="btn-row" style="margin-top:var(--space-4);"><button class="btn btn--primary" id="js-filtro-aplicar">Aplicar</button></div>
+      </div>
+    </div>
   </div>
 
   <script src="js/utils.js"></script>
@@ -42,6 +87,7 @@
   <script src="js/storage.js"></script>
   <script src="js/tema.js"></script>
   <script src="js/app.js"></script>
+  <script src="js/modal.js"></script>
   <script src="js/ranking-servicos.js"></script>
 </body>
 </html>

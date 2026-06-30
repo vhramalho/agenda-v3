@@ -36,6 +36,119 @@ function formatarDataCurta(isoDate) {
   return `${dia}/${mes}/${ano}`;
 }
 
+/* ---------- Período (Ano / Mês / Personalizado) ----------
+   Usado pelas 3 páginas de ranking completo (Ranking, Ranking de
+   serviços, Devedores) pro botão "Filtrar". periodo = { tipo: "ano",
+   ano } | { tipo: "mes", ano, mes (1-12) } | { tipo: "personalizado",
+   inicio, fim (ISO) }. */
+
+function dataNoPeriodo(dataIso, periodo) {
+  if (periodo.tipo === "mes") return dataIso.slice(0, 7) === `${periodo.ano}-${String(periodo.mes).padStart(2, "0")}`;
+  if (periodo.tipo === "personalizado") return dataIso >= periodo.inicio && dataIso <= periodo.fim;
+  return dataIso.slice(0, 4) === String(periodo.ano);
+}
+
+function rotuloPeriodo(periodo) {
+  if (periodo.tipo === "mes") return `${MESES_NOME_UTILS[periodo.mes - 1].slice(0, 3)}/${periodo.ano}`;
+  if (periodo.tipo === "personalizado") return `${formatarDataCurta(periodo.inicio)} – ${formatarDataCurta(periodo.fim)}`;
+  return String(periodo.ano);
+}
+
+function periodoAnterior(periodo) {
+  if (periodo.tipo === "mes") {
+    const mes = periodo.mes === 1 ? 12 : periodo.mes - 1;
+    const ano = periodo.mes === 1 ? periodo.ano - 1 : periodo.ano;
+    return { tipo: "mes", ano, mes };
+  }
+  return { tipo: "ano", ano: periodo.ano - 1 };
+}
+
+function periodoProximo(periodo) {
+  if (periodo.tipo === "mes") {
+    const mes = periodo.mes === 12 ? 1 : periodo.mes + 1;
+    const ano = periodo.mes === 12 ? periodo.ano + 1 : periodo.ano;
+    return { tipo: "mes", ano, mes };
+  }
+  return { tipo: "ano", ano: periodo.ano + 1 };
+}
+
+/**
+ * Liga o botão "Filtrar" (#js-btn-filtrar) e o modal #modal-filtrar-periodo
+ * (Ano / Mês / Personalizado) de uma página de ranking completo.
+ * obterPeriodoAtual: função que devolve o período em uso agora (pra
+ * sincronizar o modal toda vez que ele abre). aoAplicar: callback
+ * chamado com o novo período quando o usuário confirma.
+ */
+function configurarFiltroPeriodo(obterPeriodoAtual, aoAplicar) {
+  let tipoModal = "ano";
+  let anoModal = new Date().getFullYear();
+  let mesModal = { ano: new Date().getFullYear(), mes: new Date().getMonth() + 1 };
+
+  function mostrarCampoDoTipo() {
+    qs("#js-filtro-campo-ano").classList.toggle("is-hidden", tipoModal !== "ano");
+    qs("#js-filtro-campo-mes").classList.toggle("is-hidden", tipoModal !== "mes");
+    qs("#js-filtro-campo-personalizado").classList.toggle("is-hidden", tipoModal !== "personalizado");
+  }
+
+  function atualizarLabelAnoModal() {
+    qs("#js-filtro-ano-label").textContent = String(anoModal);
+  }
+
+  function atualizarLabelMesModal() {
+    qs("#js-filtro-mes-label").textContent = `${MESES_NOME_UTILS[mesModal.mes - 1]} ${mesModal.ano}`;
+  }
+
+  function sincronizarComPeriodoAtual() {
+    const periodo = obterPeriodoAtual();
+    tipoModal = periodo.tipo;
+    if (periodo.tipo === "ano") anoModal = periodo.ano;
+    if (periodo.tipo === "mes") mesModal = { ano: periodo.ano, mes: periodo.mes };
+    if (periodo.tipo === "personalizado") {
+      qs("#js-filtro-data-inicio").value = periodo.inicio;
+      qs("#js-filtro-data-fim").value = periodo.fim;
+    }
+    qsa(".segmented__item[data-tipo]", qs("#js-filtro-tipo")).forEach((i) => i.classList.toggle("is-active", i.dataset.tipo === tipoModal));
+    mostrarCampoDoTipo();
+    atualizarLabelAnoModal();
+    atualizarLabelMesModal();
+  }
+
+  qs("#js-btn-filtrar").addEventListener("click", () => {
+    sincronizarComPeriodoAtual();
+    abrirModal("modal-filtrar-periodo");
+  });
+
+  qs("#js-filtro-ano-anterior").addEventListener("click", () => { anoModal -= 1; atualizarLabelAnoModal(); });
+  qs("#js-filtro-ano-proximo").addEventListener("click", () => { anoModal += 1; atualizarLabelAnoModal(); });
+  qs("#js-filtro-mes-anterior").addEventListener("click", () => { mesModal = periodoAnterior({ tipo: "mes", ...mesModal }); atualizarLabelMesModal(); });
+  qs("#js-filtro-mes-proximo").addEventListener("click", () => { mesModal = periodoProximo({ tipo: "mes", ...mesModal }); atualizarLabelMesModal(); });
+
+  qsa(".segmented__item[data-tipo]", qs("#js-filtro-tipo")).forEach((item) => {
+    item.addEventListener("click", () => {
+      qsa(".segmented__item[data-tipo]", qs("#js-filtro-tipo")).forEach((i) => i.classList.remove("is-active"));
+      item.classList.add("is-active");
+      tipoModal = item.dataset.tipo;
+      mostrarCampoDoTipo();
+    });
+  });
+
+  qs("#js-filtro-aplicar").addEventListener("click", () => {
+    let periodo;
+    if (tipoModal === "ano") {
+      periodo = { tipo: "ano", ano: anoModal };
+    } else if (tipoModal === "mes") {
+      periodo = { tipo: "mes", ano: mesModal.ano, mes: mesModal.mes };
+    } else {
+      const inicio = qs("#js-filtro-data-inicio").value;
+      const fim = qs("#js-filtro-data-fim").value;
+      if (!inicio || !fim || inicio > fim) return;
+      periodo = { tipo: "personalizado", inicio, fim };
+    }
+    fecharModal("modal-filtrar-periodo");
+    aoAplicar(periodo);
+  });
+}
+
 function gerarGradeHorarios(horaInicio, horaFim, intervaloGrade) {
   const grade = [];
   let [h, m] = horaInicio.split(":").map(Number);

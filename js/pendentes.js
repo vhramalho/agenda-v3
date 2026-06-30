@@ -79,8 +79,8 @@ function montarLinhaPago(agendamento) {
   return linha;
 }
 
-function rankingDevedores(ano) {
-  const filtrados = listaPendentes().filter((a) => a.data.slice(0, 4) === String(ano));
+function rankingDevedores(periodo) {
+  const filtrados = listaPendentes().filter((a) => dataNoPeriodo(a.data, periodo));
   const contagem = {};
   filtrados.forEach((a) => {
     const chave = a.clienteId || `avulso:${a.nomeCliente}`;
@@ -182,7 +182,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // ---- Devedores — card resumo top 3 (pendentes.html) ----
   if (qs("#js-devedores-top3")) {
-    const top3 = rankingDevedores(new Date().getFullYear()).slice(0, 3);
+    const top3 = rankingDevedores({ tipo: "ano", ano: new Date().getFullYear() }).slice(0, 3);
     const container = qs("#js-devedores-top3");
     container.innerHTML = "";
     if (top3.length === 0) {
@@ -196,11 +196,13 @@ document.addEventListener("DOMContentLoaded", () => {
   if (qs("#js-devedores-lista-completa")) {
     const container = qs("#js-devedores-lista-completa");
     const vazio = qs("#js-devedores-vazio-completo");
-    let anoAtual = new Date().getFullYear();
+    let periodoAtual = { tipo: "ano", ano: new Date().getFullYear() };
 
     function renderDevedoresCompleto() {
-      qs("#js-ano-label").textContent = String(anoAtual);
-      const ranking = rankingDevedores(anoAtual);
+      qs("#js-ano-label").textContent = rotuloPeriodo(periodoAtual);
+      qs("#js-ano-anterior").classList.toggle("is-hidden", periodoAtual.tipo === "personalizado");
+      qs("#js-ano-proximo").classList.toggle("is-hidden", periodoAtual.tipo === "personalizado");
+      const ranking = rankingDevedores(periodoAtual);
       container.innerHTML = "";
       if (ranking.length === 0) {
         container.classList.add("is-hidden");
@@ -212,8 +214,13 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
 
-    qs("#js-ano-anterior").addEventListener("click", () => { anoAtual -= 1; renderDevedoresCompleto(); });
-    qs("#js-ano-proximo").addEventListener("click", () => { anoAtual += 1; renderDevedoresCompleto(); });
+    qs("#js-ano-anterior").addEventListener("click", () => { periodoAtual = periodoAnterior(periodoAtual); renderDevedoresCompleto(); });
+    qs("#js-ano-proximo").addEventListener("click", () => { periodoAtual = periodoProximo(periodoAtual); renderDevedoresCompleto(); });
     renderDevedoresCompleto();
+
+    configurarFiltroPeriodo(() => periodoAtual, (novoPeriodo) => {
+      periodoAtual = novoPeriodo;
+      renderDevedoresCompleto();
+    });
   }
 });

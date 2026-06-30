@@ -6,9 +6,9 @@
 
 /* ---------- Ranking ---------- */
 
-function estatisticasRanking(clienteId, ano) {
+function estatisticasRanking(clienteId, periodo) {
   const realizados = obterAgendamentos().filter(
-    (a) => a.clienteId === clienteId && a.status && a.status.startsWith("realizado_") && a.data.slice(0, 4) === String(ano)
+    (a) => a.clienteId === clienteId && a.status && a.status.startsWith("realizado_") && dataNoPeriodo(a.data, periodo)
   );
   const visitas = realizados.length;
   const totalGasto = realizados.reduce((s, a) => s + (a.valorTotal || 0), 0);
@@ -44,10 +44,10 @@ function montarLinhaRanking(item, indice, posicao, metrica) {
   return linha;
 }
 
-function renderizarRanking(metrica, ano) {
+function renderizarRanking(metrica, periodo) {
   const linhas = obterClientes()
     .filter((c) => c.ativo)
-    .map((c) => ({ cliente: c, stats: estatisticasRanking(c.id, ano) }))
+    .map((c) => ({ cliente: c, stats: estatisticasRanking(c.id, periodo) }))
     .filter((r) => r.stats.visitas > 0)
     .sort((a, b) => valorPorMetrica(b.stats, metrica) - valorPorMetrica(a.stats, metrica));
 
@@ -69,26 +69,33 @@ function renderizarRanking(metrica, ano) {
 if (qs("#js-ranking-tabela")) {
   document.addEventListener("DOMContentLoaded", () => {
     let metricaAtual = "faturamento";
-    let anoAtual = new Date().getFullYear();
+    let periodoAtual = { tipo: "ano", ano: new Date().getFullYear() };
 
-    function atualizarAnoRanking() {
-      qs("#js-ano-label").textContent = String(anoAtual);
-      qs("#js-ranking-ano-texto").textContent = anoAtual;
-      renderizarRanking(metricaAtual, anoAtual);
+    function atualizarRankingPeriodo() {
+      qs("#js-ano-label").textContent = rotuloPeriodo(periodoAtual);
+      qs("#js-ano-anterior").classList.toggle("is-hidden", periodoAtual.tipo === "personalizado");
+      qs("#js-ano-proximo").classList.toggle("is-hidden", periodoAtual.tipo === "personalizado");
+      qs("#js-ranking-ano-texto").textContent = rotuloPeriodo(periodoAtual);
+      renderizarRanking(metricaAtual, periodoAtual);
     }
 
-    atualizarAnoRanking();
+    atualizarRankingPeriodo();
 
-    qs("#js-ano-anterior").addEventListener("click", () => { anoAtual -= 1; atualizarAnoRanking(); });
-    qs("#js-ano-proximo").addEventListener("click", () => { anoAtual += 1; atualizarAnoRanking(); });
+    qs("#js-ano-anterior").addEventListener("click", () => { periodoAtual = periodoAnterior(periodoAtual); atualizarRankingPeriodo(); });
+    qs("#js-ano-proximo").addEventListener("click", () => { periodoAtual = periodoProximo(periodoAtual); atualizarRankingPeriodo(); });
 
     qsa(".segmented__item[data-metrica]").forEach((item) => {
       item.addEventListener("click", () => {
         qsa(".segmented__item[data-metrica]").forEach((i) => i.classList.remove("is-active"));
         item.classList.add("is-active");
         metricaAtual = item.dataset.metrica;
-        renderizarRanking(metricaAtual, anoAtual);
+        renderizarRanking(metricaAtual, periodoAtual);
       });
+    });
+
+    configurarFiltroPeriodo(() => periodoAtual, (novoPeriodo) => {
+      periodoAtual = novoPeriodo;
+      atualizarRankingPeriodo();
     });
   });
 }
