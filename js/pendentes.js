@@ -115,48 +115,78 @@ document.addEventListener("DOMContentLoaded", () => {
   const pendentes = listaPendentes();
   const totalPendente = pendentes.reduce((soma, a) => soma + (a.valorPendente || a.valorTotal || 0), 0);
 
+  // ---- Card A receber ----
   if (qs("#js-pendentes-valor")) {
     qs("#js-pendentes-valor").textContent = formatarMoeda(totalPendente);
     qs("#js-pendentes-contagem").textContent = `${pendentes.length} cobrança${pendentes.length === 1 ? "" : "s"} pendente${pendentes.length === 1 ? "" : "s"}`;
   }
 
+  // ---- Quem deve (expansível, limite 5) ----
   if (qs("#js-quem-deve-lista")) {
-    const limite = qs("#js-quem-deve-rodape") ? Infinity : 3;
     const titulo = qs("#js-quem-deve-titulo");
-    if (titulo) titulo.textContent = `Quem deve (${pendentes.length})`;
-    const visiveis = pendentes.slice(0, limite);
+    const toggle = qs("#js-quem-deve-toggle");
     const container = qs("#js-quem-deve-lista");
     const vazio = qs("#js-quem-deve-vazio");
-    container.innerHTML = "";
-    if (visiveis.length === 0) {
-      container.classList.add("is-hidden");
-      vazio.classList.remove("is-hidden");
-    } else {
-      container.classList.remove("is-hidden");
-      vazio.classList.add("is-hidden");
-      visiveis.forEach((a, i) => container.appendChild(montarLinhaPendente(a, i)));
+    let expandido = false;
+
+    function renderQuemDeve() {
+      container.innerHTML = "";
+      if (pendentes.length === 0) {
+        container.classList.add("is-hidden");
+        vazio.classList.remove("is-hidden");
+        titulo.textContent = "Quem deve";
+        toggle.classList.add("is-hidden");
+      } else {
+        container.classList.remove("is-hidden");
+        vazio.classList.add("is-hidden");
+        (expandido ? pendentes : pendentes.slice(0, 5)).forEach((a, i) => container.appendChild(montarLinhaPendente(a, i)));
+        if (pendentes.length > 5) {
+          titulo.textContent = `Quem deve (${pendentes.length})`;
+          toggle.textContent = expandido ? "Ver menos" : "Ver todos";
+          toggle.classList.remove("is-hidden");
+        } else {
+          titulo.textContent = "Quem deve";
+          toggle.classList.add("is-hidden");
+        }
+      }
     }
-    const rodape = qs("#js-quem-deve-rodape");
-    if (rodape) rodape.textContent = `Mostrando todas as ${pendentes.length} cobrança${pendentes.length === 1 ? "" : "s"} pendente${pendentes.length === 1 ? "" : "s"}.`;
+
+    toggle.addEventListener("click", () => { expandido = !expandido; renderQuemDeve(); });
+    renderQuemDeve();
   }
 
+  // ---- Pagos recentemente (expansível, resumo 2, máximo 5 na memória) ----
   if (qs("#js-pagos-lista")) {
-    const pagos = listaPagosRecentes();
-    const ehResumo = !window.location.pathname.includes("pendentes-pagos.html");
-    const visiveis = pagos.slice(0, ehResumo ? 2 : 5);
+    const pagos = listaPagosRecentes().slice(0, 5);
+    const toggle = qs("#js-pagos-toggle");
     const container = qs("#js-pagos-lista");
     const vazio = qs("#js-pagos-vazio");
-    container.innerHTML = "";
-    if (visiveis.length === 0) {
-      container.classList.add("is-hidden");
-      vazio.classList.remove("is-hidden");
-    } else {
-      container.classList.remove("is-hidden");
-      vazio.classList.add("is-hidden");
-      visiveis.forEach((a) => container.appendChild(montarLinhaPago(a)));
+    let expandido = false;
+
+    function renderPagos() {
+      container.innerHTML = "";
+      if (pagos.length === 0) {
+        container.classList.add("is-hidden");
+        vazio.classList.remove("is-hidden");
+        toggle.classList.add("is-hidden");
+      } else {
+        container.classList.remove("is-hidden");
+        vazio.classList.add("is-hidden");
+        (expandido ? pagos : pagos.slice(0, 2)).forEach((a) => container.appendChild(montarLinhaPago(a)));
+        if (pagos.length > 2) {
+          toggle.textContent = expandido ? "Ver menos" : "Ver todos";
+          toggle.classList.remove("is-hidden");
+        } else {
+          toggle.classList.add("is-hidden");
+        }
+      }
     }
+
+    toggle.addEventListener("click", () => { expandido = !expandido; renderPagos(); });
+    renderPagos();
   }
 
+  // ---- Devedores — card resumo top 3 (pendentes.html) ----
   if (qs("#js-devedores-top3")) {
     const top3 = rankingDevedores(6).slice(0, 3);
     const container = qs("#js-devedores-top3");
@@ -168,6 +198,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  // ---- Devedores — lista completa (pendentes-devedores.html) ----
   if (qs("#js-devedores-lista-completa")) {
     const ranking = rankingDevedores(6);
     const container = qs("#js-devedores-lista-completa");
