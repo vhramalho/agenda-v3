@@ -139,8 +139,8 @@ document.addEventListener("DOMContentLoaded", () => {
       } else {
         container.classList.remove("is-hidden");
         vazio.classList.add("is-hidden");
-        (expandido ? pendentes : pendentes.slice(0, 5)).forEach((a, i) => container.appendChild(montarLinhaPendente(a, i)));
-        if (pendentes.length > 5) {
+        (expandido ? pendentes : pendentes.slice(0, 2)).forEach((a, i) => container.appendChild(montarLinhaPendente(a, i)));
+        if (pendentes.length > 2) {
           titulo.textContent = `Quem deve (${pendentes.length})`;
           toggle.textContent = expandido ? "Ver menos" : "Ver todos";
           toggle.classList.remove("is-hidden");
