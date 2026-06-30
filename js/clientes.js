@@ -6,7 +6,7 @@
 
 function renderizarRankingTop3(clientesAtivos) {
   const ranqueados = clientesAtivos
-    .map((c) => ({ cliente: c, stats: estatisticasRanking(c.id) }))
+    .map((c) => ({ cliente: c, stats: estatisticasRanking(c.id, new Date().getFullYear()) }))
     .filter((r) => r.stats.visitas > 0)
     .sort((a, b) => b.stats.totalGasto - a.stats.totalGasto)
     .slice(0, 3);

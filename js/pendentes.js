@@ -79,15 +79,8 @@ function montarLinhaPago(agendamento) {
   return linha;
 }
 
-function rankingDevedores(meses, ano) {
-  const filtrados = ano
-    ? listaPendentes().filter((a) => a.data.slice(0, 4) === String(ano))
-    : listaPendentes().filter((a) => {
-        if (!meses) return true;
-        const limite = isoParaDate(hojeIso());
-        limite.setMonth(limite.getMonth() - meses);
-        return a.data >= limite.toISOString().slice(0, 10);
-      });
+function rankingDevedores(ano) {
+  const filtrados = listaPendentes().filter((a) => a.data.slice(0, 4) === String(ano));
   const contagem = {};
   filtrados.forEach((a) => {
     const chave = a.clienteId || `avulso:${a.nomeCliente}`;
@@ -189,7 +182,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // ---- Devedores — card resumo top 3 (pendentes.html) ----
   if (qs("#js-devedores-top3")) {
-    const top3 = rankingDevedores(6).slice(0, 3);
+    const top3 = rankingDevedores(new Date().getFullYear()).slice(0, 3);
     const container = qs("#js-devedores-top3");
     container.innerHTML = "";
     if (top3.length === 0) {
@@ -207,7 +200,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function renderDevedoresCompleto() {
       qs("#js-ano-label").textContent = String(anoAtual);
-      const ranking = rankingDevedores(null, anoAtual);
+      const ranking = rankingDevedores(anoAtual);
       container.innerHTML = "";
       if (ranking.length === 0) {
         container.classList.add("is-hidden");

@@ -10,7 +10,7 @@ function calcularRankingServicos(ano) {
   const contagem = {};
   obterAgendamentos().forEach((agendamento) => {
     if (!agendamento.status || !agendamento.status.startsWith("realizado_")) return;
-    if (ano && agendamento.data.slice(0, 4) !== String(ano)) return;
+    if (agendamento.data.slice(0, 4) !== String(ano)) return;
     (agendamento.servicosIds || []).forEach((id) => {
       contagem[id] = (contagem[id] || 0) + 1;
     });

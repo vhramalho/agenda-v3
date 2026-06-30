@@ -4,26 +4,12 @@
    elementos daquela tela existirem no documento.
    ============================================================ */
 
-function isoDeDateLocal(d) {
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
-}
-
-function diasAtras(n) {
-  const d = new Date();
-  d.setDate(d.getDate() - n);
-  return d;
-}
-
 /* ---------- Ranking ---------- */
 
 function estatisticasRanking(clienteId, ano) {
-  const realizados = ano
-    ? obterAgendamentos().filter(
-        (a) => a.clienteId === clienteId && a.status && a.status.startsWith("realizado_") && a.data.slice(0, 4) === String(ano)
-      )
-    : obterAgendamentos().filter(
-        (a) => a.clienteId === clienteId && a.status && a.status.startsWith("realizado_") && a.data >= isoDeDateLocal(diasAtras(365))
-      );
+  const realizados = obterAgendamentos().filter(
+    (a) => a.clienteId === clienteId && a.status && a.status.startsWith("realizado_") && a.data.slice(0, 4) === String(ano)
+  );
   const visitas = realizados.length;
   const totalGasto = realizados.reduce((s, a) => s + (a.valorTotal || 0), 0);
   const ticket = visitas > 0 ? totalGasto / visitas : 0;
