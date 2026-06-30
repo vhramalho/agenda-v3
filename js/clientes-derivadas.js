@@ -108,7 +108,7 @@ function montarLinhaAniversariante(cliente, indice) {
   `;
   linha.querySelector(".list-item__avatar").textContent = iniciaisCliente(cliente.nome);
   linha.querySelector(".list-item__title").textContent = cliente.nome;
-  linha.querySelector(".js-aniv-data").textContent = `📅 ${cliente.aniversarioDia} de ${MESES_NOME[(cliente.aniversarioMes || 1) - 1].toLowerCase()}`;
+  linha.querySelector(".js-aniv-data").textContent = `${cliente.aniversarioDia} de ${MESES_NOME[(cliente.aniversarioMes || 1) - 1].toLowerCase()}`;
 
   if (cliente.telefone) {
     const tel = linha.querySelector(".js-aniv-telefone");
@@ -152,8 +152,6 @@ if (qs("#js-aniv-mes-label")) {
         .filter((c) => c.ativo && c.aniversarioMes === mesNumero)
         .sort((a, b) => (a.aniversarioDia || 0) - (b.aniversarioDia || 0));
 
-      qs("#js-aniv-contagem-numero").textContent = lista.length;
-      qs("#js-aniv-contagem-mes").textContent = `em ${MESES_NOME[anivMes].toLowerCase()}`;
       qs("#js-aniv-titulo").textContent = `Aniversariantes (${lista.length})`;
 
       const container = qs("#js-aniv-lista");
