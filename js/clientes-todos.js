@@ -27,7 +27,8 @@ function renderizarClientesTodos(ordem) {
   } else {
     container.classList.remove("is-hidden");
     vazio.classList.add("is-hidden");
-    filtrados.forEach((cliente, indice) => container.appendChild(montarLinhaCliente(cliente, indice)));
+    const modoSubtitulo = ordem === "novos" || ordem === "antigos" ? "cadastro" : "padrao";
+    filtrados.forEach((cliente, indice) => container.appendChild(montarLinhaCliente(cliente, indice, modoSubtitulo)));
   }
 }
 

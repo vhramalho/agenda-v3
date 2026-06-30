@@ -125,7 +125,15 @@ function iniciaisCliente(nome) {
   return (primeira + ultima).toUpperCase();
 }
 
-function montarLinhaCliente(cliente, indice) {
+const MESES_NOME_UTILS = ["janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"];
+
+function formatarDesdeCadastro(isoDate) {
+  if (!isoDate) return "data de cadastro não disponível";
+  const [ano, mes] = isoDate.split("-");
+  return `desde ${MESES_NOME_UTILS[parseInt(mes, 10) - 1]} ${ano}`;
+}
+
+function montarLinhaCliente(cliente, indice, modoSubtitulo = "padrao") {
   const stats = estatisticasCliente(cliente.id);
   const linha = document.createElement("a");
   linha.href = `cliente-detalhe.html?id=${cliente.id}`;
@@ -144,6 +152,12 @@ function montarLinhaCliente(cliente, indice) {
   `;
   linha.querySelector(".list-item__avatar").textContent = iniciaisCliente(cliente.nome);
   linha.querySelector(".list-item__title").textContent = cliente.nome;
+
+  if (modoSubtitulo === "cadastro") {
+    linha.querySelector(".list-item__subtitle").textContent = formatarDesdeCadastro(cliente.criadoEm);
+    return linha;
+  }
+
   const visitasTexto = `${stats.visitas} visita${stats.visitas === 1 ? "" : "s"}`;
   linha.querySelector(".list-item__subtitle").textContent =
     stats.ultimaVisitaDias === null
