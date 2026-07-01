@@ -16,10 +16,12 @@ function renderizarNegocioPerfil() {
   const estabelecimento = config.nomeEstabelecimento || "";
   const profissional = config.nomeProfissional || "";
   const endereco = config.endereco || "";
+  const linkMapa = config.linkMapa || "";
 
   qs("#js-perfil-estabelecimento").textContent = estabelecimento || "Nenhum nome cadastrado";
   qs("#js-perfil-profissional").textContent = profissional || "Nenhum nome cadastrado";
   qs("#js-perfil-endereco").textContent = endereco || "Nenhum endereço cadastrado";
+  qs("#js-perfil-link-mapa").textContent = linkMapa || "Gerado automaticamente pelo endereço";
 
   qs("#js-perfil-estabelecimento-topo").textContent = estabelecimento || "Nenhum nome cadastrado";
   qs("#js-perfil-profissional-topo").textContent = profissional || "Nenhum nome cadastrado";
@@ -79,6 +81,19 @@ document.addEventListener("DOMContentLoaded", () => {
     salvarConfig(config);
     renderizarNegocioPerfil();
     fecharModal("modal-editar-endereco-perfil");
+    mostrarSucesso();
+  });
+
+  qs("[data-abrir-modal='modal-editar-link-mapa']").addEventListener("click", () => {
+    qs("#js-link-mapa-input").value = obterConfig().linkMapa || "";
+  });
+
+  qs("#js-link-mapa-salvar").addEventListener("click", () => {
+    const config = obterConfig();
+    config.linkMapa = qs("#js-link-mapa-input").value.trim();
+    salvarConfig(config);
+    renderizarNegocioPerfil();
+    fecharModal("modal-editar-link-mapa");
     mostrarSucesso();
   });
 });

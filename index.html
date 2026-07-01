@@ -4,11 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Agenda — Agenda V3</title>
-  <link rel="stylesheet" href="css/tokens.css?v=20260701d" />
-  <link rel="stylesheet" href="css/base.css?v=20260701d" />
-  <link rel="stylesheet" href="css/layout.css?v=20260701d" />
-  <link rel="stylesheet" href="css/components.css?v=20260701d" />
-  <link rel="stylesheet" href="css/agenda.css?v=20260701d" />
+  <link rel="stylesheet" href="css/tokens.css?v=20260701e" />
+  <link rel="stylesheet" href="css/base.css?v=20260701e" />
+  <link rel="stylesheet" href="css/layout.css?v=20260701e" />
+  <link rel="stylesheet" href="css/components.css?v=20260701e" />
+  <link rel="stylesheet" href="css/agenda.css?v=20260701e" />
 </head>
 <body data-page="index">
   <div class="app">
@@ -57,17 +57,26 @@
 
     <div class="modal-overlay is-hidden" id="modal-horario-agendado">
       <div class="modal-sheet">
-        <div class="row" style="margin-bottom:20px;">
-          <div class="list-item__avatar" id="js-agendado-avatar"></div>
-          <div>
-            <p style="font-weight:700;" id="js-agendado-nome"></p>
-            <p class="text-secondary" id="js-agendado-info"></p>
+        <div class="row row--between" style="margin-bottom:20px;align-items:flex-start;">
+          <div class="row">
+            <div class="list-item__avatar" id="js-agendado-avatar"></div>
+            <div>
+              <p style="font-weight:700;" id="js-agendado-nome"></p>
+              <p class="text-secondary" id="js-agendado-info"></p>
+            </div>
+          </div>
+          <div class="row" style="gap:8px;flex-shrink:0;">
+            <button class="icon-btn" id="js-btn-endereco-agendado" aria-label="Enviar endereço">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7-5.5-7-11a7 7 0 0 1 14 0c0 5.5-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
+            </button>
+            <button class="icon-btn" id="js-btn-lembrete" aria-label="Enviar lembrete">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 3.9M15.4 6.6l-6.8 3.9"/></svg>
+            </button>
           </div>
         </div>
         <div class="stack">
           <button class="btn btn--primary" id="js-btn-realizar">Realizado</button>
           <button class="btn btn--secondary" id="js-btn-editar-agendamento">Editar</button>
-          <button class="btn btn--ghost" id="js-btn-lembrete">Enviar lembrete</button>
           <button class="btn btn--danger" data-trocar-modal="modal-confirmar-exclusao-agendamento">Excluir</button>
         </div>
       </div>
@@ -292,15 +301,15 @@
     </div>
   </div>
 
-  <script src="js/utils.js?v=20260701d"></script>
-  <script src="js/menu.js?v=20260701d"></script>
-  <script src="js/storage.js?v=20260701d"></script>
-  <script src="js/tema.js?v=20260701d"></script>
-  <script src="js/app.js?v=20260701d"></script>
-  <script src="js/chips.js?v=20260701d"></script>
-  <script src="js/modal.js?v=20260701d"></script>
-  <script src="js/calendario.js?v=20260701d"></script>
-  <script src="js/acoes-simuladas.js?v=20260701d"></script>
-  <script src="js/agenda.js?v=20260701d"></script>
+  <script src="js/utils.js?v=20260701e"></script>
+  <script src="js/menu.js?v=20260701e"></script>
+  <script src="js/storage.js?v=20260701e"></script>
+  <script src="js/tema.js?v=20260701e"></script>
+  <script src="js/app.js?v=20260701e"></script>
+  <script src="js/chips.js?v=20260701e"></script>
+  <script src="js/modal.js?v=20260701e"></script>
+  <script src="js/calendario.js?v=20260701e"></script>
+  <script src="js/acoes-simuladas.js?v=20260701e"></script>
+  <script src="js/agenda.js?v=20260701e"></script>
 </body>
 </html>

@@ -193,6 +193,12 @@ function formatarDiaRelativo(iso) {
   return `dia ${d.getDate()} de ${MESES_NOME_UTILS[d.getMonth()]}`;
 }
 
+function gerarLinkMapa(endereco, linkMapa) {
+  if (linkMapa) return linkMapa;
+  if (endereco) return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(endereco)}`;
+  return "";
+}
+
 function substituirPlaceholders(texto, dados) {
   let resultado = (texto || "").split("{saudacao}").join(saudacaoPorHora());
   dados = dados || {};
@@ -200,7 +206,16 @@ function substituirPlaceholders(texto, dados) {
   if (dados.hora !== undefined) resultado = resultado.split("{hora}").join(dados.hora);
   if (dados.dia !== undefined) resultado = resultado.split("{dia}").join(dados.dia);
   if (dados.endereco !== undefined) resultado = resultado.split("{endereco}").join(dados.endereco);
+  if (dados.mapa !== undefined) resultado = resultado.split("{mapa}").join(dados.mapa);
   return resultado;
+}
+
+function mostrarAviso(mensagem) {
+  const toast = document.createElement("div");
+  toast.className = "aviso-toast";
+  toast.textContent = mensagem;
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 2200);
 }
 
 function extrairAniversario(texto) {

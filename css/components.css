@@ -802,6 +802,34 @@
   100% { transform: scale(1); }
 }
 
+/* ---------- Toast de aviso (temporário) ---------- */
+.aviso-toast {
+  position: fixed;
+  left: 50%;
+  bottom: calc(var(--bottom-nav-height) + var(--safe-bottom) + 16px);
+  transform: translateX(-50%);
+  background: var(--warning);
+  color: #1A1A1A;
+  padding: 10px 20px;
+  border-radius: var(--radius-full);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  z-index: 210;
+  opacity: 0;
+  pointer-events: none;
+  max-width: 90%;
+  text-align: center;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+  animation: aviso-toast 2200ms ease forwards;
+}
+
+@keyframes aviso-toast {
+  0% { opacity: 0; transform: translateX(-50%) translateY(10px); }
+  10% { opacity: 1; transform: translateX(-50%) translateY(0); }
+  85% { opacity: 1; transform: translateX(-50%) translateY(0); }
+  100% { opacity: 0; transform: translateX(-50%) translateY(0); }
+}
+
 /* Grade de calendário */
 .cal-grid {
   display: grid;

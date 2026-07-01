@@ -29,6 +29,7 @@ const PLACEHOLDERS_MENSAGEM = {
     { token: "{saudacao}", label: "Saudação" },
     { token: "{nome}", label: "Nome" },
     { token: "{endereco}", label: "Endereço" },
+    { token: "{mapa}", label: "Mapa" },
   ],
 };
 

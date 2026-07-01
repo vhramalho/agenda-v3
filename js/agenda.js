@@ -468,8 +468,6 @@ function abrirHorarioAgendado(agendamento) {
   qs("#js-agendado-avatar").textContent = iniciaisCliente(agendamento.nomeCliente);
   qs("#js-agendado-nome").textContent = agendamento.nomeCliente;
   qs("#js-agendado-info").textContent = `${agendamento.hora} · ${nomesServicosPorIds(agendamento.servicosIds) || "—"}`;
-  const cliente = agendamento.clienteId ? obterClientes().find((c) => c.id === agendamento.clienteId) : null;
-  qs("#js-btn-lembrete").classList.toggle("is-hidden", !(cliente && cliente.telefone));
   abrirModal("modal-horario-agendado");
 }
 
@@ -775,14 +773,35 @@ document.addEventListener("DOMContentLoaded", () => {
 
   qs("#js-btn-lembrete").addEventListener("click", () => {
     const agendamento = agendamentoModalAtual;
-    if (!agendamento || !agendamento.clienteId) return;
-    const cliente = obterClientes().find((c) => c.id === agendamento.clienteId);
-    if (!cliente || !cliente.telefone) return;
+    if (!agendamento) return;
+    const cliente = agendamento.clienteId ? obterClientes().find((c) => c.id === agendamento.clienteId) : null;
+    if (!cliente || !cliente.telefone) {
+      mostrarAviso("Telefone não cadastrado");
+      return;
+    }
     const mensagem = substituirPlaceholders(obterWhatsapp().mensagemLembrete || "", {
       nome: cliente.nome,
       hora: agendamento.hora,
       dia: formatarDiaRelativo(agendamento.data),
       endereco: obterConfig().endereco || "",
+    });
+    const digitos = cliente.telefone.replace(/\D/g, "");
+    window.open(`https://wa.me/55${digitos}?text=${encodeURIComponent(mensagem)}`, "_blank");
+  });
+
+  qs("#js-btn-endereco-agendado").addEventListener("click", () => {
+    const agendamento = agendamentoModalAtual;
+    if (!agendamento) return;
+    const cliente = agendamento.clienteId ? obterClientes().find((c) => c.id === agendamento.clienteId) : null;
+    if (!cliente || !cliente.telefone) {
+      mostrarAviso("Telefone não cadastrado");
+      return;
+    }
+    const config = obterConfig();
+    const mensagem = substituirPlaceholders(obterWhatsapp().mensagemEndereco || "", {
+      nome: cliente.nome,
+      endereco: config.endereco || "",
+      mapa: gerarLinkMapa(config.endereco, config.linkMapa),
     });
     const digitos = cliente.telefone.replace(/\D/g, "");
     window.open(`https://wa.me/55${digitos}?text=${encodeURIComponent(mensagem)}`, "_blank");
