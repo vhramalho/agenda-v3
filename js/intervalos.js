@@ -82,24 +82,6 @@ function montarLinhaIntervalo(bloqueio, indice) {
   return linha;
 }
 
-function calcularTotaisBloqueados(bloqueios) {
-  const intervaloGrade = obterConfig().intervaloGrade || 30;
-  let totalMinutosSemana = 0;
-  bloqueios.forEach((b) => {
-    totalMinutosSemana += b.horariosBloqueados.length * intervaloGrade * b.diasSemana.length;
-  });
-  const mediaMinutosDia = totalMinutosSemana / 7;
-  qs("#js-intervalos-total").textContent = formatarDuracao(totalMinutosSemana);
-  qs("#js-intervalos-media").textContent = formatarDuracao(mediaMinutosDia);
-}
-
-function formatarDuracao(minutos) {
-  const h = Math.floor(minutos / 60);
-  const m = Math.round(minutos % 60);
-  if (h === 0) return `${m}min`;
-  if (m === 0) return `${h}h`;
-  return `${h}h ${m}min`;
-}
 
 function renderizarIntervalos() {
   const bloqueios = obterBloqueiosFixos().filter((b) => b.ativo);
@@ -118,7 +100,6 @@ function renderizarIntervalos() {
     filtrados.forEach((bloqueio, indice) => container.appendChild(montarLinhaIntervalo(bloqueio, indice)));
   }
 
-  calcularTotaisBloqueados(bloqueios);
 }
 
 function abrirNovoIntervalo() {
