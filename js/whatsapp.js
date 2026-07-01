@@ -74,20 +74,6 @@ document.addEventListener("DOMContentLoaded", () => {
     window.open(`https://wa.me/55${digitos}`, "_blank");
   });
 
-  qs("#js-whatsapp-editar").addEventListener("click", () => {
-    qs("#js-numero-input").value = obterWhatsapp().numero || "";
-    abrirModal("modal-editar-numero");
-  });
-
-  qs("#js-numero-salvar").addEventListener("click", () => {
-    const config = obterWhatsapp();
-    config.numero = qs("#js-numero-input").value.trim();
-    salvarWhatsapp(config);
-    renderizarWhatsapp();
-    fecharModal("modal-editar-numero");
-    mostrarSucesso();
-  });
-
   qsa("[data-campo]").forEach((botao) => {
     botao.addEventListener("click", () => {
       campoMensagemAtual = botao.dataset.campo;
