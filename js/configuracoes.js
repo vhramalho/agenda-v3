@@ -171,8 +171,17 @@ document.addEventListener("DOMContentLoaded", () => {
     fecharModal("modal-confirmar-limpar-agenda");
   });
 
+  qs("[data-abrir-modal='modal-confirmar-apagar-dados']").addEventListener("click", () => {
+    qs("#js-apagar-dados-confirmacao").value = "";
+    qs("#js-confirmar-apagar-dados").disabled = true;
+  });
+
+  qs("#js-apagar-dados-confirmacao").addEventListener("input", (evento) => {
+    qs("#js-confirmar-apagar-dados").disabled = evento.target.value.trim().toLowerCase() !== "resetar";
+  });
+
   qs("#js-confirmar-apagar-dados").addEventListener("click", () => {
     Object.values(CHAVES).forEach((chave) => localStorage.removeItem(chave));
-    window.location.href = "index.html";
+    window.location.href = "onboarding.html";
   });
 });

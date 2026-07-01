@@ -4,10 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Configurações — Agenda V3</title>
-  <link rel="stylesheet" href="css/tokens.css?v=20260701g" />
-  <link rel="stylesheet" href="css/base.css?v=20260701g" />
-  <link rel="stylesheet" href="css/layout.css?v=20260701g" />
-  <link rel="stylesheet" href="css/components.css?v=20260701g" />
+  <link rel="stylesheet" href="css/tokens.css?v=20260701h" />
+  <link rel="stylesheet" href="css/base.css?v=20260701h" />
+  <link rel="stylesheet" href="css/layout.css?v=20260701h" />
+  <link rel="stylesheet" href="css/components.css?v=20260701h" />
 </head>
 <body data-page="mais">
   <div class="app">
@@ -209,8 +209,13 @@
     <div class="modal-overlay is-hidden" id="modal-confirmar-apagar-dados">
       <div class="modal-sheet" style="text-align:center;">
         <div class="modal-sheet__header" style="text-align:left;"><p class="modal-sheet__title" style="color:var(--danger);">Apagar todos os dados</p><button class="modal-close">✕</button></div>
-        <p class="text-secondary" style="margin-bottom:20px;">Tem certeza? Clientes, serviços, formas de pagamento, agendamentos e configurações serão apagados. Essa ação não pode ser desfeita.</p>
-        <div class="btn-row"><button class="btn btn--secondary" data-fechar-modal>Cancelar</button><button class="btn btn--danger-solid" id="js-confirmar-apagar-dados">Confirmar</button></div>
+        <p class="text-secondary" style="margin-bottom:12px;">Clientes, serviços, formas de pagamento, agendamentos, bloqueios e configurações serão apagados, e você voltará para o Onboarding. <strong>Essa ação não pode ser desfeita.</strong></p>
+        <p class="text-secondary" style="margin-bottom:16px;">Recomendamos fazer um <a href="backup.html" class="text-primary-accent">backup manual</a> antes de continuar.</p>
+        <div class="field" style="text-align:left;">
+          <label class="field__label">Digite "resetar" para confirmar</label>
+          <input class="input" id="js-apagar-dados-confirmacao" placeholder="resetar" autocomplete="off" />
+        </div>
+        <div class="btn-row"><button class="btn btn--secondary" data-fechar-modal>Cancelar</button><button class="btn btn--danger-solid" id="js-confirmar-apagar-dados" disabled>Confirmar</button></div>
       </div>
     </div>
 
@@ -226,14 +231,14 @@
     </div>
   </div>
 
-  <script src="js/utils.js?v=20260701g"></script>
-  <script src="js/menu.js?v=20260701g"></script>
-  <script src="js/storage.js?v=20260701g"></script>
-  <script src="js/tema.js?v=20260701g"></script>
-  <script src="js/app.js?v=20260701g"></script>
-  <script src="js/chips.js?v=20260701g"></script>
-  <script src="js/modal.js?v=20260701g"></script>
-  <script src="js/configuracoes.js?v=20260701g"></script>
-  <script src="js/versao.js?v=20260701g"></script>
+  <script src="js/utils.js?v=20260701h"></script>
+  <script src="js/menu.js?v=20260701h"></script>
+  <script src="js/storage.js?v=20260701h"></script>
+  <script src="js/tema.js?v=20260701h"></script>
+  <script src="js/app.js?v=20260701h"></script>
+  <script src="js/chips.js?v=20260701h"></script>
+  <script src="js/modal.js?v=20260701h"></script>
+  <script src="js/configuracoes.js?v=20260701h"></script>
+  <script src="js/versao.js?v=20260701h"></script>
 </body>
 </html>

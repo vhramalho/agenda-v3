@@ -56,11 +56,30 @@ document.addEventListener("DOMContentLoaded", () => {
     salvarConfig(config);
   }
 
+  function completarComPadroes() {
+    const padraoConfig = seedConfig();
+    const config = obterConfig();
+    Object.keys(padraoConfig).forEach((chave) => {
+      if (config[chave] === undefined) config[chave] = padraoConfig[chave];
+    });
+    salvarConfig(config);
+
+    const padraoWhatsapp = seedWhatsapp();
+    const whatsapp = obterWhatsapp();
+    Object.keys(padraoWhatsapp).forEach((chave) => {
+      if (whatsapp[chave] === undefined) whatsapp[chave] = padraoWhatsapp[chave];
+    });
+    salvarWhatsapp(whatsapp);
+  }
+
   function mostrarPasso(indice) {
     passos.forEach((p, i) => p.classList.toggle("is-active", i === indice));
     pontos.forEach((p, i) => p.classList.toggle("is-active", i === indice));
     atual = indice;
-    if (indice === 5) salvarOnboarding({ concluido: true });
+    if (indice === 5) {
+      completarComPadroes();
+      salvarOnboarding({ concluido: true });
+    }
   }
 
   qs("#js-ob-grade").addEventListener("click", () => {
