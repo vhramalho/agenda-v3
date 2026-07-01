@@ -778,7 +778,12 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!agendamento || !agendamento.clienteId) return;
     const cliente = obterClientes().find((c) => c.id === agendamento.clienteId);
     if (!cliente || !cliente.telefone) return;
-    const mensagem = (obterWhatsapp().mensagemLembrete || "").replace("{hora}", agendamento.hora);
+    const mensagem = substituirPlaceholders(obterWhatsapp().mensagemLembrete || "", {
+      nome: cliente.nome,
+      hora: agendamento.hora,
+      dia: formatarDiaRelativo(agendamento.data),
+      endereco: obterConfig().endereco || "",
+    });
     const digitos = cliente.telefone.replace(/\D/g, "");
     window.open(`https://wa.me/55${digitos}?text=${encodeURIComponent(mensagem)}`, "_blank");
   });
@@ -1043,7 +1048,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const diasSelecionados = qsa(".chip--ativo", qs("#js-whatsapp-dias")).map((c) => c.dataset.iso);
     if (diasSelecionados.length === 0) return;
     const whatsapp = obterWhatsapp();
-    let mensagem = whatsapp.mensagemHorarios || "Horários disponíveis:";
+    let mensagem = substituirPlaceholders(whatsapp.mensagemHorarios || "Horários disponíveis:");
     diasSelecionados.sort().forEach((iso) => {
       const livres = classificarGradeDoDia(iso).filter((item) => item.tipo === "livre").map((item) => item.hora);
       if (livres.length > 0) {

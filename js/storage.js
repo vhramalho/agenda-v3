@@ -278,10 +278,10 @@ function seedConfig() {
 function seedWhatsapp() {
   return {
     numero: "(32) 99999-9999",
-    mensagemHorarios: "Olá! Tenho estes horários disponíveis para você:",
-    mensagemLembrete: "Olá, passando para lembrar do seu horário agendado para amanhã às {hora}.",
-    mensagemAniversario: "Feliz aniversário! Que seu dia seja incrível e cheio de conquistas!",
-    mensagemEndereco: "Nosso endereço é: {endereco_completo}",
+    mensagemHorarios: "{saudacao}! Tenho estes horários disponíveis para você:",
+    mensagemLembrete: "{saudacao}, {nome}! Passando para lembrar do seu horário agendado para {dia} às {hora}, em {endereco}.",
+    mensagemAniversario: "{saudacao}, {nome}! Feliz aniversário! Que seu dia seja incrível e cheio de conquistas!",
+    mensagemEndereco: "{saudacao}, {nome}! Nosso endereço é: {endereco}",
   };
 }
 

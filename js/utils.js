@@ -178,6 +178,31 @@ function hojeIso() {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 }
 
+function saudacaoPorHora() {
+  const h = new Date().getHours();
+  if (h < 12) return "Bom dia";
+  if (h < 18) return "Boa tarde";
+  return "Boa noite";
+}
+
+function formatarDiaRelativo(iso) {
+  const diffDias = Math.round((new Date(`${iso}T00:00:00`) - new Date(`${hojeIso()}T00:00:00`)) / 86400000);
+  if (diffDias === 0) return "hoje";
+  if (diffDias === 1) return "amanhã";
+  const d = new Date(`${iso}T00:00:00`);
+  return `dia ${d.getDate()} de ${MESES_NOME_UTILS[d.getMonth()]}`;
+}
+
+function substituirPlaceholders(texto, dados) {
+  let resultado = (texto || "").split("{saudacao}").join(saudacaoPorHora());
+  dados = dados || {};
+  if (dados.nome !== undefined) resultado = resultado.split("{nome}").join(dados.nome);
+  if (dados.hora !== undefined) resultado = resultado.split("{hora}").join(dados.hora);
+  if (dados.dia !== undefined) resultado = resultado.split("{dia}").join(dados.dia);
+  if (dados.endereco !== undefined) resultado = resultado.split("{endereco}").join(dados.endereco);
+  return resultado;
+}
+
 function extrairAniversario(texto) {
   const partes = (texto || "").split("/");
   if (partes.length < 2) return { dia: null, mes: null };

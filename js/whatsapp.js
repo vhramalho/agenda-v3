@@ -12,6 +12,50 @@ const TITULOS_MENSAGEM = {
   mensagemEndereco: "Endereço",
 };
 
+const PLACEHOLDERS_MENSAGEM = {
+  mensagemHorarios: [{ token: "{saudacao}", label: "Saudação" }],
+  mensagemLembrete: [
+    { token: "{saudacao}", label: "Saudação" },
+    { token: "{nome}", label: "Nome" },
+    { token: "{dia}", label: "Dia" },
+    { token: "{hora}", label: "Hora" },
+    { token: "{endereco}", label: "Endereço" },
+  ],
+  mensagemAniversario: [
+    { token: "{saudacao}", label: "Saudação" },
+    { token: "{nome}", label: "Nome" },
+  ],
+  mensagemEndereco: [
+    { token: "{saudacao}", label: "Saudação" },
+    { token: "{nome}", label: "Nome" },
+    { token: "{endereco}", label: "Endereço" },
+  ],
+};
+
+function inserirTokenNoTextarea(textarea, token) {
+  const inicio = textarea.selectionStart ?? textarea.value.length;
+  const fim = textarea.selectionEnd ?? textarea.value.length;
+  const valor = textarea.value;
+  textarea.value = valor.slice(0, inicio) + token + valor.slice(fim);
+  const novaPosicao = inicio + token.length;
+  textarea.focus();
+  textarea.setSelectionRange(novaPosicao, novaPosicao);
+}
+
+function renderizarChipsMensagem(campo) {
+  const container = qs("#js-mensagem-chips");
+  const textarea = qs("#js-mensagem-texto");
+  container.innerHTML = "";
+  (PLACEHOLDERS_MENSAGEM[campo] || []).forEach((item) => {
+    const chip = document.createElement("button");
+    chip.type = "button";
+    chip.className = "chip";
+    chip.textContent = `+ ${item.label}`;
+    chip.addEventListener("click", () => inserirTokenNoTextarea(textarea, item.token));
+    container.appendChild(chip);
+  });
+}
+
 function renderizarWhatsapp() {
   const config = obterWhatsapp();
   qs("#js-whatsapp-numero").textContent = config.numero || "Nenhum número cadastrado";
@@ -23,15 +67,14 @@ function renderizarWhatsapp() {
 document.addEventListener("DOMContentLoaded", () => {
   renderizarWhatsapp();
 
-  qs("#js-whatsapp-testar").addEventListener("click", (evento) => {
-    evento.stopPropagation();
+  qs("#js-whatsapp-testar").addEventListener("click", () => {
     const numero = obterWhatsapp().numero || "";
     const digitos = numero.replace(/\D/g, "");
     if (!digitos) return;
     window.open(`https://wa.me/55${digitos}`, "_blank");
   });
 
-  qs("#js-whatsapp-numero-row").addEventListener("click", () => {
+  qs("#js-whatsapp-editar").addEventListener("click", () => {
     qs("#js-numero-input").value = obterWhatsapp().numero || "";
     abrirModal("modal-editar-numero");
   });
@@ -50,6 +93,7 @@ document.addEventListener("DOMContentLoaded", () => {
       campoMensagemAtual = botao.dataset.campo;
       qs("#js-mensagem-titulo").textContent = TITULOS_MENSAGEM[campoMensagemAtual] || "Editar mensagem";
       qs("#js-mensagem-texto").value = obterWhatsapp()[campoMensagemAtual] || "";
+      renderizarChipsMensagem(campoMensagemAtual);
       abrirModal("modal-editar-mensagem");
     });
   });
