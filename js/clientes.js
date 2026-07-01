@@ -93,6 +93,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     salvarClientes(lista);
     fecharModal("modal-novo-cliente");
+    mostrarSucesso();
     renderizarClientes();
   });
 });

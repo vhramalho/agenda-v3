@@ -66,6 +66,7 @@ document.addEventListener("DOMContentLoaded", () => {
     clientes.push({ ...cliente, ativo: true });
     salvarClientes(clientes);
     fecharModal("modal-lixeira-acoes");
+    mostrarSucesso();
     renderizarLixeira();
   });
 

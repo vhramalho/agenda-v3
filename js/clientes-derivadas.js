@@ -292,6 +292,7 @@ if (qs("#js-semretornar-lista")) {
       config.semRetornarBucketsInsight = bucketsInsight;
       salvarConfig(config);
       fecharModal("modal-editar-semretornar");
+      mostrarSucesso();
     });
   });
 }

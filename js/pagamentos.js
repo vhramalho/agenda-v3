@@ -127,6 +127,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     salvarFormasPagamento(lista);
     fecharModal("modal-nova-forma");
+    mostrarSucesso();
     renderizarFormas();
   });
 
@@ -141,6 +142,7 @@ document.addEventListener("DOMContentLoaded", () => {
     forma.taxaPercentual = extrairTaxa(qs("#js-editar-forma-taxa").value);
     salvarFormasPagamento(lista);
     fecharModal("modal-editar-forma");
+    mostrarSucesso();
     renderizarFormas();
   });
 

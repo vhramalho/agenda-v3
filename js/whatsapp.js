@@ -42,6 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
     salvarWhatsapp(config);
     renderizarWhatsapp();
     fecharModal("modal-editar-numero");
+    mostrarSucesso();
   });
 
   qsa("[data-campo]").forEach((botao) => {
@@ -60,6 +61,7 @@ document.addEventListener("DOMContentLoaded", () => {
     salvarWhatsapp(config);
     renderizarWhatsapp();
     fecharModal("modal-editar-mensagem");
+    mostrarSucesso();
   });
 
   qs("#js-confirmar-restaurar-mensagens").addEventListener("click", () => {
@@ -72,5 +74,6 @@ document.addEventListener("DOMContentLoaded", () => {
     salvarWhatsapp(config);
     renderizarWhatsapp();
     fecharModal("modal-confirmar-restaurar-mensagens");
+    mostrarSucesso();
   });
 });

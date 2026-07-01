@@ -49,6 +49,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     localStorage.setItem(CHAVE_ULTIMO_BACKUP, new Date().toISOString());
     renderizarUltimoBackup();
+    mostrarSucesso();
   });
 
   qs("#js-backup-importar-btn").addEventListener("click", () => {

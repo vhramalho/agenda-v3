@@ -140,6 +140,7 @@ document.addEventListener("DOMContentLoaded", () => {
     lista.push({ id: gerarId("blq"), nome, diasSemana: dias, horariosBloqueados: horarios, ativo: true });
     salvarBloqueiosFixos(lista);
     fecharModal("modal-novo-intervalo");
+    mostrarSucesso();
     renderizarIntervalos();
   });
 
@@ -156,6 +157,7 @@ document.addEventListener("DOMContentLoaded", () => {
     bloqueio.horariosBloqueados = horarios;
     salvarBloqueiosFixos(lista);
     fecharModal("modal-editar-intervalo");
+    mostrarSucesso();
     renderizarIntervalos();
   });
 

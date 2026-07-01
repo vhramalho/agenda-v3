@@ -89,6 +89,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     salvarServicos(lista);
     fecharModal("modal-novo-servico");
+    mostrarSucesso();
     renderizarServicos();
   });
 
@@ -103,6 +104,7 @@ document.addEventListener("DOMContentLoaded", () => {
     servico.atualizadoEm = hojeIso();
     salvarServicos(lista);
     fecharModal("modal-editar-servico");
+    mostrarSucesso();
     renderizarServicos();
   });
 

@@ -173,6 +173,7 @@ document.addEventListener("DOMContentLoaded", () => {
     cliente.atualizadoEm = hojeIso();
     salvarClientes(lista);
     fecharModal("modal-editar-cliente");
+    mostrarSucesso();
     renderizarPagina();
   });
 
