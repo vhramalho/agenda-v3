@@ -380,10 +380,18 @@
   border: none;
   border-radius: var(--radius-md);
   padding: 4px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.segmented::-webkit-scrollbar {
+  display: none;
 }
 
 .segmented__item {
   flex: 1;
+  min-width: 50px;
   display: flex;
   align-items: center;
   justify-content: center;

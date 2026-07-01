@@ -97,3 +97,17 @@
   display: flex;
   z-index: 100;
 }
+
+/* Telas muito pequenas: reduz ícone e fonte do menu inferior
+   pra garantir que os 5 itens caibam sem corte */
+@media (max-width: 360px) {
+  .bottom-nav__item {
+    font-size: 9px;
+    gap: 2px;
+    min-width: 0;
+  }
+  .bottom-nav__item svg {
+    width: 18px;
+    height: 18px;
+  }
+}
