@@ -21,16 +21,16 @@ function calcularRankingServicos(periodo) {
     .sort((a, b) => b.quantidade - a.quantidade);
 }
 
-function montarLinhaRankingServico(item, posicao) {
+function montarLinhaRankingServico(item, posicao, indice) {
   const linha = document.createElement("div");
   linha.className = "list-item";
   linha.innerHTML = `
     <span class="ranking-posicao ${classePosicaoRanking(posicao)}">${posicao}</span>
-    <div class="list-item__avatar"></div>
+    <div class="list-item__avatar ${classeAvatarPorIndice(indice)}"></div>
     <div class="list-item__body"><p class="list-item__title"></p></div>
     <span class="text-primary-accent" style="font-weight:700;"></span>
   `;
-  linha.querySelector(".list-item__avatar").textContent = item.servico.nome.slice(0, 2).toUpperCase();
+  linha.querySelector(".list-item__avatar").textContent = iniciaisCliente(item.servico.nome);
   linha.querySelector(".list-item__title").textContent = item.servico.nome;
   linha.querySelector(".text-primary-accent").textContent = `${item.quantidade} atendimento${item.quantidade === 1 ? "" : "s"}`;
   return linha;
@@ -50,7 +50,7 @@ function renderizarRankingServicosCompleto(periodo) {
   tabela.classList.remove("is-hidden");
   vazio.classList.add("is-hidden");
 
-  ranking.forEach((item, i) => tabela.appendChild(montarLinhaRankingServico(item, i + 1)));
+  ranking.forEach((item, i) => tabela.appendChild(montarLinhaRankingServico(item, i + 1, i)));
 }
 
 if (qs("#js-ranking-servicos-tabela")) {

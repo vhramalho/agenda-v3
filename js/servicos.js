@@ -4,20 +4,19 @@
    Exclusão é lógica (ativo:false) — preserva o histórico.
    ============================================================ */
 
-const ICONE_SERVICO_GENERICO = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v6m0 8v6M4.93 4.93l4.24 4.24m5.66 5.66l4.24 4.24M2 12h6m8 0h6M4.93 19.07l4.24-4.24m5.66-5.66l4.24-4.24"/></svg>';
-
 let servicoEditandoId = null;
 
-function montarLinhaServico(servico) {
+function montarLinhaServico(servico, indice) {
   const linha = document.createElement("div");
   linha.className = "list-item";
   linha.style.cursor = "pointer";
   linha.innerHTML = `
-    <div class="icon-circle">${ICONE_SERVICO_GENERICO}</div>
+    <div class="list-item__avatar ${classeAvatarPorIndice(indice)}"></div>
     <div class="list-item__body"><p class="list-item__title"></p></div>
     <div class="list-item__trailing"><p style="font-weight:700;"></p></div>
     <svg class="list-item__chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
   `;
+  linha.querySelector(".list-item__avatar").textContent = iniciaisCliente(servico.nome);
   linha.querySelector(".list-item__title").textContent = servico.nome;
   linha.querySelector(".list-item__trailing p").textContent = servico.valorOpcional ? formatarMoeda(servico.valorOpcional) : "—";
   linha.addEventListener("click", () => abrirEdicaoServico(servico.id));
@@ -33,7 +32,7 @@ function calcularMaisRealizado() {
   }
   const container = qs("#js-servico-top3");
   container.innerHTML = "";
-  ranking.forEach((item, i) => container.appendChild(montarLinhaRankingServico(item, i + 1)));
+  ranking.forEach((item, i) => container.appendChild(montarLinhaRankingServico(item, i + 1, i)));
   destaque.classList.remove("is-hidden");
 }
 
@@ -49,7 +48,7 @@ function renderizarServicos() {
   } else {
     container.classList.remove("is-hidden");
     vazio.classList.add("is-hidden");
-    servicosAtivos.forEach((servico) => container.appendChild(montarLinhaServico(servico)));
+    servicosAtivos.forEach((servico, i) => container.appendChild(montarLinhaServico(servico, i)));
   }
 
   calcularMaisRealizado();
