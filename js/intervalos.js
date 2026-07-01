@@ -7,11 +7,6 @@
    ============================================================ */
 
 const DIAS_LABEL = { seg: "Seg", ter: "Ter", qua: "Qua", qui: "Qui", sex: "Sex", sab: "Sáb", dom: "Dom" };
-const ICONES_INTERVALO = [
-  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 3v8a3 3 0 0 0 6 0V3M9 11v10M16 3c-1.5 2-1.5 5 0 7v10"/></svg>',
-  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 9h13a3 3 0 0 1 0 6h-1M4 9v8a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3v-2M4 9V6h12v3"/></svg>',
-];
-const ICONE_FOLGA = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="11" width="18" height="7" rx="1"/><path d="M5 11V8a4 4 0 0 1 8 0M19 18v2M5 18v2"/></svg>';
 
 let intervaloEditandoId = null;
 let filtroDiaAtual = "todos";
@@ -69,12 +64,9 @@ function montarLinhaIntervalo(bloqueio, indice) {
   const linha = document.createElement("div");
   linha.className = "list-item";
   linha.style.cursor = "pointer";
-  const icone = bloqueio.diasSemana.length === 1 && bloqueio.diasSemana[0] === "dom"
-    ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/></svg>'
-    : (bloqueio.diasSemana.length === 1 ? ICONE_FOLGA : ICONES_INTERVALO[indice % ICONES_INTERVALO.length]);
 
   linha.innerHTML = `
-    <div class="icon-circle">${icone}</div>
+    <div class="list-item__avatar ${classeAvatarPorIndice(indice)}"></div>
     <div class="list-item__body">
       <p class="list-item__title"></p>
       <p class="list-item__subtitle js-intervalo-dias"></p>
@@ -82,6 +74,7 @@ function montarLinhaIntervalo(bloqueio, indice) {
     </div>
     <svg class="list-item__chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
   `;
+  linha.querySelector(".list-item__avatar").textContent = iniciaisCliente(bloqueio.nome);
   linha.querySelector(".list-item__title").textContent = bloqueio.nome;
   linha.querySelector(".js-intervalo-dias").textContent = bloqueio.diasSemana.map((dia) => DIAS_LABEL[dia]).join(", ");
   linha.querySelector(".js-intervalo-horario").textContent = descreverHorario(bloqueio);
