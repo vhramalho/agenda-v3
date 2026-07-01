@@ -71,13 +71,15 @@ agenda-v3/
 │   │   intervalos.js, configuracoes.js, agenda.js, pendentes.js,
 │   │   relatorio.js, clientes-derivadas.js, whatsapp.js, backup.js,
 │   │   onboarding.js           (lógica por tela, Fase 3 — completa)
-│   └── seletor-horario.js      (não usado mais — substituído por chips de horário; mantido no repo, sem `<script>` apontando pra ele)
-├── components/                 (menu.html, header.html, empty-state.html — fragmentos injetados via fetch)
+│   ├── seletor-horario.js      (não usado mais — substituído por chips de horário; mantido no repo, sem `<script>` apontando pra ele)
+│   └── versao.js                (Fase 4: verificação de versão real em Configurações, ver seção 10)
+├── components/                 (menu.html, empty-state.html — fragmentos injetados via fetch; header.html foi removido em 2026-06-27, header secundário passou a ser manual por página)
 ├── referencias-visuais/        (24 imagens de referência visual do app, .PNG)
 ├── docs/
 │   ├── AGENDA_V3_DOCUMENTO_MESTRE.txt   (documento original do produto)
 │   └── LOGICA_E_FLUXO_DE_DADOS.md       (especificação de dados/lógica pré-Fase 3, com decisões resolvidas)
 ├── Documentacao/                (este protocolo — criado em 2026-06-25)
+├── version.json                 (Fase 4: versão/build atual, consultado por `js/versao.js`)
 └── _static-server.ps1           (servidor local de desenvolvimento)
 ```
 
@@ -176,6 +178,7 @@ Tudo isso vive em CSS compartilhado (`css/components.css`/`css/layout.css`) — 
 - A grade de horários da Agenda é **sempre** gerada por `gerarGradeHorarios(horaInicio, horaFim, intervaloGrade)` (`js/utils.js`) — nenhuma tela deve ter uma grade de horários hardcoded.
 - Estatísticas de cliente (visitas, total gasto, última visita) **nunca são salvas no registro do Cliente** — são sempre calculadas em tempo real a partir de `agendaV3:agendamentos`.
 - Script de uma tela que precisa de chips/modais dinâmicos deve carregar `js/chips.js` e `js/modal.js` **antes** do próprio script da tela, pois usa as funções globais `inicializarGrupoChips`, `abrirModal`, `fecharModal`.
+- **Cache-busting (Fase 4, 2026-07-01):** todo `<link rel="stylesheet">`/`<script src>` de `css/`/`js/` nas páginas `.html` tem `?v=BUILD` no final (ex.: `?v=20260701a`), pra evitar que o navegador (principalmente mobile) sirva uma versão antiga em cache depois de um commit. **Sempre que um commit alterar CSS ou JS, atualizar juntos os 3 lugares com o mesmo valor de build:** o `?v=` em todas as páginas, o campo `"build"` de `version.json`, e a constante `BUILD_VERSAO` em `js/versao.js`. A tela Configurações usa esses dois últimos pra oferecer "Verificar atualizações" de verdade (busca `version.json` sem cache e compara).
 
 ## 11. Regras de negócio definitivas
 
@@ -267,7 +270,8 @@ Todas em `docs/AGENDA_V3_DOCUMENTO_MESTRE.txt` seção 6. Lista: Agenda (`index.
 - **Calendário do Relatório (sincronizado em 2026-06-29):** ao abrir o modal de calendário, chama `window.irParaMesCalendarioAgenda` com o `refData` atual — o calendário abre já no mês/dia do período visualizado, com o dia ativo destacado, a semana inteira marcada e o dia de hoje distinguível. Ao selecionar um dia, `window.aoSelecionarDiaCalendarioAgenda` (definido em `relatorio.js`) atualiza `refData` e recalcula o relatório. Reutiliza toda a infraestrutura visual de `calendario.js` sem nenhuma mudança de CSS ou HTML.
 - **Layout e visual do Relatório (ajustado em 2026-06-29):** ordem das seções: Faturamento → 3 insight-cards (Atendimentos/Ticket médio/Taxas) → Recebimentos (antes os insights eram por último). Card de período agora tem duas linhas: principal (ex: "29 de junho" ou "28 jun – 04 jul") e secundária (dia da semana para Dia; "domingo à sábado" para Semana; vazia para Mês/Ano). Título "Recebimentos" e valores por forma de pagamento usam `text-secondary` (sem negrito); texto "Total recebido" removido (redundante). Cores das formas de pagamento agora são fixas: dinheiro `#22C55E`, pix `#3B82F6`, crédito `#EC4899`, débito `#EAB308`, outras `#94A3B8`. Variações mostram só diferença de valor (`▲R$X,XX vs período anterior`) ou unidade (`▲N vs …`) — sem porcentagem.
 - Ranking (3 métricas), Aniversariantes (navegação de mês real) e Sem retornar (filtro por dias real) como telas completas (Etapa 9).
-- WhatsApp: número e as 4 mensagens editáveis de verdade, com "Restaurar padrão" (Etapa 10).
+- WhatsApp: número e as 4 mensagens editáveis de verdade, com "Restaurar padrão" (Etapa 10). **Ajustado na Fase 4 (2026-07-01):** card do número virou `card--destaque` (mesmo padrão do card de assinatura do hub "Mais"), com botões "Editar"/"Testar" dentro do card em vez do card inteiro ser clicável. Mensagens ganharam **5 placeholders reais** — `{saudacao}` (Bom dia/Boa tarde/Boa noite conforme a hora do envio, `saudacaoPorHora()` em `js/utils.js`), `{nome}`, `{dia}` (hoje/amanhã/"dia D de mês", `formatarDiaRelativo()` em `js/utils.js`), `{hora}`, `{endereco}` (puxa de `agendaV3:config`) — cada mensagem só oferece os placeholders que fazem sentido pra ela: Horários disponíveis → Saudação (sem cliente/hora específicos, é uma divulgação geral); Lembrete de horário → Saudação, Nome, Dia, Hora, Endereço; Aniversário → Saudação, Nome; Endereço → Saudação, Nome, Endereço. No modal "Editar mensagem", chips clicáveis abaixo do texto inserem o token na posição do cursor (`inserirTokenNoTextarea` em `js/whatsapp.js`) — evita o usuário ter que digitar `{...}` na mão. Substituição real acontece em `js/agenda.js` (Lembrete e Horários) e `js/clientes-derivadas.js` (Aniversário); `mensagemEndereco` ainda não tem um botão de envio real (Pergunta 7 continua em espera), mas já está pronta com os chips certos.
+- **Verificação de versão real em Configurações (Fase 4, 2026-07-01):** "Versão do aplicativo" deixou de ser decorativo — busca `version.json` sem cache (`fetch(..., {cache:"no-store"})`), compara com `BUILD_VERSAO` (`js/versao.js`), e mostra "Você já está na versão mais recente" ou "Nova versão disponível! Atualizar agora" (recarrega a página com um parâmetro novo na URL pra forçar buscar tudo de novo). Ver regra de manutenção na seção 10.
 - Backup: exportar baixa um `.json` real das 9 chaves; importar substitui tudo com confirmação (Etapa 10).
 - Onboarding: Passo 1 (estabelecimento/profissional/WhatsApp/endereço) e Passo 3 (horários/grade/tempo padrão) salvam de verdade; chegar ao passo final marca `agendaV3:onboarding` como concluído (Etapa 11).
 - **Fase 3 está 100% concluída (todas as 11 etapas).**
@@ -307,6 +311,8 @@ Todas as 10 perguntas resolvidas em `docs/LOGICA_E_FLUXO_DE_DADOS.md` seção 7,
 **Fase 4 formal** — processo definido em `Documentacao/04_FASE_4.md`: achar o problema real antes da solução, pesquisar referência (Booksy/Fresha/Google e Apple Calendar/Mercado Pago) quando houver dúvida de fluxo, Claude age como analista antes de implementar, checklist único por tela. App publicado e testável em https://vhramalho.github.io/agenda-v3/ (repo https://github.com/vhramalho/agenda-v3).
 
 **Página Agenda (`index.html`) encerrada nesta rodada da Fase 4** (2026-06-29) — passou pelo checklist da seção 6 de `04_FASE_4.md`: padronização visual (sessões anteriores), simplificação do fluxo de cliente nos modais, animação de troca de dia/semana corrigida, botões redundantes de Cancelar/Fechar removidos. Usuário confirmou "acho que encerramos a página de agenda". Única pendência registrada pra depois: a funcionalidade de "adicionar horário extra só no dia" (seção 18). Não é definitivo — pode voltar a receber ajustes se surgir algo no uso real, mas não é mais o foco ativo.
+
+**Rodada de 2026-07-01 (WhatsApp + infraestrutura):** card do número do WhatsApp restilizado (`card--destaque`, botões Editar/Testar dentro — ver seção 17); ícone dos cards Aniversariantes/Sem retornar em `clientes.html` corrigido de volta pra direita do título (tinha sido empurrado pro meio ao lado do texto quando a setinha de navegação foi restaurada; setinha agora numa linha própria, abaixo, ao lado do valor); mensagens do WhatsApp ganharam os 5 placeholders reais com chips de inserção (seção 17); criada infraestrutura de cache-busting + verificação de versão real (`version.json`, `js/versao.js`, seção 10) pra resolver o navegador do celular servindo versão antiga depois de um commit. Nenhuma dessas telas foi formalmente "encerrada" pelo checklist da seção 6 ainda — são ajustes pontuais vindos do uso real, não uma rodada completa de auditoria.
 
 ## 23. Próxima etapa
 
