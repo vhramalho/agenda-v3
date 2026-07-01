@@ -53,7 +53,3 @@ function nomeDaCor(corId) {
 }
 
 aplicarTema();
-
-window.addEventListener("pageshow", (evento) => {
-  if (evento.persisted) aplicarTema();
-});

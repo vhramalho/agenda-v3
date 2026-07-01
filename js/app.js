@@ -11,3 +11,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     destacarItemMenuAtivo();
   }
 });
+
+/* Toda tela renderiza seus dados uma vez, no carregamento. Ao voltar
+   (history.back()) o navegador pode restaurar a página do bfcache sem
+   reexecutar nenhum script — recarrega pra garantir dado sempre fresco. */
+window.addEventListener("pageshow", (evento) => {
+  if (evento.persisted) location.reload();
+});
