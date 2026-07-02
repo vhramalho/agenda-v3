@@ -4,10 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Configurações — Agenda V3</title>
-  <link rel="stylesheet" href="css/tokens.css?v=20260701h" />
-  <link rel="stylesheet" href="css/base.css?v=20260701h" />
-  <link rel="stylesheet" href="css/layout.css?v=20260701h" />
-  <link rel="stylesheet" href="css/components.css?v=20260701h" />
+  <link rel="stylesheet" href="css/tokens.css?v=20260701i" />
+  <link rel="stylesheet" href="css/base.css?v=20260701i" />
+  <link rel="stylesheet" href="css/layout.css?v=20260701i" />
+  <link rel="stylesheet" href="css/components.css?v=20260701i" />
 </head>
 <body data-page="mais">
   <div class="app">
@@ -145,6 +145,7 @@
     <div class="modal-overlay is-hidden" id="modal-primeiro-horario">
       <div class="modal-sheet">
         <div class="modal-sheet__header"><p class="modal-sheet__title">Primeiro horário</p><button class="modal-close">✕</button></div>
+        <p class="text-secondary" style="margin-bottom:12px;">Agendamentos já criados continuam aparecendo normalmente, mesmo fora do novo horário.</p>
         <div class="row" style="gap:8px;flex-wrap:wrap;max-height:50vh;overflow-y:auto;" data-chips="single" id="js-primeiro-horario-chips"></div>
         <div class="btn-row" style="margin-top:16px;"><button class="btn btn--secondary" data-fechar-modal>Cancelar</button><button class="btn btn--primary" id="js-primeiro-horario-salvar">Salvar</button></div>
       </div>
@@ -153,6 +154,7 @@
     <div class="modal-overlay is-hidden" id="modal-ultimo-horario">
       <div class="modal-sheet">
         <div class="modal-sheet__header"><p class="modal-sheet__title">Último horário</p><button class="modal-close">✕</button></div>
+        <p class="text-secondary" style="margin-bottom:12px;">Agendamentos já criados continuam aparecendo normalmente, mesmo fora do novo horário.</p>
         <div class="row" style="gap:8px;flex-wrap:wrap;max-height:50vh;overflow-y:auto;" data-chips="single" id="js-ultimo-horario-chips"></div>
         <div class="btn-row" style="margin-top:16px;"><button class="btn btn--secondary" data-fechar-modal>Cancelar</button><button class="btn btn--primary" id="js-ultimo-horario-salvar">Salvar</button></div>
       </div>
@@ -161,7 +163,7 @@
     <div class="modal-overlay is-hidden" id="modal-grade">
       <div class="modal-sheet">
         <div class="modal-sheet__header"><p class="modal-sheet__title">Visualização da agenda</p><button class="modal-close">✕</button></div>
-        <p class="text-secondary" style="margin-bottom:12px;">De quanto em quanto tempo os horários aparecem na Agenda.</p>
+        <p class="text-secondary" style="margin-bottom:12px;">De quanto em quanto tempo os horários aparecem na Agenda. Agendamentos já criados continuam aparecendo normalmente, mesmo fora do novo padrão.</p>
         <div class="row" style="gap:8px;flex-wrap:wrap;" data-chips="single" id="js-grade-chips">
           <span class="chip" data-valor="15">15 minutos</span>
           <span class="chip" data-valor="30">30 minutos</span>
@@ -174,7 +176,7 @@
     <div class="modal-overlay is-hidden" id="modal-tempo-padrao">
       <div class="modal-sheet">
         <div class="modal-sheet__header"><p class="modal-sheet__title">Tempo padrão de atendimento</p><button class="modal-close">✕</button></div>
-        <p class="text-secondary" style="margin-bottom:12px;">Usado pra calcular o ritmo da agenda no modo estratégico.</p>
+        <p class="text-secondary" style="margin-bottom:12px;">Usado pra calcular o ritmo da agenda no modo estratégico. Agendamentos já criados continuam aparecendo normalmente, mesmo fora do novo padrão.</p>
         <div class="row" style="gap:8px;flex-wrap:wrap;" data-chips="single" id="js-tempo-padrao-chips">
           <span class="chip" data-valor="15">15 min</span>
           <span class="chip" data-valor="30">30 min</span>
@@ -231,14 +233,14 @@
     </div>
   </div>
 
-  <script src="js/utils.js?v=20260701h"></script>
-  <script src="js/menu.js?v=20260701h"></script>
-  <script src="js/storage.js?v=20260701h"></script>
-  <script src="js/tema.js?v=20260701h"></script>
-  <script src="js/app.js?v=20260701h"></script>
-  <script src="js/chips.js?v=20260701h"></script>
-  <script src="js/modal.js?v=20260701h"></script>
-  <script src="js/configuracoes.js?v=20260701h"></script>
-  <script src="js/versao.js?v=20260701h"></script>
+  <script src="js/utils.js?v=20260701i"></script>
+  <script src="js/menu.js?v=20260701i"></script>
+  <script src="js/storage.js?v=20260701i"></script>
+  <script src="js/tema.js?v=20260701i"></script>
+  <script src="js/app.js?v=20260701i"></script>
+  <script src="js/chips.js?v=20260701i"></script>
+  <script src="js/modal.js?v=20260701i"></script>
+  <script src="js/configuracoes.js?v=20260701i"></script>
+  <script src="js/versao.js?v=20260701i"></script>
 </body>
 </html>

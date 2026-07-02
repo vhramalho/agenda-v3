@@ -73,10 +73,15 @@ function classificarGradeDoDia(iso) {
 
   const horariosOcupados = Array.from(new Set([...compromissos.map((a) => a.hora), ...horariosFixos.keys()])).sort();
 
+  /* Compromissos/bloqueios num horário que não bate com a grade atual (ex.:
+     agendamento feito com um intervaloGrade diferente do de hoje) continuam
+     aparecendo — a lista do dia é a grade oficial + qualquer horário já ocupado. */
+  const horariosParaExibir = Array.from(new Set([...grade, ...horariosOcupados])).sort();
+
   let ponteiro = config.horaInicio;
   const estrategico = config.modoCompartilhamento === "estrategico";
 
-  return grade.map((hora) => {
+  return horariosParaExibir.map((hora) => {
     const agendamento = porHora[hora];
     if (agendamento) {
       if (agendamento.status === "bloqueado") {
