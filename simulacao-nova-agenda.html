@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Simulação — Nova Agenda (protótipo, não afeta dados reais)</title>
+  <title>Simulação v2 — duração visual + compartilhamento (protótipo, não afeta dados reais)</title>
   <link rel="stylesheet" href="css/tokens.css" />
   <link rel="stylesheet" href="css/base.css" />
   <link rel="stylesheet" href="css/layout.css" />
@@ -18,97 +18,189 @@
       font-weight: 600;
       margin-bottom: var(--space-4);
     }
-    .sim-slot {
+    .sim-config-grid { display: flex; flex-direction: column; gap: var(--space-3); }
+    .sim-config-item { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .sim-config-item label { font-size: var(--text-sm); color: var(--text-secondary); flex-shrink: 0; }
+    .sim-config-item input { width: 100px; text-align: right; }
+    .sim-chip-list { display: flex; gap: 8px; flex-wrap: wrap; margin: 8px 0; }
+    .sim-data-label { font-size: var(--text-sm); color: var(--text-secondary); margin: -8px 0 16px; text-transform: capitalize; }
+
+    /* ---------- Lista com trilho de duração ---------- */
+    #js-sim2-lista { position: relative; }
+    .sim2-row {
       display: flex;
       align-items: center;
-      gap: var(--space-3);
-      padding: 12px 14px;
-      border-radius: var(--radius-md);
-      border: 1px solid var(--border);
-      margin-bottom: 8px;
-      background: var(--card);
+      gap: 12px;
+      height: 64px;
+      padding: 0 14px 0 44px;
+      border-bottom: 1px solid var(--border);
       cursor: pointer;
+      position: relative;
     }
-    .sim-slot--livre { background: transparent; }
-    .sim-slot--agendado { border-color: var(--primary); background: var(--primary-soft); }
-    .sim-slot--bloqueado { border-style: dashed; opacity: 0.75; }
-    .sim-slot__hora { width: 52px; flex-shrink: 0; font-weight: 700; font-variant-numeric: tabular-nums; }
-    .sim-slot__body { flex: 1; }
-    .sim-slot__titulo { font-weight: 600; }
-    .sim-slot__sub { font-size: var(--text-sm); color: var(--text-secondary); }
-    .sim-painel {
-      background: var(--card-elevated);
+    .sim2-row__hora { position: absolute; left: 0; width: 40px; text-align: right; padding-right: 8px; font-weight: 700; font-variant-numeric: tabular-nums; font-size: var(--text-sm); }
+    .sim2-row__body { flex: 1; min-width: 0; }
+    .sim2-row__titulo { font-weight: 600; }
+    .sim2-row__sub { font-size: var(--text-xs); color: var(--text-secondary); }
+
+    .sim2-row--livre .sim2-row__titulo { color: var(--text-muted); font-weight: 500; }
+    .sim2-row--agendado { background: var(--primary-soft); }
+    .sim2-row--agendado .sim2-row__titulo { color: var(--text-primary); }
+    .sim2-row--bloqueado { border-style: dashed; opacity: 0.8; }
+    .sim2-row--encaixe { opacity: 0.55; }
+    .sim2-row--encaixe .sim2-row__titulo { font-style: italic; font-size: var(--text-sm); }
+
+    .sim2-linha {
+      position: absolute;
+      left: 18px;
+      width: 2px;
+      background: var(--primary);
+      z-index: 2;
+      pointer-events: none;
+    }
+    .sim2-linha::before, .sim2-linha::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      width: 9px; height: 9px;
+      border-radius: 999px;
+      background: var(--primary);
+      transform: translateX(-50%);
+    }
+    .sim2-linha::before { top: -4px; }
+    .sim2-linha::after { bottom: -5px; }
+
+    .sim-painel { background: var(--card-elevated); border-radius: var(--radius-md); padding: var(--space-3); margin: 4px 0 10px; }
+
+    /* ---------- Modal compartilhar ---------- */
+    .sim2-aviso {
+      background: var(--warning-soft);
       border-radius: var(--radius-md);
       padding: var(--space-3);
-      margin-top: 8px;
+      margin: 10px 0;
     }
-    .sim-chip-list { display: flex; gap: 8px; flex-wrap: wrap; margin: 8px 0; }
-    .sim-resultado {
-      background: var(--card-elevated);
-      border: 1px dashed var(--primary);
-      border-radius: var(--radius-md);
-      padding: var(--space-3);
-      margin-top: 12px;
+    .sim2-aviso b { color: var(--warning); display: block; margin-bottom: 4px; }
+    .sim2-aviso p { font-size: var(--text-sm); color: var(--text-secondary); margin: 0; }
+
+    .sim2-toggle {
+      width: 44px; height: 26px; border-radius: 999px;
+      background: var(--card-elevated); border: 1px solid var(--border-strong);
+      position: relative; cursor: pointer; padding: 0; flex-shrink: 0;
     }
-    .sim-resultado__lista { display: flex; gap: 8px; flex-wrap: wrap; margin: 10px 0; }
+    .sim2-toggle__bola {
+      position: absolute; top: 2px; left: 2px; width: 20px; height: 20px; border-radius: 999px;
+      background: var(--text-muted); transition: transform .15s ease, background .15s ease;
+    }
+    .sim2-toggle[aria-pressed="true"] { background: var(--primary-soft); border-color: var(--primary); }
+    .sim2-toggle[aria-pressed="true"] .sim2-toggle__bola { transform: translateX(18px); background: var(--primary); }
+
+    .sim2-whatsapp-preview { background: #0B141A; border-radius: var(--radius-md); padding: 14px; }
+    .sim2-whatsapp-preview p, .sim2-whatsapp-preview textarea {
+      background: #005C4B; color: #E9EDEF; border-radius: 8px; padding: 10px 12px;
+      font-size: var(--text-sm); border: none; width: 100%; font-family: var(--font-family);
+      white-space: pre-wrap; margin: 0;
+    }
+
+    .chip-recomendado { font-size: 9px; font-weight: 800; letter-spacing: .03em; text-transform: uppercase; color: var(--primary-strong); margin-left: 4px; }
   </style>
 </head>
 <body data-page="simulacao">
   <div class="app">
     <main class="page">
       <div class="page-header-principal">
-        <h1 class="page-header-principal__titulo">Simulação</h1>
+        <h1 class="page-header-principal__titulo">Simulação v2</h1>
       </div>
 
-      <p class="sim-aviso">Protótipo isolado — usa dados próprios (não mexe na sua agenda real). Horário fixo 9h às 17h, só pra testar a lógica nova.</p>
+      <p class="sim-aviso">Protótipo isolado — dados próprios (não mexe na sua agenda real). Testando: duração visual do agendamento, encaixes por atravessamento, e o modal de compartilhamento.</p>
 
       <section class="section">
-        <h2 class="section__title">Grade da agenda</h2>
-        <div class="row" style="gap:8px;flex-wrap:wrap;" id="js-sim-grade-chips"></div>
+        <h2 class="section__title">Configurações</h2>
+        <div class="sim-config-grid">
+          <div class="sim-config-item">
+            <label>Horário de início</label>
+            <input class="input" id="js-sim2-hora-inicio" />
+          </div>
+          <div class="sim-config-item">
+            <label>Horário de fim</label>
+            <input class="input" id="js-sim2-hora-fim" />
+          </div>
+        </div>
+        <p class="text-secondary" style="margin:12px 0 6px;font-size:var(--text-sm);">Grade visual</p>
+        <div class="sim-chip-list" id="js-sim2-grade-chips"></div>
+        <p class="text-secondary" style="margin:12px 0 6px;font-size:var(--text-sm);">Tempo padrão de atendimento</p>
+        <div class="sim-chip-list" id="js-sim2-tempo-padrao-chips"></div>
       </section>
 
       <section class="section">
         <h2 class="section__title">Seu WhatsApp (pra testar de verdade)</h2>
         <div class="field">
-          <input class="input" id="js-sim-numero" placeholder="(00) 00000-0000" />
+          <input class="input" id="js-sim2-numero" placeholder="(00) 00000-0000" />
         </div>
       </section>
 
       <section class="section">
-        <div class="row row--between" style="margin-bottom:12px;">
-          <h2 class="section__title" style="margin-bottom:0;">Agenda simulada (9h–17h)</h2>
-          <button class="btn btn--ghost btn--sm" id="js-sim-limpar">Limpar tudo</button>
+        <div class="row row--between" style="margin-bottom:4px;">
+          <h2 class="section__title" style="margin-bottom:0;">Agenda simulada</h2>
+          <button class="btn btn--ghost btn--sm" id="js-sim2-limpar">Restaurar exemplo</button>
         </div>
-        <div id="js-sim-lista"></div>
+        <p class="sim-data-label" id="js-sim2-data"></p>
+        <div id="js-sim2-lista"></div>
       </section>
 
       <section class="section">
-        <button class="btn btn--primary" id="js-sim-compartilhar" style="width:100%;">Compartilhar horários</button>
-        <div class="sim-painel is-hidden" id="js-sim-painel-compartilhar">
-          <p class="text-secondary" style="margin-bottom:4px;">Quanto tempo você quer disponibilizar?</p>
-          <div class="sim-chip-list" id="js-sim-duracao-chips"></div>
-          <button class="btn btn--secondary" id="js-sim-calcular" style="width:100%;">Calcular horários</button>
-          <div class="sim-resultado is-hidden" id="js-sim-resultado">
-            <p style="font-weight:700;">Horários encontrados (sem criar buracos):</p>
-            <div class="sim-resultado__lista" id="js-sim-resultado-lista"></div>
-            <button class="btn btn--primary" id="js-sim-enviar" style="width:100%;">Abrir no WhatsApp</button>
-          </div>
-        </div>
+        <button class="btn btn--primary" id="js-sim2-compartilhar" style="width:100%;">Compartilhar horários</button>
       </section>
     </main>
   </div>
 
+  <div class="modal-overlay is-hidden" id="sim2-modal-compartilhar">
+    <div class="modal-sheet">
+      <div class="modal-sheet__header"><p class="modal-sheet__title">Compartilhar horários</p><button class="modal-close" id="sim2-fechar-x">✕</button></div>
+      <p class="text-secondary" style="margin-bottom:16px;">Veja como seus horários serão enviados antes de compartilhar.</p>
+
+      <p style="font-weight:700;margin-bottom:2px;">Tempo mínimo do atendimento</p>
+      <div class="sim-chip-list" id="sim2-chips-duracao"></div>
+
+      <div class="sim2-aviso is-hidden" id="sim2-aviso-buraco">
+        <b>Atenção</b>
+        <p>Seu tempo padrão é de <span id="sim2-aviso-padrao"></span> minutos. Compartilhar horários para atendimentos menores pode criar pequenos espaços livres ("buracos") na agenda. Você pode continuar mesmo assim, caso esteja procurando encaixes ou atendimentos mais rápidos.</p>
+      </div>
+
+      <div class="row row--between" style="margin:16px 0;">
+        <p style="font-weight:700;">Incluir possíveis encaixes</p>
+        <button class="sim2-toggle" id="sim2-toggle-encaixes" aria-pressed="false"><span class="sim2-toggle__bola"></span></button>
+      </div>
+
+      <p style="font-weight:700;margin-bottom:8px;">Prévia da mensagem</p>
+      <div class="sim2-whatsapp-preview">
+        <p id="sim2-preview-texto"></p>
+        <textarea class="is-hidden" id="sim2-preview-textarea" style="min-height:140px;"></textarea>
+      </div>
+
+      <div class="btn-row" style="margin-top:16px;flex-wrap:wrap;gap:8px;">
+        <button class="btn btn--secondary btn--sm" id="sim2-btn-editar" style="flex:1;">Editar mensagem</button>
+        <button class="btn btn--secondary btn--sm" id="sim2-btn-copiar" style="flex:1;">Copiar</button>
+      </div>
+      <button class="btn btn--primary" id="sim2-btn-whatsapp" style="width:100%;margin-top:8px;">Compartilhar no WhatsApp</button>
+      <button class="btn btn--ghost" id="sim2-btn-fechar2" style="width:100%;margin-top:8px;">Fechar</button>
+    </div>
+  </div>
+
   <script>
     /* ============================================================
-       SIMULAÇÃO — protótipo isolado, chave própria de localStorage
-       (agendaV3Sim:*), nunca toca em agendaV3:*. Sem dependência dos
-       js/*.js do app real, propositalmente, pra zero risco de
-       interferir nos dados de verdade.
+       SIMULAÇÃO v2 — protótipo isolado, chave própria de localStorage
+       (agendaV3SimV2:*), nunca toca em agendaV3:*. Sem dependência dos
+       js/*.js do app real.
+
+       Regra central testada aqui: duração do agendamento só DESENHA
+       o período ocupado (linha vertical) e alimenta o cálculo de
+       compartilhamento — não empurra nem reorganiza a grade. Um
+       horário "atravessado" pela duração de um atendimento anterior
+       vira "Encaixe possível": continua clicável normalmente.
        ============================================================ */
-    const CHAVE_SIM = "agendaV3Sim:estado";
-    const HORA_INICIO = "09:00";
-    const HORA_FIM = "17:00";
+    const CHAVE_SIM = "agendaV3SimV2:estado";
+    const ROW_HEIGHT = 64;
     const GRADES_DISPONIVEIS = [15, 20, 30, 40, 45, 50, 60];
+    const TEMPOS_PADRAO_DISPONIVEIS = [20, 30, 40, 45, 50, 60, 90, 120];
 
     function qs(sel, esc) { return (esc || document).querySelector(sel); }
     function qsa(sel, esc) { return Array.from((esc || document).querySelectorAll(sel)); }
@@ -121,9 +213,6 @@
       const h = Math.floor(min / 60);
       const m = min % 60;
       return `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
-    }
-    function somarMinutos(hora, minutos) {
-      return minutosParaHora(horaParaMinutos(hora) + minutos);
     }
 
     function gerarGrade(horaInicio, horaFim, intervalo) {
@@ -139,10 +228,16 @@
 
     function estadoPadrao() {
       return {
+        data: "sexta, 03 de julho de 2026",
+        horaInicio: "09:00",
+        horaFim: "13:00",
         grade: 30,
+        tempoPadrao: 60,
         numero: "",
-        proximoClienteTeste: 1,
-        itens: [], // {hora, tipo: "agendado"|"bloqueado", duracao?: number, rotulo?: string}
+        proximoClienteTeste: 2,
+        itens: [
+          { hora: "09:00", tipo: "agendado", duracao: 60, nome: "João da Silva", servico: "Corte + Barba" },
+        ],
       };
     }
 
@@ -155,13 +250,12 @@
         return estadoPadrao();
       }
     }
-    function salvarEstado(estado) {
-      localStorage.setItem(CHAVE_SIM, JSON.stringify(estado));
-    }
+    function salvarEstado() { localStorage.setItem(CHAVE_SIM, JSON.stringify(estado)); }
 
     let estado = obterEstado();
     let painelAbertoHora = null;
 
+    /* múltiplos da grade até total>=120min E pelo menos 3 opções (regra fechada em conversa) */
     function gerarOpcoesDuracao(grade) {
       const opcoes = [];
       let total = 0;
@@ -172,29 +266,39 @@
         total = valor;
         mult++;
         if (total >= 120 && opcoes.length >= 3) break;
-        if (opcoes.length > 20) break; // trava de segurança
+        if (opcoes.length > 20) break;
       }
       return opcoes;
     }
 
-    function renderizarGradeChips() {
-      const container = qs("#js-sim-grade-chips");
-      container.innerHTML = "";
-      GRADES_DISPONIVEIS.forEach((valor) => {
-        const chip = document.createElement("span");
-        chip.className = "chip" + (valor === estado.grade ? " chip--ativo" : "");
-        chip.textContent = `${valor} min`;
-        chip.addEventListener("click", () => {
-          estado.grade = valor;
-          salvarEstado(estado);
-          renderizarTudo();
-        });
-        container.appendChild(chip);
-      });
-    }
-
     function itemNaHora(hora) {
       return estado.itens.find((i) => i.hora === hora);
+    }
+
+    /* classifica uma linha da grade: agendado / bloqueado / encaixe (atravessado por duração) / livre */
+    function classificarLinha(hora) {
+      const item = itemNaHora(hora);
+      if (item) return { tipo: item.tipo, item };
+      const horaMin = horaParaMinutos(hora);
+      for (const it of estado.itens) {
+        if (it.tipo !== "agendado" || !it.duracao) continue;
+        const ini = horaParaMinutos(it.hora);
+        const fim = ini + it.duracao;
+        if (horaMin > ini && horaMin < fim) return { tipo: "encaixe", origem: it };
+      }
+      return { tipo: "livre" };
+    }
+
+    function renderizarChipsSimples(containerId, opcoes, valorAtual, sufixo, onEscolher) {
+      const container = qs(containerId);
+      container.innerHTML = "";
+      opcoes.forEach((valor) => {
+        const chip = document.createElement("span");
+        chip.className = "chip" + (valor === valorAtual ? " chip--ativo" : "");
+        chip.textContent = `${valor}${sufixo}`;
+        chip.addEventListener("click", () => onEscolher(valor));
+        container.appendChild(chip);
+      });
     }
 
     function abrirPainelSlot(hora, corpoContainer) {
@@ -204,16 +308,16 @@
       const opcoesDuracao = gerarOpcoesDuracao(estado.grade);
       painel.innerHTML = `
         <p class="text-secondary" style="margin-bottom:6px;">Duração do atendimento (opcional):</p>
-        <div class="sim-chip-list" id="js-sim-duracao-agendar"></div>
+        <div class="sim-chip-list" id="js-sim2-duracao-agendar"></div>
         <div class="btn-row" style="margin-top:10px;">
-          <button class="btn btn--primary btn--sm" id="js-sim-btn-agendar">Agendar</button>
-          <button class="btn btn--secondary btn--sm" id="js-sim-btn-bloquear">Bloquear</button>
+          <button class="btn btn--primary btn--sm" id="js-sim2-btn-agendar">Agendar</button>
+          <button class="btn btn--secondary btn--sm" id="js-sim2-btn-bloquear">Bloquear</button>
         </div>
       `;
       corpoContainer.appendChild(painel);
 
       let duracaoEscolhida = null;
-      const listaDuracao = qs("#js-sim-duracao-agendar", painel);
+      const listaDuracao = qs("#js-sim2-duracao-agendar", painel);
       opcoesDuracao.forEach((valor) => {
         const chip = document.createElement("span");
         chip.className = "chip";
@@ -226,75 +330,97 @@
         listaDuracao.appendChild(chip);
       });
 
-      qs("#js-sim-btn-agendar", painel).addEventListener("click", () => {
+      qs("#js-sim2-btn-agendar", painel).addEventListener("click", () => {
         estado.itens.push({
-          hora,
-          tipo: "agendado",
-          duracao: duracaoEscolhida,
-          rotulo: `Cliente teste ${estado.proximoClienteTeste}`,
+          hora, tipo: "agendado", duracao: duracaoEscolhida,
+          nome: `Cliente teste ${estado.proximoClienteTeste}`, servico: "Atendimento simulado",
         });
         estado.proximoClienteTeste++;
-        salvarEstado(estado);
+        salvarEstado();
         painelAbertoHora = null;
         renderizarTudo();
       });
 
-      qs("#js-sim-btn-bloquear", painel).addEventListener("click", () => {
+      qs("#js-sim2-btn-bloquear", painel).addEventListener("click", () => {
         estado.itens.push({ hora, tipo: "bloqueado" });
-        salvarEstado(estado);
+        salvarEstado();
         painelAbertoHora = null;
         renderizarTudo();
       });
     }
 
     function renderizarLista() {
-      const container = qs("#js-sim-lista");
+      const container = qs("#js-sim2-lista");
       container.innerHTML = "";
-      const grade = gerarGrade(HORA_INICIO, HORA_FIM, estado.grade);
+      const grade = gerarGrade(estado.horaInicio, estado.horaFim, estado.grade);
 
-      grade.forEach((hora) => {
-        const item = itemNaHora(hora);
+      grade.forEach((hora, indice) => {
+        const classificacao = classificarLinha(hora);
         const linha = document.createElement("div");
+        linha.className = `sim2-row sim2-row--${classificacao.tipo}`;
+        linha.dataset.hora = hora;
 
-        if (item && item.tipo === "agendado") {
-          linha.className = "sim-slot sim-slot--agendado";
-          linha.innerHTML = `
-            <span class="sim-slot__hora">${hora}</span>
-            <div class="sim-slot__body">
-              <p class="sim-slot__titulo">${item.rotulo}</p>
-              <p class="sim-slot__sub">${item.duracao ? item.duracao + " min" : "sem duração definida"}</p>
-            </div>
-          `;
-          linha.addEventListener("click", () => {
-            estado.itens = estado.itens.filter((i) => i !== item);
-            salvarEstado(estado);
-            renderizarTudo();
-          });
-        } else if (item && item.tipo === "bloqueado") {
-          linha.className = "sim-slot sim-slot--bloqueado";
-          linha.innerHTML = `
-            <span class="sim-slot__hora">${hora}</span>
-            <div class="sim-slot__body"><p class="sim-slot__titulo">Bloqueado</p></div>
-          `;
-          linha.addEventListener("click", () => {
-            estado.itens = estado.itens.filter((i) => i !== item);
-            salvarEstado(estado);
-            renderizarTudo();
-          });
+        let corpo = "";
+        if (classificacao.tipo === "agendado") {
+          const it = classificacao.item;
+          corpo = `<p class="sim2-row__titulo">${it.nome}</p><p class="sim2-row__sub">${it.servico}${it.duracao ? " · " + it.duracao + " min" : " · sem duração definida"}</p>`;
+        } else if (classificacao.tipo === "bloqueado") {
+          corpo = `<p class="sim2-row__titulo">Bloqueado</p>`;
+        } else if (classificacao.tipo === "encaixe") {
+          corpo = `<p class="sim2-row__titulo">Encaixe possível</p>`;
         } else {
-          linha.className = "sim-slot sim-slot--livre";
-          linha.innerHTML = `<span class="sim-slot__hora">${hora}</span><div class="sim-slot__body"><p class="sim-slot__sub">Livre</p></div>`;
+          corpo = `<p class="sim2-row__titulo">Livre</p>`;
+        }
+
+        linha.innerHTML = `<span class="sim2-row__hora">${hora}</span><div class="sim2-row__body">${corpo}</div>`;
+
+        if (classificacao.tipo === "agendado" || classificacao.tipo === "bloqueado") {
+          linha.addEventListener("click", () => {
+            estado.itens = estado.itens.filter((i) => i !== classificacao.item);
+            salvarEstado();
+            renderizarTudo();
+          });
+        } else if (classificacao.tipo === "livre") {
           linha.addEventListener("click", () => {
             const jaAberto = painelAbertoHora === hora;
             painelAbertoHora = null;
             renderizarTudo();
             if (!jaAberto) {
-              const linhaAtual = qsa(".sim-slot__hora", container).find((el) => el.textContent === hora).closest(".sim-slot");
+              const linhaAtual = qs(`.sim2-row[data-hora="${hora}"]`, qs("#js-sim2-lista"));
+              abrirPainelSlot(hora, linhaAtual.parentElement);
+            }
+          });
+        } else {
+          /* encaixe: continua clicável, permite agendar/bloquear ali mesmo, igual um livre */
+          linha.addEventListener("click", () => {
+            const jaAberto = painelAbertoHora === hora;
+            painelAbertoHora = null;
+            renderizarTudo();
+            if (!jaAberto) {
+              const linhaAtual = qs(`.sim2-row[data-hora="${hora}"]`, qs("#js-sim2-lista"));
               abrirPainelSlot(hora, linhaAtual.parentElement);
             }
           });
         }
 
+        container.appendChild(linha);
+      });
+
+      desenharLinhasDuracao(container, grade);
+    }
+
+    function desenharLinhasDuracao(container, grade) {
+      qsa(".sim2-linha", container).forEach((el) => el.remove());
+      estado.itens.forEach((it) => {
+        if (it.tipo !== "agendado" || !it.duracao) return;
+        const startIdx = grade.indexOf(it.hora);
+        if (startIdx === -1) return;
+        const startY = startIdx * ROW_HEIGHT + 28;
+        const endY = startIdx * ROW_HEIGHT + 28 + (it.duracao / estado.grade) * ROW_HEIGHT;
+        const linha = document.createElement("div");
+        linha.className = "sim2-linha";
+        linha.style.top = `${startY}px`;
+        linha.style.height = `${endY - startY}px`;
         container.appendChild(linha);
       });
     }
@@ -306,7 +432,7 @@
       });
     }
 
-    function proximoConflito(inicio, fim, ocupados) {
+    function maiorFimConflito(inicio, fim, ocupados) {
       let maiorFim = null;
       ocupados.forEach((r) => {
         if (r.inicio < fim && r.fim > inicio) {
@@ -317,100 +443,181 @@
     }
 
     function arredondarParaGrade(minutoAlvo) {
-      const inicioMin = horaParaMinutos(HORA_INICIO);
+      const inicioMin = horaParaMinutos(estado.horaInicio);
       const passos = Math.ceil((minutoAlvo - inicioMin) / estado.grade);
       return inicioMin + passos * estado.grade;
     }
 
-    function calcularBlocos(duracao) {
+    function calcularHorariosLivres(duracaoMin) {
       const ocupados = calcularOcupados();
-      const fimMin = horaParaMinutos(HORA_FIM);
+      const fimMin = horaParaMinutos(estado.horaFim);
       const resultado = [];
-      let ponteiro = horaParaMinutos(HORA_INICIO);
-
-      while (ponteiro + duracao <= fimMin) {
-        const conflito = proximoConflito(ponteiro, ponteiro + duracao, ocupados);
+      let ponteiro = horaParaMinutos(estado.horaInicio);
+      while (ponteiro + duracaoMin <= fimMin) {
+        const conflito = maiorFimConflito(ponteiro, ponteiro + duracaoMin, ocupados);
         if (conflito === null) {
           resultado.push(minutosParaHora(ponteiro));
-          ponteiro += duracao;
+          ponteiro += duracaoMin;
         } else {
-          const novoPonteiro = arredondarParaGrade(conflito);
-          if (novoPonteiro <= ponteiro) { ponteiro += estado.grade; } else { ponteiro = novoPonteiro; }
+          const novo = arredondarParaGrade(conflito);
+          ponteiro = novo > ponteiro ? novo : ponteiro + estado.grade;
         }
       }
       return resultado;
     }
 
-    function renderizarPainelCompartilhar() {
-      const container = qs("#js-sim-duracao-chips");
-      container.innerHTML = "";
-      const opcoes = gerarOpcoesDuracao(estado.grade);
-      let duracaoEscolhida = opcoes[0];
+    function obterHorariosEncaixeAtual() {
+      const grade = gerarGrade(estado.horaInicio, estado.horaFim, estado.grade);
+      return grade.filter((h) => classificarLinha(h).tipo === "encaixe");
+    }
 
-      opcoes.forEach((valor, indice) => {
+    /* ---------- Modal compartilhar ---------- */
+    let duracaoCompartilharEscolhida = null;
+    let incluirEncaixes = false;
+    let mensagemEditadaManualmente = false;
+
+    function renderizarChipsDuracaoCompartilhar() {
+      const opcoes = gerarOpcoesDuracao(estado.grade);
+      duracaoCompartilharEscolhida = opcoes.includes(estado.tempoPadrao) ? estado.tempoPadrao : opcoes[0];
+      const container = qs("#sim2-chips-duracao");
+      container.innerHTML = "";
+      opcoes.forEach((valor) => {
         const chip = document.createElement("span");
-        chip.className = "chip" + (indice === 0 ? " chip--ativo" : "");
-        chip.textContent = `${valor} min`;
+        chip.className = "chip" + (valor === duracaoCompartilharEscolhida ? " chip--ativo" : "");
+        chip.innerHTML = `${valor} min` + (valor === estado.tempoPadrao ? `<span class="chip-recomendado">· Recomendado</span>` : "");
         chip.addEventListener("click", () => {
-          duracaoEscolhida = valor;
+          duracaoCompartilharEscolhida = valor;
           qsa(".chip", container).forEach((c) => c.classList.remove("chip--ativo"));
           chip.classList.add("chip--ativo");
+          mensagemEditadaManualmente = false;
+          atualizarPreviaMensagem();
         });
         container.appendChild(chip);
       });
+    }
 
-      qs("#js-sim-calcular").onclick = () => {
-        const blocos = calcularBlocos(duracaoEscolhida);
-        const resultadoBox = qs("#js-sim-resultado");
-        const lista = qs("#js-sim-resultado-lista");
-        lista.innerHTML = "";
-        if (blocos.length === 0) {
-          lista.innerHTML = `<p class="text-secondary">Nenhum horário de ${duracaoEscolhida}min disponível hoje.</p>`;
-        } else {
-          blocos.forEach((h) => {
-            const chip = document.createElement("span");
-            chip.className = "chip chip--ativo";
-            chip.textContent = h;
-            lista.appendChild(chip);
-          });
+    function atualizarAviso() {
+      const aviso = qs("#sim2-aviso-buraco");
+      if (duracaoCompartilharEscolhida < estado.tempoPadrao) {
+        qs("#sim2-aviso-padrao").textContent = estado.tempoPadrao;
+        aviso.classList.remove("is-hidden");
+      } else {
+        aviso.classList.add("is-hidden");
+      }
+    }
+
+    function montarMensagem() {
+      const livres = calcularHorariosLivres(duracaoCompartilharEscolhida);
+      let msg = "Olá!\nTenho estes horários disponíveis hoje:\n\n" + (livres.length ? livres.join("\n") : "(nenhum horário livre pra esse tempo)");
+      if (incluirEncaixes) {
+        const encaixes = obterHorariosEncaixeAtual();
+        if (encaixes.length) {
+          msg += "\n\nTambém consigo alguns possíveis encaixes:\n\n" + encaixes.join("\n");
         }
-        resultadoBox.classList.remove("is-hidden");
+      }
+      return msg;
+    }
 
-        qs("#js-sim-enviar").onclick = () => {
-          const digitos = (estado.numero || "").replace(/\D/g, "");
-          if (!digitos) { alert("Digite seu número de WhatsApp ali em cima primeiro."); return; }
-          const texto = `[Simulação] Horários de ${duracaoEscolhida}min disponíveis: ${blocos.join(", ") || "nenhum"}`;
-          window.open(`https://wa.me/55${digitos}?text=${encodeURIComponent(texto)}`, "_blank");
-        };
-      };
+    function atualizarPreviaMensagem() {
+      atualizarAviso();
+      if (!mensagemEditadaManualmente) {
+        const texto = montarMensagem();
+        qs("#sim2-preview-texto").textContent = texto;
+        qs("#sim2-preview-textarea").value = texto;
+      }
+    }
+
+    function textoAtualDaPrevia() {
+      const textarea = qs("#sim2-preview-textarea");
+      return textarea.classList.contains("is-hidden") ? qs("#sim2-preview-texto").textContent : textarea.value;
+    }
+
+    function abrirModalCompartilhar() {
+      mensagemEditadaManualmente = false;
+      incluirEncaixes = false;
+      qs("#sim2-toggle-encaixes").setAttribute("aria-pressed", "false");
+      qs("#sim2-preview-texto").classList.remove("is-hidden");
+      qs("#sim2-preview-textarea").classList.add("is-hidden");
+      qs("#sim2-btn-editar").textContent = "Editar mensagem";
+      renderizarChipsDuracaoCompartilhar();
+      atualizarPreviaMensagem();
+      qs("#sim2-modal-compartilhar").classList.remove("is-hidden");
     }
 
     function renderizarTudo() {
-      renderizarGradeChips();
+      renderizarChipsSimples("#js-sim2-grade-chips", GRADES_DISPONIVEIS, estado.grade, " min", (v) => {
+        estado.grade = v; salvarEstado(); renderizarTudo();
+      });
+      renderizarChipsSimples("#js-sim2-tempo-padrao-chips", TEMPOS_PADRAO_DISPONIVEIS, estado.tempoPadrao, " min", (v) => {
+        estado.tempoPadrao = v; salvarEstado(); renderizarTudo();
+      });
+      qs("#js-sim2-hora-inicio").value = estado.horaInicio;
+      qs("#js-sim2-hora-fim").value = estado.horaFim;
+      qs("#js-sim2-numero").value = estado.numero || "";
+      qs("#js-sim2-data").textContent = estado.data;
       renderizarLista();
-      qs("#js-sim-numero").value = estado.numero || "";
     }
 
     document.addEventListener("DOMContentLoaded", () => {
       renderizarTudo();
 
-      qs("#js-sim-numero").addEventListener("input", (e) => {
-        estado.numero = e.target.value;
-        salvarEstado(estado);
-      });
+      qs("#js-sim2-hora-inicio").addEventListener("change", (e) => { estado.horaInicio = e.target.value; salvarEstado(); renderizarTudo(); });
+      qs("#js-sim2-hora-fim").addEventListener("change", (e) => { estado.horaFim = e.target.value; salvarEstado(); renderizarTudo(); });
+      qs("#js-sim2-numero").addEventListener("input", (e) => { estado.numero = e.target.value; salvarEstado(); });
 
-      qs("#js-sim-limpar").addEventListener("click", () => {
+      qs("#js-sim2-limpar").addEventListener("click", () => {
         estado = estadoPadrao();
-        salvarEstado(estado);
-        qs("#js-sim-painel-compartilhar").classList.add("is-hidden");
+        salvarEstado();
         renderizarTudo();
       });
 
-      qs("#js-sim-compartilhar").addEventListener("click", () => {
-        const painel = qs("#js-sim-painel-compartilhar");
-        painel.classList.toggle("is-hidden");
-        qs("#js-sim-resultado").classList.add("is-hidden");
-        if (!painel.classList.contains("is-hidden")) renderizarPainelCompartilhar();
+      qs("#js-sim2-compartilhar").addEventListener("click", abrirModalCompartilhar);
+
+      qs("#sim2-fechar-x").addEventListener("click", () => qs("#sim2-modal-compartilhar").classList.add("is-hidden"));
+      qs("#sim2-btn-fechar2").addEventListener("click", () => qs("#sim2-modal-compartilhar").classList.add("is-hidden"));
+      qs("#sim2-modal-compartilhar").addEventListener("click", (e) => { if (e.target.id === "sim2-modal-compartilhar") e.currentTarget.classList.add("is-hidden"); });
+
+      qs("#sim2-toggle-encaixes").addEventListener("click", (e) => {
+        incluirEncaixes = !incluirEncaixes;
+        e.currentTarget.setAttribute("aria-pressed", incluirEncaixes ? "true" : "false");
+        mensagemEditadaManualmente = false;
+        atualizarPreviaMensagem();
+      });
+
+      qs("#sim2-btn-editar").addEventListener("click", () => {
+        const textoEl = qs("#sim2-preview-texto");
+        const textarea = qs("#sim2-preview-textarea");
+        const editando = !textarea.classList.contains("is-hidden");
+        if (!editando) {
+          textarea.value = textoEl.textContent;
+          textoEl.classList.add("is-hidden");
+          textarea.classList.remove("is-hidden");
+          qs("#sim2-btn-editar").textContent = "Concluir edição";
+        } else {
+          textoEl.textContent = textarea.value;
+          mensagemEditadaManualmente = true;
+          textoEl.classList.remove("is-hidden");
+          textarea.classList.add("is-hidden");
+          qs("#sim2-btn-editar").textContent = "Editar mensagem";
+        }
+      });
+
+      qs("#sim2-btn-copiar").addEventListener("click", async () => {
+        const botao = qs("#sim2-btn-copiar");
+        try {
+          await navigator.clipboard.writeText(textoAtualDaPrevia());
+          const originalTexto = botao.textContent;
+          botao.textContent = "Copiado!";
+          setTimeout(() => { botao.textContent = originalTexto; }, 1400);
+        } catch (e) {
+          alert("Não foi possível copiar automaticamente. Selecione o texto manualmente.");
+        }
+      });
+
+      qs("#sim2-btn-whatsapp").addEventListener("click", () => {
+        const digitos = (estado.numero || "").replace(/\D/g, "");
+        if (!digitos) { alert("Digite seu número de WhatsApp no topo da página primeiro."); return; }
+        window.open(`https://wa.me/55${digitos}?text=${encodeURIComponent(textoAtualDaPrevia())}`, "_blank");
       });
     });
   </script>
