@@ -25,21 +25,32 @@
     .sim-chip-list { display: flex; gap: 8px; flex-wrap: wrap; margin: 8px 0; }
     .sim-data-label { font-size: var(--text-sm); color: var(--text-secondary); margin: -8px 0 16px; text-transform: capitalize; }
 
-    /* ---------- Lista com trilho de duração ---------- */
+    /* ---------- Lista com card-de-hora + trilho de duração ---------- */
     #js-sim2-lista { position: relative; }
+    .sim2-hora-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      margin-bottom: 10px;
+      overflow: hidden;
+    }
     .sim2-row {
       display: flex;
       align-items: center;
       gap: 12px;
-      height: 64px;
       padding: 0 14px 0 44px;
-      border-bottom: 1px solid var(--border);
       cursor: pointer;
       position: relative;
+      border-bottom: 1px solid var(--border);
     }
+    .sim2-hora-card .sim2-row:last-child { border-bottom: none; }
+    .sim2-row--principal { height: 64px; }
+    .sim2-row--sub { height: 42px; background: rgba(255,255,255,0.02); padding-left: 60px; }
     .sim2-row__hora { position: absolute; left: 0; width: 40px; text-align: right; padding-right: 8px; font-weight: 700; font-variant-numeric: tabular-nums; font-size: var(--text-sm); }
+    .sim2-row--sub .sim2-row__hora { font-size: var(--text-xs); font-weight: 600; width: 56px; }
     .sim2-row__body { flex: 1; min-width: 0; }
     .sim2-row__titulo { font-weight: 600; }
+    .sim2-row--sub .sim2-row__titulo { font-size: var(--text-sm); }
     .sim2-row__sub { font-size: var(--text-xs); color: var(--text-secondary); }
 
     .sim2-row--livre .sim2-row__titulo { color: var(--text-muted); font-weight: 500; }
@@ -198,8 +209,9 @@
        vira "Encaixe possível": continua clicável normalmente.
        ============================================================ */
     const CHAVE_SIM = "agendaV3SimV2:estado";
-    const ROW_HEIGHT = 64;
-    const GRADES_DISPONIVEIS = [15, 20, 30, 40, 45, 50, 60];
+    const ALTURA_PRINCIPAL = 64;
+    const ALTURA_SUB = 42;
+    const GRADES_DISPONIVEIS = [15, 20, 30, 60];
     const TEMPOS_PADRAO_DISPONIVEIS = [20, 30, 40, 45, 50, 60, 90, 120];
 
     function qs(sel, esc) { return (esc || document).querySelector(sel); }
@@ -349,15 +361,60 @@
       });
     }
 
+    /* Agrupa a grade por hora cheia (HH). A 1ª linha de cada grupo é "principal"
+       (maior, destaque), as demais são "sub" (menores, recuadas) — um card por
+       hora, com os encaixes daquela hora visíveis e clicáveis dentro dele. */
+    function calcularMetricas(grade) {
+      const info = [];
+      let cursorY = 0;
+      let horaAtualGrupo = null;
+      grade.forEach((hora, idx) => {
+        const horaDoDia = hora.split(":")[0];
+        const principal = horaDoDia !== horaAtualGrupo;
+        if (principal && idx !== 0) cursorY += 10; // margem entre cards de hora
+        horaAtualGrupo = horaDoDia;
+        const altura = principal ? ALTURA_PRINCIPAL : ALTURA_SUB;
+        info.push({ hora, top: cursorY, height: altura, principal });
+        cursorY += altura;
+      });
+      return info;
+    }
+
+    function calcularPosicaoY(minutosAlvo, info) {
+      for (const linha of info) {
+        const iniMin = horaParaMinutos(linha.hora);
+        const fimMin = iniMin + estado.grade;
+        if (minutosAlvo <= fimMin) {
+          const fracao = Math.max(0, Math.min(1, (minutosAlvo - iniMin) / estado.grade));
+          return linha.top + fracao * linha.height;
+        }
+      }
+      const ultimo = info[info.length - 1];
+      return ultimo ? ultimo.top + ultimo.height : 0;
+    }
+
     function renderizarLista() {
       const container = qs("#js-sim2-lista");
       container.innerHTML = "";
       const grade = gerarGrade(estado.horaInicio, estado.horaFim, estado.grade);
+      const info = calcularMetricas(grade);
 
-      grade.forEach((hora, indice) => {
+      let horaAtualGrupo = null;
+      let cardAtual = null;
+
+      grade.forEach((hora) => {
+        const horaDoDia = hora.split(":")[0];
+        const principal = horaDoDia !== horaAtualGrupo;
+        if (principal) {
+          cardAtual = document.createElement("div");
+          cardAtual.className = "sim2-hora-card";
+          container.appendChild(cardAtual);
+          horaAtualGrupo = horaDoDia;
+        }
+
         const classificacao = classificarLinha(hora);
         const linha = document.createElement("div");
-        linha.className = `sim2-row sim2-row--${classificacao.tipo}`;
+        linha.className = `sim2-row sim2-row--${principal ? "principal" : "sub"} sim2-row--${classificacao.tipo}`;
         linha.dataset.hora = hora;
 
         let corpo = "";
@@ -380,47 +437,35 @@
             salvarEstado();
             renderizarTudo();
           });
-        } else if (classificacao.tipo === "livre") {
-          linha.addEventListener("click", () => {
-            const jaAberto = painelAbertoHora === hora;
-            painelAbertoHora = null;
-            renderizarTudo();
-            if (!jaAberto) {
-              const linhaAtual = qs(`.sim2-row[data-hora="${hora}"]`, qs("#js-sim2-lista"));
-              abrirPainelSlot(hora, linhaAtual.parentElement);
-            }
-          });
         } else {
-          /* encaixe: continua clicável, permite agendar/bloquear ali mesmo, igual um livre */
+          /* livre ou encaixe: ambos continuam clicáveis, abrem o mesmo painel de agendar/bloquear */
           linha.addEventListener("click", () => {
             const jaAberto = painelAbertoHora === hora;
             painelAbertoHora = null;
             renderizarTudo();
-            if (!jaAberto) {
-              const linhaAtual = qs(`.sim2-row[data-hora="${hora}"]`, qs("#js-sim2-lista"));
-              abrirPainelSlot(hora, linhaAtual.parentElement);
-            }
+            if (!jaAberto) abrirPainelSlot(hora, qs("#js-sim2-lista"));
           });
         }
 
-        container.appendChild(linha);
+        cardAtual.appendChild(linha);
       });
 
-      desenharLinhasDuracao(container, grade);
+      desenharLinhasDuracao(container, info);
     }
 
-    function desenharLinhasDuracao(container, grade) {
+    function desenharLinhasDuracao(container, info) {
       qsa(".sim2-linha", container).forEach((el) => el.remove());
       estado.itens.forEach((it) => {
         if (it.tipo !== "agendado" || !it.duracao) return;
-        const startIdx = grade.indexOf(it.hora);
-        if (startIdx === -1) return;
-        const startY = startIdx * ROW_HEIGHT + 28;
-        const endY = startIdx * ROW_HEIGHT + 28 + (it.duracao / estado.grade) * ROW_HEIGHT;
+        const startInfo = info.find((i) => i.hora === it.hora);
+        if (!startInfo) return;
+        const startY = startInfo.top + startInfo.height * 0.42;
+        const minutosFim = horaParaMinutos(it.hora) + it.duracao;
+        const endY = calcularPosicaoY(minutosFim, info);
         const linha = document.createElement("div");
         linha.className = "sim2-linha";
         linha.style.top = `${startY}px`;
-        linha.style.height = `${endY - startY}px`;
+        linha.style.height = `${Math.max(0, endY - startY)}px`;
         container.appendChild(linha);
       });
     }
