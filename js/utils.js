@@ -164,6 +164,25 @@ function gerarGradeHorarios(horaInicio, horaFim, intervaloGrade) {
   return grade;
 }
 
+/* Opções de duração/compartilhamento: sempre múltiplos exatos da grade, até
+   o total chegar em pelo menos 120min E existirem pelo menos 3 opções —
+   regra validada nas simulações antes da implementação (ver
+   docs/REFATORACAO_DURACAO_COMPARTILHAMENTO.md). */
+function gerarOpcoesDuracao(grade) {
+  const opcoes = [];
+  let total = 0;
+  let mult = 1;
+  while (true) {
+    const valor = grade * mult;
+    opcoes.push(valor);
+    total = valor;
+    mult++;
+    if (total >= 120 && opcoes.length >= 3) break;
+    if (opcoes.length > 20) break;
+  }
+  return opcoes;
+}
+
 function somarMinutos(hora, minutos) {
   let [h, m] = hora.split(":").map(Number);
   m += minutos;
@@ -171,6 +190,11 @@ function somarMinutos(hora, minutos) {
   m = ((m % 60) + 60) % 60;
   h = h % 24;
   return `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
+}
+
+function horaParaMinutos(hora) {
+  const [h, m] = hora.split(":").map(Number);
+  return h * 60 + m;
 }
 
 function hojeIso() {

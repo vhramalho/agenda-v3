@@ -4,11 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Agenda — Agenda V3</title>
-  <link rel="stylesheet" href="css/tokens.css?v=20260701j" />
-  <link rel="stylesheet" href="css/base.css?v=20260701j" />
-  <link rel="stylesheet" href="css/layout.css?v=20260701j" />
-  <link rel="stylesheet" href="css/components.css?v=20260701j" />
-  <link rel="stylesheet" href="css/agenda.css?v=20260701j" />
+  <link rel="stylesheet" href="css/tokens.css?v=20260704a" />
+  <link rel="stylesheet" href="css/base.css?v=20260704a" />
+  <link rel="stylesheet" href="css/layout.css?v=20260704a" />
+  <link rel="stylesheet" href="css/components.css?v=20260704a" />
+  <link rel="stylesheet" href="css/agenda.css?v=20260704a" />
 </head>
 <body data-page="index">
   <div class="app">
@@ -151,6 +151,18 @@
         <p class="modal-sheet__title">Compartilhar horários</p>
         <p class="text-secondary" style="margin-bottom:12px;">Selecione os dias para compartilhar</p>
         <div class="row" style="gap:6px;margin-bottom:20px;flex-wrap:wrap;" data-chips="multi" id="js-whatsapp-dias"></div>
+        <div class="field">
+          <label class="field__label">Duração do atendimento</label>
+          <div class="chip-group" data-chips="single" id="js-whatsapp-duracao"></div>
+        </div>
+        <div class="field">
+          <label class="field__label">Mostrar</label>
+          <div class="chip-group" data-chips="single" id="js-whatsapp-mostrar">
+            <span class="chip chip--ativo" data-valor="livres">Apenas livres</span>
+            <span class="chip" data-valor="livres_encaixes">Livres + encaixes</span>
+            <span class="chip" data-valor="encaixes">Apenas encaixes</span>
+          </div>
+        </div>
         <div class="btn-row"><button class="btn btn--secondary" data-fechar-modal>Fechar</button><button class="btn btn--primary" id="js-whatsapp-enviar">Enviar no WhatsApp</button></div>
       </div>
     </div>
@@ -181,6 +193,10 @@
         <div class="field">
           <label class="field__label">Serviços</label>
           <div class="chip-group" data-chips="multi" id="js-novo-agendamento-servicos"></div>
+        </div>
+        <div class="field">
+          <label class="field__label">Duração</label>
+          <div class="chip-group" data-chips="single" id="js-novo-agendamento-duracao"></div>
         </div>
         <div class="field">
           <button type="button" id="js-novo-agendamento-observacao-toggle" class="text-primary-accent" style="font-weight:600;font-size:var(--text-sm);background:none;border:none;text-align:left;padding:0;cursor:pointer;">+ Adicionar observação</button>
@@ -301,15 +317,15 @@
     </div>
   </div>
 
-  <script src="js/utils.js?v=20260701j"></script>
-  <script src="js/menu.js?v=20260701j"></script>
-  <script src="js/storage.js?v=20260701j"></script>
-  <script src="js/tema.js?v=20260701j"></script>
-  <script src="js/app.js?v=20260701j"></script>
-  <script src="js/chips.js?v=20260701j"></script>
-  <script src="js/modal.js?v=20260701j"></script>
-  <script src="js/calendario.js?v=20260701j"></script>
-  <script src="js/acoes-simuladas.js?v=20260701j"></script>
-  <script src="js/agenda.js?v=20260701j"></script>
+  <script src="js/utils.js?v=20260704a"></script>
+  <script src="js/menu.js?v=20260704a"></script>
+  <script src="js/storage.js?v=20260704a"></script>
+  <script src="js/tema.js?v=20260704a"></script>
+  <script src="js/app.js?v=20260704a"></script>
+  <script src="js/chips.js?v=20260704a"></script>
+  <script src="js/modal.js?v=20260704a"></script>
+  <script src="js/calendario.js?v=20260704a"></script>
+  <script src="js/acoes-simuladas.js?v=20260704a"></script>
+  <script src="js/agenda.js?v=20260704a"></script>
 </body>
 </html>

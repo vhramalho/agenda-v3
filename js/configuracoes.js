@@ -83,8 +83,7 @@ document.addEventListener("DOMContentLoaded", () => {
     qs("#js-primeiro-horario-valor").textContent = config.horaInicio;
     qs("#js-ultimo-horario-valor").textContent = config.horaFim;
     qs("#js-grade-valor").textContent = `${config.intervaloGrade} minutos`;
-    qs("#js-tempo-padrao-valor").textContent = `${config.tempoPadraoAtendimento} minutos`;
-    qs("#js-modo-compartilhamento-valor").textContent = config.modoCompartilhamento === "simples" ? "Simples" : "Estratégico";
+    qs("#js-tempo-padrao-valor").textContent = config.tempoPadraoAtendimento ? `${config.tempoPadraoAtendimento} minutos` : "Não definido";
   }
 
   qs("#js-primeiro-horario-row").addEventListener("click", () => {
@@ -130,31 +129,17 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   qs("#js-tempo-padrao-row").addEventListener("click", () => {
-    marcarChipValor("js-tempo-padrao-chips", obterConfig().tempoPadraoAtendimento);
+    marcarChipValor("js-tempo-padrao-chips", obterConfig().tempoPadraoAtendimento || "");
     abrirModal("modal-tempo-padrao");
   });
   qs("#js-tempo-padrao-salvar").addEventListener("click", () => {
     const novoValor = valorSelecionado("js-tempo-padrao-chips");
-    if (!novoValor) return;
+    if (novoValor === null) return;
     const config = obterConfig();
-    config.tempoPadraoAtendimento = parseInt(novoValor, 10);
+    config.tempoPadraoAtendimento = novoValor === "" ? null : parseInt(novoValor, 10);
     salvarConfig(config);
     atualizarTextosAgenda();
     fecharModal("modal-tempo-padrao");
-  });
-
-  qs("#js-modo-compartilhamento-row").addEventListener("click", () => {
-    marcarChipValor("js-modo-compartilhamento-chips", obterConfig().modoCompartilhamento);
-    abrirModal("modal-modo-compartilhamento");
-  });
-  qs("#js-modo-compartilhamento-salvar").addEventListener("click", () => {
-    const novoValor = valorSelecionado("js-modo-compartilhamento-chips");
-    if (!novoValor) return;
-    const config = obterConfig();
-    config.modoCompartilhamento = novoValor;
-    salvarConfig(config);
-    atualizarTextosAgenda();
-    fecharModal("modal-modo-compartilhamento");
   });
 
   atualizarTextosAgenda();

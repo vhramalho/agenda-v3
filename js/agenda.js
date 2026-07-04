@@ -78,18 +78,12 @@ function classificarGradeDoDia(iso) {
      aparecendo — a lista do dia é a grade oficial + qualquer horário já ocupado. */
   const horariosParaExibir = Array.from(new Set([...grade, ...horariosOcupados])).sort();
 
-  let ponteiro = config.horaInicio;
-  const estrategico = config.modoCompartilhamento === "estrategico";
-
   return horariosParaExibir.map((hora) => {
     const agendamento = porHora[hora];
     if (agendamento) {
       if (agendamento.status === "bloqueado") {
-        const fimDoSlot = somarMinutos(hora, config.intervaloGrade);
-        if (fimDoSlot > ponteiro) ponteiro = fimDoSlot;
         return { hora, tipo: "bloqueado", pontual: true, agendamento };
       }
-      ponteiro = somarMinutos(agendamento.hora, config.tempoPadraoAtendimento);
       if (agendamento.status && agendamento.status.startsWith("realizado_")) {
         return { hora, tipo: "realizado", agendamento };
       }
@@ -97,26 +91,83 @@ function classificarGradeDoDia(iso) {
     }
 
     if (horariosFixos.has(hora)) {
-      const fimDoSlot = somarMinutos(hora, config.intervaloGrade);
-      if (fimDoSlot > ponteiro) ponteiro = fimDoSlot;
       return { hora, tipo: "bloqueado", pontual: false, bloqueio: horariosFixos.get(hora) };
     }
 
-    if (!estrategico) {
-      return { hora, tipo: "livre" };
-    }
+    /* "Encaixe": cai dentro da duração real de um agendamento/realizado anterior
+       (compromisso sem duracaoMinutos definida não empurra nada — ocupa só o
+       próprio horário). Não depende de nenhum ritmo/modo — é sempre calculado
+       assim, e não muda o que a Agenda mostra pro profissional. */
+    const horaMin = horaParaMinutos(hora);
+    const dentroDeAlgumAtendimento = compromissos.some((a) => {
+      if (!a.duracaoMinutos || a.status === "bloqueado") return false;
+      const ini = horaParaMinutos(a.hora);
+      return horaMin > ini && horaMin < ini + a.duracaoMinutos;
+    });
+    if (dentroDeAlgumAtendimento) return { hora, tipo: "encaixe" };
 
-    const proximo = horariosOcupados.find((h) => h > hora);
-    const fimJanela = somarMinutos(hora, config.tempoPadraoAtendimento);
-    const colideComProximo = proximo && fimJanela > proximo;
-    const noRitmo = hora === ponteiro;
-
-    if (noRitmo && !colideComProximo) {
-      ponteiro = somarMinutos(hora, config.tempoPadraoAtendimento);
-      return { hora, tipo: "livre" };
-    }
-    return { hora, tipo: "encaixe" };
+    return { hora, tipo: "livre" };
   });
+}
+
+/* ---------- Compartilhar horários: trechos contínuos livres + passo ---------- */
+
+/* Agrupa os horários "livre" da grade do dia em trechos contínuos (quebrados
+   por qualquer agendado/bloqueado/encaixe), pra depois "andar" dentro de
+   cada trecho no passo da duração escolhida (regra validada nas simulações,
+   ver docs/REFATORACAO_DURACAO_COMPARTILHAMENTO.md). */
+function calcularTrechosLivresDoDia(iso) {
+  const config = obterConfig();
+  const grade = gerarGradeHorarios(config.horaInicio, config.horaFim, config.intervaloGrade);
+  const porHora = {};
+  classificarGradeDoDia(iso).forEach((item) => { porHora[item.hora] = item.tipo; });
+  const trechos = [];
+  let atual = null;
+  grade.forEach((hora) => {
+    const tipo = porHora[hora] || "livre";
+    const min = horaParaMinutos(hora);
+    if (tipo === "livre") {
+      if (!atual) {
+        atual = { inicioMin: min, fimMin: min + config.intervaloGrade };
+        trechos.push(atual);
+      } else {
+        atual.fimMin = min + config.intervaloGrade;
+      }
+    } else {
+      atual = null;
+    }
+  });
+  return trechos;
+}
+
+/* Horários que cabem inteiros (compartilháveis) pra uma duração escolhida, e
+   as "sobras" — o resto de cada trecho que não é grande o bastante pra caber
+   essa duração. As sobras viram "encaixe" só pra esse compartilhamento, sem
+   afetar a Agenda em si. */
+function calcularLivresEsobrasDoDia(iso, duracao) {
+  const config = obterConfig();
+  const trechos = calcularTrechosLivresDoDia(iso);
+  const compartilhaveis = [];
+  const sobras = [];
+  trechos.forEach((t) => {
+    let cursor = t.inicioMin;
+    while (cursor + duracao <= t.fimMin) {
+      compartilhaveis.push(somarMinutos("00:00", cursor));
+      cursor += duracao;
+    }
+    for (let m = cursor; m < t.fimMin; m += config.intervaloGrade) {
+      sobras.push(somarMinutos("00:00", m));
+    }
+  });
+  return { compartilhaveis, sobras };
+}
+
+function todosLivresDoDia(iso) {
+  return classificarGradeDoDia(iso).filter((item) => item.tipo === "livre").map((item) => item.hora);
+}
+
+function todosEncaixesDoDia(iso) {
+  return classificarGradeDoDia(iso).filter((item) => item.tipo === "encaixe").map((item) => item.hora);
 }
 
 /* ---------- Renderização: cabeçalho, semana, lista de slots ---------- */
@@ -410,6 +461,57 @@ function idsSelecionados(containerId) {
   return qsa(".chip--ativo", qs(`#${containerId}`)).map((c) => c.dataset.id);
 }
 
+/* Chips de duração do atendimento — sempre múltiplos da grade atual. Sem
+   opção "sem duração": a menor opção já cobre "ocupa só este horário". */
+function montarDuracaoChips(containerId, duracaoAtual) {
+  const container = qs(`#${containerId}`);
+  container.innerHTML = "";
+  const config = obterConfig();
+  const opcoes = gerarOpcoesDuracao(config.intervaloGrade);
+  const sugestao = duracaoAtual || (config.tempoPadraoAtendimento && opcoes.includes(config.tempoPadraoAtendimento) ? config.tempoPadraoAtendimento : opcoes[0]);
+  opcoes.forEach((valor) => {
+    const chip = document.createElement("span");
+    chip.className = "chip" + (valor === sugestao ? " chip--ativo" : "");
+    chip.dataset.valor = valor;
+    chip.textContent = `${valor} min`;
+    container.appendChild(chip);
+  });
+  inicializarGrupoChips(container, false);
+}
+
+function duracaoSelecionada(containerId) {
+  const ativo = qs(".chip--ativo", qs(`#${containerId}`));
+  return ativo ? parseInt(ativo.dataset.valor, 10) : null;
+}
+
+/* Igual a montarDuracaoChips, mas com "Não definir" como primeira opção —
+   usado no compartilhamento, onde não escolher duração mostra todos os
+   horários livres em vez de calcular o passo de encaixe. */
+function montarDuracaoCompartilharChips() {
+  const container = qs("#js-whatsapp-duracao");
+  container.innerHTML = "";
+  const config = obterConfig();
+  const chipNaoDefinir = document.createElement("span");
+  chipNaoDefinir.className = "chip chip--ativo";
+  chipNaoDefinir.dataset.valor = "";
+  chipNaoDefinir.textContent = "Não definir";
+  container.appendChild(chipNaoDefinir);
+  gerarOpcoesDuracao(config.intervaloGrade).forEach((valor) => {
+    const chip = document.createElement("span");
+    chip.className = "chip";
+    chip.dataset.valor = valor;
+    chip.textContent = `${valor} min`;
+    container.appendChild(chip);
+  });
+  inicializarGrupoChips(container, false);
+}
+
+function duracaoCompartilharSelecionada() {
+  const ativo = qs(".chip--ativo", qs("#js-whatsapp-duracao"));
+  const valor = ativo ? ativo.dataset.valor : "";
+  return valor === "" ? null : parseInt(valor, 10);
+}
+
 function adicionarLinhaForma(container, nome, valor) {
   const linha = document.createElement("div");
   linha.className = "row";
@@ -585,6 +687,7 @@ function prepararNovoAgendamento() {
   limparTelefoneNovo();
   mostrarClienteCard(null);
   montarServicosChips("js-novo-agendamento-servicos", []);
+  montarDuracaoChips("js-novo-agendamento-duracao", null);
   prepararObservacaoWrap("js-novo-agendamento-observacao", "js-novo-agendamento-observacao-toggle", "");
 }
 
@@ -600,6 +703,7 @@ function prepararEdicaoAgendamento(agendamento) {
   const cliente = agendamento.clienteId ? obterClientes().find((c) => c.id === agendamento.clienteId) : null;
   mostrarClienteCard(cliente);
   montarServicosChips("js-novo-agendamento-servicos", agendamento.servicosIds || []);
+  montarDuracaoChips("js-novo-agendamento-duracao", agendamento.duracaoMinutos || null);
   prepararObservacaoWrap("js-novo-agendamento-observacao", "js-novo-agendamento-observacao-toggle", agendamento.observacao || "");
 }
 
@@ -633,6 +737,7 @@ function renderizarResultadosBusca(termo) {
 function finalizarCriacaoOuEdicaoAgendamento(clienteId, nome) {
   const servicosIds = idsSelecionados("js-novo-agendamento-servicos");
   const observacao = qs("#js-novo-agendamento-observacao").value.trim();
+  const duracaoMinutos = duracaoSelecionada("js-novo-agendamento-duracao");
   const lista = obterAgendamentos();
   if (agendamentoEditandoId) {
     const ag = lista.find((a) => a.id === agendamentoEditandoId);
@@ -641,12 +746,13 @@ function finalizarCriacaoOuEdicaoAgendamento(clienteId, nome) {
       ag.clienteId = clienteId;
       ag.servicosIds = servicosIds;
       ag.observacao = observacao;
+      ag.duracaoMinutos = duracaoMinutos;
     }
   } else {
     lista.push({
       id: gerarId("agd"), data: dataSelecionada, hora: horaModalAtual,
       clienteId: clienteId || null, nomeCliente: nome,
-      servicosIds, observacao, status: "agendado",
+      servicosIds, observacao, status: "agendado", duracaoMinutos,
     });
   }
   salvarAgendamentos(lista);
@@ -1065,18 +1171,35 @@ document.addEventListener("DOMContentLoaded", () => {
       container.appendChild(chip);
     }
     inicializarGrupoChips(container, true);
+    montarDuracaoCompartilharChips();
     abrirModal("modal-compartilhar-whatsapp");
   });
 
   qs("#js-whatsapp-enviar").addEventListener("click", () => {
     const diasSelecionados = qsa(".chip--ativo", qs("#js-whatsapp-dias")).map((c) => c.dataset.iso);
     if (diasSelecionados.length === 0) return;
+    const duracao = duracaoCompartilharSelecionada();
+    const mostrarAtivo = qs(".chip--ativo", qs("#js-whatsapp-mostrar"));
+    const mostrar = mostrarAtivo ? mostrarAtivo.dataset.valor : "livres";
     const whatsapp = obterWhatsapp();
     let mensagem = substituirPlaceholders(whatsapp.mensagemHorarios || "Horários disponíveis:");
     diasSelecionados.sort().forEach((iso) => {
-      const livres = classificarGradeDoDia(iso).filter((item) => item.tipo === "livre").map((item) => item.hora);
-      if (livres.length > 0) {
-        mensagem += `\n\n*${formatarDataLonga(iso)}*\n${livres.join(", ")}`;
+      let livres = [];
+      let sobras = [];
+      if (duracao === null) {
+        livres = todosLivresDoDia(iso);
+      } else {
+        const resultado = calcularLivresEsobrasDoDia(iso, duracao);
+        livres = resultado.compartilhaveis;
+        sobras = resultado.sobras;
+      }
+      const encaixes = Array.from(new Set([...todosEncaixesDoDia(iso), ...sobras])).sort();
+
+      const blocos = [];
+      if (mostrar !== "encaixes" && livres.length > 0) blocos.push(livres.join(", "));
+      if (mostrar !== "livres" && encaixes.length > 0) blocos.push(`Possíveis encaixes: ${encaixes.join(", ")}`);
+      if (blocos.length > 0) {
+        mensagem += `\n\n*${formatarDataLonga(iso)}*\n${blocos.join("\n")}`;
       }
     });
     window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(mensagem)}`, "_blank");

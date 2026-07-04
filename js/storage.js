@@ -119,7 +119,6 @@ function seedConfig() {
     horaFim: "20:30",
     intervaloGrade: 30,
     tempoPadraoAtendimento: 60,
-    modoCompartilhamento: "estrategico",
     assinaturaStatus: "gratuito",
     semRetornarBucketsInsight: [20, 30, 45],
   };
