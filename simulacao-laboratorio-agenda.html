@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Laboratório — Nova Agenda V3 (protótipo isolado, zero dependência do projeto)</title>
+<style>
+  /* ============================================================
+     Tudo inline, de propósito — nenhum arquivo do projeto real é
+     referenciado (nem CSS, nem JS). Cores copiadas à mão do tema
+     escuro/roxo da Agenda V3 só pra parecer familiar visualmente.
+     ============================================================ */
+  :root {
+    --bg: #0B0B10; --card: #171724; --card2: #1E1E2E;
+    --border: rgba(255,255,255,.08); --border2: rgba(255,255,255,.16);
+    --texto: #F4F4F5; --texto2: #A1A1AA; --texto3: #71717A;
+    --primaria: #7C3AED; --primaria2: #8B5CF6; --primariaSuave: rgba(124,58,237,.18);
+    --aviso: #F59E0B; --avisoSuave: rgba(245,158,11,.14);
+  }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--texto); font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif; }
+  .pagina { max-width: 480px; margin: 0 auto; padding: 20px 16px 60px; }
+  h1 { font-size: 20px; margin: 0 0 4px; }
+  h2 { font-size: 15px; margin: 0 0 10px; color: var(--texto2); text-transform: uppercase; letter-spacing: .03em; }
+  .lab-aviso { background: var(--avisoSuave); color: var(--aviso); border-radius: 12px; padding: 10px 14px; font-size: 13px; font-weight: 600; margin-bottom: 20px; }
+  .secao { margin-bottom: 26px; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 14px; }
+  .linha-config { display:flex; align-items:center; justify-content:space-between; gap:10px; padding: 8px 0; border-bottom: 1px solid var(--border); }
+  .linha-config:last-child { border-bottom: none; }
+  .linha-config label { font-size: 13px; color: var(--texto2); }
+  input[type=text], input[type=time] {
+    background: var(--card2); border: 1px solid var(--border2); color: var(--texto);
+    border-radius: 8px; padding: 8px 10px; font-size: 14px; width: 110px; text-align:right;
+  }
+  input[type=text].lab-input-nome { width: 100%; text-align: left; }
+  .chips { display:flex; gap:6px; flex-wrap:wrap; margin-top:6px; }
+  .chip {
+    background: var(--card2); border: 1px solid var(--border2); color: var(--texto2);
+    border-radius: 999px; padding: 6px 12px; font-size: 13px; font-weight: 600; cursor:pointer; user-select:none;
+  }
+  .chip.ativo { background: var(--primaria); border-color: var(--primaria); color: #fff; }
+  .chip.desabilitado { opacity: .4; cursor: default; }
+  .toggle { display:flex; align-items:center; gap:8px; cursor:pointer; }
+  .toggle-bola { width:40px; height:24px; border-radius:999px; background:var(--card2); border:1px solid var(--border2); position:relative; flex-shrink:0; }
+  .toggle-bola::after { content:""; position:absolute; top:2px; left:2px; width:18px; height:18px; border-radius:999px; background:var(--texto3); transition:.15s; }
+  .toggle.ativo .toggle-bola { background: var(--primariaSuave); border-color: var(--primaria); }
+  .toggle.ativo .toggle-bola::after { transform: translateX(16px); background: var(--primaria); }
+
+  .btn { border:none; border-radius:10px; padding:11px 16px; font-size:14px; font-weight:700; cursor:pointer; }
+  .btn-primaria { background: var(--primaria); color:#fff; width:100%; }
+  .btn-secundaria { background: var(--card2); color:var(--texto); border:1px solid var(--border2); flex:1; }
+  .btn-row { display:flex; gap:8px; margin-top:10px; }
+
+  .lab-slot {
+    display:flex; align-items:center; gap:12px; padding: 10px 12px; border-bottom:1px solid var(--border); cursor:pointer;
+  }
+  .lab-slot:last-child { border-bottom:none; }
+  .lab-slot__hora { width:44px; flex-shrink:0; font-weight:700; font-variant-numeric:tabular-nums; font-size:13px; }
+  .lab-slot__titulo { font-weight:600; font-size:14px; }
+  .lab-slot__sub { font-size:12px; color:var(--texto2); }
+  .lab-slot--livre .lab-slot__titulo { color: var(--texto3); font-weight:500; }
+  .lab-slot--agendado { background: var(--primariaSuave); }
+  .lab-slot--bloqueado { opacity:.85; }
+  .lab-slot--bloqueado .lab-slot__titulo { color: var(--texto2); }
+  .lab-slot--encaixe { padding-top:6px; padding-bottom:6px; opacity:.5; }
+  .lab-slot--encaixe .lab-slot__hora { font-size:11px; }
+  .lab-slot--encaixe .lab-slot__titulo { font-size:12px; font-style:italic; font-weight:500; }
+
+  .modal-overlay {
+    position:fixed; inset:0; background:rgba(0,0,0,.6); display:flex; align-items:flex-end; z-index:50;
+  }
+  .modal-overlay.oculto { display:none; }
+  .modal-folha { background:var(--card); border-radius:20px 20px 0 0; padding:20px; width:100%; max-height:85vh; overflow-y:auto; }
+  .modal-titulo { font-size:17px; font-weight:800; margin:0 0 14px; }
+  .campo-label { font-size:12px; color:var(--texto2); margin-bottom:4px; display:block; }
+
+  .lab-resultado { background: var(--card2); border:1px dashed var(--primaria); border-radius:12px; padding:14px; margin-top:14px; white-space:pre-wrap; font-size:13px; line-height:1.6; }
+
+  .checkbox-dia { display:inline-flex; align-items:center; gap:4px; font-size:12px; color:var(--texto2); margin:0 8px 6px 0; }
+</style>
+</head>
+<body>
+<div class="pagina">
+  <h1>Laboratório — Nova Agenda V3</h1>
+  <p class="lab-aviso">Protótipo 100% isolado — nenhum código ou CSS do projeto real é usado aqui. Só pra validar a lógica antes da implementação oficial.</p>
+
+  <section class="secao">
+    <h2>Configurações — horário</h2>
+    <div class="card">
+      <div class="linha-config"><label>Hora inicial</label><input type="time" id="lab-hora-inicio" value="08:00" /></div>
+      <div class="linha-config"><label>Hora final</label><input type="time" id="lab-hora-fim" value="20:00" /></div>
+    </div>
+  </section>
+
+  <section class="secao">
+    <h2>Grade da agenda</h2>
+    <div class="chips" id="lab-grade-chips"></div>
+  </section>
+
+  <section class="secao">
+    <h2>Tempo padrão (opcional)</h2>
+    <div class="card">
+      <div class="toggle" id="lab-tempo-padrao-toggle"><div class="toggle-bola"></div><span>Ativar tempo padrão</span></div>
+      <div class="chips" id="lab-tempo-padrao-chips" style="margin-top:12px;"></div>
+    </div>
+  </section>
+
+  <section class="secao">
+    <div style="display:flex;justify-content:space-between;align-items:center;">
+      <h2 style="margin-bottom:0;">Agenda simulada</h2>
+      <button class="chip" id="lab-limpar">Limpar tudo</button>
+    </div>
+    <div class="card" id="lab-agenda" style="padding:0;margin-top:10px;"></div>
+  </section>
+
+  <section class="secao">
+    <button class="btn btn-primaria" id="lab-btn-compartilhar">Compartilhar horários (simulação)</button>
+  </section>
+</div>
+
+<div class="modal-overlay oculto" id="lab-modal-agendar">
+  <div class="modal-folha">
+    <p class="modal-titulo" id="lab-modal-agendar-titulo">Agendar</p>
+    <span class="campo-label">Nome</span>
+    <input type="text" class="lab-input-nome" id="lab-input-nome" placeholder="Nome do cliente (opcional)" />
+    <div style="margin-top:14px;">
+      <span class="campo-label">Duração</span>
+      <div class="chips" id="lab-duracao-agendar-chips"></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-secundaria" id="lab-btn-fechar-modal">Cancelar</button>
+      <button class="btn btn-secundaria" id="lab-btn-bloquear">Bloquear</button>
+      <button class="btn btn-secundaria" style="background:var(--primaria);color:#fff;border:none;" id="lab-btn-agendar">Agendar</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay oculto" id="lab-modal-compartilhar">
+  <div class="modal-folha">
+    <p class="modal-titulo">Compartilhar horários (simulação)</p>
+
+    <span class="campo-label">Dias (só visual, não afeta o cálculo)</span>
+    <div id="lab-dias-checkbox" style="margin-bottom:14px;"></div>
+
+    <span class="campo-label">Mostrar</span>
+    <div class="chips" id="lab-mostrar-chips"></div>
+
+    <div style="margin-top:14px;">
+      <span class="campo-label">Duração do compartilhamento</span>
+      <div class="chips" id="lab-duracao-compartilhar-chips"></div>
+    </div>
+
+    <button class="btn btn-primaria" id="lab-btn-calcular" style="margin-top:16px;">Calcular</button>
+    <div class="lab-resultado" id="lab-resultado" style="display:none;"></div>
+
+    <button class="btn btn-secundaria" id="lab-btn-fechar-compartilhar" style="width:100%;margin-top:12px;">Fechar</button>
+  </div>
+</div>
+
+<script>
+  /* ============================================================
+     LABORATÓRIO — protótipo isolado. Estado só em memória + uma
+     chave própria de localStorage (labAgendaV3:*). Nenhuma função
+     ou dado do projeto real é usado.
+     ============================================================ */
+  const CHAVE = "labAgendaV3:estado";
+  const GRADES_DISPONIVEIS = [10, 15, 20, 30, 60];
+  const DIAS_SEMANA = ["Seg","Ter","Qua","Qui","Sex","Sáb","Dom"];
+
+  function qs(sel, esc) { return (esc || document).querySelector(sel); }
+  function qsa(sel, esc) { return Array.from((esc || document).querySelectorAll(sel)); }
+
+  function horaParaMinutos(hora) { const [h,m] = hora.split(":").map(Number); return h*60+m; }
+  function minutosParaHora(min) { const h = Math.floor(min/60), m = min%60; return `${String(h).padStart(2,"0")}:${String(m).padStart(2,"0")}`; }
+
+  function gerarGrade(horaInicio, horaFim, intervalo) {
+    const lista = [];
+    let atual = horaParaMinutos(horaInicio);
+    const fim = horaParaMinutos(horaFim);
+    while (atual < fim) { lista.push(minutosParaHora(atual)); atual += intervalo; }
+    return lista;
+  }
+
+  /* múltiplos da grade até total>=120min E pelo menos 3 opções (regra já validada em conversa anterior) */
+  function gerarOpcoesDuracao(grade) {
+    const opcoes = []; let total = 0, mult = 1;
+    while (true) {
+      const v = grade * mult; opcoes.push(v); total = v; mult++;
+      if (total >= 120 && opcoes.length >= 3) break;
+      if (opcoes.length > 20) break;
+    }
+    return opcoes;
+  }
+
+  function estadoPadrao() {
+    return {
+      horaInicio: "08:00", horaFim: "20:00", grade: 20,
+      tempoPadraoAtivo: false, tempoPadrao: null,
+      itens: [], proximoClienteTeste: 1,
+    };
+  }
+  function obterEstado() {
+    try { const b = localStorage.getItem(CHAVE); return b ? { ...estadoPadrao(), ...JSON.parse(b) } : estadoPadrao(); }
+    catch (e) { return estadoPadrao(); }
+  }
+  function salvar() { localStorage.setItem(CHAVE, JSON.stringify(estado)); }
+
+  let estado = obterEstado();
+  let horaModalAtual = null;
+
+  function itemNaHora(hora) { return estado.itens.find(i => i.hora === hora); }
+
+  /* classifica um horário: agendado / bloqueado / encaixe (dentro da duração de um agendamento anterior) / livre */
+  function classificar(hora) {
+    const item = itemNaHora(hora);
+    if (item) return { tipo: item.tipo, item };
+    const min = horaParaMinutos(hora);
+    for (const it of estado.itens) {
+      if (it.tipo !== "agendado" || !it.duracao) continue;
+      const ini = horaParaMinutos(it.hora), fim = ini + it.duracao;
+      if (min > ini && min < fim) return { tipo: "encaixe", origem: it };
+    }
+    return { tipo: "livre" };
+  }
+
+  function gradeAtual() { return gerarGrade(estado.horaInicio, estado.horaFim, estado.grade); }
+
+  /* ---------- Algoritmo essencial: trechos contínuos livres + passo = duração escolhida ---------- */
+  function calcularTrechosLivres() {
+    const grade = gradeAtual();
+    const trechos = [];
+    let atual = null;
+    grade.forEach((hora) => {
+      const tipo = classificar(hora).tipo;
+      const min = horaParaMinutos(hora);
+      if (tipo === "livre") {
+        if (!atual) { atual = { inicioMin: min, fimMin: min + estado.grade }; trechos.push(atual); }
+        else atual.fimMin = min + estado.grade;
+      } else {
+        atual = null;
+      }
+    });
+    return trechos;
+  }
+
+  function calcularLivresComDuracao(duracao) {
+    const trechos = calcularTrechosLivres();
+    const resultado = [];
+    trechos.forEach((t) => {
+      let cursor = t.inicioMin;
+      while (cursor + duracao <= t.fimMin) { resultado.push(minutosParaHora(cursor)); cursor += duracao; }
+    });
+    return resultado;
+  }
+
+  function todosLivres() { return gradeAtual().filter((h) => classificar(h).tipo === "livre"); }
+  function todosEncaixes() { return gradeAtual().filter((h) => classificar(h).tipo === "encaixe"); }
+
+  /* ---------- Render: chips genéricos ---------- */
+  function renderizarChips(containerId, opcoes, valorAtual, formatador, onEscolher) {
+    const c = qs(containerId); c.innerHTML = "";
+    opcoes.forEach((v) => {
+      const chip = document.createElement("span");
+      chip.className = "chip" + (v === valorAtual ? " ativo" : "");
+      chip.textContent = formatador(v);
+      chip.addEventListener("click", () => {
+        qsa(".chip", c).forEach((el) => el.classList.remove("ativo"));
+        chip.classList.add("ativo");
+        onEscolher(v);
+      });
+      c.appendChild(chip);
+    });
+  }
+
+  /* ---------- Render: agenda ---------- */
+  function renderizarAgenda() {
+    const container = qs("#lab-agenda");
+    container.innerHTML = "";
+    gradeAtual().forEach((hora) => {
+      const c = classificar(hora);
+      const linha = document.createElement("div");
+      linha.className = `lab-slot lab-slot--${c.tipo}`;
+      let corpo;
+      if (c.tipo === "agendado") {
+        corpo = `<p class="lab-slot__titulo">${c.item.nome || "Cliente"}</p><p class="lab-slot__sub">${c.item.duracao ? c.item.duracao + " min" : "duração 0 (só este horário)"}</p>`;
+      } else if (c.tipo === "bloqueado") {
+        corpo = `<p class="lab-slot__titulo">Bloqueado</p>`;
+      } else if (c.tipo === "encaixe") {
+        corpo = `<p class="lab-slot__titulo">Encaixe</p>`;
+      } else {
+        corpo = `<p class="lab-slot__titulo">Livre</p>`;
+      }
+      linha.innerHTML = `<span class="lab-slot__hora">${hora}</span><div>${corpo}</div>`;
+      linha.addEventListener("click", () => {
+        const atual = classificar(hora);
+        if (atual.tipo === "agendado" || atual.tipo === "bloqueado") {
+          estado.itens = estado.itens.filter((i) => i !== atual.item);
+          salvar(); renderizarTudo();
+        } else {
+          abrirModalAgendar(hora);
+        }
+      });
+      container.appendChild(linha);
+    });
+  }
+
+  /* ---------- Modal Agendar/Bloquear ---------- */
+  function abrirModalAgendar(hora) {
+    horaModalAtual = hora;
+    qs("#lab-modal-agendar-titulo").textContent = `Agendar às ${hora}`;
+    qs("#lab-input-nome").value = "";
+    const opcoes = [0, ...gerarOpcoesDuracao(estado.grade)];
+    const sugestao = estado.tempoPadraoAtivo && opcoes.includes(estado.tempoPadrao) ? estado.tempoPadrao : 0;
+    renderizarChips("#lab-duracao-agendar-chips", opcoes, sugestao, (v) => (v === 0 ? "0 (só este horário)" : v + " min"), (v) => {
+      duracaoAgendarEscolhida = v;
+    });
+    duracaoAgendarEscolhida = sugestao;
+    qs("#lab-modal-agendar").classList.remove("oculto");
+  }
+  let duracaoAgendarEscolhida = 0;
+
+  /* ---------- Modal Compartilhar ---------- */
+  let mostrarEscolhido = "livres";
+  let duracaoCompartilharEscolhida = null; // null = "Não definir"
+
+  function abrirModalCompartilhar() {
+    const diasBox = qs("#lab-dias-checkbox");
+    diasBox.innerHTML = "";
+    DIAS_SEMANA.forEach((d) => {
+      const label = document.createElement("label");
+      label.className = "checkbox-dia";
+      label.innerHTML = `<input type="checkbox" /> ${d}`;
+      diasBox.appendChild(label);
+    });
+
+    renderizarChipsCompartilhar();
+    qs("#lab-resultado").style.display = "none";
+    qs("#lab-modal-compartilhar").classList.remove("oculto");
+  }
+
+  function renderizarChipsCompartilhar() {
+    renderizarChips("#lab-mostrar-chips", ["livres", "livres_encaixes", "encaixes"], mostrarEscolhido, (v) => ({
+      livres: "Apenas livres", livres_encaixes: "Livres + encaixes", encaixes: "Apenas encaixes",
+    }[v]), (v) => { mostrarEscolhido = v; qs("#lab-resultado").style.display = "none"; });
+
+    const opcoes = ["nao_definir", ...gerarOpcoesDuracao(estado.grade)];
+    renderizarChips("#lab-duracao-compartilhar-chips", opcoes, duracaoCompartilharEscolhida === null ? "nao_definir" : duracaoCompartilharEscolhida,
+      (v) => (v === "nao_definir" ? "Não definir" : v + " min"),
+      (v) => { duracaoCompartilharEscolhida = v === "nao_definir" ? null : v; qs("#lab-resultado").style.display = "none"; });
+  }
+
+  function calcularResultado() {
+    let livres;
+    if (duracaoCompartilharEscolhida === null) livres = todosLivres();
+    else livres = calcularLivresComDuracao(duracaoCompartilharEscolhida);
+    const encaixes = todosEncaixes();
+
+    let texto = "";
+    if (mostrarEscolhido === "livres") {
+      texto = "Horários disponíveis:\n" + (livres.length ? livres.join("\n") : "(nenhum)");
+    } else if (mostrarEscolhido === "encaixes") {
+      texto = "Possíveis encaixes:\n" + (encaixes.length ? encaixes.join("\n") : "(nenhum)");
+    } else {
+      texto = "Horários disponíveis:\n" + (livres.length ? livres.join("\n") : "(nenhum)");
+      texto += "\n\nPossíveis encaixes:\n" + (encaixes.length ? encaixes.join("\n") : "(nenhum)");
+    }
+    return texto;
+  }
+
+  function renderizarTudo() {
+    renderizarChips("#lab-grade-chips", GRADES_DISPONIVEIS, estado.grade, (v) => v + " min", (v) => {
+      estado.grade = v; salvar(); renderizarTudo();
+    });
+
+    const togglePadrao = qs("#lab-tempo-padrao-toggle");
+    togglePadrao.classList.toggle("ativo", estado.tempoPadraoAtivo);
+    const opcoesPadrao = gerarOpcoesDuracao(estado.grade);
+    if (estado.tempoPadraoAtivo && !opcoesPadrao.includes(estado.tempoPadrao)) estado.tempoPadrao = opcoesPadrao[0];
+    qs("#lab-tempo-padrao-chips").style.opacity = estado.tempoPadraoAtivo ? "1" : ".4";
+    qs("#lab-tempo-padrao-chips").style.pointerEvents = estado.tempoPadraoAtivo ? "auto" : "none";
+    renderizarChips("#lab-tempo-padrao-chips", opcoesPadrao, estado.tempoPadrao, (v) => v + " min", (v) => {
+      estado.tempoPadrao = v; salvar(); renderizarTudo();
+    });
+
+    qs("#lab-hora-inicio").value = estado.horaInicio;
+    qs("#lab-hora-fim").value = estado.horaFim;
+
+    renderizarAgenda();
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    renderizarTudo();
+
+    qs("#lab-hora-inicio").addEventListener("change", (e) => { estado.horaInicio = e.target.value; salvar(); renderizarTudo(); });
+    qs("#lab-hora-fim").addEventListener("change", (e) => { estado.horaFim = e.target.value; salvar(); renderizarTudo(); });
+
+    qs("#lab-tempo-padrao-toggle").addEventListener("click", () => {
+      estado.tempoPadraoAtivo = !estado.tempoPadraoAtivo;
+      if (estado.tempoPadraoAtivo && !estado.tempoPadrao) estado.tempoPadrao = gerarOpcoesDuracao(estado.grade)[0];
+      salvar(); renderizarTudo();
+    });
+
+    qs("#lab-limpar").addEventListener("click", () => { estado = estadoPadrao(); salvar(); renderizarTudo(); });
+
+    qs("#lab-btn-fechar-modal").addEventListener("click", () => qs("#lab-modal-agendar").classList.add("oculto"));
+
+    qs("#lab-btn-agendar").addEventListener("click", () => {
+      estado.itens.push({
+        hora: horaModalAtual, tipo: "agendado", duracao: duracaoAgendarEscolhida,
+        nome: qs("#lab-input-nome").value.trim() || `Cliente teste ${estado.proximoClienteTeste}`,
+      });
+      estado.proximoClienteTeste++;
+      salvar();
+      qs("#lab-modal-agendar").classList.add("oculto");
+      renderizarTudo();
+    });
+
+    qs("#lab-btn-bloquear").addEventListener("click", () => {
+      estado.itens.push({ hora: horaModalAtual, tipo: "bloqueado" });
+      salvar();
+      qs("#lab-modal-agendar").classList.add("oculto");
+      renderizarTudo();
+    });
+
+    qs("#lab-btn-compartilhar").addEventListener("click", abrirModalCompartilhar);
+    qs("#lab-btn-fechar-compartilhar").addEventListener("click", () => qs("#lab-modal-compartilhar").classList.add("oculto"));
+
+    qs("#lab-btn-calcular").addEventListener("click", () => {
+      const resultado = qs("#lab-resultado");
+      resultado.textContent = calcularResultado();
+      resultado.style.display = "block";
+    });
+  });
+</script>
+</body>
+</html>
