@@ -162,10 +162,6 @@ function calcularLivresEsobrasDoDia(iso, duracao) {
   return { compartilhaveis, sobras };
 }
 
-function todosLivresDoDia(iso) {
-  return classificarGradeDoDia(iso).filter((item) => item.tipo === "livre").map((item) => item.hora);
-}
-
 function todosEncaixesDoDia(iso) {
   return classificarGradeDoDia(iso).filter((item) => item.tipo === "encaixe").map((item) => item.hora);
 }
@@ -506,33 +502,6 @@ function duracaoSelecionada(containerId) {
   return ativo ? parseInt(ativo.dataset.valor, 10) : null;
 }
 
-/* Igual a montarDuracaoChips, mas com "Não definir" como primeira opção —
-   usado no compartilhamento, onde não escolher duração mostra todos os
-   horários livres em vez de calcular o passo de encaixe. */
-function montarDuracaoCompartilharChips() {
-  const container = qs("#js-whatsapp-duracao");
-  container.innerHTML = "";
-  const config = obterConfig();
-  const chipNaoDefinir = document.createElement("span");
-  chipNaoDefinir.className = "chip chip--ativo";
-  chipNaoDefinir.dataset.valor = "";
-  chipNaoDefinir.textContent = "Não definir";
-  container.appendChild(chipNaoDefinir);
-  gerarOpcoesDuracao(config.intervaloGrade).forEach((valor) => {
-    const chip = document.createElement("span");
-    chip.className = "chip";
-    chip.dataset.valor = valor;
-    chip.textContent = `${valor} min`;
-    container.appendChild(chip);
-  });
-  inicializarGrupoChips(container, false);
-}
-
-function duracaoCompartilharSelecionada() {
-  const ativo = qs(".chip--ativo", qs("#js-whatsapp-duracao"));
-  const valor = ativo ? ativo.dataset.valor : "";
-  return valor === "" ? null : parseInt(valor, 10);
-}
 
 function adicionarLinhaForma(container, nome, valor) {
   const linha = document.createElement("div");
@@ -1193,29 +1162,23 @@ document.addEventListener("DOMContentLoaded", () => {
       container.appendChild(chip);
     }
     inicializarGrupoChips(container, true);
-    montarDuracaoCompartilharChips();
+    montarDuracaoChips("js-whatsapp-duracao", null);
     abrirModal("modal-compartilhar-whatsapp");
   });
 
   qs("#js-whatsapp-enviar").addEventListener("click", () => {
     const diasSelecionados = qsa(".chip--ativo", qs("#js-whatsapp-dias")).map((c) => c.dataset.iso);
     if (diasSelecionados.length === 0) return;
-    const duracao = duracaoCompartilharSelecionada();
+    const duracao = duracaoSelecionada("js-whatsapp-duracao");
     const mostrarValores = qsa(".chip--ativo", qs("#js-whatsapp-mostrar")).map((c) => c.dataset.valor);
     const mostrarLivre = mostrarValores.includes("livre");
     const mostrarEncaixe = mostrarValores.includes("encaixe");
     const whatsapp = obterWhatsapp();
     let mensagem = substituirPlaceholders(whatsapp.mensagemHorarios || "Horários disponíveis:");
     diasSelecionados.sort().forEach((iso) => {
-      let livres = [];
-      let sobras = [];
-      if (duracao === null) {
-        livres = todosLivresDoDia(iso);
-      } else {
-        const resultado = calcularLivresEsobrasDoDia(iso, duracao);
-        livres = resultado.compartilhaveis;
-        sobras = resultado.sobras;
-      }
+      const resultado = calcularLivresEsobrasDoDia(iso, duracao);
+      const livres = resultado.compartilhaveis;
+      const sobras = resultado.sobras;
       const encaixes = Array.from(new Set([...todosEncaixesDoDia(iso), ...sobras])).sort();
 
       const blocos = [];
