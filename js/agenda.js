@@ -461,6 +461,27 @@ function idsSelecionados(containerId) {
   return qsa(".chip--ativo", qs(`#${containerId}`)).map((c) => c.dataset.id);
 }
 
+/* Duração mais usada nos agendamentos já criados (dentre as opções válidas
+   pra grade atual) — a sugestão de duração é "aprendida" pelo uso real, sem
+   precisar de uma configuração manual de "duração padrão" que ficaria
+   desatualizada toda vez que o usuário mudasse a grade. */
+function duracaoAprendida(opcoes) {
+  const contagem = {};
+  obterAgendamentos().forEach((a) => {
+    if (a.status === "bloqueado" || !a.duracaoMinutos || !opcoes.includes(a.duracaoMinutos)) return;
+    contagem[a.duracaoMinutos] = (contagem[a.duracaoMinutos] || 0) + 1;
+  });
+  let melhor = null;
+  let maiorContagem = 0;
+  Object.keys(contagem).forEach((valor) => {
+    if (contagem[valor] >= maiorContagem) {
+      maiorContagem = contagem[valor];
+      melhor = parseInt(valor, 10);
+    }
+  });
+  return melhor;
+}
+
 /* Chips de duração do atendimento — sempre múltiplos da grade atual. Sem
    opção "sem duração": a menor opção já cobre "ocupa só este horário". */
 function montarDuracaoChips(containerId, duracaoAtual) {
@@ -468,7 +489,8 @@ function montarDuracaoChips(containerId, duracaoAtual) {
   container.innerHTML = "";
   const config = obterConfig();
   const opcoes = gerarOpcoesDuracao(config.intervaloGrade);
-  const sugestao = duracaoAtual || (config.tempoPadraoAtendimento && opcoes.includes(config.tempoPadraoAtendimento) ? config.tempoPadraoAtendimento : opcoes[0]);
+  const aprendida = duracaoAprendida(opcoes);
+  const sugestao = duracaoAtual || aprendida || (config.tempoPadraoAtendimento && opcoes.includes(config.tempoPadraoAtendimento) ? config.tempoPadraoAtendimento : opcoes[0]);
   opcoes.forEach((valor) => {
     const chip = document.createElement("span");
     chip.className = "chip" + (valor === sugestao ? " chip--ativo" : "");
@@ -1179,8 +1201,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const diasSelecionados = qsa(".chip--ativo", qs("#js-whatsapp-dias")).map((c) => c.dataset.iso);
     if (diasSelecionados.length === 0) return;
     const duracao = duracaoCompartilharSelecionada();
-    const mostrarAtivo = qs(".chip--ativo", qs("#js-whatsapp-mostrar"));
-    const mostrar = mostrarAtivo ? mostrarAtivo.dataset.valor : "livres";
+    const mostrarValores = qsa(".chip--ativo", qs("#js-whatsapp-mostrar")).map((c) => c.dataset.valor);
+    const mostrarLivre = mostrarValores.includes("livre");
+    const mostrarEncaixe = mostrarValores.includes("encaixe");
     const whatsapp = obterWhatsapp();
     let mensagem = substituirPlaceholders(whatsapp.mensagemHorarios || "Horários disponíveis:");
     diasSelecionados.sort().forEach((iso) => {
@@ -1196,8 +1219,8 @@ document.addEventListener("DOMContentLoaded", () => {
       const encaixes = Array.from(new Set([...todosEncaixesDoDia(iso), ...sobras])).sort();
 
       const blocos = [];
-      if (mostrar !== "encaixes" && livres.length > 0) blocos.push(livres.join(", "));
-      if (mostrar !== "livres" && encaixes.length > 0) blocos.push(`Possíveis encaixes: ${encaixes.join(", ")}`);
+      if (mostrarLivre && livres.length > 0) blocos.push(livres.join(", "));
+      if (mostrarEncaixe && encaixes.length > 0) blocos.push(`Possíveis encaixes: ${encaixes.join(", ")}`);
       if (blocos.length > 0) {
         mensagem += `\n\n*${formatarDataLonga(iso)}*\n${blocos.join("\n")}`;
       }

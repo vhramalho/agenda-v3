@@ -4,10 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Configurações — Agenda V3</title>
-  <link rel="stylesheet" href="css/tokens.css?v=20260704a" />
-  <link rel="stylesheet" href="css/base.css?v=20260704a" />
-  <link rel="stylesheet" href="css/layout.css?v=20260704a" />
-  <link rel="stylesheet" href="css/components.css?v=20260704a" />
+  <link rel="stylesheet" href="css/tokens.css?v=20260704b" />
+  <link rel="stylesheet" href="css/base.css?v=20260704b" />
+  <link rel="stylesheet" href="css/layout.css?v=20260704b" />
+  <link rel="stylesheet" href="css/components.css?v=20260704b" />
 </head>
 <body data-page="mais">
   <div class="app">
@@ -61,12 +61,6 @@
             <div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/></svg></div>
             <div class="list-item__body"><p class="list-item__title">Visualização</p></div>
             <span class="text-secondary" id="js-grade-valor"></span>
-            <svg class="list-item__chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
-          </button>
-          <button class="list-item" id="js-tempo-padrao-row" style="text-decoration:none;color:inherit;background:none;border:none;width:100%;text-align:left;">
-            <div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="8"/><path d="M12 9v3l2 2"/><path d="M9 3h6"/></svg></div>
-            <div class="list-item__body"><p class="list-item__title">Duração padrão (opcional)</p></div>
-            <span class="text-secondary" id="js-tempo-padrao-valor"></span>
             <svg class="list-item__chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
           </button>
         </div>
@@ -163,37 +157,10 @@
           <span class="chip" data-valor="10">10 minutos</span>
           <span class="chip" data-valor="15">15 minutos</span>
           <span class="chip" data-valor="20">20 minutos</span>
-          <span class="chip" data-valor="25">25 minutos</span>
           <span class="chip" data-valor="30">30 minutos</span>
-          <span class="chip" data-valor="35">35 minutos</span>
-          <span class="chip" data-valor="40">40 minutos</span>
-          <span class="chip" data-valor="45">45 minutos</span>
-          <span class="chip" data-valor="50">50 minutos</span>
           <span class="chip" data-valor="60">60 minutos</span>
         </div>
         <div class="btn-row" style="margin-top:16px;"><button class="btn btn--secondary" data-fechar-modal>Cancelar</button><button class="btn btn--primary" id="js-grade-salvar">Salvar</button></div>
-      </div>
-    </div>
-
-    <div class="modal-overlay is-hidden" id="modal-tempo-padrao">
-      <div class="modal-sheet">
-        <div class="modal-sheet__header"><p class="modal-sheet__title">Duração padrão (opcional)</p><button class="modal-close">✕</button></div>
-        <p class="text-secondary" style="margin-bottom:12px;">Sugestão pré-selecionada ao criar um novo agendamento. Você sempre pode escolher outra duração (ou nenhuma) na hora de agendar.</p>
-        <div class="row" style="gap:8px;flex-wrap:wrap;max-height:50vh;overflow-y:auto;" data-chips="single" id="js-tempo-padrao-chips">
-          <span class="chip" data-valor="">Não definir</span>
-          <span class="chip" data-valor="15">15 min</span>
-          <span class="chip" data-valor="20">20 min</span>
-          <span class="chip" data-valor="30">30 min</span>
-          <span class="chip" data-valor="35">35 min</span>
-          <span class="chip" data-valor="40">40 min</span>
-          <span class="chip" data-valor="45">45 min</span>
-          <span class="chip" data-valor="50">50 min</span>
-          <span class="chip" data-valor="60">60 min</span>
-          <span class="chip" data-valor="75">75 min</span>
-          <span class="chip" data-valor="90">90 min</span>
-          <span class="chip" data-valor="120">120 min</span>
-        </div>
-        <div class="btn-row" style="margin-top:16px;"><button class="btn btn--secondary" data-fechar-modal>Cancelar</button><button class="btn btn--primary" id="js-tempo-padrao-salvar">Salvar</button></div>
       </div>
     </div>
 
@@ -230,14 +197,14 @@
     </div>
   </div>
 
-  <script src="js/utils.js?v=20260704a"></script>
-  <script src="js/menu.js?v=20260704a"></script>
-  <script src="js/storage.js?v=20260704a"></script>
-  <script src="js/tema.js?v=20260704a"></script>
-  <script src="js/app.js?v=20260704a"></script>
-  <script src="js/chips.js?v=20260704a"></script>
-  <script src="js/modal.js?v=20260704a"></script>
-  <script src="js/configuracoes.js?v=20260704a"></script>
-  <script src="js/versao.js?v=20260704a"></script>
+  <script src="js/utils.js?v=20260704b"></script>
+  <script src="js/menu.js?v=20260704b"></script>
+  <script src="js/storage.js?v=20260704b"></script>
+  <script src="js/tema.js?v=20260704b"></script>
+  <script src="js/app.js?v=20260704b"></script>
+  <script src="js/chips.js?v=20260704b"></script>
+  <script src="js/modal.js?v=20260704b"></script>
+  <script src="js/configuracoes.js?v=20260704b"></script>
+  <script src="js/versao.js?v=20260704b"></script>
 </body>
 </html>

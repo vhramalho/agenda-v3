@@ -83,7 +83,6 @@ document.addEventListener("DOMContentLoaded", () => {
     qs("#js-primeiro-horario-valor").textContent = config.horaInicio;
     qs("#js-ultimo-horario-valor").textContent = config.horaFim;
     qs("#js-grade-valor").textContent = `${config.intervaloGrade} minutos`;
-    qs("#js-tempo-padrao-valor").textContent = config.tempoPadraoAtendimento ? `${config.tempoPadraoAtendimento} minutos` : "Não definido";
   }
 
   qs("#js-primeiro-horario-row").addEventListener("click", () => {
@@ -126,20 +125,6 @@ document.addEventListener("DOMContentLoaded", () => {
     salvarConfig(config);
     atualizarTextosAgenda();
     fecharModal("modal-grade");
-  });
-
-  qs("#js-tempo-padrao-row").addEventListener("click", () => {
-    marcarChipValor("js-tempo-padrao-chips", obterConfig().tempoPadraoAtendimento || "");
-    abrirModal("modal-tempo-padrao");
-  });
-  qs("#js-tempo-padrao-salvar").addEventListener("click", () => {
-    const novoValor = valorSelecionado("js-tempo-padrao-chips");
-    if (novoValor === null) return;
-    const config = obterConfig();
-    config.tempoPadraoAtendimento = novoValor === "" ? null : parseInt(novoValor, 10);
-    salvarConfig(config);
-    atualizarTextosAgenda();
-    fecharModal("modal-tempo-padrao");
   });
 
   atualizarTextosAgenda();

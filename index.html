@@ -4,11 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Agenda — Agenda V3</title>
-  <link rel="stylesheet" href="css/tokens.css?v=20260704a" />
-  <link rel="stylesheet" href="css/base.css?v=20260704a" />
-  <link rel="stylesheet" href="css/layout.css?v=20260704a" />
-  <link rel="stylesheet" href="css/components.css?v=20260704a" />
-  <link rel="stylesheet" href="css/agenda.css?v=20260704a" />
+  <link rel="stylesheet" href="css/tokens.css?v=20260704b" />
+  <link rel="stylesheet" href="css/base.css?v=20260704b" />
+  <link rel="stylesheet" href="css/layout.css?v=20260704b" />
+  <link rel="stylesheet" href="css/components.css?v=20260704b" />
+  <link rel="stylesheet" href="css/agenda.css?v=20260704b" />
 </head>
 <body data-page="index">
   <div class="app">
@@ -152,15 +152,14 @@
         <p class="text-secondary" style="margin-bottom:12px;">Selecione os dias para compartilhar</p>
         <div class="row" style="gap:6px;margin-bottom:20px;flex-wrap:wrap;" data-chips="multi" id="js-whatsapp-dias"></div>
         <div class="field">
-          <label class="field__label">Duração do atendimento</label>
+          <label class="field__label">Horários que cabem um atendimento de:</label>
           <div class="chip-group" data-chips="single" id="js-whatsapp-duracao"></div>
         </div>
         <div class="field">
           <label class="field__label">Mostrar</label>
-          <div class="chip-group" data-chips="single" id="js-whatsapp-mostrar">
-            <span class="chip chip--ativo" data-valor="livres">Apenas livres</span>
-            <span class="chip" data-valor="livres_encaixes">Livres + encaixes</span>
-            <span class="chip" data-valor="encaixes">Apenas encaixes</span>
+          <div class="chip-group" data-chips="multi" id="js-whatsapp-mostrar">
+            <span class="chip chip--ativo" data-valor="livre">Livre</span>
+            <span class="chip" data-valor="encaixe">Encaixe</span>
           </div>
         </div>
         <div class="btn-row"><button class="btn btn--secondary" data-fechar-modal>Fechar</button><button class="btn btn--primary" id="js-whatsapp-enviar">Enviar no WhatsApp</button></div>
@@ -317,15 +316,15 @@
     </div>
   </div>
 
-  <script src="js/utils.js?v=20260704a"></script>
-  <script src="js/menu.js?v=20260704a"></script>
-  <script src="js/storage.js?v=20260704a"></script>
-  <script src="js/tema.js?v=20260704a"></script>
-  <script src="js/app.js?v=20260704a"></script>
-  <script src="js/chips.js?v=20260704a"></script>
-  <script src="js/modal.js?v=20260704a"></script>
-  <script src="js/calendario.js?v=20260704a"></script>
-  <script src="js/acoes-simuladas.js?v=20260704a"></script>
-  <script src="js/agenda.js?v=20260704a"></script>
+  <script src="js/utils.js?v=20260704b"></script>
+  <script src="js/menu.js?v=20260704b"></script>
+  <script src="js/storage.js?v=20260704b"></script>
+  <script src="js/tema.js?v=20260704b"></script>
+  <script src="js/app.js?v=20260704b"></script>
+  <script src="js/chips.js?v=20260704b"></script>
+  <script src="js/modal.js?v=20260704b"></script>
+  <script src="js/calendario.js?v=20260704b"></script>
+  <script src="js/acoes-simuladas.js?v=20260704b"></script>
+  <script src="js/agenda.js?v=20260704b"></script>
 </body>
 </html>
