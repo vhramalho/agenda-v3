@@ -146,7 +146,7 @@
     <div class="chips" id="lab-mostrar-chips"></div>
 
     <div style="margin-top:14px;">
-      <span class="campo-label">Duração do compartilhamento</span>
+      <span class="campo-label">Duração do atendimento</span>
       <div class="chips" id="lab-duracao-compartilhar-chips"></div>
     </div>
 
@@ -243,14 +243,20 @@
     return trechos;
   }
 
-  function calcularLivresComDuracao(duracao) {
+  /* Além dos horários compartilháveis (cabem inteiros), qualquer sobra de um
+     trecho que não é grande o bastante pra caber a duração escolhida vira
+     "encaixe" só pra esse compartilhamento — não desaparece do nada, e não
+     afeta como aquele horário aparece na Agenda em si. */
+  function calcularLivresEsobras(duracao) {
     const trechos = calcularTrechosLivres();
-    const resultado = [];
+    const compartilhaveis = [];
+    const sobras = [];
     trechos.forEach((t) => {
       let cursor = t.inicioMin;
-      while (cursor + duracao <= t.fimMin) { resultado.push(minutosParaHora(cursor)); cursor += duracao; }
+      while (cursor + duracao <= t.fimMin) { compartilhaveis.push(minutosParaHora(cursor)); cursor += duracao; }
+      for (let m = cursor; m < t.fimMin; m += estado.grade) sobras.push(minutosParaHora(m));
     });
-    return resultado;
+    return { compartilhaveis, sobras };
   }
 
   function todosLivres() { return gradeAtual().filter((h) => classificar(h).tipo === "livre"); }
@@ -282,7 +288,7 @@
       linha.className = `lab-slot lab-slot--${c.tipo}`;
       let corpo;
       if (c.tipo === "agendado") {
-        corpo = `<p class="lab-slot__titulo">${c.item.nome || "Cliente"}</p><p class="lab-slot__sub">${c.item.duracao ? c.item.duracao + " min" : "duração 0 (só este horário)"}</p>`;
+        corpo = `<p class="lab-slot__titulo">${c.item.nome || "Cliente"}</p><p class="lab-slot__sub">${c.item.duracao || estado.grade} min</p>`;
       } else if (c.tipo === "bloqueado") {
         corpo = `<p class="lab-slot__titulo">Bloqueado</p>`;
       } else if (c.tipo === "encaixe") {
@@ -309,9 +315,9 @@
     horaModalAtual = hora;
     qs("#lab-modal-agendar-titulo").textContent = `Agendar às ${hora}`;
     qs("#lab-input-nome").value = "";
-    const opcoes = [0, ...gerarOpcoesDuracao(estado.grade)];
-    const sugestao = estado.tempoPadraoAtivo && opcoes.includes(estado.tempoPadrao) ? estado.tempoPadrao : 0;
-    renderizarChips("#lab-duracao-agendar-chips", opcoes, sugestao, (v) => (v === 0 ? "0 (só este horário)" : v + " min"), (v) => {
+    const opcoes = gerarOpcoesDuracao(estado.grade);
+    const sugestao = estado.tempoPadraoAtivo && opcoes.includes(estado.tempoPadrao) ? estado.tempoPadrao : opcoes[0];
+    renderizarChips("#lab-duracao-agendar-chips", opcoes, sugestao, (v) => v + " min", (v) => {
       duracaoAgendarEscolhida = v;
     });
     duracaoAgendarEscolhida = sugestao;
@@ -350,10 +356,15 @@
   }
 
   function calcularResultado() {
-    let livres;
-    if (duracaoCompartilharEscolhida === null) livres = todosLivres();
-    else livres = calcularLivresComDuracao(duracaoCompartilharEscolhida);
-    const encaixes = todosEncaixes();
+    let livres, sobras = [];
+    if (duracaoCompartilharEscolhida === null) {
+      livres = todosLivres();
+    } else {
+      const r = calcularLivresEsobras(duracaoCompartilharEscolhida);
+      livres = r.compartilhaveis;
+      sobras = r.sobras;
+    }
+    const encaixes = [...todosEncaixes(), ...sobras].sort();
 
     let texto = "";
     if (mostrarEscolhido === "livres") {
