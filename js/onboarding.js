@@ -70,6 +70,8 @@ document.addEventListener("DOMContentLoaded", () => {
       if (whatsapp[chave] === undefined) whatsapp[chave] = padraoWhatsapp[chave];
     });
     salvarWhatsapp(whatsapp);
+
+    garantirFormasPagamentoPadrao();
   }
 
   function mostrarPasso(indice) {

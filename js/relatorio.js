@@ -11,6 +11,8 @@
 const MESES_NOME_RELATORIO = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
 const MESES_ABREV_RELATORIO = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"];
 const CORES_FORMA = { pix: "#3B82F6", dinheiro: "#22C55E", credito: "#EC4899", debito: "#EAB308", outras: "#94A3B8" };
+const ROTULO_TIPO_FORMA = { pix: "Pix", dinheiro: "Dinheiro", credito: "Crédito", debito: "Débito", outras: "Outras" };
+const ORDEM_TIPOS_FORMA = ["pix", "dinheiro", "credito", "debito", "outras"];
 
 function dataLocalParaIso(date) {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
@@ -189,20 +191,28 @@ function montarGraficoSemana(tipoPeriodo, refData) {
 }
 
 function montarRecebimentos(resumo) {
-  const formas = obterFormasPagamento().filter((f) => f.ativo);
+  const todasFormas = obterFormasPagamento();
+  const tiposComFormaAtiva = new Set(todasFormas.filter((f) => f.ativo).map((f) => f.tipo));
   const container = qs("#js-relatorio-formas");
   const pizza = qs("#js-relatorio-pizza");
   container.innerHTML = "";
   pizza.innerHTML = "";
 
+  const valorPorTipo = {};
+  todasFormas.forEach((forma) => {
+    const valor = resumo.porFormaValor[forma.id] || 0;
+    if (valor > 0) valorPorTipo[forma.tipo] = (valorPorTipo[forma.tipo] || 0) + valor;
+  });
+
+  const tipos = ORDEM_TIPOS_FORMA.filter((tipo) => tiposComFormaAtiva.has(tipo) || valorPorTipo[tipo] > 0);
 
   const circunferencia = 2 * Math.PI * 45;
   let acumulado = 0;
 
-  formas.forEach((forma) => {
-    const valor = resumo.porFormaValor[forma.id] || 0;
+  tipos.forEach((tipo) => {
+    const valor = valorPorTipo[tipo] || 0;
     const percentual = resumo.totalRecebido > 0 ? (valor / resumo.totalRecebido) * 100 : 0;
-    const cor = CORES_FORMA[forma.tipo] || "var(--text-muted)";
+    const cor = CORES_FORMA[tipo] || "var(--text-muted)";
 
     const linha = document.createElement("div");
     linha.className = "row row--between";
@@ -210,7 +220,7 @@ function montarRecebimentos(resumo) {
       <span class="row" style="gap:8px;"><span style="width:8px;height:8px;border-radius:50%;background:${cor};display:inline-block;"></span><span class="js-nome-forma"></span></span>
       <span class="js-valor-forma" style="color:var(--text-secondary);"></span>
     `;
-    linha.querySelector(".js-nome-forma").textContent = forma.nome;
+    linha.querySelector(".js-nome-forma").textContent = ROTULO_TIPO_FORMA[tipo] || tipo;
     linha.querySelector(".js-valor-forma").textContent = formatarMoeda(valor);
     container.appendChild(linha);
 

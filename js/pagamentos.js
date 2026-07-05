@@ -110,6 +110,7 @@ function abrirEdicaoForma(id) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+  garantirFormasPagamentoPadrao();
   renderizarFormas();
 
   qs("#js-btn-nova-forma").addEventListener("click", abrirNovaForma);

@@ -133,3 +133,17 @@ function seedWhatsapp() {
     mensagemEndereco: "{saudacao}, {nome}! Nosso endereço é: {endereco}. Veja no mapa: {mapa}",
   };
 }
+
+function seedFormasPagamento() {
+  return [
+    { id: gerarId("pgto"), nome: "Pix", tipo: "pix", taxaPercentual: null, ativo: true },
+    { id: gerarId("pgto"), nome: "Dinheiro", tipo: "dinheiro", taxaPercentual: null, ativo: true },
+    { id: gerarId("pgto"), nome: "Crédito", tipo: "credito", taxaPercentual: null, ativo: true },
+    { id: gerarId("pgto"), nome: "Débito", tipo: "debito", taxaPercentual: null, ativo: true },
+    { id: gerarId("pgto"), nome: "Outras", tipo: "outras", taxaPercentual: null, ativo: true },
+  ];
+}
+
+function garantirFormasPagamentoPadrao() {
+  if (obterFormasPagamento().length === 0) salvarFormasPagamento(seedFormasPagamento());
+}

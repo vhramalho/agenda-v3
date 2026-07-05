@@ -14,8 +14,8 @@ function listaPendentes() {
 
 function listaPagosRecentes() {
   return obterAgendamentos()
-    .filter((a) => a.status === "realizado_pago")
-    .sort((a, b) => (b.realizadoEm || "").localeCompare(a.realizadoEm || ""));
+    .filter((a) => a.status === "realizado_pago" && a.foiPendente)
+    .sort((a, b) => (b.pagoEm || "").localeCompare(a.pagoEm || ""));
 }
 
 function diasEmAberto(dataIso) {
@@ -28,10 +28,11 @@ function isoParaDate(iso) {
 }
 
 function formatarPagoEm(agendamento) {
-  const dias = diasEmAberto(agendamento.data);
+  const dataPagamento = (agendamento.pagoEm || "").slice(0, 10) || agendamento.data;
+  const dias = diasEmAberto(dataPagamento);
   if (dias === 0) return "Pago hoje";
   if (dias === 1) return "Pago ontem";
-  return `Pago em ${formatarDataCurta(agendamento.data)}`;
+  return `Pago em ${formatarDataCurta(dataPagamento)}`;
 }
 
 function montarLinhaPendente(agendamento, indice) {

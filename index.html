@@ -4,11 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Agenda — Agenda V3</title>
-  <link rel="stylesheet" href="css/tokens.css?v=20260704c" />
-  <link rel="stylesheet" href="css/base.css?v=20260704c" />
-  <link rel="stylesheet" href="css/layout.css?v=20260704c" />
-  <link rel="stylesheet" href="css/components.css?v=20260704c" />
-  <link rel="stylesheet" href="css/agenda.css?v=20260704c" />
+  <link rel="stylesheet" href="css/tokens.css?v=20260704d" />
+  <link rel="stylesheet" href="css/base.css?v=20260704d" />
+  <link rel="stylesheet" href="css/layout.css?v=20260704d" />
+  <link rel="stylesheet" href="css/components.css?v=20260704d" />
+  <link rel="stylesheet" href="css/agenda.css?v=20260704d" />
 </head>
 <body data-page="index">
   <div class="app">
@@ -185,9 +185,8 @@
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
           </button>
         </div>
-        <div class="field is-hidden" id="js-novo-agendamento-telefone-wrap" style="margin-top:-8px;">
-          <button type="button" id="js-novo-agendamento-telefone-toggle" class="text-primary-accent" style="font-weight:600;font-size:var(--text-sm);background:none;border:none;text-align:left;padding:0;cursor:pointer;">+ Adicionar telefone</button>
-          <input class="input is-hidden" style="margin-top:8px;" id="js-novo-agendamento-telefone" placeholder="(00) 00000-0000"/>
+        <div class="field is-hidden" id="js-novo-agendamento-cadastro-wrap" style="margin-top:-8px;">
+          <button type="button" id="js-novo-agendamento-cadastro-toggle" class="text-primary-accent" style="font-weight:600;font-size:var(--text-sm);background:none;border:none;text-align:left;padding:0;cursor:pointer;">+ Completar cadastro</button>
         </div>
         <div class="field">
           <label class="field__label">Serviços</label>
@@ -202,6 +201,17 @@
           <textarea class="textarea is-hidden" placeholder="Alguma observação sobre o atendimento..." id="js-novo-agendamento-observacao"></textarea>
         </div>
         <div class="btn-row"><button class="btn btn--secondary" data-fechar-modal>Cancelar</button><button class="btn btn--primary" id="js-novo-agendamento-salvar">Salvar</button></div>
+      </div>
+    </div>
+
+    <div class="modal-overlay is-hidden" id="modal-completar-cadastro-agenda">
+      <div class="modal-sheet">
+        <p class="modal-sheet__title">Completar cadastro</p>
+        <div class="field"><label class="field__label">Nome</label><input class="input" placeholder="Digite o nome do cliente" id="js-cadastro-agenda-nome"/></div>
+        <div class="field"><label class="field__label">Telefone</label><input class="input" placeholder="(00) 00000-0000" id="js-cadastro-agenda-telefone"/></div>
+        <div class="field"><label class="field__label">Aniversário</label><input class="input" placeholder="DD/MM" id="js-cadastro-agenda-aniversario"/></div>
+        <div class="field"><label class="field__label">Observação</label><textarea class="textarea" placeholder="Alguma informação importante sobre o cliente..." id="js-cadastro-agenda-observacao"></textarea></div>
+        <div class="btn-row"><button class="btn btn--secondary" id="js-cadastro-agenda-cancelar">Cancelar</button><button class="btn btn--primary" id="js-cadastro-agenda-salvar">Salvar</button></div>
       </div>
     </div>
 
@@ -316,15 +326,15 @@
     </div>
   </div>
 
-  <script src="js/utils.js?v=20260704c"></script>
-  <script src="js/menu.js?v=20260704c"></script>
-  <script src="js/storage.js?v=20260704c"></script>
-  <script src="js/tema.js?v=20260704c"></script>
-  <script src="js/app.js?v=20260704c"></script>
-  <script src="js/chips.js?v=20260704c"></script>
-  <script src="js/modal.js?v=20260704c"></script>
-  <script src="js/calendario.js?v=20260704c"></script>
-  <script src="js/acoes-simuladas.js?v=20260704c"></script>
-  <script src="js/agenda.js?v=20260704c"></script>
+  <script src="js/utils.js?v=20260704d"></script>
+  <script src="js/menu.js?v=20260704d"></script>
+  <script src="js/storage.js?v=20260704d"></script>
+  <script src="js/tema.js?v=20260704d"></script>
+  <script src="js/app.js?v=20260704d"></script>
+  <script src="js/chips.js?v=20260704d"></script>
+  <script src="js/modal.js?v=20260704d"></script>
+  <script src="js/calendario.js?v=20260704d"></script>
+  <script src="js/acoes-simuladas.js?v=20260704d"></script>
+  <script src="js/agenda.js?v=20260704d"></script>
 </body>
 </html>
