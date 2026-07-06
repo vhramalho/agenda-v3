@@ -74,6 +74,7 @@ document.addEventListener("DOMContentLoaded", () => {
     salvarClientesLixeira(obterClientesLixeira().filter((c) => c.id !== clienteSelecionadoId));
     salvarAgendamentos(obterAgendamentos().filter((a) => a.clienteId !== clienteSelecionadoId));
     fecharModal("modal-lixeira-confirmar-exclusao");
+    mostrarSucesso();
     renderizarLixeira();
   });
 
@@ -84,6 +85,7 @@ document.addEventListener("DOMContentLoaded", () => {
     salvarClientesLixeira([]);
     salvarAgendamentos(obterAgendamentos().filter((a) => !idsLixeira.includes(a.clienteId)));
     fecharModal("modal-lixeira-esvaziar-confirmar");
+    mostrarSucesso();
     renderizarLixeira();
   });
 });

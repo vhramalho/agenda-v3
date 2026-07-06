@@ -192,6 +192,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const lixeira = obterClientesLixeira();
     lixeira.push({ ...cliente, ativo: false, movidoParaLixeiraEm: hojeIso() });
     salvarClientesLixeira(lixeira);
-    window.location.href = "clientes.html";
+    mostrarSucesso();
+    setTimeout(() => { window.location.href = "clientes.html"; }, 700);
   });
 });
