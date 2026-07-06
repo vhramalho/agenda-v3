@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // ---------- Foi pago? Sim / Não ----------
   qsa("[data-pago]").forEach((botao) => {
     botao.addEventListener("click", () => {
-      const grupo = botao.closest(".btn-row");
+      const grupo = botao.closest(".chip-group");
       const modal = botao.closest(".modal-sheet");
       const escolha = botao.dataset.pago;
 

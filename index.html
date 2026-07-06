@@ -4,11 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Agenda — Agenda V3</title>
-  <link rel="stylesheet" href="css/tokens.css?v=20260704d" />
-  <link rel="stylesheet" href="css/base.css?v=20260704d" />
-  <link rel="stylesheet" href="css/layout.css?v=20260704d" />
-  <link rel="stylesheet" href="css/components.css?v=20260704d" />
-  <link rel="stylesheet" href="css/agenda.css?v=20260704d" />
+  <link rel="stylesheet" href="css/tokens.css?v=20260706a" />
+  <link rel="stylesheet" href="css/base.css?v=20260706a" />
+  <link rel="stylesheet" href="css/layout.css?v=20260706a" />
+  <link rel="stylesheet" href="css/components.css?v=20260706a" />
+  <link rel="stylesheet" href="css/agenda.css?v=20260706a" />
 </head>
 <body data-page="index">
   <div class="app">
@@ -218,16 +218,23 @@
     <div class="modal-overlay is-hidden" id="modal-finalizar-atendimento">
       <div class="modal-sheet">
         <p class="modal-sheet__title">Finalizar atendimento</p>
-        <div class="field">
+        <div class="field" style="position:relative;" id="js-finalizar-nome-wrap">
           <label class="field__label">Nome do cliente</label>
-          <div class="card row" id="js-finalizar-nome-card">
-            <div class="list-item__avatar" id="js-finalizar-avatar"></div>
-            <span style="flex:1;font-weight:700;" id="js-finalizar-nome"></span>
-            <button type="button" class="icon-btn" id="js-finalizar-nome-editar" aria-label="Editar nome" style="background:none;flex-shrink:0;">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-            </button>
+          <input class="input" placeholder="Buscar ou digitar nome" id="js-finalizar-nome" />
+          <div class="card is-hidden" id="js-finalizar-resultados" style="position:absolute;top:100%;left:0;z-index:5;width:100%;max-height:150px;overflow-y:auto;margin-top:4px;padding:4px 12px;"></div>
+        </div>
+        <div class="card row is-hidden" id="js-finalizar-cliente-card" style="margin-bottom:16px;">
+          <div class="list-item__avatar" id="js-finalizar-cliente-avatar"></div>
+          <div style="flex:1;">
+            <p style="font-weight:700;" id="js-finalizar-cliente-nome"></p>
+            <p class="text-secondary" style="font-size:var(--text-sm);" id="js-finalizar-cliente-info"></p>
           </div>
-          <input class="input is-hidden" id="js-finalizar-nome-input" style="margin-top:8px;"/>
+          <button type="button" id="js-finalizar-cliente-remover" class="icon-btn" aria-label="Remover seleção" style="background:none;flex-shrink:0;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+          </button>
+        </div>
+        <div class="field is-hidden" id="js-finalizar-cadastro-wrap" style="margin-top:-8px;">
+          <button type="button" id="js-finalizar-cadastro-toggle" class="text-primary-accent" style="font-weight:600;font-size:var(--text-sm);background:none;border:none;text-align:left;padding:0;cursor:pointer;">+ Completar cadastro</button>
         </div>
         <div class="field">
           <label class="field__label">Serviços</label>
@@ -239,7 +246,7 @@
         </div>
         <div class="field">
           <label class="field__label">Foi pago?</label>
-          <div class="btn-row" style="gap:8px;">
+          <div class="chip-group">
             <span class="chip chip--ativo" data-pago="sim">Sim</span>
             <span class="chip" data-pago="nao">Não</span>
           </div>
@@ -286,16 +293,23 @@
     <div class="modal-overlay is-hidden" id="modal-editar-realizado">
       <div class="modal-sheet">
         <p class="modal-sheet__title">Editar atendimento</p>
-        <div class="field">
+        <div class="field" style="position:relative;" id="js-editar-realizado-nome-wrap">
           <label class="field__label">Nome</label>
-          <div class="card row" id="js-editar-realizado-nome-card">
-            <div class="list-item__avatar" id="js-editar-realizado-avatar"></div>
-            <span style="flex:1;font-weight:700;" id="js-editar-realizado-nome"></span>
-            <button type="button" class="icon-btn" id="js-editar-realizado-nome-editar" aria-label="Editar nome" style="background:none;flex-shrink:0;">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-            </button>
+          <input class="input" placeholder="Buscar ou digitar nome" id="js-editar-realizado-nome" />
+          <div class="card is-hidden" id="js-editar-realizado-resultados" style="position:absolute;top:100%;left:0;z-index:5;width:100%;max-height:150px;overflow-y:auto;margin-top:4px;padding:4px 12px;"></div>
+        </div>
+        <div class="card row is-hidden" id="js-editar-realizado-cliente-card" style="margin-bottom:16px;">
+          <div class="list-item__avatar" id="js-editar-realizado-cliente-avatar"></div>
+          <div style="flex:1;">
+            <p style="font-weight:700;" id="js-editar-realizado-cliente-nome"></p>
+            <p class="text-secondary" style="font-size:var(--text-sm);" id="js-editar-realizado-cliente-info"></p>
           </div>
-          <input class="input is-hidden" id="js-editar-realizado-nome-input" style="margin-top:8px;"/>
+          <button type="button" id="js-editar-realizado-cliente-remover" class="icon-btn" aria-label="Remover seleção" style="background:none;flex-shrink:0;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+          </button>
+        </div>
+        <div class="field is-hidden" id="js-editar-realizado-cadastro-wrap" style="margin-top:-8px;">
+          <button type="button" id="js-editar-realizado-cadastro-toggle" class="text-primary-accent" style="font-weight:600;font-size:var(--text-sm);background:none;border:none;text-align:left;padding:0;cursor:pointer;">+ Completar cadastro</button>
         </div>
         <div class="field">
           <label class="field__label">Serviços</label>
@@ -307,9 +321,9 @@
         </div>
         <div class="field">
           <label class="field__label">Situação do pagamento</label>
-          <div class="row" style="gap:8px;">
-            <span class="chip" data-pago-editar="sim">Pago</span>
-            <span class="chip" data-pago-editar="nao">Pendente</span>
+          <div class="chip-group">
+            <span class="chip" data-pago-editar="sim">Sim</span>
+            <span class="chip" data-pago-editar="nao">Não</span>
           </div>
         </div>
         <div class="field is-hidden" id="js-editar-realizado-campo-formas">
@@ -326,15 +340,15 @@
     </div>
   </div>
 
-  <script src="js/utils.js?v=20260704d"></script>
-  <script src="js/menu.js?v=20260704d"></script>
-  <script src="js/storage.js?v=20260704d"></script>
-  <script src="js/tema.js?v=20260704d"></script>
-  <script src="js/app.js?v=20260704d"></script>
-  <script src="js/chips.js?v=20260704d"></script>
-  <script src="js/modal.js?v=20260704d"></script>
-  <script src="js/calendario.js?v=20260704d"></script>
-  <script src="js/acoes-simuladas.js?v=20260704d"></script>
-  <script src="js/agenda.js?v=20260704d"></script>
+  <script src="js/utils.js?v=20260706a"></script>
+  <script src="js/menu.js?v=20260706a"></script>
+  <script src="js/storage.js?v=20260706a"></script>
+  <script src="js/tema.js?v=20260706a"></script>
+  <script src="js/app.js?v=20260706a"></script>
+  <script src="js/chips.js?v=20260706a"></script>
+  <script src="js/modal.js?v=20260706a"></script>
+  <script src="js/calendario.js?v=20260706a"></script>
+  <script src="js/acoes-simuladas.js?v=20260706a"></script>
+  <script src="js/agenda.js?v=20260706a"></script>
 </body>
 </html>
