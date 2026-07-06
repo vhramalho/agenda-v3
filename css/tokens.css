@@ -2,7 +2,7 @@
    AGENDA V3 — Design Tokens
    Tema escuro é o padrão. Tema claro é selecionado via
    <html data-theme="light">. Cor principal é selecionada via
-   <html data-accent="roxo|azul|ciano|verde|rosa|vermelho|dourado">.
+   <html data-accent="roxo|azul|ciano|verde|rosa|vermelho|dourado|preto|cinza|amarelo">.
    ============================================================ */
 
 :root,
@@ -103,6 +103,24 @@
   --primary: #B45309;
   --primary-strong: #D97706;
   --primary-soft: rgba(180, 83, 9, 0.18);
+}
+
+:root[data-accent="preto"] {
+  --primary: #27272A;
+  --primary-strong: #52525B;
+  --primary-soft: rgba(39, 39, 42, 0.18);
+}
+
+:root[data-accent="cinza"] {
+  --primary: #71717A;
+  --primary-strong: #A1A1AA;
+  --primary-soft: rgba(113, 113, 122, 0.18);
+}
+
+:root[data-accent="amarelo"] {
+  --primary: #A16207;
+  --primary-strong: #EAB308;
+  --primary-soft: rgba(161, 98, 7, 0.18);
 }
 
 :root {
