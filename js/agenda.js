@@ -502,12 +502,16 @@ function duracaoSelecionada(containerId) {
 }
 
 
-function adicionarLinhaForma(container, nome, valor) {
+function adicionarLinhaForma(container, nome, valor, formaExcluida) {
   const linha = document.createElement("div");
-  linha.className = "row";
-  linha.style.gap = "8px";
   linha.dataset.linhaForma = nome;
-  linha.innerHTML = `<span class="text-secondary" style="width:110px;flex-shrink:0;">${nome}</span><input class="input" placeholder="R$ 0,00" style="flex:1;" value="${valor != null ? formatarMoeda(valor) : ""}" />`;
+  linha.innerHTML = `
+    <div class="row" style="gap:8px;">
+      <span class="text-secondary" style="width:110px;flex-shrink:0;">${nome}</span>
+      <input class="input" placeholder="R$ 0,00" style="flex:1;" value="${valor != null ? formatarMoeda(valor) : ""}" />
+    </div>
+    ${formaExcluida ? '<p class="text-warning" style="font-size:var(--text-sm);margin-top:4px;">Forma de pagamento excluída — esse valor continua contando no relatório. Escolha outra forma se quiser trocar.</p>' : ""}
+  `;
   container.appendChild(linha);
   aplicarMascaraMoeda(linha.querySelector("input"));
 }
@@ -517,7 +521,9 @@ function montarFormasChips(chipsContainerId, linhasContainerId, nomesSelecionado
   const linhasContainer = qs(`#${linhasContainerId}`);
   chipsContainer.innerHTML = "";
   linhasContainer.innerHTML = "";
-  obterFormasPagamento().filter((f) => f.ativo).forEach((forma) => {
+  const formasAtivas = obterFormasPagamento().filter((f) => f.ativo);
+  const nomesAtivos = formasAtivas.map((f) => f.nome);
+  formasAtivas.forEach((forma) => {
     const ativo = nomesSelecionados.includes(forma.nome);
     const chip = document.createElement("span");
     chip.className = "chip" + (ativo ? " chip--ativo" : "");
@@ -525,6 +531,11 @@ function montarFormasChips(chipsContainerId, linhasContainerId, nomesSelecionado
     chip.textContent = forma.nome;
     chipsContainer.appendChild(chip);
     if (ativo) adicionarLinhaForma(linhasContainer, forma.nome, valoresPorNome && valoresPorNome[forma.nome]);
+  });
+  // Formas usadas neste pagamento que já foram excluídas: sem chip (não dá pra escolher de novo),
+  // mas a linha continua mostrada — senão "Salvar" perderia esse valor silenciosamente.
+  nomesSelecionados.filter((nome) => !nomesAtivos.includes(nome)).forEach((nome) => {
+    adicionarLinhaForma(linhasContainer, nome, valoresPorNome && valoresPorNome[nome], true);
   });
   qsa(".chip", chipsContainer).forEach((chip) => {
     chip.addEventListener("click", () => {
