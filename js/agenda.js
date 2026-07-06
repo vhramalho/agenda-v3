@@ -55,9 +55,22 @@ function obterBloqueiosFixosDoDia(iso) {
   return obterBloqueiosFixos().filter((b) => b.ativo && b.diasSemana.includes(abrev));
 }
 
-function classificarGradeDoDia(iso) {
+/* horaInicio/horaFim globais (Configurações) + extensão pontual daquele dia
+   (ver "+ Adicionar mais 1 hora", obterExtensoesGrade() em js/storage.js) —
+   nunca mexe em agendaV3:config, só no que é exibido pra esse dia. */
+function limitesGradeDoDia(iso) {
   const config = obterConfig();
-  const grade = gerarGradeHorarios(config.horaInicio, config.horaFim, config.intervaloGrade);
+  const extensao = obterExtensoesGrade()[iso] || {};
+  return {
+    horaInicio: somarMinutosClampado(config.horaInicio, -(extensao.antes || 0)),
+    horaFim: somarMinutosClampado(config.horaFim, extensao.depois || 0),
+    intervaloGrade: config.intervaloGrade,
+  };
+}
+
+function classificarGradeDoDia(iso) {
+  const limites = limitesGradeDoDia(iso);
+  const grade = gerarGradeHorarios(limites.horaInicio, limites.horaFim, limites.intervaloGrade);
   const compromissos = obterCompromissosDoDia(iso);
   const bloqueiosFixos = obterBloqueiosFixosDoDia(iso);
   const horariosFixos = new Map();
@@ -118,7 +131,8 @@ function classificarGradeDoDia(iso) {
    ver docs/REFATORACAO_DURACAO_COMPARTILHAMENTO.md). */
 function calcularTrechosLivresDoDia(iso) {
   const config = obterConfig();
-  const grade = gerarGradeHorarios(config.horaInicio, config.horaFim, config.intervaloGrade);
+  const limites = limitesGradeDoDia(iso);
+  const grade = gerarGradeHorarios(limites.horaInicio, limites.horaFim, limites.intervaloGrade);
   const porHora = {};
   classificarGradeDoDia(iso).forEach((item) => { porHora[item.hora] = item.tipo; });
   const trechos = [];
@@ -255,9 +269,27 @@ function montarSlotBloqueado(item) {
   return el;
 }
 
+function montarBotaoEstenderGrade(iso, direcao) {
+  const botao = document.createElement("button");
+  botao.type = "button";
+  botao.className = "btn btn--ghost";
+  botao.style.cssText = `width:100%;${direcao === "antes" ? "margin-bottom:8px;" : "margin-top:8px;"}`;
+  botao.textContent = "+ Adicionar mais 1 hora";
+  botao.addEventListener("click", () => {
+    const extensoes = obterExtensoesGrade();
+    const atual = extensoes[iso] || {};
+    atual[direcao] = (atual[direcao] || 0) + 60;
+    extensoes[iso] = atual;
+    salvarExtensoesGrade(extensoes);
+    renderizarAgendaLista();
+  });
+  return botao;
+}
+
 function renderizarAgendaLista() {
   const container = qs("#js-agenda-lista");
   container.innerHTML = "";
+  container.appendChild(montarBotaoEstenderGrade(dataSelecionada, "antes"));
   const itens = classificarGradeDoDia(dataSelecionada);
   itens.forEach((item) => {
     let el;
@@ -267,6 +299,7 @@ function renderizarAgendaLista() {
     else el = montarSlotBloqueado(item);
     container.appendChild(el);
   });
+  container.appendChild(montarBotaoEstenderGrade(dataSelecionada, "depois"));
 }
 
 function renderizarCabecalho() {

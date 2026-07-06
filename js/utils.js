@@ -197,6 +197,14 @@ function horaParaMinutos(hora) {
   return h * 60 + m;
 }
 
+/* Como somarMinutos(), mas nunca vira o dia (fica preso em 00:00–23:59) —
+   usado pra estender o início/fim da grade de um dia específico, onde
+   "passar da meia-noite" não faz sentido (ver extensão da grade em agenda.js). */
+function somarMinutosClampado(hora, minutos) {
+  const total = Math.min(23 * 60 + 59, Math.max(0, horaParaMinutos(hora) + minutos));
+  return `${String(Math.floor(total / 60)).padStart(2, "0")}:${String(total % 60).padStart(2, "0")}`;
+}
+
 function hojeIso() {
   const d = new Date();
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;

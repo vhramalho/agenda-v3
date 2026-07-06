@@ -17,6 +17,7 @@ const CHAVES = {
   bloqueiosFixos: "agendaV3:bloqueiosFixos",
   whatsapp: "agendaV3:whatsapp",
   onboarding: "agendaV3:onboarding",
+  extensoesGrade: "agendaV3:extensoesGrade",
 };
 
 function gerarId(prefixo) {
@@ -101,6 +102,17 @@ function obterOnboarding() {
 }
 function salvarOnboarding(estado) {
   salvarChave(CHAVES.onboarding, estado);
+}
+
+/* Extensão pontual da grade de horários por dia — "+ Adicionar mais 1 hora"
+   na Agenda (ver js/agenda.js). Mapa { [dataIso]: { antes: minutos, depois: minutos } },
+   somado ao horaInicio/horaFim globais só na hora de montar a grade daquele
+   dia específico — nunca altera agendaV3:config. */
+function obterExtensoesGrade() {
+  return lerChave(CHAVES.extensoesGrade, {});
+}
+function salvarExtensoesGrade(mapa) {
+  salvarChave(CHAVES.extensoesGrade, mapa);
 }
 
 /* ============================================================
