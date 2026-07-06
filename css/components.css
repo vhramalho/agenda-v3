@@ -548,8 +548,8 @@
 
 /* ---------- Swatch de cor principal (Onboarding e Configurações) ---------- */
 .cor-swatch {
-  width: 36px;
-  height: 36px;
+  width: 28px;
+  height: 28px;
   border-radius: var(--radius-full);
   border: 2px solid transparent;
   flex-shrink: 0;
@@ -568,7 +568,7 @@
   align-items: center;
   justify-content: center;
   color: white;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 700;
 }
 

@@ -42,7 +42,6 @@ const CORES_PRINCIPAIS = [
   { id: "vermelho", nome: "Vermelho", hex: "#B91C1C" },
   { id: "dourado", nome: "Dourado", hex: "#B45309" },
   { id: "cinza", nome: "Cinza", hex: "#71717A" },
-  { id: "amarelo", nome: "Amarelo", hex: "#FFE600" },
 ];
 
 function nomeDoTema(tema) {

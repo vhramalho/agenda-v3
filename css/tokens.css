@@ -2,7 +2,7 @@
    AGENDA V3 — Design Tokens
    Tema escuro é o padrão. Tema claro é selecionado via
    <html data-theme="light">. Cor principal é selecionada via
-   <html data-accent="roxo|azul|ciano|verde|rosa|vermelho|dourado|cinza|amarelo">.
+   <html data-accent="roxo|azul|ciano|verde|rosa|vermelho|dourado|cinza">.
    ============================================================ */
 
 :root,
@@ -109,16 +109,6 @@
   --primary: #71717A;
   --primary-strong: #A1A1AA;
   --primary-soft: rgba(113, 113, 122, 0.18);
-}
-
-:root[data-accent="amarelo"] {
-  /* Amarelo "puro" de verdade (estilo Mercado Livre) — precisa de texto
-     escuro em cima pra ter contraste, diferente de todas as outras cores
-     (que usam texto branco), então --text-on-primary é sobrescrito aqui. */
-  --primary: #FFE600;
-  --primary-strong: #FFEB3B;
-  --primary-soft: rgba(255, 230, 0, 0.18);
-  --text-on-primary: #1A1A1A;
 }
 
 :root {
