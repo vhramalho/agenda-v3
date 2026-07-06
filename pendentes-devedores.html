@@ -4,10 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Clientes que mais ficam devendo — Agenda V3</title>
-  <link rel="stylesheet" href="css/tokens.css?v=20260706f" />
-  <link rel="stylesheet" href="css/base.css?v=20260706f" />
-  <link rel="stylesheet" href="css/layout.css?v=20260706f" />
-  <link rel="stylesheet" href="css/components.css?v=20260706f" />
+  <link rel="stylesheet" href="css/tokens.css?v=20260706g" />
+  <link rel="stylesheet" href="css/base.css?v=20260706g" />
+  <link rel="stylesheet" href="css/layout.css?v=20260706g" />
+  <link rel="stylesheet" href="css/components.css?v=20260706g" />
 </head>
 <body data-page="pendentes">
   <div class="app">
@@ -34,6 +34,14 @@
 
       <div class="card section" id="js-devedores-lista-completa"></div>
       <div class="empty-state is-hidden" id="js-devedores-vazio-completo"><p class="empty-state__title">Nenhum cliente com pendência no momento</p></div>
+
+      <div class="modal-overlay is-hidden" id="modal-devedor-ocorrencias">
+        <div class="modal-sheet">
+          <div class="modal-sheet__header"><p class="modal-sheet__title" id="js-devedor-ocorrencias-titulo"></p><button class="modal-close">✕</button></div>
+          <p class="text-secondary" style="margin-bottom:12px;">Marque as ocorrências que não devem contar no ranking de devedores (ex.: lançamento por engano).</p>
+          <div class="stack" id="js-devedor-ocorrencias-lista"></div>
+        </div>
+      </div>
     </main>
 
     <div id="js-bottom-nav-mount"></div>
@@ -82,12 +90,12 @@
     </div>
   </div>
 
-  <script src="js/utils.js?v=20260706f"></script>
-  <script src="js/menu.js?v=20260706f"></script>
-  <script src="js/storage.js?v=20260706f"></script>
-  <script src="js/tema.js?v=20260706f"></script>
-  <script src="js/app.js?v=20260706f"></script>
-  <script src="js/modal.js?v=20260706f"></script>
-  <script src="js/pendentes.js?v=20260706f"></script>
+  <script src="js/utils.js?v=20260706g"></script>
+  <script src="js/menu.js?v=20260706g"></script>
+  <script src="js/storage.js?v=20260706g"></script>
+  <script src="js/tema.js?v=20260706g"></script>
+  <script src="js/app.js?v=20260706g"></script>
+  <script src="js/modal.js?v=20260706g"></script>
+  <script src="js/pendentes.js?v=20260706g"></script>
 </body>
 </html>

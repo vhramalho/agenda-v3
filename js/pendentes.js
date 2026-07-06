@@ -83,17 +83,20 @@ function montarLinhaPago(agendamento) {
 function rankingDevedores(periodo) {
   // Histórico de quantas vezes o cliente já entrou como pendente, mesmo que
   // tenha pago depois — não é só quem está pendente agora (isso é listaPendentes()).
-  const filtrados = obterAgendamentos().filter((a) => (a.status === "realizado_pendente" || a.foiPendente) && dataNoPeriodo(a.data, periodo));
+  // Ocorrências marcadas com excluidoDoRanking (lançamento por engano etc.) não
+  // entram na contagem de "vezes", mas continuam na lista pra poder desmarcar depois.
+  const candidatos = obterAgendamentos().filter((a) => (a.status === "realizado_pendente" || a.foiPendente) && dataNoPeriodo(a.data, periodo));
   const contagem = {};
-  filtrados.forEach((a) => {
+  candidatos.forEach((a) => {
     const chave = a.clienteId || `avulso:${a.nomeCliente}`;
-    if (!contagem[chave]) contagem[chave] = { nome: a.nomeCliente, vezes: 0 };
-    contagem[chave].vezes += 1;
+    if (!contagem[chave]) contagem[chave] = { nome: a.nomeCliente, vezes: 0, ocorrenciaIds: [] };
+    contagem[chave].ocorrenciaIds.push(a.id);
+    if (!a.excluidoDoRanking) contagem[chave].vezes += 1;
   });
   return Object.values(contagem).sort((a, b) => b.vezes - a.vezes);
 }
 
-function montarLinhaDevedorCompleta(item, indice, posicao) {
+function montarLinhaDevedorCompleta(item, indice, posicao, aoAtualizar) {
   const linha = document.createElement("div");
   linha.className = "list-item";
   linha.innerHTML = `
@@ -101,11 +104,47 @@ function montarLinhaDevedorCompleta(item, indice, posicao) {
     <div class="list-item__avatar ${classeAvatarPorIndice(indice)}"></div>
     <div class="list-item__body"><p class="list-item__title"></p></div>
     <span class="text-primary-accent" style="font-weight:700;"></span>
+    ${aoAtualizar ? '<svg class="list-item__chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>' : ""}
   `;
   linha.querySelector(".list-item__avatar").textContent = iniciaisCliente(item.nome);
   linha.querySelector(".list-item__title").textContent = item.nome;
   linha.querySelector(".text-primary-accent").textContent = `${item.vezes} ${item.vezes === 1 ? "vez" : "vezes"}`;
+  if (aoAtualizar) {
+    linha.style.cursor = "pointer";
+    linha.addEventListener("click", () => abrirOcorrenciasDevedor(item, aoAtualizar));
+  }
   return linha;
+}
+
+let aoAtualizarOcorrenciasAtual = null;
+
+function abrirOcorrenciasDevedor(item, aoAtualizar) {
+  aoAtualizarOcorrenciasAtual = aoAtualizar;
+  qs("#js-devedor-ocorrencias-titulo").textContent = item.nome;
+  renderizarOcorrenciasDevedor(item);
+  abrirModal("modal-devedor-ocorrencias");
+}
+
+function renderizarOcorrenciasDevedor(item) {
+  const lista = qs("#js-devedor-ocorrencias-lista");
+  lista.innerHTML = "";
+  const ocorrencias = obterAgendamentos()
+    .filter((ag) => item.ocorrenciaIds.includes(ag.id))
+    .sort((a, b) => (a.data < b.data ? 1 : a.data > b.data ? -1 : 0));
+  ocorrencias.forEach((ag) => {
+    const conta = !ag.excluidoDoRanking;
+    const statusTexto = ag.status === "realizado_pendente" ? "Ainda pendente" : `Pago${ag.pagoEm ? ` em ${formatarDataCurta(ag.pagoEm.slice(0, 10))}` : ""}`;
+    const linha = document.createElement("div");
+    linha.className = "card row row--between";
+    linha.innerHTML = `
+      <div>
+        <p style="font-weight:600;">${formatarDataCurta(ag.data)}</p>
+        <p class="text-secondary" style="font-size:var(--text-sm);">${formatarMoeda(ag.valorPendente || ag.valorTotal || 0)} · ${statusTexto}</p>
+      </div>
+      <span class="chip${conta ? " chip--ativo" : ""}" data-agendamento-id="${ag.id}">${conta ? "Conta" : "Não conta"}</span>
+    `;
+    lista.appendChild(linha);
+  });
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -213,7 +252,7 @@ document.addEventListener("DOMContentLoaded", () => {
       } else {
         container.classList.remove("is-hidden");
         vazio.classList.add("is-hidden");
-        ranking.forEach((item, i) => container.appendChild(montarLinhaDevedorCompleta(item, i, i + 1)));
+        ranking.forEach((item, i) => container.appendChild(montarLinhaDevedorCompleta(item, i, i + 1, renderDevedoresCompleto)));
       }
     }
 
@@ -224,6 +263,22 @@ document.addEventListener("DOMContentLoaded", () => {
     configurarFiltroPeriodo(() => periodoAtual, (novoPeriodo) => {
       periodoAtual = novoPeriodo;
       renderDevedoresCompleto();
+    });
+  }
+
+  // ---- Toggle "Conta"/"Não conta" nas ocorrências de um devedor ----
+  if (qs("#js-devedor-ocorrencias-lista")) {
+    qs("#js-devedor-ocorrencias-lista").addEventListener("click", (evento) => {
+      const chip = evento.target.closest("[data-agendamento-id]");
+      if (!chip) return;
+      const lista = obterAgendamentos();
+      const ag = lista.find((a) => a.id === chip.dataset.agendamentoId);
+      if (!ag) return;
+      ag.excluidoDoRanking = !ag.excluidoDoRanking;
+      salvarAgendamentos(lista);
+      chip.classList.toggle("chip--ativo", !ag.excluidoDoRanking);
+      chip.textContent = ag.excluidoDoRanking ? "Não conta" : "Conta";
+      if (aoAtualizarOcorrenciasAtual) aoAtualizarOcorrenciasAtual();
     });
   }
 });
