@@ -4,6 +4,23 @@
    elementos daquela tela existirem no documento.
    ============================================================ */
 
+/* ---------- Botão de WhatsApp (sempre com o ícone de mensagem) ---------- */
+
+function montarBotaoWhatsapp(cliente, mensagemTexto) {
+  const botao = document.createElement("button");
+  botao.type = "button";
+  botao.className = "icon-btn icon-btn--accent";
+  botao.setAttribute("aria-label", "WhatsApp");
+  botao.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>';
+  botao.addEventListener("click", () => {
+    if (!cliente.telefone) { mostrarAviso("Telefone não cadastrado"); return; }
+    const digitos = cliente.telefone.replace(/\D/g, "");
+    const texto = mensagemTexto ? `?text=${encodeURIComponent(mensagemTexto)}` : "";
+    window.open(`https://wa.me/55${digitos}${texto}`, "_blank");
+  });
+  return botao;
+}
+
 /* ---------- Ranking ---------- */
 
 function estatisticasRanking(clienteId, periodo) {
@@ -117,32 +134,16 @@ function montarLinhaAniversariante(cliente, indice) {
   linha.querySelector(".list-item__title").textContent = cliente.nome;
   linha.querySelector(".js-aniv-data").textContent = `${cliente.aniversarioDia} de ${MESES_NOME[(cliente.aniversarioMes || 1) - 1].toLowerCase()}`;
 
+  const tel = linha.querySelector(".js-aniv-telefone");
   if (cliente.telefone) {
-    const tel = linha.querySelector(".js-aniv-telefone");
     tel.className = "text-secondary js-aniv-telefone";
     tel.textContent = cliente.telefone;
-    const botao = document.createElement("a");
-    botao.className = "icon-btn icon-btn--accent";
-    botao.setAttribute("aria-label", "WhatsApp");
-    botao.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>';
-    const mensagem = substituirPlaceholders(obterWhatsapp().mensagemAniversario || "", { nome: cliente.nome });
-    const digitos = cliente.telefone.replace(/\D/g, "");
-    botao.href = `https://wa.me/55${digitos}?text=${encodeURIComponent(mensagem)}`;
-    botao.target = "_blank";
-    botao.rel = "noopener";
-    linha.appendChild(botao);
   } else {
-    const tel = linha.querySelector(".js-aniv-telefone");
     tel.className = "text-muted js-aniv-telefone";
     tel.textContent = "Sem telefone cadastrado";
-    const desabilitado = document.createElement("span");
-    desabilitado.className = "icon-btn";
-    desabilitado.style.background = "var(--card-elevated)";
-    desabilitado.style.color = "var(--text-muted)";
-    desabilitado.setAttribute("aria-hidden", "true");
-    desabilitado.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 12h14"/></svg>';
-    linha.appendChild(desabilitado);
   }
+  const mensagem = substituirPlaceholders(obterWhatsapp().mensagemAniversario || "", { nome: cliente.nome });
+  linha.appendChild(montarBotaoWhatsapp(cliente, mensagem));
   return linha;
 }
 
@@ -224,26 +225,9 @@ function montarLinhaSemRetornar(item, indice) {
   linha.querySelector(".js-sr-data").textContent = item.info.data ? `última visita em ${formatarDataCurta(item.info.data)}` : "Nunca atendido";
   linha.querySelector(".js-sr-dias").textContent = item.info.dias === null ? "—" : `${item.info.dias} dias`;
 
-  if (item.cliente.telefone) {
-    const botao = document.createElement("a");
-    botao.className = "icon-btn icon-btn--accent";
-    botao.style.marginLeft = "8px";
-    botao.setAttribute("aria-label", "WhatsApp");
-    botao.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>';
-    botao.href = `https://wa.me/55${item.cliente.telefone.replace(/\D/g, "")}`;
-    botao.target = "_blank";
-    botao.rel = "noopener";
-    linha.appendChild(botao);
-  } else {
-    const desabilitado = document.createElement("span");
-    desabilitado.className = "icon-btn";
-    desabilitado.style.marginLeft = "8px";
-    desabilitado.style.background = "var(--card-elevated)";
-    desabilitado.style.color = "var(--text-muted)";
-    desabilitado.setAttribute("aria-hidden", "true");
-    desabilitado.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 12h14"/></svg>';
-    linha.appendChild(desabilitado);
-  }
+  const botao = montarBotaoWhatsapp(item.cliente, "");
+  botao.style.marginLeft = "8px";
+  linha.appendChild(botao);
   return linha;
 }
 

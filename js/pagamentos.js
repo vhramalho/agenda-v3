@@ -12,6 +12,16 @@ const ICONES_TIPO_PAGAMENTO = {
   outras: { classe: "icon-circle--gray", svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="5" cy="12" r="1.4" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.4" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.4" fill="currentColor" stroke="none"/></svg>' },
 };
 
+const ORDEM_TIPOS_PAGAMENTO = ["pix", "dinheiro", "credito", "debito", "outras"];
+
+function ordenarFormasPorTipo(formas) {
+  const posicao = (tipo) => {
+    const indice = ORDEM_TIPOS_PAGAMENTO.indexOf(tipo);
+    return indice === -1 ? ORDEM_TIPOS_PAGAMENTO.length : indice;
+  };
+  return [...formas].sort((a, b) => posicao(a.tipo) - posicao(b.tipo));
+}
+
 let formaEditandoId = null;
 
 function montarLinhaForma(forma) {
@@ -58,7 +68,7 @@ function calcularMaisUtilizada(formasAtivas) {
 }
 
 function renderizarFormas() {
-  const formasAtivas = obterFormasPagamento().filter((f) => f.ativo);
+  const formasAtivas = ordenarFormasPorTipo(obterFormasPagamento().filter((f) => f.ativo));
   const container = qs("#js-lista-formas");
   const vazio = qs("#js-formas-vazio");
   container.innerHTML = "";
