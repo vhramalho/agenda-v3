@@ -256,6 +256,23 @@ function extrairValor(texto) {
   return isNaN(numero) ? null : numero;
 }
 
+/**
+ * Aplica máscara de moeda num input: digita-se só números (teclado
+ * numérico via inputmode="decimal") e a vírgula/separador de milhar
+ * se posicionam sozinhos, sempre com 2 casas decimais (ex.: "150" -> "1,50").
+ */
+function aplicarMascaraMoeda(input) {
+  input.setAttribute("inputmode", "decimal");
+  input.addEventListener("input", () => {
+    const digitos = input.value.replace(/\D/g, "").replace(/^0+(?=\d)/, "");
+    if (!digitos) { input.value = ""; return; }
+    const comCentavos = digitos.padStart(3, "0");
+    const inteiro = comCentavos.slice(0, -2);
+    const centavos = comCentavos.slice(-2);
+    input.value = `R$ ${parseInt(inteiro, 10).toLocaleString("pt-BR")},${centavos}`;
+  });
+}
+
 function estatisticasCliente(clienteId) {
   const realizados = obterAgendamentos().filter(
     (a) => a.clienteId === clienteId && a.status && a.status.startsWith("realizado_")

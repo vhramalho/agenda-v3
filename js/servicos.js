@@ -71,6 +71,8 @@ function abrirEdicaoServico(id) {
 
 document.addEventListener("DOMContentLoaded", () => {
   renderizarServicos();
+  aplicarMascaraMoeda(qs("#js-novo-servico-valor"));
+  aplicarMascaraMoeda(qs("#js-editar-servico-valor"));
 
   qs("#js-btn-novo-servico").addEventListener("click", abrirNovoServico);
 

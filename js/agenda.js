@@ -509,6 +509,7 @@ function adicionarLinhaForma(container, nome, valor) {
   linha.dataset.linhaForma = nome;
   linha.innerHTML = `<span class="text-secondary" style="width:110px;flex-shrink:0;">${nome}</span><input class="input" placeholder="R$ 0,00" style="flex:1;" value="${valor != null ? formatarMoeda(valor) : ""}" />`;
   container.appendChild(linha);
+  aplicarMascaraMoeda(linha.querySelector("input"));
 }
 
 function montarFormasChips(chipsContainerId, linhasContainerId, nomesSelecionados, valoresPorNome) {
@@ -891,6 +892,8 @@ function prepararEditarRealizado(agendamento) {
 
 document.addEventListener("DOMContentLoaded", () => {
   garantirFormasPagamentoPadrao();
+  aplicarMascaraMoeda(qs("#js-finalizar-valor-pendente"));
+  aplicarMascaraMoeda(qs("#js-editar-realizado-valor-pendente"));
   const dataDaUrl = new URLSearchParams(window.location.search).get("data");
   selecionarData(dataDaUrl || dataSelecionada);
 
