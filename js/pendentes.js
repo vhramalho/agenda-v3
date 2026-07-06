@@ -81,7 +81,9 @@ function montarLinhaPago(agendamento) {
 }
 
 function rankingDevedores(periodo) {
-  const filtrados = listaPendentes().filter((a) => dataNoPeriodo(a.data, periodo));
+  // Histórico de quantas vezes o cliente já entrou como pendente, mesmo que
+  // tenha pago depois — não é só quem está pendente agora (isso é listaPendentes()).
+  const filtrados = obterAgendamentos().filter((a) => (a.status === "realizado_pendente" || a.foiPendente) && dataNoPeriodo(a.data, periodo));
   const contagem = {};
   filtrados.forEach((a) => {
     const chave = a.clienteId || `avulso:${a.nomeCliente}`;
