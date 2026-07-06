@@ -505,6 +505,7 @@ function duracaoSelecionada(containerId) {
 function adicionarLinhaForma(container, nome, valor, formaExcluida) {
   const linha = document.createElement("div");
   linha.dataset.linhaForma = nome;
+  if (formaExcluida) linha.dataset.formaExcluida = "true";
   linha.innerHTML = `
     <div class="row" style="gap:8px;">
       <span class="text-secondary" style="width:110px;flex-shrink:0;">${nome}</span>
@@ -543,7 +544,18 @@ function montarFormasChips(chipsContainerId, linhasContainerId, nomesSelecionado
       const nome = chip.dataset.nome;
       const existente = linhasContainer.querySelector(`[data-linha-forma="${nome}"]`);
       if (chip.classList.contains("chip--ativo")) {
-        if (!existente) adicionarLinhaForma(linhasContainer, nome);
+        if (!existente) {
+          // Escolher uma forma nova enquanto há linha(s) de forma excluída pendente
+          // substitui todas elas por essa, somando os valores (sem volta).
+          const linhasExcluidas = qsa("[data-forma-excluida]", linhasContainer);
+          if (linhasExcluidas.length > 0) {
+            const somaExcluidas = linhasExcluidas.reduce((soma, linha) => soma + (extrairValor(linha.querySelector("input").value) || 0), 0);
+            linhasExcluidas.forEach((linha) => linha.remove());
+            adicionarLinhaForma(linhasContainer, nome, somaExcluidas);
+          } else {
+            adicionarLinhaForma(linhasContainer, nome);
+          }
+        }
       } else if (existente) {
         existente.remove();
       }
