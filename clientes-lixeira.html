@@ -4,10 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Lixeira — Agenda V3</title>
-  <link rel="stylesheet" href="css/tokens.css?v=20260706h" />
-  <link rel="stylesheet" href="css/base.css?v=20260706h" />
-  <link rel="stylesheet" href="css/layout.css?v=20260706h" />
-  <link rel="stylesheet" href="css/components.css?v=20260706h" />
+  <link rel="stylesheet" href="css/tokens.css?v=20260706i" />
+  <link rel="stylesheet" href="css/base.css?v=20260706i" />
+  <link rel="stylesheet" href="css/layout.css?v=20260706i" />
+  <link rel="stylesheet" href="css/components.css?v=20260706i" />
 </head>
 <body data-page="clientes">
   <div class="app">
@@ -43,8 +43,8 @@
     <div class="modal-overlay is-hidden" id="modal-lixeira-confirmar-exclusao">
       <div class="modal-sheet" style="text-align:center;">
         <div class="modal-sheet__header" style="text-align:left;"><p class="modal-sheet__title" style="color:var(--danger);">Excluir permanentemente</p><button class="modal-close">✕</button></div>
-        <p class="text-secondary" style="margin-bottom:8px;">Tem certeza? Essa ação não pode ser desfeita.</p>
-        <p class="text-muted" style="font-size:var(--text-sm);margin-bottom:20px;">O histórico de atendimentos desse cliente também será apagado.</p>
+        <p class="text-secondary" style="margin-bottom:8px;"><strong>Não recomendado</strong> — essa ação não pode ser desfeita.</p>
+        <p class="text-muted" style="font-size:var(--text-sm);margin-bottom:20px;">O histórico de atendimentos e faturamento desse cliente também será apagado de todo o app (Agenda, Relatório, Ranking, Pendentes). Só faça isso se tiver certeza que não vai precisar desse histórico.</p>
         <div class="btn-row"><button class="btn btn--secondary" data-fechar-modal>Cancelar</button><button class="btn btn--danger-solid" id="js-lixeira-confirmar-exclusao">Excluir</button></div>
       </div>
     </div>
@@ -52,19 +52,19 @@
     <div class="modal-overlay is-hidden" id="modal-lixeira-esvaziar-confirmar">
       <div class="modal-sheet" style="text-align:center;">
         <div class="modal-sheet__header" style="text-align:left;"><p class="modal-sheet__title" style="color:var(--danger);">Esvaziar lixeira</p><button class="modal-close">✕</button></div>
-        <p class="text-secondary" style="margin-bottom:8px;">Tem certeza que deseja excluir permanentemente todos os clientes da lixeira?</p>
-        <p class="text-muted" style="font-size:var(--text-sm);margin-bottom:20px;">Essa ação não pode ser desfeita.</p>
+        <p class="text-secondary" style="margin-bottom:8px;"><strong>Não recomendado</strong> — essa ação não pode ser desfeita.</p>
+        <p class="text-muted" style="font-size:var(--text-sm);margin-bottom:20px;">O histórico de atendimentos e faturamento de todos esses clientes também será apagado de todo o app (Agenda, Relatório, Ranking, Pendentes). Só faça isso se tiver certeza que não vai precisar desse histórico.</p>
         <div class="btn-row"><button class="btn btn--secondary" data-fechar-modal>Cancelar</button><button class="btn btn--danger-solid" id="js-lixeira-confirmar-esvaziar">Esvaziar</button></div>
       </div>
     </div>
   </div>
 
-  <script src="js/utils.js?v=20260706h"></script>
-  <script src="js/menu.js?v=20260706h"></script>
-  <script src="js/storage.js?v=20260706h"></script>
-  <script src="js/tema.js?v=20260706h"></script>
-  <script src="js/app.js?v=20260706h"></script>
-  <script src="js/modal.js?v=20260706h"></script>
-  <script src="js/clientes-lixeira.js?v=20260706h"></script>
+  <script src="js/utils.js?v=20260706i"></script>
+  <script src="js/menu.js?v=20260706i"></script>
+  <script src="js/storage.js?v=20260706i"></script>
+  <script src="js/tema.js?v=20260706i"></script>
+  <script src="js/app.js?v=20260706i"></script>
+  <script src="js/modal.js?v=20260706i"></script>
+  <script src="js/clientes-lixeira.js?v=20260706i"></script>
 </body>
 </html>
