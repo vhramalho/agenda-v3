@@ -4,10 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>WhatsApp — Agenda V3</title>
-  <link rel="stylesheet" href="css/tokens.css?v=20260706i" />
-  <link rel="stylesheet" href="css/base.css?v=20260706i" />
-  <link rel="stylesheet" href="css/layout.css?v=20260706i" />
-  <link rel="stylesheet" href="css/components.css?v=20260706i" />
+  <link rel="stylesheet" href="css/tokens.css?v=20260706j" />
+  <link rel="stylesheet" href="css/base.css?v=20260706j" />
+  <link rel="stylesheet" href="css/layout.css?v=20260706j" />
+  <link rel="stylesheet" href="css/components.css?v=20260706j" />
 </head>
 <body data-page="mais">
   <div class="app">
@@ -74,7 +74,7 @@
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.8" style="flex-shrink:0;"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z"/></svg>
         <div>
           <p style="font-weight:700;margin-bottom:4px;">Como as mensagens são usadas</p>
-          <p class="text-secondary">Essas mensagens serão utilizadas nos recursos do app: Horários (botão WhatsApp), Lembretes, Aniversariantes e ao enviar o endereço para seus clientes.</p>
+          <p class="text-secondary">Essas mensagens serão utilizadas ao compartilhar horários, Lembretes, Aniversariantes e ao enviar o endereço para seus clientes no WhatsApp.</p>
         </div>
       </div>
 
@@ -93,6 +93,12 @@
           <textarea class="textarea" id="js-mensagem-texto" style="min-height:120px;"></textarea>
           <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;" id="js-mensagem-chips"></div>
         </div>
+        <div class="field">
+          <label class="field__label">Prévia (com dados de exemplo)</label>
+          <div class="card" style="background:var(--card-elevated);">
+            <p class="text-secondary" id="js-mensagem-preview" style="white-space:pre-wrap;"></p>
+          </div>
+        </div>
         <div class="btn-row"><button class="btn btn--secondary" data-fechar-modal>Cancelar</button><button class="btn btn--primary" id="js-mensagem-salvar">Salvar</button></div>
       </div>
     </div>
@@ -106,12 +112,12 @@
     </div>
   </div>
 
-  <script src="js/utils.js?v=20260706i"></script>
-  <script src="js/menu.js?v=20260706i"></script>
-  <script src="js/storage.js?v=20260706i"></script>
-  <script src="js/tema.js?v=20260706i"></script>
-  <script src="js/app.js?v=20260706i"></script>
-  <script src="js/modal.js?v=20260706i"></script>
-  <script src="js/whatsapp.js?v=20260706i"></script>
+  <script src="js/utils.js?v=20260706j"></script>
+  <script src="js/menu.js?v=20260706j"></script>
+  <script src="js/storage.js?v=20260706j"></script>
+  <script src="js/tema.js?v=20260706j"></script>
+  <script src="js/app.js?v=20260706j"></script>
+  <script src="js/modal.js?v=20260706j"></script>
+  <script src="js/whatsapp.js?v=20260706j"></script>
 </body>
 </html>

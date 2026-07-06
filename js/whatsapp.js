@@ -33,6 +33,24 @@ const PLACEHOLDERS_MENSAGEM = {
   ],
 };
 
+function dadosExemploPreview() {
+  const config = obterConfig();
+  const endereco = config.endereco || "Rua Exemplo, 123";
+  return {
+    nome: "Maria",
+    hora: "14:00",
+    dia: "amanhã",
+    endereco,
+    mapa: gerarLinkMapa(endereco, config.linkMapa) || "(link do mapa)",
+  };
+}
+
+function atualizarPreviewMensagem() {
+  const preview = qs("#js-mensagem-preview");
+  if (!preview) return;
+  preview.textContent = substituirPlaceholders(qs("#js-mensagem-texto").value, dadosExemploPreview());
+}
+
 function inserirTokenNoTextarea(textarea, token) {
   const inicio = textarea.selectionStart ?? textarea.value.length;
   const fim = textarea.selectionEnd ?? textarea.value.length;
@@ -41,6 +59,7 @@ function inserirTokenNoTextarea(textarea, token) {
   const novaPosicao = inicio + token.length;
   textarea.focus();
   textarea.setSelectionRange(novaPosicao, novaPosicao);
+  atualizarPreviewMensagem();
 }
 
 function renderizarChipsMensagem(campo) {
@@ -60,8 +79,9 @@ function renderizarChipsMensagem(campo) {
 function renderizarWhatsapp() {
   const config = obterWhatsapp();
   qs("#js-whatsapp-numero").textContent = config.numero || "Nenhum número cadastrado";
+  const exemplo = dadosExemploPreview();
   qsa(".js-msg-preview").forEach((el) => {
-    el.textContent = config[el.dataset.campoPreview] || "";
+    el.textContent = substituirPlaceholders(config[el.dataset.campoPreview] || "", exemplo);
   });
 }
 
@@ -75,12 +95,15 @@ document.addEventListener("DOMContentLoaded", () => {
     window.open(`https://wa.me/55${digitos}`, "_blank");
   });
 
+  qs("#js-mensagem-texto").addEventListener("input", atualizarPreviewMensagem);
+
   qsa("[data-campo]").forEach((botao) => {
     botao.addEventListener("click", () => {
       campoMensagemAtual = botao.dataset.campo;
       qs("#js-mensagem-titulo").textContent = TITULOS_MENSAGEM[campoMensagemAtual] || "Editar mensagem";
       qs("#js-mensagem-texto").value = obterWhatsapp()[campoMensagemAtual] || "";
       renderizarChipsMensagem(campoMensagemAtual);
+      atualizarPreviewMensagem();
       abrirModal("modal-editar-mensagem");
     });
   });
