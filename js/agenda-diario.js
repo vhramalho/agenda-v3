@@ -58,7 +58,7 @@ function montarAgendaDiario(iso) {
   if (contagem.listas > 0) partes.push(`${contagem.listas} ${contagem.listas === 1 ? "lista" : "listas"}`);
 
   const titulo = contagem.total > 0
-    ? `${contagem.total} ${contagem.total === 1 ? "item" : "itens"} para hoje`
+    ? `${contagem.total} ${contagem.total === 1 ? "lembrete" : "lembretes"}`
     : "Nada por aqui hoje, toque pra adicionar";
   const subtitulo = partes.join(", ");
 

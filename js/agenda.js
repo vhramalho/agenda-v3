@@ -272,8 +272,8 @@ function montarSlotBloqueado(item) {
 function montarBotaoEstenderGrade(iso, direcao) {
   const botao = document.createElement("button");
   botao.type = "button";
-  botao.className = "btn btn--ghost";
-  botao.style.cssText = `width:100%;${direcao === "antes" ? "margin-bottom:8px;" : "margin-top:8px;"}`;
+  botao.className = "text-primary-accent";
+  botao.style.cssText = `display:block;width:100%;text-align:center;background:none;border:none;font-weight:600;font-size:var(--text-sm);cursor:pointer;${direcao === "antes" ? "margin-bottom:8px;" : "margin-top:8px;"}`;
   botao.textContent = "+ Adicionar mais 1 hora";
   botao.addEventListener("click", () => {
     const extensoes = obterExtensoesGrade();
