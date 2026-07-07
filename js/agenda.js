@@ -1315,7 +1315,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const linhas = [];
       if (mostrarLivre && livres.length > 0) linhas.push(...livres);
       if (mostrarEncaixe && encaixes.length > 0) {
-        linhas.push("*Encaixes possíveis:*");
+        linhas.push("*Encaixes possíveis:");
         linhas.push(...encaixes);
       }
 
