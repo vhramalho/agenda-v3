@@ -847,22 +847,32 @@ function salvarNomeClienteInline(ag, prefixo) {
   }
 }
 
+function definirModoPagamentoFinalizar(modo) {
+  const pendenteToggle = qs("#js-finalizar-pendente-toggle");
+  const campoPendente = qs("#js-finalizar-campo-pendente");
+  if (modo === "pendente") {
+    qsa(".chip", qs("#js-finalizar-formas")).forEach((c) => c.classList.remove("chip--ativo"));
+    qs("#js-finalizar-linhas-pagamento").innerHTML = "";
+    pendenteToggle.classList.add("is-ativo");
+    campoPendente.classList.remove("is-hidden");
+  } else {
+    pendenteToggle.classList.remove("is-ativo");
+    campoPendente.classList.add("is-hidden");
+  }
+}
+
 function prepararFinalizarAtendimento(agendamento) {
-  const modal = qs("#modal-finalizar-atendimento");
   prepararClientePicker("js-finalizar", agendamento.clienteId || null, agendamento.nomeCliente);
   montarServicosChips("js-finalizar-servicos", agendamento.servicosIds || []);
-  prepararObservacaoWrap("js-finalizar-observacao", "js-finalizar-observacao-toggle", agendamento.observacao || "");
+  qs("#js-finalizar-observacao").value = agendamento.observacao || "";
+  qs("#js-finalizar-observacao").classList.add("is-hidden");
+  qs("#js-finalizar-observacao-dot").classList.toggle("is-hidden", !agendamento.observacao);
   vendaAnexadaId = null;
   qs("#js-finalizar-venda-toggle").classList.remove("is-hidden");
   qs("#js-finalizar-venda-resumo").classList.add("is-hidden");
-  qsa("[data-pago]", modal).forEach((b) => {
-    b.classList.toggle("chip--ativo", b.dataset.pago === "sim");
-  });
-  qsa("[data-campo-pago]", modal).forEach((campo) => {
-    campo.classList.toggle("is-hidden", campo.dataset.campoPago !== "sim");
-  });
   montarFormasChips("js-finalizar-formas", "js-finalizar-linhas-pagamento", [], {});
   qs("#js-finalizar-valor-pendente").value = "";
+  definirModoPagamentoFinalizar("pago");
 }
 
 function textoResumoVenda(venda) {
@@ -1159,7 +1169,23 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   qs("#js-finalizar-observacao-toggle").addEventListener("click", () => {
-    alternarObservacaoWrap("js-finalizar-observacao", "js-finalizar-observacao-toggle");
+    const textarea = qs("#js-finalizar-observacao");
+    const abrir = textarea.classList.contains("is-hidden");
+    textarea.classList.toggle("is-hidden", !abrir);
+    if (abrir) textarea.focus();
+  });
+
+  qs("#js-finalizar-observacao").addEventListener("input", (e) => {
+    qs("#js-finalizar-observacao-dot").classList.toggle("is-hidden", !e.target.value.trim());
+  });
+
+  qs("#js-finalizar-pendente-toggle").addEventListener("click", () => {
+    const jaPendente = qs("#js-finalizar-pendente-toggle").classList.contains("is-ativo");
+    definirModoPagamentoFinalizar(jaPendente ? "pago" : "pendente");
+  });
+
+  qs("#js-finalizar-formas").addEventListener("click", (e) => {
+    if (e.target.closest(".chip")) definirModoPagamentoFinalizar("pago");
   });
 
   qs("#js-editar-realizado-observacao-toggle").addEventListener("click", () => {
@@ -1221,8 +1247,8 @@ document.addEventListener("DOMContentLoaded", () => {
     ag.servicosIds = idsSelecionados("js-finalizar-servicos");
     ag.observacao = qs("#js-finalizar-observacao").value.trim();
     ag.realizadoEm = new Date().toISOString();
-    const pagoEscolha = qs("[data-pago].chip--ativo", qs("#modal-finalizar-atendimento")).dataset.pago;
-    if (pagoEscolha === "sim") {
+    const pendenteEscolhido = qs("#js-finalizar-pendente-toggle").classList.contains("is-ativo");
+    if (!pendenteEscolhido) {
       const pagamentos = lerPagamentosDeLinhas("js-finalizar-linhas-pagamento");
       ag.status = "realizado_pago";
       ag.pago = true;

@@ -16,6 +16,7 @@
   border: none;
   color: var(--text-primary);
   flex-shrink: 0;
+  position: relative;
 }
 
 .icon-btn svg {
@@ -27,6 +28,16 @@
   background: var(--primary-soft);
   color: var(--primary);
   border: none;
+}
+
+.icon-btn__dot {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-full);
+  background: var(--primary);
 }
 
 /* ---------- Botões ---------- */
@@ -169,6 +180,42 @@
   gap: 1px;
   line-height: 1.1;
   border-radius: var(--radius-md);
+}
+
+/* Chip de forma de pagamento — ícone em cima, nome embaixo, mais alto
+   e tocável que um chip de texto comum. Usado por montarFormasChips()
+   (js/utils.js), então aparece em todo lugar que escolhe forma de
+   pagamento (Finalizar atendimento, Editar realizado, Venda). */
+.chip--pagamento {
+  flex-direction: column;
+  gap: 4px;
+  padding: 10px 6px;
+  border-radius: var(--radius-md);
+  white-space: normal;
+  text-align: center;
+}
+
+.chip--pagamento svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* Pílula "Ficou pendente" — opção secundária, deliberadamente menos
+   chamativa que os cartões de forma de pagamento (é a exceção, não
+   uma opção igual às outras). */
+.pendente-pill {
+  display: inline-block;
+  margin-top: 10px;
+  font-size: var(--text-xs);
+  font-weight: 700;
+  color: var(--text-muted);
+  cursor: pointer;
+  text-decoration: underline dotted;
+  text-underline-offset: 3px;
+}
+
+.pendente-pill.is-ativo {
+  color: var(--warning);
 }
 
 .chip--dia .chip-dia__label {

@@ -4,16 +4,6 @@
    Exclusão é lógica (ativo:false) — preserva o histórico.
    ============================================================ */
 
-const ICONES_TIPO_PAGAMENTO = {
-  pix: { classe: "icon-circle--teal", svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2l4 4-4 4-4-4 4-4zM12 14l4 4-4 4-4-4 4-4zM2 12l4-4 4 4-4 4-4-4zM14 12l4-4 4 4-4 4-4-4z"/></svg>' },
-  dinheiro: { classe: "icon-circle--green", svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/></svg>' },
-  credito: { classe: "", svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>' },
-  debito: { classe: "icon-circle--blue", svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>' },
-  outras: { classe: "icon-circle--gray", svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="5" cy="12" r="1.4" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.4" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.4" fill="currentColor" stroke="none"/></svg>' },
-};
-
-const ORDEM_TIPOS_PAGAMENTO = ["pix", "dinheiro", "credito", "debito", "outras"];
-
 function ordenarFormasPorTipo(formas) {
   const posicao = (tipo) => {
     const indice = ORDEM_TIPOS_PAGAMENTO.indexOf(tipo);

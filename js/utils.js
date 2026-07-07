@@ -370,6 +370,20 @@ function montarLinhaCliente(cliente, indice, modoSubtitulo = "padrao") {
   return linha;
 }
 
+/* Ícone por tipo de forma de pagamento — movido de pagamentos.js pra cá
+   porque montarFormasChips() (abaixo) também precisa, e roda em páginas
+   que não carregam pagamentos.js (Finalizar atendimento, Editar
+   realizado, Venda). */
+const ICONES_TIPO_PAGAMENTO = {
+  pix: { classe: "icon-circle--teal", svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2l4 4-4 4-4-4 4-4zM12 14l4 4-4 4-4-4 4-4zM2 12l4-4 4 4-4 4-4-4zM14 12l4-4 4 4-4 4-4-4z"/></svg>' },
+  dinheiro: { classe: "icon-circle--green", svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/></svg>' },
+  credito: { classe: "", svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>' },
+  debito: { classe: "icon-circle--blue", svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>' },
+  outras: { classe: "icon-circle--gray", svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="5" cy="12" r="1.4" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.4" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.4" fill="currentColor" stroke="none"/></svg>' },
+};
+
+const ORDEM_TIPOS_PAGAMENTO = ["pix", "dinheiro", "credito", "debito", "outras"];
+
 /* Formas de pagamento (chips + linhas de valor) — movido de agenda.js pra cá
    na Etapa 3 de Vendas, porque js/produtos.js/js/vendas.js também precisam
    (usado por Finalizar atendimento, Editar realizado E o modal de venda). */
@@ -397,10 +411,11 @@ function montarFormasChips(chipsContainerId, linhasContainerId, nomesSelecionado
   const nomesAtivos = formasAtivas.map((f) => f.nome);
   formasAtivas.forEach((forma) => {
     const ativo = nomesSelecionados.includes(forma.nome);
+    const icone = ICONES_TIPO_PAGAMENTO[forma.tipo] || ICONES_TIPO_PAGAMENTO.outras;
     const chip = document.createElement("span");
-    chip.className = "chip" + (ativo ? " chip--ativo" : "");
+    chip.className = "chip chip--pagamento" + (ativo ? " chip--ativo" : "");
     chip.dataset.nome = forma.nome;
-    chip.textContent = forma.nome;
+    chip.innerHTML = `${icone.svg}<span>${forma.nome}</span>`;
     chipsContainer.appendChild(chip);
     if (ativo) adicionarLinhaForma(linhasContainer, forma.nome, valoresPorNome && valoresPorNome[forma.nome]);
   });
