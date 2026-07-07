@@ -89,7 +89,7 @@ function montarAgendaDiario(iso) {
       ` : ""}
       ${listas.map((lista) => `
         <div class="agenda-diario__secao">
-          <p class="agenda-diario__secao-titulo agenda-diario__secao-titulo--lista" data-abrir-lista="${lista.id}">Lista ${lista.nome}</p>
+          <p class="agenda-diario__secao-titulo agenda-diario__secao-titulo--lista" data-abrir-lista="${lista.id}">${lista.nome ? `Lista ${lista.nome}` : "Lista"}</p>
           ${lista.itens.map((item) => montarLinhaItemDiario(item, "item", lista.id)).join("")}
         </div>
       `).join("")}
@@ -243,7 +243,6 @@ function salvarLembreteDiario() {
     salvarTarefasDiarias(lista);
   } else if (tipo === "lista") {
     const nome = qs("#js-agenda-diario-lembrete-lista-nome").value.trim();
-    if (!nome) return;
     const itensExistentesPorId = {};
     if (listaDiarioAtualId) {
       const atual = obterListasDiarias().find((l) => l.id === listaDiarioAtualId);

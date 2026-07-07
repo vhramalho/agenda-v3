@@ -321,6 +321,14 @@
 
 .agenda-diario__secao-titulo--lista {
   cursor: pointer;
+  padding: 2px 6px;
+  margin: -2px -6px var(--space-2) -6px;
+  border-radius: var(--radius-sm);
+  transition: background-color 0.15s ease;
+}
+
+.agenda-diario__secao-titulo--lista:active {
+  background: var(--card-elevated);
 }
 
 .agenda-diario__nota {
@@ -364,6 +372,14 @@
   min-width: 0;
   font-size: var(--text-sm);
   cursor: pointer;
+  padding: 4px 8px 4px 0;
+  margin: -4px -8px -4px 0;
+  border-radius: var(--radius-sm);
+  transition: background-color 0.15s ease;
+}
+
+.agenda-diario__item-texto:active {
+  background: var(--card-elevated);
 }
 
 .agenda-diario__item-texto--feito {
