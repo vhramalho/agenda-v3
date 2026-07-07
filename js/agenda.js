@@ -341,6 +341,7 @@ function selecionarData(iso) {
   renderizarSemana();
   renderizarAgendaLista();
   qs("#js-btn-hoje").classList.toggle("is-invisivel", dataSelecionada === hojeIso());
+  if (typeof window.renderizarAgendaDiario === "function") window.renderizarAgendaDiario(iso);
   if (typeof window.irParaMesCalendarioAgenda === "function") {
     const d = isoParaDate(iso);
     window.irParaMesCalendarioAgenda(d.getFullYear(), d.getMonth(), d.getDate());

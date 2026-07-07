@@ -247,3 +247,133 @@
   font-weight: 500;
   font-size: var(--text-sm);
 }
+
+/* ---------- Agenda diário (Anotação/Tarefa/Lista por dia) ---------- */
+.agenda-diario {
+  border-radius: var(--radius-md);
+  background: var(--card);
+  border: 1px solid var(--border);
+  margin-bottom: var(--space-3);
+}
+
+.agenda-diario__cabecalho {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: 14px;
+  cursor: pointer;
+}
+
+.agenda-diario__body {
+  flex: 1;
+  min-width: 0;
+}
+
+.agenda-diario__titulo {
+  font-weight: 700;
+}
+
+.agenda-diario__subtitulo {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+
+.agenda-diario__chevron {
+  color: var(--text-muted);
+  flex-shrink: 0;
+  transition: transform 0.15s ease;
+}
+
+.agenda-diario.is-aberto .agenda-diario__chevron {
+  transform: rotate(90deg);
+}
+
+.agenda-diario__painel {
+  display: none;
+  padding: 0 14px 14px;
+  border-top: 1px solid var(--border);
+}
+
+.agenda-diario.is-aberto .agenda-diario__painel {
+  display: block;
+  padding-top: var(--space-3);
+}
+
+.agenda-diario__secao {
+  margin-bottom: var(--space-4);
+}
+
+.agenda-diario__secao-titulo {
+  font-size: var(--text-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  color: var(--text-muted);
+  margin-bottom: var(--space-2);
+}
+
+.agenda-diario__secao-titulo--lista {
+  text-transform: none;
+  font-size: var(--text-sm);
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+.agenda-diario__nota {
+  padding: var(--space-3);
+  border-radius: var(--radius-sm);
+  background: var(--card-elevated);
+  font-size: var(--text-sm);
+  color: var(--text-primary);
+  cursor: pointer;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+
+.agenda-diario__item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2) 0;
+}
+
+.agenda-diario__item-check {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.agenda-diario__item-check--feito {
+  color: var(--success);
+}
+
+.agenda-diario__item-check--pendente {
+  color: var(--text-muted);
+}
+
+.agenda-diario__item-texto {
+  flex: 1;
+  min-width: 0;
+  font-size: var(--text-sm);
+  cursor: pointer;
+}
+
+.agenda-diario__item-texto--feito {
+  color: var(--text-muted);
+  text-decoration: line-through;
+}
+
+.agenda-diario__btn-add {
+  width: 100%;
+}
+
+.agenda-diario__btn-add-item {
+  width: 100%;
+  margin-top: 4px;
+  font-size: var(--text-sm);
+  padding: 8px;
+}

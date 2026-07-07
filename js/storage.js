@@ -1,6 +1,6 @@
 /* ============================================================
    AGENDA V3 — Acesso centralizado ao localStorage (Fase 3)
-   Todas as 9 chaves do app passam por aqui. Nenhuma outra tela
+   Todas as 12 chaves do app passam por aqui. Nenhuma outra tela
    ou script deve chamar localStorage.getItem/setItem direto —
    sempre por uma das funções abaixo, pra manter os dados
    consistentes e fáceis de mudar no futuro (ex.: trocar pra um
@@ -18,6 +18,9 @@ const CHAVES = {
   whatsapp: "agendaV3:whatsapp",
   onboarding: "agendaV3:onboarding",
   extensoesGrade: "agendaV3:extensoesGrade",
+  notasDiarias: "agendaV3:notasDiarias",
+  tarefasDiarias: "agendaV3:tarefasDiarias",
+  listasDiarias: "agendaV3:listasDiarias",
 };
 
 function gerarId(prefixo) {
@@ -113,6 +116,33 @@ function obterExtensoesGrade() {
 }
 function salvarExtensoesGrade(mapa) {
   salvarChave(CHAVES.extensoesGrade, mapa);
+}
+
+/* Agenda diário — Anotação/Tarefa/Lista por dia (ver Documentacao/MASTER_CONTEXT.md
+   §24, "Em discussão 2026-07-06"). Toda leitura/gravação e a UI moram em
+   js/agenda-diario.js — este arquivo só guarda o acesso ao localStorage.
+   Formatos: notasDiarias { id, dataIso, texto } (no máx. 1 por dataIso);
+   tarefasDiarias { id, dataIso, texto, feito }; listasDiarias { id, dataIso,
+   nome, itens: [{ id, texto, feito }] }. */
+function obterNotasDiarias() {
+  return lerChave(CHAVES.notasDiarias, []);
+}
+function salvarNotasDiarias(lista) {
+  salvarChave(CHAVES.notasDiarias, lista);
+}
+
+function obterTarefasDiarias() {
+  return lerChave(CHAVES.tarefasDiarias, []);
+}
+function salvarTarefasDiarias(lista) {
+  salvarChave(CHAVES.tarefasDiarias, lista);
+}
+
+function obterListasDiarias() {
+  return lerChave(CHAVES.listasDiarias, []);
+}
+function salvarListasDiarias(lista) {
+  salvarChave(CHAVES.listasDiarias, lista);
 }
 
 /* ============================================================
