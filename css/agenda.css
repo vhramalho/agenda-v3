@@ -3,6 +3,29 @@
    Cabeçalho, carrossel semanal e lista de horários.
    ============================================================ */
 
+/* ---------- Topo fixo: só "+ Adicionar mais 1 hora" + horários rolam ---------- */
+body[data-page="index"] .app {
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+}
+
+body[data-page="index"] .page {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding-bottom: 0;
+  overflow: hidden;
+}
+
+body[data-page="index"] #js-agenda-lista {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  padding-bottom: calc(var(--bottom-nav-height) + var(--safe-bottom) + var(--space-6));
+}
+
 .agenda-topo {
   display: flex;
   align-items: center;
