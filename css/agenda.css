@@ -59,11 +59,6 @@ body[data-page="index"] #js-agenda-lista {
   visibility: hidden;
 }
 
-.agenda-mes {
-  color: var(--text-secondary);
-  margin-bottom: var(--space-3);
-}
-
 /* ---------- Carrossel semanal ---------- */
 .week-carousel-wrap {
   position: relative;
