@@ -300,6 +300,11 @@ function renderizarAgendaLista() {
     container.appendChild(el);
   });
   container.appendChild(montarBotaoEstenderGrade(dataSelecionada, "depois"));
+
+  const espacadorFinal = document.createElement("div");
+  espacadorFinal.setAttribute("aria-hidden", "true");
+  espacadorFinal.style.cssText = "height:120px;flex-shrink:0;";
+  container.appendChild(espacadorFinal);
 }
 
 function renderizarCabecalho() {
