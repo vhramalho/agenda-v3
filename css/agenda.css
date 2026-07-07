@@ -264,6 +264,13 @@
   cursor: pointer;
 }
 
+.agenda-diario__icone {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  color: var(--primary);
+}
+
 .agenda-diario__body {
   flex: 1;
   min-width: 0;

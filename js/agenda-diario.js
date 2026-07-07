@@ -69,7 +69,7 @@ function montarAgendaDiario(iso) {
 
   container.innerHTML = `
     <div class="agenda-diario__cabecalho">
-      <div class="icon-circle">${iconeClipeSvg()}</div>
+      <span class="agenda-diario__icone">${iconeClipeSvg()}</span>
       <div class="agenda-diario__body">
         <p class="agenda-diario__titulo">${titulo}</p>
         ${subtitulo ? `<p class="agenda-diario__subtitulo">${subtitulo}</p>` : ""}
