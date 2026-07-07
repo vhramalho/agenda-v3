@@ -902,13 +902,18 @@ function removerVendaAnexada(vendaId) {
 
 /* ---------- Editar realizado ---------- */
 
-function definirPagoEditarRealizado(pago) {
-  const modal = qs("#modal-editar-realizado");
-  qsa("[data-pago-editar]", modal).forEach((b) => {
-    b.classList.toggle("chip--ativo", (b.dataset.pagoEditar === "sim") === pago);
-  });
-  qs("#js-editar-realizado-campo-formas").classList.toggle("is-hidden", !pago);
-  qs("#js-editar-realizado-campo-pendente").classList.toggle("is-hidden", pago);
+function definirModoPagamentoEditarRealizado(modo) {
+  const pendenteToggle = qs("#js-editar-realizado-pendente-toggle");
+  const campoPendente = qs("#js-editar-realizado-campo-pendente");
+  if (modo === "pendente") {
+    qsa(".chip", qs("#js-editar-realizado-formas")).forEach((c) => c.classList.remove("chip--ativo"));
+    qs("#js-editar-realizado-linhas-pagamento").innerHTML = "";
+    pendenteToggle.classList.add("is-ativo");
+    campoPendente.classList.remove("is-hidden");
+  } else {
+    pendenteToggle.classList.remove("is-ativo");
+    campoPendente.classList.add("is-hidden");
+  }
 }
 
 function mostrarResumoVendaEditarRealizado(venda) {
@@ -926,7 +931,9 @@ function ocultarResumoVendaEditarRealizado() {
 function prepararEditarRealizado(agendamento) {
   prepararClientePicker("js-editar-realizado", agendamento.clienteId || null, agendamento.nomeCliente);
   montarServicosChips("js-editar-realizado-servicos", agendamento.servicosIds || []);
-  prepararObservacaoWrap("js-editar-realizado-observacao", "js-editar-realizado-observacao-toggle", agendamento.observacao || "");
+  qs("#js-editar-realizado-observacao").value = agendamento.observacao || "";
+  qs("#js-editar-realizado-observacao").classList.add("is-hidden");
+  qs("#js-editar-realizado-observacao-dot").classList.toggle("is-hidden", !agendamento.observacao);
   const vendaExistente = agendamento.vendaId ? obterVendas().find((v) => v.id === agendamento.vendaId) : null;
   if (vendaExistente) {
     mostrarResumoVendaEditarRealizado(vendaExistente);
@@ -935,7 +942,6 @@ function prepararEditarRealizado(agendamento) {
     ocultarResumoVendaEditarRealizado();
   }
   const pago = agendamento.status === "realizado_pago";
-  definirPagoEditarRealizado(pago);
   if (pago) {
     const valoresPorNome = {};
     const nomesSelecionados = [];
@@ -946,9 +952,11 @@ function prepararEditarRealizado(agendamento) {
     });
     montarFormasChips("js-editar-realizado-formas", "js-editar-realizado-linhas-pagamento", nomesSelecionados, valoresPorNome);
     qs("#js-editar-realizado-valor-pendente").value = "";
+    definirModoPagamentoEditarRealizado("pago");
   } else {
     montarFormasChips("js-editar-realizado-formas", "js-editar-realizado-linhas-pagamento", [], {});
     qs("#js-editar-realizado-valor-pendente").value = agendamento.valorPendente != null ? formatarMoeda(agendamento.valorPendente) : "";
+    definirModoPagamentoEditarRealizado("pendente");
   }
 }
 
@@ -1189,7 +1197,23 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   qs("#js-editar-realizado-observacao-toggle").addEventListener("click", () => {
-    alternarObservacaoWrap("js-editar-realizado-observacao", "js-editar-realizado-observacao-toggle");
+    const textarea = qs("#js-editar-realizado-observacao");
+    const abrir = textarea.classList.contains("is-hidden");
+    textarea.classList.toggle("is-hidden", !abrir);
+    if (abrir) textarea.focus();
+  });
+
+  qs("#js-editar-realizado-observacao").addEventListener("input", (e) => {
+    qs("#js-editar-realizado-observacao-dot").classList.toggle("is-hidden", !e.target.value.trim());
+  });
+
+  qs("#js-editar-realizado-pendente-toggle").addEventListener("click", () => {
+    const jaPendente = qs("#js-editar-realizado-pendente-toggle").classList.contains("is-ativo");
+    definirModoPagamentoEditarRealizado(jaPendente ? "pago" : "pendente");
+  });
+
+  qs("#js-editar-realizado-formas").addEventListener("click", (e) => {
+    if (e.target.closest(".chip")) definirModoPagamentoEditarRealizado("pago");
   });
 
   qs("#js-novo-agendamento-salvar").addEventListener("click", () => {
@@ -1277,12 +1301,6 @@ document.addEventListener("DOMContentLoaded", () => {
     abrirModal("modal-editar-realizado");
   });
 
-  qs("#modal-editar-realizado").addEventListener("click", (evento) => {
-    const botao = evento.target.closest("[data-pago-editar]");
-    if (!botao) return;
-    definirPagoEditarRealizado(botao.dataset.pagoEditar === "sim");
-  });
-
   qs("#js-editar-realizado-venda-toggle").addEventListener("click", () => {
     const agendamento = agendamentoModalAtual;
     if (!agendamento) return;
@@ -1315,7 +1333,7 @@ document.addEventListener("DOMContentLoaded", () => {
     ag.servicosIds = idsSelecionados("js-editar-realizado-servicos");
     ag.observacao = qs("#js-editar-realizado-observacao").value.trim();
     const eraPendente = ag.status === "realizado_pendente";
-    const pagoEscolhido = qs("[data-pago-editar].chip--ativo", qs("#modal-editar-realizado")).dataset.pagoEditar === "sim";
+    const pagoEscolhido = !qs("#js-editar-realizado-pendente-toggle").classList.contains("is-ativo");
     if (pagoEscolhido) {
       const pagamentos = lerPagamentosDeLinhas("js-editar-realizado-linhas-pagamento");
       ag.status = "realizado_pago";
