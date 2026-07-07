@@ -68,7 +68,7 @@ body[data-page="index"] #js-agenda-lista {
 .week-carousel-wrap {
   position: relative;
   overflow: hidden;
-  margin-bottom: var(--space-5);
+  margin-bottom: var(--space-3);
 }
 
 .week-carousel-wrap .week-carousel {
@@ -98,8 +98,8 @@ body[data-page="index"] #js-agenda-lista {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
-  padding: 10px 0;
+  gap: 2px;
+  padding: 6px 0;
   border-radius: var(--radius-md);
   background: var(--card);
   border: 1px solid var(--border);
@@ -276,14 +276,14 @@ body[data-page="index"] #js-agenda-lista {
   border-radius: var(--radius-md);
   background: var(--card);
   border: 1px solid var(--border);
-  margin-bottom: var(--space-3);
+  margin-bottom: var(--space-2);
 }
 
 .agenda-diario__cabecalho {
   display: flex;
   align-items: center;
   gap: var(--space-3);
-  padding: 14px;
+  padding: 10px 14px;
   cursor: pointer;
 }
 
