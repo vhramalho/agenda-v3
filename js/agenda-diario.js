@@ -10,8 +10,7 @@
 let notaDiarioEditandoId = null;
 let tarefaDiarioEditandoId = null;
 let listaDiarioAtualId = null;
-let listaItemDiarioEditando = null; // { listaId, itemId }
-let exclusaoDiarioAtual = null; // { tipo: "nota"|"tarefa"|"lista"|"item", id, listaId? }
+let exclusaoDiarioAtual = null; // { tipo: "nota"|"tarefa"|"lista", id }
 let agendaDiarioAberto = false;
 
 function obterNotaDoDiaDiario(iso) {
@@ -77,6 +76,9 @@ function montarAgendaDiario(iso) {
       <svg class="agenda-diario__chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
     </div>
     <div class="agenda-diario__painel">
+      <div class="agenda-diario__painel-acoes">
+        <button type="button" class="agenda-diario__btn-add" id="js-agenda-diario-btn-add" aria-label="Adicionar">+</button>
+      </div>
       ${nota ? `
         <div class="agenda-diario__secao">
           <p class="agenda-diario__secao-titulo">Nota</p>
@@ -93,10 +95,8 @@ function montarAgendaDiario(iso) {
         <div class="agenda-diario__secao">
           <p class="agenda-diario__secao-titulo agenda-diario__secao-titulo--lista" data-abrir-lista="${lista.id}">${lista.nome}</p>
           ${lista.itens.map((item) => montarLinhaItemDiario(item, "item", lista.id)).join("")}
-          <button type="button" class="btn btn--ghost agenda-diario__btn-add-item" data-nova-lista-item="${lista.id}">+ Item</button>
         </div>
       `).join("")}
-      <button type="button" class="btn btn--ghost agenda-diario__btn-add" id="js-agenda-diario-btn-add">+</button>
     </div>
   `;
 
@@ -105,10 +105,6 @@ function montarAgendaDiario(iso) {
 
   qsa("[data-abrir-lista]", container).forEach((el) => {
     el.addEventListener("click", () => abrirEdicaoListaDiario(listas.find((l) => l.id === el.dataset.abrirLista)));
-  });
-
-  qsa("[data-nova-lista-item]", container).forEach((el) => {
-    el.addEventListener("click", () => abrirNovoItemListaDiario(el.dataset.novaListaItem));
   });
 
   qsa("[data-check-tarefa]", container).forEach((el) => {
@@ -128,11 +124,7 @@ function montarAgendaDiario(iso) {
     });
   });
   qsa("[data-texto-item]", container).forEach((el) => {
-    el.addEventListener("click", () => {
-      const lista = listas.find((l) => l.id === el.dataset.listaId);
-      const item = lista && lista.itens.find((i) => i.id === el.dataset.textoItem);
-      abrirEdicaoItemListaDiario(el.dataset.listaId, item);
-    });
+    el.addEventListener("click", () => abrirEdicaoListaDiario(listas.find((l) => l.id === el.dataset.listaId)));
   });
 
   qs(".agenda-diario__cabecalho", container).addEventListener("click", () => {
@@ -208,12 +200,26 @@ function abrirEdicaoTarefaDiario(tarefa) {
   abrirModal("modal-agenda-diario-tarefa");
 }
 
-/* ---------- Lista ---------- */
+/* ---------- Lista (nome + itens editados juntos, no mesmo modal) ---------- */
+function linhaItemListaModal(texto, itemId) {
+  const row = document.createElement("div");
+  row.className = "agenda-diario__modal-item-row";
+  row.dataset.itemId = itemId || "";
+  row.innerHTML = `
+    <input class="input" value="${texto || ""}" placeholder="Ex.: Leite" />
+    <button type="button" class="agenda-diario__modal-item-remover" aria-label="Remover item">✕</button>
+  `;
+  row.querySelector(".agenda-diario__modal-item-remover").addEventListener("click", () => row.remove());
+  return row;
+}
 function prepararNovaListaDiario() {
   listaDiarioAtualId = null;
   qs("#js-agenda-diario-lista-titulo").textContent = "Nova lista";
   qs("#js-agenda-diario-lista-nome").value = "";
   qs("#js-agenda-diario-lista-excluir").classList.add("is-hidden");
+  const itensEl = qs("#js-agenda-diario-lista-itens");
+  itensEl.innerHTML = "";
+  itensEl.appendChild(linhaItemListaModal("", null));
 }
 function abrirEdicaoListaDiario(lista) {
   if (!lista) return;
@@ -221,26 +227,11 @@ function abrirEdicaoListaDiario(lista) {
   qs("#js-agenda-diario-lista-titulo").textContent = "Editar lista";
   qs("#js-agenda-diario-lista-nome").value = lista.nome;
   qs("#js-agenda-diario-lista-excluir").classList.remove("is-hidden");
+  const itensEl = qs("#js-agenda-diario-lista-itens");
+  itensEl.innerHTML = "";
+  lista.itens.forEach((item) => itensEl.appendChild(linhaItemListaModal(item.texto, item.id)));
+  if (lista.itens.length === 0) itensEl.appendChild(linhaItemListaModal("", null));
   abrirModal("modal-agenda-diario-lista");
-}
-
-/* ---------- Item de lista ---------- */
-function abrirNovoItemListaDiario(listaId) {
-  listaDiarioAtualId = listaId;
-  listaItemDiarioEditando = null;
-  qs("#js-agenda-diario-lista-item-titulo").textContent = "Item da lista";
-  qs("#js-agenda-diario-lista-item-texto").value = "";
-  qs("#js-agenda-diario-lista-item-excluir").classList.add("is-hidden");
-  abrirModal("modal-agenda-diario-lista-item");
-}
-function abrirEdicaoItemListaDiario(listaId, item) {
-  if (!item) return;
-  listaDiarioAtualId = listaId;
-  listaItemDiarioEditando = { listaId, itemId: item.id };
-  qs("#js-agenda-diario-lista-item-titulo").textContent = "Editar item";
-  qs("#js-agenda-diario-lista-item-texto").value = item.texto;
-  qs("#js-agenda-diario-lista-item-excluir").classList.remove("is-hidden");
-  abrirModal("modal-agenda-diario-lista-item");
 }
 
 /* ---------- Exclusão (modal de confirmação compartilhado) ---------- */
@@ -257,11 +248,6 @@ function executarExclusaoDiario() {
     salvarTarefasDiarias(obterTarefasDiarias().filter((t) => t.id !== exclusaoDiarioAtual.id));
   } else if (tipo === "lista") {
     salvarListasDiarias(obterListasDiarias().filter((l) => l.id !== exclusaoDiarioAtual.id));
-  } else if (tipo === "item") {
-    const listas = obterListasDiarias();
-    const lista = listas.find((l) => l.id === exclusaoDiarioAtual.listaId);
-    if (lista) lista.itens = lista.itens.filter((i) => i.id !== exclusaoDiarioAtual.id);
-    salvarListasDiarias(listas);
   }
   exclusaoDiarioAtual = null;
   fecharModal("modal-agenda-diario-confirmar-exclusao");
@@ -313,15 +299,35 @@ document.addEventListener("DOMContentLoaded", () => {
     pedirConfirmacaoExclusaoDiario({ tipo: "tarefa", id: tarefaDiarioEditandoId }, "Excluir tarefa?");
   });
 
+  qs("#js-agenda-diario-lista-item-add").addEventListener("click", () => {
+    const itensEl = qs("#js-agenda-diario-lista-itens");
+    const row = linhaItemListaModal("", null);
+    itensEl.appendChild(row);
+    row.querySelector("input").focus();
+  });
+
   qs("#js-agenda-diario-lista-salvar").addEventListener("click", () => {
     const nome = qs("#js-agenda-diario-lista-nome").value.trim();
     if (!nome) return;
+
+    const itensExistentesPorId = {};
+    if (listaDiarioAtualId) {
+      const atual = obterListasDiarias().find((l) => l.id === listaDiarioAtualId);
+      if (atual) atual.itens.forEach((item) => { itensExistentesPorId[item.id] = item; });
+    }
+    const itens = qsa("#js-agenda-diario-lista-itens > div").map((row) => {
+      const texto = row.querySelector("input").value.trim();
+      if (!texto) return null;
+      const existente = row.dataset.itemId && itensExistentesPorId[row.dataset.itemId];
+      return existente ? { ...existente, texto } : { id: gerarId("item"), texto, feito: false };
+    }).filter(Boolean);
+
     const listas = obterListasDiarias();
     if (listaDiarioAtualId) {
       const existente = listas.find((l) => l.id === listaDiarioAtualId);
-      if (existente) existente.nome = nome;
+      if (existente) { existente.nome = nome; existente.itens = itens; }
     } else {
-      listas.push({ id: gerarId("lista"), dataIso: dataSelecionada, nome, itens: [] });
+      listas.push({ id: gerarId("lista"), dataIso: dataSelecionada, nome, itens });
     }
     salvarListasDiarias(listas);
     fecharModal("modal-agenda-diario-lista");
@@ -331,28 +337,6 @@ document.addEventListener("DOMContentLoaded", () => {
   qs("#js-agenda-diario-lista-excluir").addEventListener("click", () => {
     if (!listaDiarioAtualId) return;
     pedirConfirmacaoExclusaoDiario({ tipo: "lista", id: listaDiarioAtualId }, "Excluir lista e todos os itens dela?");
-  });
-
-  qs("#js-agenda-diario-lista-item-salvar").addEventListener("click", () => {
-    const texto = qs("#js-agenda-diario-lista-item-texto").value.trim();
-    if (!texto || !listaDiarioAtualId) return;
-    const listas = obterListasDiarias();
-    const lista = listas.find((l) => l.id === listaDiarioAtualId);
-    if (!lista) return;
-    if (listaItemDiarioEditando && listaItemDiarioEditando.listaId === listaDiarioAtualId) {
-      const item = lista.itens.find((i) => i.id === listaItemDiarioEditando.itemId);
-      if (item) item.texto = texto;
-    } else {
-      lista.itens.push({ id: gerarId("item"), texto, feito: false });
-    }
-    salvarListasDiarias(listas);
-    fecharModal("modal-agenda-diario-lista-item");
-    mostrarSucesso();
-    montarAgendaDiario(dataSelecionada);
-  });
-  qs("#js-agenda-diario-lista-item-excluir").addEventListener("click", () => {
-    if (!listaItemDiarioEditando) return;
-    pedirConfirmacaoExclusaoDiario({ tipo: "item", id: listaItemDiarioEditando.itemId, listaId: listaItemDiarioEditando.listaId }, "Excluir item?");
   });
 
   qs("#js-agenda-diario-confirmar-exclusao-btn").addEventListener("click", executarExclusaoDiario);

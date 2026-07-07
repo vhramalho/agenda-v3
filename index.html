@@ -4,11 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Agenda — Agenda V3</title>
-  <link rel="stylesheet" href="css/tokens.css?v=20260706r" />
-  <link rel="stylesheet" href="css/base.css?v=20260706r" />
-  <link rel="stylesheet" href="css/layout.css?v=20260706r" />
-  <link rel="stylesheet" href="css/components.css?v=20260706r" />
-  <link rel="stylesheet" href="css/agenda.css?v=20260706r" />
+  <link rel="stylesheet" href="css/tokens.css?v=20260706s" />
+  <link rel="stylesheet" href="css/base.css?v=20260706s" />
+  <link rel="stylesheet" href="css/layout.css?v=20260706s" />
+  <link rel="stylesheet" href="css/components.css?v=20260706s" />
+  <link rel="stylesheet" href="css/agenda.css?v=20260706s" />
 </head>
 <body data-page="index">
   <div class="app">
@@ -390,25 +390,15 @@
           <label class="field__label">Nome da lista</label>
           <input class="input" id="js-agenda-diario-lista-nome" placeholder="Ex.: Compras" />
         </div>
+        <div class="field">
+          <label class="field__label">Itens</label>
+          <div id="js-agenda-diario-lista-itens"></div>
+          <button type="button" class="btn btn--ghost" id="js-agenda-diario-lista-item-add" style="width:100%;margin-top:8px;">+ Adicionar item</button>
+        </div>
         <div class="btn-row">
           <button class="btn btn--danger is-hidden" id="js-agenda-diario-lista-excluir" data-trocar-modal="modal-agenda-diario-confirmar-exclusao">Excluir lista</button>
           <button class="btn btn--secondary" data-fechar-modal>Cancelar</button>
           <button class="btn btn--primary" id="js-agenda-diario-lista-salvar">Salvar</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="modal-overlay is-hidden" id="modal-agenda-diario-lista-item">
-      <div class="modal-sheet">
-        <p class="modal-sheet__title" id="js-agenda-diario-lista-item-titulo">Item da lista</p>
-        <div class="field">
-          <label class="field__label">Item</label>
-          <input class="input" id="js-agenda-diario-lista-item-texto" placeholder="Ex.: Leite" />
-        </div>
-        <div class="btn-row">
-          <button class="btn btn--danger is-hidden" id="js-agenda-diario-lista-item-excluir" data-trocar-modal="modal-agenda-diario-confirmar-exclusao">Excluir</button>
-          <button class="btn btn--secondary" data-fechar-modal>Cancelar</button>
-          <button class="btn btn--primary" id="js-agenda-diario-lista-item-salvar">Salvar</button>
         </div>
       </div>
     </div>
@@ -423,16 +413,16 @@
     </div>
   </div>
 
-  <script src="js/utils.js?v=20260706r"></script>
-  <script src="js/menu.js?v=20260706r"></script>
-  <script src="js/storage.js?v=20260706r"></script>
-  <script src="js/tema.js?v=20260706r"></script>
-  <script src="js/app.js?v=20260706r"></script>
-  <script src="js/chips.js?v=20260706r"></script>
-  <script src="js/modal.js?v=20260706r"></script>
-  <script src="js/calendario.js?v=20260706r"></script>
-  <script src="js/acoes-simuladas.js?v=20260706r"></script>
-  <script src="js/agenda.js?v=20260706r"></script>
-  <script src="js/agenda-diario.js?v=20260706r"></script>
+  <script src="js/utils.js?v=20260706s"></script>
+  <script src="js/menu.js?v=20260706s"></script>
+  <script src="js/storage.js?v=20260706s"></script>
+  <script src="js/tema.js?v=20260706s"></script>
+  <script src="js/app.js?v=20260706s"></script>
+  <script src="js/chips.js?v=20260706s"></script>
+  <script src="js/modal.js?v=20260706s"></script>
+  <script src="js/calendario.js?v=20260706s"></script>
+  <script src="js/acoes-simuladas.js?v=20260706s"></script>
+  <script src="js/agenda.js?v=20260706s"></script>
+  <script src="js/agenda-diario.js?v=20260706s"></script>
 </body>
 </html>
