@@ -313,9 +313,6 @@
 }
 
 .agenda-diario__secao-titulo--lista {
-  text-transform: none;
-  font-size: var(--text-sm);
-  color: var(--text-primary);
   cursor: pointer;
 }
 

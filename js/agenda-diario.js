@@ -91,7 +91,7 @@ function montarAgendaDiario(iso) {
       ` : ""}
       ${listas.map((lista) => `
         <div class="agenda-diario__secao">
-          <p class="agenda-diario__secao-titulo agenda-diario__secao-titulo--lista" data-abrir-lista="${lista.id}">${lista.nome}</p>
+          <p class="agenda-diario__secao-titulo agenda-diario__secao-titulo--lista" data-abrir-lista="${lista.id}">Lista ${lista.nome}</p>
           ${lista.itens.map((item) => montarLinhaItemDiario(item, "item", lista.id)).join("")}
         </div>
       `).join("")}
