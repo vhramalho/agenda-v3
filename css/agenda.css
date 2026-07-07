@@ -23,7 +23,7 @@ body[data-page="index"] #js-agenda-lista {
   min-height: 0;
   overflow-y: auto;
   overscroll-behavior-y: contain;
-  padding-bottom: calc(var(--bottom-nav-height) + var(--safe-bottom) + var(--space-6));
+  padding-bottom: calc(var(--bottom-nav-height) + var(--safe-bottom) + var(--space-8));
 }
 
 .agenda-topo {

@@ -431,8 +431,8 @@ function adicionarGestoSwipe(elemento, aoArrastarEsquerda, aoArrastarDireita, ao
     const y = e.touches[0].clientY;
     deltaX = x - inicioX;
     const deltaY = y - inicioY;
-    if (!decidido && (Math.abs(deltaX) > 8 || Math.abs(deltaY) > 8)) {
-      horizontal = Math.abs(deltaX) > Math.abs(deltaY);
+    if (!decidido && (Math.abs(deltaX) > 10 || Math.abs(deltaY) > 10)) {
+      horizontal = Math.abs(deltaX) > Math.abs(deltaY) * 1.5;
       decidido = true;
     }
     if (horizontal) {
