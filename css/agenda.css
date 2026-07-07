@@ -299,12 +299,6 @@
   padding-top: var(--space-2);
 }
 
-.agenda-diario__painel-acoes {
-  display: flex;
-  justify-content: flex-end;
-  margin-bottom: var(--space-2);
-}
-
 .agenda-diario__secao {
   margin-bottom: var(--space-4);
 }
@@ -371,24 +365,6 @@
 .agenda-diario__item-texto--feito {
   color: var(--text-muted);
   text-decoration: line-through;
-}
-
-.agenda-diario__btn-add {
-  width: 28px;
-  height: 28px;
-  border-radius: var(--radius-full);
-  background: var(--primary-soft);
-  color: var(--primary);
-  border: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  cursor: pointer;
-  font-size: var(--text-md);
-  font-weight: 700;
-  line-height: 1;
-  padding: 0;
 }
 
 .agenda-diario__modal-item-row {

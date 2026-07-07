@@ -10,6 +10,7 @@
 let notaDiarioEditandoId = null;
 let tarefaDiarioEditandoId = null;
 let listaDiarioAtualId = null;
+let lembreteDiarioTipoAtual = "nota"; // "nota"|"tarefa"|"lista" — tipo ativo no modal unificado
 let exclusaoDiarioAtual = null; // { tipo: "nota"|"tarefa"|"lista", id }
 let agendaDiarioAberto = false;
 
@@ -76,9 +77,6 @@ function montarAgendaDiario(iso) {
       <svg class="agenda-diario__chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
     </div>
     <div class="agenda-diario__painel">
-      <div class="agenda-diario__painel-acoes">
-        <button type="button" class="agenda-diario__btn-add" id="js-agenda-diario-btn-add" aria-label="Adicionar">+</button>
-      </div>
       ${nota ? `
         <div class="agenda-diario__secao">
           <p class="agenda-diario__secao-titulo">Nota</p>
@@ -97,14 +95,15 @@ function montarAgendaDiario(iso) {
           ${lista.itens.map((item) => montarLinhaItemDiario(item, "item", lista.id)).join("")}
         </div>
       `).join("")}
+      <button type="button" class="text-primary-accent" id="js-agenda-diario-btn-novo" style="font-weight:600;font-size:var(--text-sm);background:none;border:none;text-align:left;padding:0;cursor:pointer;">+ Adicionar novo lembrete</button>
     </div>
   `;
 
   const notaEl = qs("[data-abrir-nota]", container);
-  if (notaEl) notaEl.addEventListener("click", () => abrirEdicaoNotaDiario(nota));
+  if (notaEl) notaEl.addEventListener("click", () => abrirModalLembreteDiario("editar", "nota", nota));
 
   qsa("[data-abrir-lista]", container).forEach((el) => {
-    el.addEventListener("click", () => abrirEdicaoListaDiario(listas.find((l) => l.id === el.dataset.abrirLista)));
+    el.addEventListener("click", () => abrirModalLembreteDiario("editar", "lista", listas.find((l) => l.id === el.dataset.abrirLista)));
   });
 
   qsa("[data-check-tarefa]", container).forEach((el) => {
@@ -114,7 +113,7 @@ function montarAgendaDiario(iso) {
     });
   });
   qsa("[data-texto-tarefa]", container).forEach((el) => {
-    el.addEventListener("click", () => abrirEdicaoTarefaDiario(tarefas.find((t) => t.id === el.dataset.textoTarefa)));
+    el.addEventListener("click", () => abrirModalLembreteDiario("editar", "tarefa", tarefas.find((t) => t.id === el.dataset.textoTarefa)));
   });
 
   qsa("[data-check-item]", container).forEach((el) => {
@@ -124,7 +123,7 @@ function montarAgendaDiario(iso) {
     });
   });
   qsa("[data-texto-item]", container).forEach((el) => {
-    el.addEventListener("click", () => abrirEdicaoListaDiario(listas.find((l) => l.id === el.dataset.listaId)));
+    el.addEventListener("click", () => abrirModalLembreteDiario("editar", "lista", listas.find((l) => l.id === el.dataset.listaId)));
   });
 
   qs(".agenda-diario__cabecalho", container).addEventListener("click", () => {
@@ -132,7 +131,7 @@ function montarAgendaDiario(iso) {
     container.classList.toggle("is-aberto", agendaDiarioAberto);
   });
 
-  qs("#js-agenda-diario-btn-add", container).addEventListener("click", () => abrirModal("modal-agenda-diario-add"));
+  qs("#js-agenda-diario-btn-novo", container).addEventListener("click", () => abrirModalLembreteDiario("novo", "nota", null));
 }
 
 function montarLinhaItemDiario(item, tipo, listaId) {
@@ -171,36 +170,7 @@ function alternarFeitoItemListaDiario(listaId, itemId) {
   montarAgendaDiario(dataSelecionada);
 }
 
-/* ---------- Nota ---------- */
-function prepararNotaDiario() {
-  const existente = obterNotaDoDiaDiario(dataSelecionada);
-  abrirEdicaoNotaDiario(existente);
-}
-function abrirEdicaoNotaDiario(nota) {
-  notaDiarioEditandoId = nota ? nota.id : null;
-  qs("#js-agenda-diario-nota-titulo").textContent = nota ? "Editar anotação" : "Anotação do dia";
-  qs("#js-agenda-diario-nota-texto").value = nota ? nota.texto : "";
-  qs("#js-agenda-diario-nota-excluir").classList.toggle("is-hidden", !nota);
-  abrirModal("modal-agenda-diario-nota");
-}
-
-/* ---------- Tarefa ---------- */
-function prepararNovaTarefaDiario() {
-  tarefaDiarioEditandoId = null;
-  qs("#js-agenda-diario-tarefa-titulo").textContent = "Tarefa";
-  qs("#js-agenda-diario-tarefa-texto").value = "";
-  qs("#js-agenda-diario-tarefa-excluir").classList.add("is-hidden");
-}
-function abrirEdicaoTarefaDiario(tarefa) {
-  if (!tarefa) return;
-  tarefaDiarioEditandoId = tarefa.id;
-  qs("#js-agenda-diario-tarefa-titulo").textContent = "Editar tarefa";
-  qs("#js-agenda-diario-tarefa-texto").value = tarefa.texto;
-  qs("#js-agenda-diario-tarefa-excluir").classList.remove("is-hidden");
-  abrirModal("modal-agenda-diario-tarefa");
-}
-
-/* ---------- Lista (nome + itens editados juntos, no mesmo modal) ---------- */
+/* ---------- Modal único "Novo lembrete" / edição (Nota, Tarefa ou Lista) ---------- */
 function linhaItemListaModal(texto, itemId) {
   const row = document.createElement("div");
   row.className = "agenda-diario__modal-item-row";
@@ -212,26 +182,102 @@ function linhaItemListaModal(texto, itemId) {
   row.querySelector(".agenda-diario__modal-item-remover").addEventListener("click", () => row.remove());
   return row;
 }
-function prepararNovaListaDiario() {
-  listaDiarioAtualId = null;
-  qs("#js-agenda-diario-lista-titulo").textContent = "Nova lista";
-  qs("#js-agenda-diario-lista-nome").value = "";
-  qs("#js-agenda-diario-lista-excluir").classList.add("is-hidden");
-  const itensEl = qs("#js-agenda-diario-lista-itens");
-  itensEl.innerHTML = "";
-  itensEl.appendChild(linhaItemListaModal("", null));
+
+function selecionarTipoLembreteDiario(tipo) {
+  lembreteDiarioTipoAtual = tipo;
+  qsa("[data-tipo-lembrete]").forEach((chip) => chip.classList.toggle("chip--ativo", chip.dataset.tipoLembrete === tipo));
+  qsa("[data-campo-lembrete]").forEach((campo) => campo.classList.toggle("is-hidden", campo.dataset.campoLembrete !== tipo));
 }
-function abrirEdicaoListaDiario(lista) {
-  if (!lista) return;
-  listaDiarioAtualId = lista.id;
-  qs("#js-agenda-diario-lista-titulo").textContent = "Editar lista";
-  qs("#js-agenda-diario-lista-nome").value = lista.nome;
-  qs("#js-agenda-diario-lista-excluir").classList.remove("is-hidden");
-  const itensEl = qs("#js-agenda-diario-lista-itens");
+
+function abrirModalLembreteDiario(modo, tipo, dados) {
+  notaDiarioEditandoId = null;
+  tarefaDiarioEditandoId = null;
+  listaDiarioAtualId = null;
+
+  const nomePorTipo = { nota: "nota", tarefa: "tarefa", lista: "lista" };
+  qs("#js-agenda-diario-lembrete-titulo").textContent = modo === "novo" ? "Novo lembrete" : `Editar ${nomePorTipo[tipo]}`;
+  qs("#js-agenda-diario-lembrete-tipo-wrap").classList.toggle("is-hidden", modo === "editar");
+  selecionarTipoLembreteDiario(tipo);
+
+  qs("#js-agenda-diario-lembrete-nota-texto").value = tipo === "nota" && dados ? dados.texto : "";
+  qs("#js-agenda-diario-lembrete-tarefa-texto").value = tipo === "tarefa" && dados ? dados.texto : "";
+  qs("#js-agenda-diario-lembrete-lista-nome").value = tipo === "lista" && dados ? dados.nome : "";
+
+  const itensEl = qs("#js-agenda-diario-lembrete-lista-itens");
   itensEl.innerHTML = "";
-  lista.itens.forEach((item) => itensEl.appendChild(linhaItemListaModal(item.texto, item.id)));
-  if (lista.itens.length === 0) itensEl.appendChild(linhaItemListaModal("", null));
-  abrirModal("modal-agenda-diario-lista");
+  const itensLista = (tipo === "lista" && dados && dados.itens) || [];
+  itensLista.forEach((item) => itensEl.appendChild(linhaItemListaModal(item.texto, item.id)));
+  if (itensLista.length === 0) itensEl.appendChild(linhaItemListaModal("", null));
+
+  if (modo === "editar") {
+    if (tipo === "nota") notaDiarioEditandoId = dados.id;
+    if (tipo === "tarefa") tarefaDiarioEditandoId = dados.id;
+    if (tipo === "lista") listaDiarioAtualId = dados.id;
+  }
+
+  qs("#js-agenda-diario-lembrete-excluir").classList.toggle("is-hidden", modo === "novo");
+  abrirModal("modal-agenda-diario-lembrete");
+}
+
+function salvarLembreteDiario() {
+  const tipo = lembreteDiarioTipoAtual;
+
+  if (tipo === "nota") {
+    const texto = qs("#js-agenda-diario-lembrete-nota-texto").value.trim();
+    if (!texto) return;
+    const lista = obterNotasDiarias();
+    const existente = notaDiarioEditandoId
+      ? lista.find((n) => n.id === notaDiarioEditandoId)
+      : lista.find((n) => n.dataIso === dataSelecionada); // evita duplicar a nota do dia mesmo criando pelo "+"
+    if (existente) existente.texto = texto;
+    else lista.push({ id: gerarId("nota"), dataIso: dataSelecionada, texto });
+    salvarNotasDiarias(lista);
+  } else if (tipo === "tarefa") {
+    const texto = qs("#js-agenda-diario-lembrete-tarefa-texto").value.trim();
+    if (!texto) return;
+    const lista = obterTarefasDiarias();
+    if (tarefaDiarioEditandoId) {
+      const item = lista.find((t) => t.id === tarefaDiarioEditandoId);
+      if (item) item.texto = texto;
+    } else {
+      lista.push({ id: gerarId("tarefa"), dataIso: dataSelecionada, texto, feito: false });
+    }
+    salvarTarefasDiarias(lista);
+  } else if (tipo === "lista") {
+    const nome = qs("#js-agenda-diario-lembrete-lista-nome").value.trim();
+    if (!nome) return;
+    const itensExistentesPorId = {};
+    if (listaDiarioAtualId) {
+      const atual = obterListasDiarias().find((l) => l.id === listaDiarioAtualId);
+      if (atual) atual.itens.forEach((item) => { itensExistentesPorId[item.id] = item; });
+    }
+    const itens = qsa("#js-agenda-diario-lembrete-lista-itens > div").map((row) => {
+      const texto = row.querySelector("input").value.trim();
+      if (!texto) return null;
+      const existente = row.dataset.itemId && itensExistentesPorId[row.dataset.itemId];
+      return existente ? { ...existente, texto } : { id: gerarId("item"), texto, feito: false };
+    }).filter(Boolean);
+
+    const listas = obterListasDiarias();
+    if (listaDiarioAtualId) {
+      const existente = listas.find((l) => l.id === listaDiarioAtualId);
+      if (existente) { existente.nome = nome; existente.itens = itens; }
+    } else {
+      listas.push({ id: gerarId("lista"), dataIso: dataSelecionada, nome, itens });
+    }
+    salvarListasDiarias(listas);
+  }
+
+  fecharModal("modal-agenda-diario-lembrete");
+  mostrarSucesso();
+  montarAgendaDiario(dataSelecionada);
+}
+
+function excluirLembreteDiario() {
+  const tipo = lembreteDiarioTipoAtual;
+  if (tipo === "nota" && notaDiarioEditandoId) pedirConfirmacaoExclusaoDiario({ tipo: "nota", id: notaDiarioEditandoId }, "Excluir anotação?");
+  else if (tipo === "tarefa" && tarefaDiarioEditandoId) pedirConfirmacaoExclusaoDiario({ tipo: "tarefa", id: tarefaDiarioEditandoId }, "Excluir tarefa?");
+  else if (tipo === "lista" && listaDiarioAtualId) pedirConfirmacaoExclusaoDiario({ tipo: "lista", id: listaDiarioAtualId }, "Excluir lista e todos os itens dela?");
 }
 
 /* ---------- Exclusão (modal de confirmação compartilhado) ---------- */
@@ -255,89 +301,19 @@ function executarExclusaoDiario() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  qs('#modal-agenda-diario-add [data-trocar-modal="modal-agenda-diario-nota"]').addEventListener("click", prepararNotaDiario);
-  qs('#modal-agenda-diario-add [data-trocar-modal="modal-agenda-diario-tarefa"]').addEventListener("click", prepararNovaTarefaDiario);
-  qs('#modal-agenda-diario-add [data-trocar-modal="modal-agenda-diario-lista"]').addEventListener("click", prepararNovaListaDiario);
-
-  qs("#js-agenda-diario-nota-salvar").addEventListener("click", () => {
-    const texto = qs("#js-agenda-diario-nota-texto").value.trim();
-    if (!texto) return;
-    const lista = obterNotasDiarias();
-    if (notaDiarioEditandoId) {
-      const existente = lista.find((n) => n.id === notaDiarioEditandoId);
-      if (existente) existente.texto = texto;
-    } else {
-      lista.push({ id: gerarId("nota"), dataIso: dataSelecionada, texto });
-    }
-    salvarNotasDiarias(lista);
-    fecharModal("modal-agenda-diario-nota");
-    mostrarSucesso();
-    montarAgendaDiario(dataSelecionada);
-  });
-  qs("#js-agenda-diario-nota-excluir").addEventListener("click", () => {
-    if (!notaDiarioEditandoId) return;
-    pedirConfirmacaoExclusaoDiario({ tipo: "nota", id: notaDiarioEditandoId }, "Excluir anotação?");
+  qsa("[data-tipo-lembrete]").forEach((chip) => {
+    chip.addEventListener("click", () => selecionarTipoLembreteDiario(chip.dataset.tipoLembrete));
   });
 
-  qs("#js-agenda-diario-tarefa-salvar").addEventListener("click", () => {
-    const texto = qs("#js-agenda-diario-tarefa-texto").value.trim();
-    if (!texto) return;
-    const lista = obterTarefasDiarias();
-    if (tarefaDiarioEditandoId) {
-      const item = lista.find((t) => t.id === tarefaDiarioEditandoId);
-      if (item) item.texto = texto;
-    } else {
-      lista.push({ id: gerarId("tarefa"), dataIso: dataSelecionada, texto, feito: false });
-    }
-    salvarTarefasDiarias(lista);
-    fecharModal("modal-agenda-diario-tarefa");
-    mostrarSucesso();
-    montarAgendaDiario(dataSelecionada);
-  });
-  qs("#js-agenda-diario-tarefa-excluir").addEventListener("click", () => {
-    if (!tarefaDiarioEditandoId) return;
-    pedirConfirmacaoExclusaoDiario({ tipo: "tarefa", id: tarefaDiarioEditandoId }, "Excluir tarefa?");
-  });
-
-  qs("#js-agenda-diario-lista-item-add").addEventListener("click", () => {
-    const itensEl = qs("#js-agenda-diario-lista-itens");
+  qs("#js-agenda-diario-lembrete-lista-item-add").addEventListener("click", () => {
+    const itensEl = qs("#js-agenda-diario-lembrete-lista-itens");
     const row = linhaItemListaModal("", null);
     itensEl.appendChild(row);
     row.querySelector("input").focus();
   });
 
-  qs("#js-agenda-diario-lista-salvar").addEventListener("click", () => {
-    const nome = qs("#js-agenda-diario-lista-nome").value.trim();
-    if (!nome) return;
-
-    const itensExistentesPorId = {};
-    if (listaDiarioAtualId) {
-      const atual = obterListasDiarias().find((l) => l.id === listaDiarioAtualId);
-      if (atual) atual.itens.forEach((item) => { itensExistentesPorId[item.id] = item; });
-    }
-    const itens = qsa("#js-agenda-diario-lista-itens > div").map((row) => {
-      const texto = row.querySelector("input").value.trim();
-      if (!texto) return null;
-      const existente = row.dataset.itemId && itensExistentesPorId[row.dataset.itemId];
-      return existente ? { ...existente, texto } : { id: gerarId("item"), texto, feito: false };
-    }).filter(Boolean);
-
-    const listas = obterListasDiarias();
-    if (listaDiarioAtualId) {
-      const existente = listas.find((l) => l.id === listaDiarioAtualId);
-      if (existente) { existente.nome = nome; existente.itens = itens; }
-    } else {
-      listas.push({ id: gerarId("lista"), dataIso: dataSelecionada, nome, itens });
-    }
-    salvarListasDiarias(listas);
-    fecharModal("modal-agenda-diario-lista");
-    mostrarSucesso();
-    montarAgendaDiario(dataSelecionada);
-  });
-  qs("#js-agenda-diario-lista-excluir").addEventListener("click", () => {
-    if (!listaDiarioAtualId) return;
-    pedirConfirmacaoExclusaoDiario({ tipo: "lista", id: listaDiarioAtualId }, "Excluir lista e todos os itens dela?");
-  });
+  qs("#js-agenda-diario-lembrete-salvar").addEventListener("click", salvarLembreteDiario);
+  qs("#js-agenda-diario-lembrete-excluir").addEventListener("click", excluirLembreteDiario);
 
   qs("#js-agenda-diario-confirmar-exclusao-btn").addEventListener("click", executarExclusaoDiario);
 });
