@@ -32,6 +32,15 @@ function formatarDataLonga(iso) {
   return `${dias[d.getDay()]}, ${String(d.getDate()).padStart(2, "0")} ${meses[d.getMonth()]}`;
 }
 
+/* Formato específico da mensagem de Compartilhar horários no WhatsApp
+   (ver "Novo modelo de mensagem" §12 no MASTER_CONTEXT.md) — dia da
+   semana por extenso + DD/MM, ex.: "Terça-feira 14/07". */
+function formatarDataWhatsapp(iso) {
+  const d = isoParaDate(iso);
+  const dias = ["Domingo", "Segunda-feira", "Terça-feira", "Quarta-feira", "Quinta-feira", "Sexta-feira", "Sábado"];
+  return `${dias[d.getDay()]} ${String(d.getDate()).padStart(2, "0")}/${String(d.getMonth() + 1).padStart(2, "0")}`;
+}
+
 function somarDias(iso, n) {
   const d = isoParaDate(iso);
   d.setDate(d.getDate() + n);
@@ -1303,12 +1312,15 @@ document.addEventListener("DOMContentLoaded", () => {
       const sobras = resultado.sobras;
       const encaixes = Array.from(new Set([...todosEncaixesDoDia(iso), ...sobras])).sort();
 
-      const blocos = [];
-      if (mostrarLivre && livres.length > 0) blocos.push(livres.join(", "));
-      if (mostrarEncaixe && encaixes.length > 0) blocos.push(`Possíveis encaixes: ${encaixes.join(", ")}`);
-      if (blocos.length > 0) {
-        mensagem += `\n\n*${formatarDataLonga(iso)}*\n${blocos.join("\n")}`;
+      const linhas = [];
+      if (mostrarLivre && livres.length > 0) linhas.push(...livres);
+      if (mostrarEncaixe && encaixes.length > 0) {
+        linhas.push("*Encaixes possíveis:*");
+        linhas.push(...encaixes);
       }
+
+      mensagem += `\n\n${formatarDataWhatsapp(iso)}\n`;
+      mensagem += linhas.length > 0 ? linhas.join("\n") : "(Sem horários disponíveis)";
     });
     window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(mensagem)}`, "_blank");
     fecharModal("modal-compartilhar-whatsapp");
