@@ -576,6 +576,14 @@ function abrirHorarioRealizado(agendamento) {
   agendamentoModalAtual = agendamento;
   qs("#js-realizado-nome").textContent = agendamento.nomeCliente;
   qs("#js-realizado-info").textContent = `${agendamento.hora} · ${nomesServicosPorIds(agendamento.servicosIds) || "—"}`;
+  const vendaInfo = qs("#js-realizado-venda-info");
+  const venda = agendamento.vendaId ? obterVendas().find((v) => v.id === agendamento.vendaId) : null;
+  if (venda) {
+    vendaInfo.textContent = textoResumoVenda(venda);
+    vendaInfo.classList.remove("is-hidden");
+  } else {
+    vendaInfo.classList.add("is-hidden");
+  }
   abrirModal("modal-horario-realizado");
 }
 
@@ -857,10 +865,14 @@ function prepararFinalizarAtendimento(agendamento) {
   qs("#js-finalizar-valor-pendente").value = "";
 }
 
+function textoResumoVenda(venda) {
+  const statusTexto = venda.status === "paga" ? "Pago" : "Pendente";
+  return `🛒 ${venda.itens.length} ite${venda.itens.length === 1 ? "m" : "ns"} — ${formatarMoeda(venda.valorTotal)} — ${statusTexto}`;
+}
+
 function mostrarResumoVendaFinalizar(venda) {
   vendaAnexadaId = venda.id;
-  const statusTexto = venda.status === "paga" ? "Pago" : "Pendente";
-  qs("#js-finalizar-venda-resumo-texto").textContent = `🛒 ${venda.itens.length} ite${venda.itens.length === 1 ? "m" : "ns"} — ${formatarMoeda(venda.valorTotal)} — ${statusTexto}`;
+  qs("#js-finalizar-venda-resumo-texto").textContent = textoResumoVenda(venda);
   qs("#js-finalizar-venda-toggle").classList.add("is-hidden");
   qs("#js-finalizar-venda-resumo").classList.remove("is-hidden");
 }
@@ -889,10 +901,29 @@ function definirPagoEditarRealizado(pago) {
   qs("#js-editar-realizado-campo-pendente").classList.toggle("is-hidden", pago);
 }
 
+function mostrarResumoVendaEditarRealizado(venda) {
+  vendaAnexadaId = venda.id;
+  qs("#js-editar-realizado-venda-resumo-texto").textContent = textoResumoVenda(venda);
+  qs("#js-editar-realizado-venda-toggle").classList.add("is-hidden");
+  qs("#js-editar-realizado-venda-resumo").classList.remove("is-hidden");
+}
+
+function ocultarResumoVendaEditarRealizado() {
+  qs("#js-editar-realizado-venda-toggle").classList.remove("is-hidden");
+  qs("#js-editar-realizado-venda-resumo").classList.add("is-hidden");
+}
+
 function prepararEditarRealizado(agendamento) {
   prepararClientePicker("js-editar-realizado", agendamento.clienteId || null, agendamento.nomeCliente);
   montarServicosChips("js-editar-realizado-servicos", agendamento.servicosIds || []);
   prepararObservacaoWrap("js-editar-realizado-observacao", "js-editar-realizado-observacao-toggle", agendamento.observacao || "");
+  const vendaExistente = agendamento.vendaId ? obterVendas().find((v) => v.id === agendamento.vendaId) : null;
+  if (vendaExistente) {
+    mostrarResumoVendaEditarRealizado(vendaExistente);
+  } else {
+    vendaAnexadaId = null;
+    ocultarResumoVendaEditarRealizado();
+  }
   const pago = agendamento.status === "realizado_pago";
   definirPagoEditarRealizado(pago);
   if (pago) {
@@ -1226,6 +1257,28 @@ document.addEventListener("DOMContentLoaded", () => {
     definirPagoEditarRealizado(botao.dataset.pagoEditar === "sim");
   });
 
+  qs("#js-editar-realizado-venda-toggle").addEventListener("click", () => {
+    const agendamento = agendamentoModalAtual;
+    if (!agendamento) return;
+    fecharModal("modal-editar-realizado");
+    prepararNovaVenda(
+      { clienteId: agendamento.clienteId, nomeCliente: agendamento.nomeCliente, agendamentoId: agendamento.id },
+      (venda) => {
+        fecharModal("modal-nova-venda");
+        abrirModal("modal-editar-realizado");
+        mostrarResumoVendaEditarRealizado(venda);
+      },
+      () => abrirModal("modal-editar-realizado")
+    );
+    abrirModal("modal-nova-venda");
+  });
+
+  qs("#js-editar-realizado-venda-remover").addEventListener("click", () => {
+    if (vendaAnexadaId) removerVendaAnexada(vendaAnexadaId);
+    vendaAnexadaId = null;
+    ocultarResumoVendaEditarRealizado();
+  });
+
   qs("#js-editar-realizado-salvar").addEventListener("click", () => {
     const agendamento = agendamentoModalAtual;
     if (!agendamento) return;
@@ -1256,6 +1309,8 @@ document.addEventListener("DOMContentLoaded", () => {
       ag.valorTotal = valorPendente;
       delete ag.pagamentos;
     }
+    if (vendaAnexadaId) ag.vendaId = vendaAnexadaId;
+    else delete ag.vendaId;
     salvarAgendamentos(lista);
     fecharModal("modal-editar-realizado");
     renderizarAgendaLista();
@@ -1264,7 +1319,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   qs("#js-confirmar-exclusao-realizado").addEventListener("click", () => {
     if (!agendamentoModalAtual) return;
-    salvarAgendamentos(obterAgendamentos().filter((a) => a.id !== agendamentoModalAtual.id));
+    const lista = obterAgendamentos();
+    const ag = lista.find((a) => a.id === agendamentoModalAtual.id);
+    if (ag && ag.vendaId) removerVendaAnexada(ag.vendaId);
+    salvarAgendamentos(lista.filter((a) => a.id !== agendamentoModalAtual.id));
     fecharModal("modal-confirmar-exclusao-realizado");
     fecharModal("modal-horario-realizado");
     renderizarAgendaLista();

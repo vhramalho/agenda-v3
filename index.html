@@ -4,11 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Agenda — Agenda V3</title>
-  <link rel="stylesheet" href="css/tokens.css?v=20260706aj" />
-  <link rel="stylesheet" href="css/base.css?v=20260706aj" />
-  <link rel="stylesheet" href="css/layout.css?v=20260706aj" />
-  <link rel="stylesheet" href="css/components.css?v=20260706aj" />
-  <link rel="stylesheet" href="css/agenda.css?v=20260706aj" />
+  <link rel="stylesheet" href="css/tokens.css?v=20260706ak" />
+  <link rel="stylesheet" href="css/base.css?v=20260706ak" />
+  <link rel="stylesheet" href="css/layout.css?v=20260706ak" />
+  <link rel="stylesheet" href="css/components.css?v=20260706ak" />
+  <link rel="stylesheet" href="css/agenda.css?v=20260706ak" />
 </head>
 <body data-page="index">
   <div class="app">
@@ -285,6 +285,7 @@
             <p class="text-secondary" id="js-realizado-info"></p>
           </div>
         </div>
+        <p class="text-secondary is-hidden" id="js-realizado-venda-info" style="margin-top:-12px;margin-bottom:16px;"></p>
         <div class="stack">
           <button class="btn btn--primary" id="js-btn-editar-realizado">Editar realizado</button>
           <button class="btn btn--danger" data-trocar-modal="modal-confirmar-exclusao-realizado">Excluir realizado</button>
@@ -329,6 +330,13 @@
         <div class="field">
           <button type="button" id="js-editar-realizado-observacao-toggle" class="text-primary-accent" style="font-weight:600;font-size:var(--text-sm);background:none;border:none;text-align:left;padding:0;cursor:pointer;">+ Adicionar observação</button>
           <textarea class="textarea is-hidden" id="js-editar-realizado-observacao"></textarea>
+        </div>
+        <div class="field">
+          <button type="button" id="js-editar-realizado-venda-toggle" class="text-primary-accent" style="font-weight:600;font-size:var(--text-sm);background:none;border:none;text-align:left;padding:0;cursor:pointer;">+ Vendeu algo pra esse cliente?</button>
+          <div class="row row--between is-hidden" id="js-editar-realizado-venda-resumo">
+            <p class="text-secondary" id="js-editar-realizado-venda-resumo-texto" style="cursor:pointer;"></p>
+            <button type="button" class="icon-btn" id="js-editar-realizado-venda-remover" aria-label="Remover venda" style="width:28px;height:28px;flex-shrink:0;">✕</button>
+          </div>
         </div>
         <div class="field">
           <label class="field__label">Foi pago?</label>
@@ -464,17 +472,17 @@
     </div>
   </div>
 
-  <script src="js/utils.js?v=20260706aj"></script>
-  <script src="js/menu.js?v=20260706aj"></script>
-  <script src="js/storage.js?v=20260706aj"></script>
-  <script src="js/tema.js?v=20260706aj"></script>
-  <script src="js/app.js?v=20260706aj"></script>
-  <script src="js/chips.js?v=20260706aj"></script>
-  <script src="js/modal.js?v=20260706aj"></script>
-  <script src="js/calendario.js?v=20260706aj"></script>
-  <script src="js/acoes-simuladas.js?v=20260706aj"></script>
-  <script src="js/vendas.js?v=20260706aj"></script>
-  <script src="js/agenda.js?v=20260706aj"></script>
-  <script src="js/agenda-diario.js?v=20260706aj"></script>
+  <script src="js/utils.js?v=20260706ak"></script>
+  <script src="js/menu.js?v=20260706ak"></script>
+  <script src="js/storage.js?v=20260706ak"></script>
+  <script src="js/tema.js?v=20260706ak"></script>
+  <script src="js/app.js?v=20260706ak"></script>
+  <script src="js/chips.js?v=20260706ak"></script>
+  <script src="js/modal.js?v=20260706ak"></script>
+  <script src="js/calendario.js?v=20260706ak"></script>
+  <script src="js/acoes-simuladas.js?v=20260706ak"></script>
+  <script src="js/vendas.js?v=20260706ak"></script>
+  <script src="js/agenda.js?v=20260706ak"></script>
+  <script src="js/agenda-diario.js?v=20260706ak"></script>
 </body>
 </html>
