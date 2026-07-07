@@ -1294,35 +1294,55 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     inicializarGrupoChips(container, true);
     montarDuracaoChips("js-whatsapp-duracao", null);
+    atualizarPreviaWhatsapp();
     abrirModal("modal-compartilhar-whatsapp");
+  });
+
+  [qs("#js-whatsapp-dias"), qs("#js-whatsapp-duracao"), qs("#js-whatsapp-mostrar")].forEach((container) => {
+    container.addEventListener("click", (e) => {
+      if (e.target.closest(".chip")) atualizarPreviaWhatsapp();
+    });
   });
 
   qs("#js-whatsapp-enviar").addEventListener("click", () => {
     const diasSelecionados = qsa(".chip--ativo", qs("#js-whatsapp-dias")).map((c) => c.dataset.iso);
     if (diasSelecionados.length === 0) return;
-    const duracao = duracaoSelecionada("js-whatsapp-duracao");
-    const mostrarValores = qsa(".chip--ativo", qs("#js-whatsapp-mostrar")).map((c) => c.dataset.valor);
-    const mostrarLivre = mostrarValores.includes("livre");
-    const mostrarEncaixe = mostrarValores.includes("encaixe");
-    const whatsapp = obterWhatsapp();
-    let mensagem = substituirPlaceholders(whatsapp.mensagemHorarios || "Horários disponíveis:");
-    diasSelecionados.sort().forEach((iso) => {
-      const resultado = calcularLivresEsobrasDoDia(iso, duracao);
-      const livres = resultado.compartilhaveis;
-      const sobras = resultado.sobras;
-      const encaixes = Array.from(new Set([...todosEncaixesDoDia(iso), ...sobras])).sort();
-
-      const linhas = [];
-      if (mostrarLivre && livres.length > 0) linhas.push(...livres);
-      if (mostrarEncaixe && encaixes.length > 0) {
-        linhas.push("*Encaixes possíveis:");
-        linhas.push(...encaixes);
-      }
-
-      mensagem += `\n\n${formatarDataWhatsapp(iso)}\n`;
-      mensagem += linhas.length > 0 ? linhas.join("\n") : "(Sem horários disponíveis)";
-    });
+    const mensagem = qs("#js-whatsapp-previa").value.trim();
     window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(mensagem)}`, "_blank");
     fecharModal("modal-compartilhar-whatsapp");
   });
 });
+
+function montarMensagemHorarios() {
+  const diasSelecionados = qsa(".chip--ativo", qs("#js-whatsapp-dias")).map((c) => c.dataset.iso);
+  if (diasSelecionados.length === 0) return "";
+  const duracao = duracaoSelecionada("js-whatsapp-duracao");
+  const mostrarValores = qsa(".chip--ativo", qs("#js-whatsapp-mostrar")).map((c) => c.dataset.valor);
+  const mostrarLivre = mostrarValores.includes("livre");
+  const mostrarEncaixe = mostrarValores.includes("encaixe");
+  const whatsapp = obterWhatsapp();
+  let mensagem = substituirPlaceholders(whatsapp.mensagemHorarios || "Horários disponíveis:");
+  diasSelecionados.sort().forEach((iso) => {
+    const resultado = calcularLivresEsobrasDoDia(iso, duracao);
+    const livres = resultado.compartilhaveis;
+    const sobras = resultado.sobras;
+    const encaixes = Array.from(new Set([...todosEncaixesDoDia(iso), ...sobras])).sort();
+
+    const linhas = [];
+    if (mostrarLivre && livres.length > 0) linhas.push(...livres);
+    if (mostrarEncaixe && encaixes.length > 0) {
+      linhas.push("*Encaixes possíveis:");
+      linhas.push(...encaixes);
+    }
+
+    mensagem += `\n\n${formatarDataWhatsapp(iso)}\n`;
+    mensagem += linhas.length > 0 ? linhas.join("\n") : "(Sem horários disponíveis)";
+  });
+  return mensagem;
+}
+
+function atualizarPreviaWhatsapp() {
+  const previa = qs("#js-whatsapp-previa");
+  if (!previa) return;
+  previa.value = montarMensagemHorarios();
+}
