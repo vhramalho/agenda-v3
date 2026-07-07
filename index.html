@@ -4,11 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Agenda — Agenda V3</title>
-  <link rel="stylesheet" href="css/tokens.css?v=20260706am" />
-  <link rel="stylesheet" href="css/base.css?v=20260706am" />
-  <link rel="stylesheet" href="css/layout.css?v=20260706am" />
-  <link rel="stylesheet" href="css/components.css?v=20260706am" />
-  <link rel="stylesheet" href="css/agenda.css?v=20260706am" />
+  <link rel="stylesheet" href="css/tokens.css?v=20260706an" />
+  <link rel="stylesheet" href="css/base.css?v=20260706an" />
+  <link rel="stylesheet" href="css/layout.css?v=20260706an" />
+  <link rel="stylesheet" href="css/components.css?v=20260706an" />
+  <link rel="stylesheet" href="css/agenda.css?v=20260706an" />
 </head>
 <body data-page="index">
   <div class="app">
@@ -222,51 +222,63 @@
     <div class="modal-overlay is-hidden" id="modal-finalizar-atendimento">
       <div class="modal-sheet">
         <p class="modal-sheet__title">Finalizar atendimento</p>
-        <div class="field" style="position:relative;" id="js-finalizar-nome-wrap">
-          <label class="field__label">Nome do cliente</label>
-          <input class="input" placeholder="Buscar ou digitar nome" id="js-finalizar-nome" />
-          <div class="card is-hidden" id="js-finalizar-resultados" style="position:absolute;top:100%;left:0;z-index:5;width:100%;max-height:150px;overflow-y:auto;margin-top:4px;padding:4px 12px;"></div>
-        </div>
+        <div class="card" style="margin-bottom:16px;">
+          <div class="field" style="position:relative;margin-bottom:0;" id="js-finalizar-nome-wrap">
+            <label class="field__label">Nome do cliente</label>
+            <input class="input" placeholder="Buscar ou digitar nome" id="js-finalizar-nome" />
+            <div class="card is-hidden" id="js-finalizar-resultados" style="position:absolute;top:100%;left:0;z-index:5;width:100%;max-height:150px;overflow-y:auto;margin-top:4px;padding:4px 12px;"></div>
+          </div>
 
-        <div class="card is-hidden" id="js-finalizar-cliente-card" style="margin-bottom:16px;">
-          <div class="row" style="align-items:flex-start;gap:10px;">
-            <div class="list-item__avatar list-item__avatar--lg" id="js-finalizar-cliente-avatar"></div>
-            <div style="flex:1;min-width:0;">
-              <p style="font-weight:700;font-size:var(--text-base);" id="js-finalizar-cliente-nome"></p>
-              <p class="text-secondary" style="font-size:var(--text-sm);" id="js-finalizar-cliente-info"></p>
+          <div class="is-hidden" id="js-finalizar-cliente-card">
+            <div class="row" style="align-items:flex-start;gap:10px;">
+              <div class="list-item__avatar list-item__avatar--lg" id="js-finalizar-cliente-avatar"></div>
+              <div style="flex:1;min-width:0;">
+                <p style="font-weight:700;font-size:var(--text-base);" id="js-finalizar-cliente-nome"></p>
+                <p class="text-secondary" style="font-size:var(--text-sm);" id="js-finalizar-cliente-info"></p>
+              </div>
+              <div class="row" style="gap:6px;flex-shrink:0;">
+                <button type="button" id="js-finalizar-observacao-toggle" class="icon-btn" aria-label="Observação">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v12H7l-3 3V4z"/></svg>
+                  <span class="icon-btn__dot is-hidden" id="js-finalizar-observacao-dot"></span>
+                </button>
+                <button type="button" id="js-finalizar-venda-toggle" class="icon-btn" aria-label="Vendeu algo pra esse cliente?">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6h15l-1.5 9h-12z"/><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/></svg>
+                </button>
+                <button type="button" id="js-finalizar-cliente-remover" class="icon-btn" aria-label="Remover seleção">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                </button>
+              </div>
             </div>
-            <div class="row" style="gap:6px;flex-shrink:0;">
-              <button type="button" id="js-finalizar-observacao-toggle" class="icon-btn" aria-label="Observação">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v12H7l-3 3V4z"/></svg>
-                <span class="icon-btn__dot is-hidden" id="js-finalizar-observacao-dot"></span>
-              </button>
-              <button type="button" id="js-finalizar-venda-toggle" class="icon-btn" aria-label="Vendeu algo pra esse cliente?">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6h15l-1.5 9h-12z"/><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/></svg>
-              </button>
-              <button type="button" id="js-finalizar-cliente-remover" class="icon-btn" aria-label="Remover seleção">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
-              </button>
+            <textarea class="textarea is-hidden" placeholder="Como foi o atendimento?" id="js-finalizar-observacao" style="margin-top:12px;"></textarea>
+            <div class="row row--between is-hidden" id="js-finalizar-venda-resumo" style="margin-top:12px;">
+              <p class="text-secondary" id="js-finalizar-venda-resumo-texto" style="cursor:pointer;"></p>
+              <button type="button" class="icon-btn" id="js-finalizar-venda-remover" aria-label="Remover venda" style="width:28px;height:28px;flex-shrink:0;">✕</button>
             </div>
           </div>
-          <div class="chip-group" data-chips="multi" id="js-finalizar-servicos" style="margin-top:12px;"></div>
-          <textarea class="textarea is-hidden" placeholder="Como foi o atendimento?" id="js-finalizar-observacao" style="margin-top:12px;"></textarea>
-          <div class="row row--between is-hidden" id="js-finalizar-venda-resumo" style="margin-top:12px;">
-            <p class="text-secondary" id="js-finalizar-venda-resumo-texto" style="cursor:pointer;"></p>
-            <button type="button" class="icon-btn" id="js-finalizar-venda-remover" aria-label="Remover venda" style="width:28px;height:28px;flex-shrink:0;">✕</button>
-          </div>
-        </div>
 
-        <div class="field is-hidden" id="js-finalizar-cadastro-wrap" style="margin-top:-8px;">
-          <button type="button" id="js-finalizar-cadastro-toggle" class="text-primary-accent" style="font-weight:600;font-size:var(--text-sm);background:none;border:none;text-align:left;padding:0;cursor:pointer;">+ Completar cadastro</button>
+          <div class="field is-hidden" id="js-finalizar-cadastro-wrap" style="margin-top:12px;margin-bottom:0;">
+            <button type="button" id="js-finalizar-cadastro-toggle" class="text-primary-accent" style="font-weight:600;font-size:var(--text-sm);background:none;border:none;text-align:left;padding:0;cursor:pointer;">+ Completar cadastro</button>
+          </div>
         </div>
 
         <div class="field">
-          <label class="field__label">Como foi pago?</label>
-          <div class="chip-group" id="js-finalizar-formas"></div>
-          <div class="stack" data-linhas-pagamento style="margin-top:12px;gap:8px;" id="js-finalizar-linhas-pagamento"></div>
-          <span class="pendente-pill" id="js-finalizar-pendente-toggle">Ficou pendente</span>
+          <label class="field__label">Serviços</label>
+          <div class="chip-group" data-chips="multi" id="js-finalizar-servicos"></div>
         </div>
-        <div class="field is-hidden" id="js-finalizar-campo-pendente">
+
+        <div class="field">
+          <label class="field__label">Foi pago?</label>
+          <div class="chip-group">
+            <span class="chip chip--ativo" data-pago="sim">Sim</span>
+            <span class="chip" data-pago="nao">Não</span>
+          </div>
+        </div>
+        <div class="field" data-campo-pago="sim">
+          <label class="field__label">Forma de pagamento</label>
+          <div class="chip-group chip-group--pagamento" id="js-finalizar-formas"></div>
+          <div class="stack" data-linhas-pagamento style="margin-top:12px;gap:8px;" id="js-finalizar-linhas-pagamento"></div>
+        </div>
+        <div class="field is-hidden" data-campo-pago="nao">
           <label class="field__label" style="color:var(--danger);">Valor pendente *</label>
           <input class="input" placeholder="R$ 0,00" id="js-finalizar-valor-pendente" />
           <p class="text-warning" style="font-size:var(--text-sm);">Esse valor entrará em Pendentes.</p>
@@ -305,49 +317,61 @@
     <div class="modal-overlay is-hidden" id="modal-editar-realizado">
       <div class="modal-sheet">
         <p class="modal-sheet__title">Editar atendimento</p>
-        <div class="field" style="position:relative;" id="js-editar-realizado-nome-wrap">
-          <label class="field__label">Nome</label>
-          <input class="input" placeholder="Buscar ou digitar nome" id="js-editar-realizado-nome" />
-          <div class="card is-hidden" id="js-editar-realizado-resultados" style="position:absolute;top:100%;left:0;z-index:5;width:100%;max-height:150px;overflow-y:auto;margin-top:4px;padding:4px 12px;"></div>
-        </div>
+        <div class="card" style="margin-bottom:16px;">
+          <div class="field" style="position:relative;margin-bottom:0;" id="js-editar-realizado-nome-wrap">
+            <label class="field__label">Nome</label>
+            <input class="input" placeholder="Buscar ou digitar nome" id="js-editar-realizado-nome" />
+            <div class="card is-hidden" id="js-editar-realizado-resultados" style="position:absolute;top:100%;left:0;z-index:5;width:100%;max-height:150px;overflow-y:auto;margin-top:4px;padding:4px 12px;"></div>
+          </div>
 
-        <div class="card is-hidden" id="js-editar-realizado-cliente-card" style="margin-bottom:16px;">
-          <div class="row" style="align-items:flex-start;gap:10px;">
-            <div class="list-item__avatar list-item__avatar--lg" id="js-editar-realizado-cliente-avatar"></div>
-            <div style="flex:1;min-width:0;">
-              <p style="font-weight:700;font-size:var(--text-base);" id="js-editar-realizado-cliente-nome"></p>
-              <p class="text-secondary" style="font-size:var(--text-sm);" id="js-editar-realizado-cliente-info"></p>
+          <div class="is-hidden" id="js-editar-realizado-cliente-card">
+            <div class="row" style="align-items:flex-start;gap:10px;">
+              <div class="list-item__avatar list-item__avatar--lg" id="js-editar-realizado-cliente-avatar"></div>
+              <div style="flex:1;min-width:0;">
+                <p style="font-weight:700;font-size:var(--text-base);" id="js-editar-realizado-cliente-nome"></p>
+                <p class="text-secondary" style="font-size:var(--text-sm);" id="js-editar-realizado-cliente-info"></p>
+              </div>
+              <div class="row" style="gap:6px;flex-shrink:0;">
+                <button type="button" id="js-editar-realizado-observacao-toggle" class="icon-btn" aria-label="Observação">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v12H7l-3 3V4z"/></svg>
+                  <span class="icon-btn__dot is-hidden" id="js-editar-realizado-observacao-dot"></span>
+                </button>
+                <button type="button" id="js-editar-realizado-venda-toggle" class="icon-btn" aria-label="Vendeu algo pra esse cliente?">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6h15l-1.5 9h-12z"/><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/></svg>
+                </button>
+                <button type="button" id="js-editar-realizado-cliente-remover" class="icon-btn" aria-label="Remover seleção">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                </button>
+              </div>
             </div>
-            <div class="row" style="gap:6px;flex-shrink:0;">
-              <button type="button" id="js-editar-realizado-observacao-toggle" class="icon-btn" aria-label="Observação">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v12H7l-3 3V4z"/></svg>
-                <span class="icon-btn__dot is-hidden" id="js-editar-realizado-observacao-dot"></span>
-              </button>
-              <button type="button" id="js-editar-realizado-venda-toggle" class="icon-btn" aria-label="Vendeu algo pra esse cliente?">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6h15l-1.5 9h-12z"/><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/></svg>
-              </button>
-              <button type="button" id="js-editar-realizado-cliente-remover" class="icon-btn" aria-label="Remover seleção">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
-              </button>
+            <textarea class="textarea is-hidden" id="js-editar-realizado-observacao" style="margin-top:12px;"></textarea>
+            <div class="row row--between is-hidden" id="js-editar-realizado-venda-resumo" style="margin-top:12px;">
+              <p class="text-secondary" id="js-editar-realizado-venda-resumo-texto" style="cursor:pointer;"></p>
+              <button type="button" class="icon-btn" id="js-editar-realizado-venda-remover" aria-label="Remover venda" style="width:28px;height:28px;flex-shrink:0;">✕</button>
             </div>
           </div>
-          <div class="chip-group" id="js-editar-realizado-servicos" style="margin-top:12px;"></div>
-          <textarea class="textarea is-hidden" id="js-editar-realizado-observacao" style="margin-top:12px;"></textarea>
-          <div class="row row--between is-hidden" id="js-editar-realizado-venda-resumo" style="margin-top:12px;">
-            <p class="text-secondary" id="js-editar-realizado-venda-resumo-texto" style="cursor:pointer;"></p>
-            <button type="button" class="icon-btn" id="js-editar-realizado-venda-remover" aria-label="Remover venda" style="width:28px;height:28px;flex-shrink:0;">✕</button>
+
+          <div class="field is-hidden" id="js-editar-realizado-cadastro-wrap" style="margin-top:12px;margin-bottom:0;">
+            <button type="button" id="js-editar-realizado-cadastro-toggle" class="text-primary-accent" style="font-weight:600;font-size:var(--text-sm);background:none;border:none;text-align:left;padding:0;cursor:pointer;">+ Completar cadastro</button>
           </div>
         </div>
 
-        <div class="field is-hidden" id="js-editar-realizado-cadastro-wrap" style="margin-top:-8px;">
-          <button type="button" id="js-editar-realizado-cadastro-toggle" class="text-primary-accent" style="font-weight:600;font-size:var(--text-sm);background:none;border:none;text-align:left;padding:0;cursor:pointer;">+ Completar cadastro</button>
+        <div class="field">
+          <label class="field__label">Serviços</label>
+          <div class="chip-group" id="js-editar-realizado-servicos"></div>
         </div>
 
-        <div class="field" id="js-editar-realizado-campo-formas">
-          <label class="field__label">Como foi pago?</label>
-          <div class="chip-group" id="js-editar-realizado-formas"></div>
+        <div class="field">
+          <label class="field__label">Foi pago?</label>
+          <div class="chip-group">
+            <span class="chip" data-pago-editar="sim">Sim</span>
+            <span class="chip" data-pago-editar="nao">Não</span>
+          </div>
+        </div>
+        <div class="field is-hidden" id="js-editar-realizado-campo-formas">
+          <label class="field__label">Formas de pagamento</label>
+          <div class="chip-group chip-group--pagamento" id="js-editar-realizado-formas"></div>
           <div class="stack" data-linhas-pagamento style="margin-top:12px;gap:8px;" id="js-editar-realizado-linhas-pagamento"></div>
-          <span class="pendente-pill" id="js-editar-realizado-pendente-toggle">Ficou pendente</span>
         </div>
         <div class="field is-hidden" id="js-editar-realizado-campo-pendente">
           <label class="field__label" style="color:var(--danger);">Valor pendente</label>
@@ -472,17 +496,17 @@
     </div>
   </div>
 
-  <script src="js/utils.js?v=20260706am"></script>
-  <script src="js/menu.js?v=20260706am"></script>
-  <script src="js/storage.js?v=20260706am"></script>
-  <script src="js/tema.js?v=20260706am"></script>
-  <script src="js/app.js?v=20260706am"></script>
-  <script src="js/chips.js?v=20260706am"></script>
-  <script src="js/modal.js?v=20260706am"></script>
-  <script src="js/calendario.js?v=20260706am"></script>
-  <script src="js/acoes-simuladas.js?v=20260706am"></script>
-  <script src="js/vendas.js?v=20260706am"></script>
-  <script src="js/agenda.js?v=20260706am"></script>
-  <script src="js/agenda-diario.js?v=20260706am"></script>
+  <script src="js/utils.js?v=20260706an"></script>
+  <script src="js/menu.js?v=20260706an"></script>
+  <script src="js/storage.js?v=20260706an"></script>
+  <script src="js/tema.js?v=20260706an"></script>
+  <script src="js/app.js?v=20260706an"></script>
+  <script src="js/chips.js?v=20260706an"></script>
+  <script src="js/modal.js?v=20260706an"></script>
+  <script src="js/calendario.js?v=20260706an"></script>
+  <script src="js/acoes-simuladas.js?v=20260706an"></script>
+  <script src="js/vendas.js?v=20260706an"></script>
+  <script src="js/agenda.js?v=20260706an"></script>
+  <script src="js/agenda-diario.js?v=20260706an"></script>
 </body>
 </html>

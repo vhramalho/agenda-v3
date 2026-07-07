@@ -200,24 +200,6 @@
   height: 18px;
 }
 
-/* Pílula "Ficou pendente" — opção secundária, deliberadamente menos
-   chamativa que os cartões de forma de pagamento (é a exceção, não
-   uma opção igual às outras). */
-.pendente-pill {
-  display: inline-block;
-  margin-top: 10px;
-  font-size: var(--text-xs);
-  font-weight: 700;
-  color: var(--text-muted);
-  cursor: pointer;
-  text-decoration: underline dotted;
-  text-underline-offset: 3px;
-}
-
-.pendente-pill.is-ativo {
-  color: var(--warning);
-}
-
 .chip--dia .chip-dia__label {
   font-size: 10px;
   font-weight: 600;
@@ -240,6 +222,13 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
   gap: 8px;
+}
+
+/* 4 cartões de forma de pagamento por linha, independente da largura
+   do nome (diferente do chip-group padrão, que ajusta a coluna ao
+   texto — aqui o ícone já identifica a forma, então cabe mais apertado). */
+.chip-group--pagamento {
+  grid-template-columns: repeat(4, 1fr);
 }
 
 .chip-group .chip {
