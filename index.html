@@ -4,11 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Agenda — Agenda V3</title>
-  <link rel="stylesheet" href="css/tokens.css?v=20260706ah" />
-  <link rel="stylesheet" href="css/base.css?v=20260706ah" />
-  <link rel="stylesheet" href="css/layout.css?v=20260706ah" />
-  <link rel="stylesheet" href="css/components.css?v=20260706ah" />
-  <link rel="stylesheet" href="css/agenda.css?v=20260706ah" />
+  <link rel="stylesheet" href="css/tokens.css?v=20260706ai" />
+  <link rel="stylesheet" href="css/base.css?v=20260706ai" />
+  <link rel="stylesheet" href="css/layout.css?v=20260706ai" />
+  <link rel="stylesheet" href="css/components.css?v=20260706ai" />
+  <link rel="stylesheet" href="css/agenda.css?v=20260706ai" />
 </head>
 <body data-page="index">
   <div class="app">
@@ -249,6 +249,13 @@
           <textarea class="textarea is-hidden" placeholder="Como foi o atendimento?" id="js-finalizar-observacao"></textarea>
         </div>
         <div class="field">
+          <button type="button" id="js-finalizar-venda-toggle" class="text-primary-accent" style="font-weight:600;font-size:var(--text-sm);background:none;border:none;text-align:left;padding:0;cursor:pointer;">+ Vendeu algo pra esse cliente?</button>
+          <div class="row row--between is-hidden" id="js-finalizar-venda-resumo">
+            <p class="text-secondary" id="js-finalizar-venda-resumo-texto" style="cursor:pointer;"></p>
+            <button type="button" class="icon-btn" id="js-finalizar-venda-remover" aria-label="Remover venda" style="width:28px;height:28px;flex-shrink:0;">✕</button>
+          </div>
+        </div>
+        <div class="field">
           <label class="field__label">Foi pago?</label>
           <div class="chip-group">
             <span class="chip chip--ativo" data-pago="sim">Sim</span>
@@ -390,18 +397,72 @@
         <div class="btn-row"><button class="btn btn--secondary" data-fechar-modal>Cancelar</button><button class="btn btn--danger-solid" id="js-agenda-diario-confirmar-exclusao-btn">Confirmar</button></div>
       </div>
     </div>
+
+    <!-- Modal de venda — markup duplicado de produtos.html, lógica compartilhada em js/vendas.js -->
+    <div class="modal-overlay is-hidden" id="modal-nova-venda">
+      <div class="modal-sheet">
+        <div class="modal-sheet__header"><p class="modal-sheet__title">Registrar venda</p><button class="modal-close">✕</button></div>
+
+        <div class="field" id="js-venda-cliente-toggle-wrap">
+          <label class="field__label">Cliente</label>
+          <div class="chip-group" data-chips="single" id="js-venda-cliente-tipo">
+            <span class="chip chip--ativo" data-tipo-cliente="avulso">Avulso</span>
+            <span class="chip" data-tipo-cliente="existente">Cliente</span>
+          </div>
+          <div class="field is-hidden" id="js-venda-cliente-busca-wrap" style="margin-top:10px;position:relative;">
+            <input class="input" placeholder="Buscar cliente" id="js-venda-cliente-busca" />
+            <div class="card is-hidden" id="js-venda-cliente-resultados" style="position:absolute;top:100%;left:0;z-index:5;width:100%;max-height:150px;overflow-y:auto;margin-top:4px;padding:4px 12px;"></div>
+          </div>
+        </div>
+        <p class="text-secondary is-hidden" id="js-venda-cliente-fixo" style="margin-top:-8px;margin-bottom:16px;"></p>
+
+        <div class="field">
+          <label class="field__label">Produtos</label>
+          <div class="card" id="js-venda-lista-produtos" style="max-height:220px;overflow-y:auto;"></div>
+        </div>
+
+        <div class="field is-hidden" id="js-venda-carrinho-wrap">
+          <label class="field__label">Itens selecionados</label>
+          <div class="stack" id="js-venda-carrinho" style="gap:8px;"></div>
+          <div class="row row--between" style="margin-top:12px;font-weight:700;">
+            <span>Total</span>
+            <span id="js-venda-total"></span>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="field__label">Foi pago?</label>
+          <div class="chip-group">
+            <span class="chip chip--ativo" data-pago="sim">Sim</span>
+            <span class="chip" data-pago="nao">Não</span>
+          </div>
+        </div>
+        <div class="field" data-campo-pago="sim">
+          <label class="field__label">Forma de pagamento</label>
+          <div class="chip-group" id="js-venda-formas"></div>
+          <div class="stack" data-linhas-pagamento style="margin-top:12px;gap:8px;" id="js-venda-linhas-pagamento"></div>
+        </div>
+        <div class="field is-hidden" data-campo-pago="nao">
+          <label class="field__label" style="color:var(--danger);">Valor pendente</label>
+          <input class="input" placeholder="R$ 0,00" id="js-venda-valor-pendente" />
+        </div>
+
+        <div class="btn-row"><button class="btn btn--secondary" data-fechar-modal>Cancelar</button><button class="btn btn--primary" id="js-venda-confirmar">Confirmar venda</button></div>
+      </div>
+    </div>
   </div>
 
-  <script src="js/utils.js?v=20260706ah"></script>
-  <script src="js/menu.js?v=20260706ah"></script>
-  <script src="js/storage.js?v=20260706ah"></script>
-  <script src="js/tema.js?v=20260706ah"></script>
-  <script src="js/app.js?v=20260706ah"></script>
-  <script src="js/chips.js?v=20260706ah"></script>
-  <script src="js/modal.js?v=20260706ah"></script>
-  <script src="js/calendario.js?v=20260706ah"></script>
-  <script src="js/acoes-simuladas.js?v=20260706ah"></script>
-  <script src="js/agenda.js?v=20260706ah"></script>
-  <script src="js/agenda-diario.js?v=20260706ah"></script>
+  <script src="js/utils.js?v=20260706ai"></script>
+  <script src="js/menu.js?v=20260706ai"></script>
+  <script src="js/storage.js?v=20260706ai"></script>
+  <script src="js/tema.js?v=20260706ai"></script>
+  <script src="js/app.js?v=20260706ai"></script>
+  <script src="js/chips.js?v=20260706ai"></script>
+  <script src="js/modal.js?v=20260706ai"></script>
+  <script src="js/calendario.js?v=20260706ai"></script>
+  <script src="js/acoes-simuladas.js?v=20260706ai"></script>
+  <script src="js/vendas.js?v=20260706ai"></script>
+  <script src="js/agenda.js?v=20260706ai"></script>
+  <script src="js/agenda-diario.js?v=20260706ai"></script>
 </body>
 </html>

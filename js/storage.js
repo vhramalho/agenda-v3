@@ -1,6 +1,6 @@
 /* ============================================================
    AGENDA V3 — Acesso centralizado ao localStorage (Fase 3)
-   Todas as 12 chaves do app passam por aqui. Nenhuma outra tela
+   Todas as 15 chaves do app passam por aqui. Nenhuma outra tela
    ou script deve chamar localStorage.getItem/setItem direto —
    sempre por uma das funções abaixo, pra manter os dados
    consistentes e fáceis de mudar no futuro (ex.: trocar pra um
@@ -21,6 +21,8 @@ const CHAVES = {
   notasDiarias: "agendaV3:notasDiarias",
   tarefasDiarias: "agendaV3:tarefasDiarias",
   listasDiarias: "agendaV3:listasDiarias",
+  produtos: "agendaV3:produtos",
+  vendas: "agendaV3:vendas",
 };
 
 function gerarId(prefixo) {
@@ -143,6 +145,30 @@ function obterListasDiarias() {
 }
 function salvarListasDiarias(lista) {
   salvarChave(CHAVES.listasDiarias, lista);
+}
+
+/* Vendas (produto + venda) — ver Documentacao/MASTER_CONTEXT.md.
+   produto: { id, nome, precoVenda, precoCusto (null se não informado),
+   estoque (number, sempre existe), ativo, criadoEm, atualizadoEm }.
+   Exclusão lógica (ativo:false), igual servico.
+   venda: { id, clienteId (null se avulsa), nomeCliente (null ou "Avulso"),
+   agendamentoId (null se avulsa), itens: [{ produtoId, nomeProduto,
+   quantidade, precoUnitario }], valorTotal, status ("paga"|"pendente"),
+   pagamentos (só quando paga, mesmo formato de agendamento.pagamentos),
+   valorPendente (só quando pendente), criadaEm }. Pagamento da venda é
+   sempre independente do pagamento do agendamento vinculado. */
+function obterProdutos() {
+  return lerChave(CHAVES.produtos, []);
+}
+function salvarProdutos(lista) {
+  salvarChave(CHAVES.produtos, lista);
+}
+
+function obterVendas() {
+  return lerChave(CHAVES.vendas, []);
+}
+function salvarVendas(lista) {
+  salvarChave(CHAVES.vendas, lista);
 }
 
 /* ============================================================

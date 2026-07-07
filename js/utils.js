@@ -369,3 +369,77 @@ function montarLinhaCliente(cliente, indice, modoSubtitulo = "padrao") {
       : `última visita há ${stats.ultimaVisitaDias} dia${stats.ultimaVisitaDias === 1 ? "" : "s"} · ${visitasTexto}`;
   return linha;
 }
+
+/* Formas de pagamento (chips + linhas de valor) — movido de agenda.js pra cá
+   na Etapa 3 de Vendas, porque js/produtos.js/js/vendas.js também precisam
+   (usado por Finalizar atendimento, Editar realizado E o modal de venda). */
+function adicionarLinhaForma(container, nome, valor, formaExcluida) {
+  const linha = document.createElement("div");
+  linha.dataset.linhaForma = nome;
+  if (formaExcluida) linha.dataset.formaExcluida = "true";
+  linha.innerHTML = `
+    <div class="row" style="gap:8px;">
+      <span class="text-secondary" style="width:110px;flex-shrink:0;">${nome}</span>
+      <input class="input" placeholder="R$ 0,00" style="flex:1;" value="${valor != null ? formatarMoeda(valor) : ""}" />
+    </div>
+    ${formaExcluida ? '<p class="text-warning" style="font-size:var(--text-sm);margin-top:4px;">Forma de pagamento excluída — esse valor continua contando no relatório. Escolha outra forma se quiser trocar.</p>' : ""}
+  `;
+  container.appendChild(linha);
+  aplicarMascaraMoeda(linha.querySelector("input"));
+}
+
+function montarFormasChips(chipsContainerId, linhasContainerId, nomesSelecionados, valoresPorNome) {
+  const chipsContainer = qs(`#${chipsContainerId}`);
+  const linhasContainer = qs(`#${linhasContainerId}`);
+  chipsContainer.innerHTML = "";
+  linhasContainer.innerHTML = "";
+  const formasAtivas = obterFormasPagamento().filter((f) => f.ativo);
+  const nomesAtivos = formasAtivas.map((f) => f.nome);
+  formasAtivas.forEach((forma) => {
+    const ativo = nomesSelecionados.includes(forma.nome);
+    const chip = document.createElement("span");
+    chip.className = "chip" + (ativo ? " chip--ativo" : "");
+    chip.dataset.nome = forma.nome;
+    chip.textContent = forma.nome;
+    chipsContainer.appendChild(chip);
+    if (ativo) adicionarLinhaForma(linhasContainer, forma.nome, valoresPorNome && valoresPorNome[forma.nome]);
+  });
+  // Formas usadas neste pagamento que já foram excluídas: sem chip (não dá pra escolher de novo),
+  // mas a linha continua mostrada — senão "Salvar" perderia esse valor silenciosamente.
+  nomesSelecionados.filter((nome) => !nomesAtivos.includes(nome)).forEach((nome) => {
+    adicionarLinhaForma(linhasContainer, nome, valoresPorNome && valoresPorNome[nome], true);
+  });
+  qsa(".chip", chipsContainer).forEach((chip) => {
+    chip.addEventListener("click", () => {
+      chip.classList.toggle("chip--ativo");
+      const nome = chip.dataset.nome;
+      const existente = linhasContainer.querySelector(`[data-linha-forma="${nome}"]`);
+      if (chip.classList.contains("chip--ativo")) {
+        if (!existente) {
+          // Escolher uma forma nova enquanto há linha(s) de forma excluída pendente
+          // substitui todas elas por essa, somando os valores (sem volta).
+          const linhasExcluidas = qsa("[data-forma-excluida]", linhasContainer);
+          if (linhasExcluidas.length > 0) {
+            const somaExcluidas = linhasExcluidas.reduce((soma, linha) => soma + (extrairValor(linha.querySelector("input").value) || 0), 0);
+            linhasExcluidas.forEach((linha) => linha.remove());
+            adicionarLinhaForma(linhasContainer, nome, somaExcluidas);
+          } else {
+            adicionarLinhaForma(linhasContainer, nome);
+          }
+        }
+      } else if (existente) {
+        existente.remove();
+      }
+    });
+  });
+}
+
+function lerPagamentosDeLinhas(linhasContainerId) {
+  const formas = obterFormasPagamento();
+  return qsa(`#${linhasContainerId} [data-linha-forma]`).map((linha) => {
+    const nome = linha.dataset.linhaForma;
+    const valor = extrairValor(linha.querySelector("input").value) || 0;
+    const forma = formas.find((f) => f.nome === nome);
+    return { formaPagamentoId: forma ? forma.id : null, valor };
+  });
+}

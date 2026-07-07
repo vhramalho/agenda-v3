@@ -12,6 +12,7 @@ let horaModalAtual = null;
 let agendamentoModalAtual = null;
 let bloqueioPontualEditandoId = null;
 let bloqueioFixoEditando = null;
+let vendaAnexadaId = null;
 
 function dataParaIso(date) {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
@@ -550,77 +551,6 @@ function duracaoSelecionada(containerId) {
 }
 
 
-function adicionarLinhaForma(container, nome, valor, formaExcluida) {
-  const linha = document.createElement("div");
-  linha.dataset.linhaForma = nome;
-  if (formaExcluida) linha.dataset.formaExcluida = "true";
-  linha.innerHTML = `
-    <div class="row" style="gap:8px;">
-      <span class="text-secondary" style="width:110px;flex-shrink:0;">${nome}</span>
-      <input class="input" placeholder="R$ 0,00" style="flex:1;" value="${valor != null ? formatarMoeda(valor) : ""}" />
-    </div>
-    ${formaExcluida ? '<p class="text-warning" style="font-size:var(--text-sm);margin-top:4px;">Forma de pagamento excluída — esse valor continua contando no relatório. Escolha outra forma se quiser trocar.</p>' : ""}
-  `;
-  container.appendChild(linha);
-  aplicarMascaraMoeda(linha.querySelector("input"));
-}
-
-function montarFormasChips(chipsContainerId, linhasContainerId, nomesSelecionados, valoresPorNome) {
-  const chipsContainer = qs(`#${chipsContainerId}`);
-  const linhasContainer = qs(`#${linhasContainerId}`);
-  chipsContainer.innerHTML = "";
-  linhasContainer.innerHTML = "";
-  const formasAtivas = obterFormasPagamento().filter((f) => f.ativo);
-  const nomesAtivos = formasAtivas.map((f) => f.nome);
-  formasAtivas.forEach((forma) => {
-    const ativo = nomesSelecionados.includes(forma.nome);
-    const chip = document.createElement("span");
-    chip.className = "chip" + (ativo ? " chip--ativo" : "");
-    chip.dataset.nome = forma.nome;
-    chip.textContent = forma.nome;
-    chipsContainer.appendChild(chip);
-    if (ativo) adicionarLinhaForma(linhasContainer, forma.nome, valoresPorNome && valoresPorNome[forma.nome]);
-  });
-  // Formas usadas neste pagamento que já foram excluídas: sem chip (não dá pra escolher de novo),
-  // mas a linha continua mostrada — senão "Salvar" perderia esse valor silenciosamente.
-  nomesSelecionados.filter((nome) => !nomesAtivos.includes(nome)).forEach((nome) => {
-    adicionarLinhaForma(linhasContainer, nome, valoresPorNome && valoresPorNome[nome], true);
-  });
-  qsa(".chip", chipsContainer).forEach((chip) => {
-    chip.addEventListener("click", () => {
-      chip.classList.toggle("chip--ativo");
-      const nome = chip.dataset.nome;
-      const existente = linhasContainer.querySelector(`[data-linha-forma="${nome}"]`);
-      if (chip.classList.contains("chip--ativo")) {
-        if (!existente) {
-          // Escolher uma forma nova enquanto há linha(s) de forma excluída pendente
-          // substitui todas elas por essa, somando os valores (sem volta).
-          const linhasExcluidas = qsa("[data-forma-excluida]", linhasContainer);
-          if (linhasExcluidas.length > 0) {
-            const somaExcluidas = linhasExcluidas.reduce((soma, linha) => soma + (extrairValor(linha.querySelector("input").value) || 0), 0);
-            linhasExcluidas.forEach((linha) => linha.remove());
-            adicionarLinhaForma(linhasContainer, nome, somaExcluidas);
-          } else {
-            adicionarLinhaForma(linhasContainer, nome);
-          }
-        }
-      } else if (existente) {
-        existente.remove();
-      }
-    });
-  });
-}
-
-function lerPagamentosDeLinhas(linhasContainerId) {
-  const formas = obterFormasPagamento();
-  return qsa(`#${linhasContainerId} [data-linha-forma]`).map((linha) => {
-    const nome = linha.dataset.linhaForma;
-    const valor = extrairValor(linha.querySelector("input").value) || 0;
-    const forma = formas.find((f) => f.nome === nome);
-    return { formaPagamentoId: forma ? forma.id : null, valor };
-  });
-}
-
 /* ---------- Horário livre / encaixe ---------- */
 
 function abrirHorarioLivre(hora) {
@@ -914,6 +844,9 @@ function prepararFinalizarAtendimento(agendamento) {
   prepararClientePicker("js-finalizar", agendamento.clienteId || null, agendamento.nomeCliente);
   montarServicosChips("js-finalizar-servicos", agendamento.servicosIds || []);
   prepararObservacaoWrap("js-finalizar-observacao", "js-finalizar-observacao-toggle", agendamento.observacao || "");
+  vendaAnexadaId = null;
+  qs("#js-finalizar-venda-toggle").classList.remove("is-hidden");
+  qs("#js-finalizar-venda-resumo").classList.add("is-hidden");
   qsa("[data-pago]", modal).forEach((b) => {
     b.classList.toggle("chip--ativo", b.dataset.pago === "sim");
   });
@@ -922,6 +855,27 @@ function prepararFinalizarAtendimento(agendamento) {
   });
   montarFormasChips("js-finalizar-formas", "js-finalizar-linhas-pagamento", [], {});
   qs("#js-finalizar-valor-pendente").value = "";
+}
+
+function mostrarResumoVendaFinalizar(venda) {
+  vendaAnexadaId = venda.id;
+  const statusTexto = venda.status === "paga" ? "Pago" : "Pendente";
+  qs("#js-finalizar-venda-resumo-texto").textContent = `🛒 ${venda.itens.length} ite${venda.itens.length === 1 ? "m" : "ns"} — ${formatarMoeda(venda.valorTotal)} — ${statusTexto}`;
+  qs("#js-finalizar-venda-toggle").classList.add("is-hidden");
+  qs("#js-finalizar-venda-resumo").classList.remove("is-hidden");
+}
+
+function removerVendaAnexada(vendaId) {
+  const vendas = obterVendas();
+  const venda = vendas.find((v) => v.id === vendaId);
+  if (!venda) return;
+  const produtos = obterProdutos();
+  venda.itens.forEach((item) => {
+    const produto = produtos.find((p) => p.id === item.produtoId);
+    if (produto) produto.estoque += item.quantidade;
+  });
+  salvarProdutos(produtos);
+  salvarVendas(vendas.filter((v) => v.id !== vendaId));
 }
 
 /* ---------- Editar realizado ---------- */
@@ -1098,6 +1052,38 @@ document.addEventListener("DOMContentLoaded", () => {
   ligarEventosClientePicker("js-finalizar", "modal-finalizar-atendimento");
   ligarEventosClientePicker("js-editar-realizado", "modal-editar-realizado");
 
+  qs("#js-finalizar-venda-toggle").addEventListener("click", () => {
+    const agendamento = agendamentoModalAtual;
+    if (!agendamento) return;
+    fecharModal("modal-finalizar-atendimento");
+    prepararNovaVenda({ clienteId: agendamento.clienteId, nomeCliente: agendamento.nomeCliente, agendamentoId: agendamento.id }, (venda) => {
+      fecharModal("modal-nova-venda");
+      abrirModal("modal-finalizar-atendimento");
+      mostrarResumoVendaFinalizar(venda);
+    });
+    abrirModal("modal-nova-venda");
+  });
+
+  qs("#js-finalizar-venda-remover").addEventListener("click", () => {
+    if (vendaAnexadaId) removerVendaAnexada(vendaAnexadaId);
+    vendaAnexadaId = null;
+    qs("#js-finalizar-venda-toggle").classList.remove("is-hidden");
+    qs("#js-finalizar-venda-resumo").classList.add("is-hidden");
+  });
+
+  // Se o usuário cancelar (ou tocar fora) o Finalizar atendimento depois de
+  // já ter anexado uma venda, desfaz a venda e devolve o estoque — senão
+  // ficaria uma venda "órfã" sem atendimento e o estoque descontado à toa.
+  const abandonarVendaSeAnexada = () => {
+    if (!vendaAnexadaId) return;
+    removerVendaAnexada(vendaAnexadaId);
+    vendaAnexadaId = null;
+  };
+  qs('#modal-finalizar-atendimento [data-fechar-modal]').addEventListener("click", abandonarVendaSeAnexada);
+  qs("#modal-finalizar-atendimento").addEventListener("click", (e) => {
+    if (e.target.id === "modal-finalizar-atendimento") abandonarVendaSeAnexada();
+  });
+
   qs("#js-cadastro-agenda-cancelar").addEventListener("click", () => {
     fecharModal("modal-completar-cadastro-agenda");
     if (cadastroAgendaOrigemModalId) abrirModal(cadastroAgendaOrigemModalId);
@@ -1216,7 +1202,9 @@ document.addEventListener("DOMContentLoaded", () => {
       ag.valorTotal = valorPendente;
       delete ag.pagamentos;
     }
+    if (vendaAnexadaId) ag.vendaId = vendaAnexadaId;
     salvarAgendamentos(lista);
+    vendaAnexadaId = null;
     fecharModal("modal-finalizar-atendimento");
     renderizarAgendaLista();
     mostrarSucesso();
