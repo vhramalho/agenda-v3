@@ -1056,11 +1056,15 @@ document.addEventListener("DOMContentLoaded", () => {
     const agendamento = agendamentoModalAtual;
     if (!agendamento) return;
     fecharModal("modal-finalizar-atendimento");
-    prepararNovaVenda({ clienteId: agendamento.clienteId, nomeCliente: agendamento.nomeCliente, agendamentoId: agendamento.id }, (venda) => {
-      fecharModal("modal-nova-venda");
-      abrirModal("modal-finalizar-atendimento");
-      mostrarResumoVendaFinalizar(venda);
-    });
+    prepararNovaVenda(
+      { clienteId: agendamento.clienteId, nomeCliente: agendamento.nomeCliente, agendamentoId: agendamento.id },
+      (venda) => {
+        fecharModal("modal-nova-venda");
+        abrirModal("modal-finalizar-atendimento");
+        mostrarResumoVendaFinalizar(venda);
+      },
+      () => abrirModal("modal-finalizar-atendimento")
+    );
     abrirModal("modal-nova-venda");
   });
 

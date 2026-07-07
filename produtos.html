@@ -4,10 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Produtos — Agenda V3</title>
-  <link rel="stylesheet" href="css/tokens.css?v=20260706ai" />
-  <link rel="stylesheet" href="css/base.css?v=20260706ai" />
-  <link rel="stylesheet" href="css/layout.css?v=20260706ai" />
-  <link rel="stylesheet" href="css/components.css?v=20260706ai" />
+  <link rel="stylesheet" href="css/tokens.css?v=20260706aj" />
+  <link rel="stylesheet" href="css/base.css?v=20260706aj" />
+  <link rel="stylesheet" href="css/layout.css?v=20260706aj" />
+  <link rel="stylesheet" href="css/components.css?v=20260706aj" />
 </head>
 <body data-page="mais">
   <div class="app">
@@ -72,64 +72,76 @@
       <div class="modal-sheet">
         <div class="modal-sheet__header"><p class="modal-sheet__title">Registrar venda</p><button class="modal-close">✕</button></div>
 
-        <div class="field" id="js-venda-cliente-toggle-wrap">
-          <label class="field__label">Cliente</label>
-          <div class="chip-group" data-chips="single" id="js-venda-cliente-tipo">
-            <span class="chip chip--ativo" data-tipo-cliente="avulso">Avulso</span>
-            <span class="chip" data-tipo-cliente="existente">Cliente</span>
+        <div id="js-venda-etapa-produtos">
+          <div class="field">
+            <label class="field__label">Produtos</label>
+            <div id="js-venda-lista-produtos" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;max-height:320px;overflow-y:auto;padding:2px;"></div>
           </div>
-          <div class="field is-hidden" id="js-venda-cliente-busca-wrap" style="margin-top:10px;position:relative;">
-            <input class="input" placeholder="Buscar cliente" id="js-venda-cliente-busca" />
-            <div class="card is-hidden" id="js-venda-cliente-resultados" style="position:absolute;top:100%;left:0;z-index:5;width:100%;max-height:150px;overflow-y:auto;margin-top:4px;padding:4px 12px;"></div>
-          </div>
-        </div>
-        <p class="text-secondary is-hidden" id="js-venda-cliente-fixo" style="margin-top:-8px;margin-bottom:16px;"></p>
 
-        <div class="field">
-          <label class="field__label">Produtos</label>
-          <div class="card" id="js-venda-lista-produtos" style="max-height:220px;overflow-y:auto;"></div>
-        </div>
-
-        <div class="field is-hidden" id="js-venda-carrinho-wrap">
-          <label class="field__label">Itens selecionados</label>
-          <div class="stack" id="js-venda-carrinho" style="gap:8px;"></div>
-          <div class="row row--between" style="margin-top:12px;font-weight:700;">
-            <span>Total</span>
-            <span id="js-venda-total"></span>
+          <div class="field is-hidden" id="js-venda-carrinho-wrap">
+            <label class="field__label">Itens selecionados</label>
+            <div class="stack" id="js-venda-carrinho" style="gap:8px;"></div>
+            <div class="row row--between" style="margin-top:12px;font-weight:700;">
+              <span>Total</span>
+              <span id="js-venda-total"></span>
+            </div>
           </div>
+
+          <div class="btn-row"><button class="btn btn--secondary" data-fechar-modal>Cancelar</button><button class="btn btn--primary" id="js-venda-continuar">Continuar</button></div>
         </div>
 
-        <div class="field">
-          <label class="field__label">Foi pago?</label>
-          <div class="chip-group">
-            <span class="chip chip--ativo" data-pago="sim">Sim</span>
-            <span class="chip" data-pago="nao">Não</span>
+        <div class="is-hidden" id="js-venda-etapa-pagamento">
+          <div class="field" id="js-venda-cliente-toggle-wrap">
+            <label class="field__label">Cliente</label>
+            <div class="chip-group" data-chips="single" id="js-venda-cliente-tipo">
+              <span class="chip chip--ativo" data-tipo-cliente="avulso">Avulso</span>
+              <span class="chip" data-tipo-cliente="existente">Cliente</span>
+            </div>
+            <div class="field is-hidden" id="js-venda-cliente-busca-wrap" style="margin-top:10px;position:relative;">
+              <input class="input" placeholder="Buscar cliente" id="js-venda-cliente-busca" />
+              <div class="card is-hidden" id="js-venda-cliente-resultados" style="position:absolute;top:100%;left:0;z-index:5;width:100%;max-height:150px;overflow-y:auto;margin-top:4px;padding:4px 12px;"></div>
+            </div>
           </div>
-        </div>
-        <div class="field" data-campo-pago="sim">
-          <label class="field__label">Forma de pagamento</label>
-          <div class="chip-group" id="js-venda-formas"></div>
-          <div class="stack" data-linhas-pagamento style="margin-top:12px;gap:8px;" id="js-venda-linhas-pagamento"></div>
-        </div>
-        <div class="field is-hidden" data-campo-pago="nao">
-          <label class="field__label" style="color:var(--danger);">Valor pendente</label>
-          <input class="input" placeholder="R$ 0,00" id="js-venda-valor-pendente" />
-        </div>
+          <p class="text-secondary is-hidden" id="js-venda-cliente-fixo" style="margin-top:-8px;margin-bottom:16px;"></p>
 
-        <div class="btn-row"><button class="btn btn--secondary" data-fechar-modal>Cancelar</button><button class="btn btn--primary" id="js-venda-confirmar">Confirmar venda</button></div>
+          <div class="card row row--between section" style="margin-bottom:16px;">
+            <span class="text-secondary">Total do carrinho</span>
+            <span style="font-weight:700;" id="js-venda-total-resumo"></span>
+          </div>
+
+          <div class="field">
+            <label class="field__label">Foi pago?</label>
+            <div class="chip-group">
+              <span class="chip chip--ativo" data-pago="sim">Sim</span>
+              <span class="chip" data-pago="nao">Não</span>
+            </div>
+          </div>
+          <div class="field" data-campo-pago="sim">
+            <label class="field__label">Forma de pagamento</label>
+            <div class="chip-group" id="js-venda-formas"></div>
+            <div class="stack" data-linhas-pagamento style="margin-top:12px;gap:8px;" id="js-venda-linhas-pagamento"></div>
+            <p class="text-secondary" style="font-size:var(--text-sm);margin-top:8px;">Digitar um valor menor que o total do carrinho registra a diferença como desconto.</p>
+          </div>
+          <div class="field is-hidden" data-campo-pago="nao">
+            <label class="field__label" style="color:var(--danger);">Valor pendente</label>
+            <input class="input" placeholder="R$ 0,00" id="js-venda-valor-pendente" />
+          </div>
+
+          <div class="btn-row"><button class="btn btn--secondary" id="js-venda-voltar">Voltar</button><button class="btn btn--primary" id="js-venda-confirmar">Confirmar venda</button></div>
+        </div>
       </div>
     </div>
   </div>
 
-  <script src="js/utils.js?v=20260706ai"></script>
-  <script src="js/menu.js?v=20260706ai"></script>
-  <script src="js/storage.js?v=20260706ai"></script>
-  <script src="js/tema.js?v=20260706ai"></script>
-  <script src="js/app.js?v=20260706ai"></script>
-  <script src="js/chips.js?v=20260706ai"></script>
-  <script src="js/modal.js?v=20260706ai"></script>
-  <script src="js/acoes-simuladas.js?v=20260706ai"></script>
-  <script src="js/vendas.js?v=20260706ai"></script>
-  <script src="js/produtos.js?v=20260706ai"></script>
+  <script src="js/utils.js?v=20260706aj"></script>
+  <script src="js/menu.js?v=20260706aj"></script>
+  <script src="js/storage.js?v=20260706aj"></script>
+  <script src="js/tema.js?v=20260706aj"></script>
+  <script src="js/app.js?v=20260706aj"></script>
+  <script src="js/chips.js?v=20260706aj"></script>
+  <script src="js/modal.js?v=20260706aj"></script>
+  <script src="js/acoes-simuladas.js?v=20260706aj"></script>
+  <script src="js/vendas.js?v=20260706aj"></script>
+  <script src="js/produtos.js?v=20260706aj"></script>
 </body>
 </html>

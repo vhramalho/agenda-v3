@@ -1,5 +1,5 @@
 /* ============================================================
-   AGENDA V3 — Fluxo de venda (Vendas, etapa 3)
+   AGENDA V3 — Fluxo de venda (Vendas, etapa 3 + refinamento)
    Compartilhado entre produtos.html (venda avulsa, botão
    "Registrar venda") e index.html (venda ligada a um atendimento,
    via "Vendeu algo pra esse cliente?" dentro de Finalizar
@@ -8,24 +8,31 @@
    por #modal-calendario em index.html/relatorio.html, com a
    lógica centralizada aqui).
 
+   Duas etapas dentro do mesmo modal (estilo "maquininha"): primeiro
+   só produtos, num grid de 2 colunas; "Continuar" leva pra cliente
+   + pagamento. "Voltar" retorna sem perder o carrinho.
+
    prepararNovaVenda(contexto, aoConcluir) só prepara o estado —
    quem chama decide quando abrir/fechar o modal, igual
    prepararFinalizarAtendimento/prepararNovoAgendamento em
    js/agenda.js.
    ============================================================ */
 
-const ESTOQUE_BAIXO_LIMITE_VENDA = 3;
-
 let vendaContexto = { clienteId: null, nomeCliente: null, agendamentoId: null };
 let vendaAoConcluir = null;
+let vendaAoCancelar = null;
 let vendaCarrinho = {};
 let vendaClienteSelecionadoId = null;
 
-function prepararNovaVenda(contexto, aoConcluir) {
+function prepararNovaVenda(contexto, aoConcluir, aoCancelar) {
   vendaContexto = { clienteId: contexto.clienteId || null, nomeCliente: contexto.nomeCliente || null, agendamentoId: contexto.agendamentoId || null };
   vendaAoConcluir = aoConcluir;
+  vendaAoCancelar = aoCancelar || null;
   vendaCarrinho = {};
   vendaClienteSelecionadoId = contexto.clienteId || null;
+
+  qs("#js-venda-etapa-pagamento").classList.add("is-hidden");
+  qs("#js-venda-etapa-produtos").classList.remove("is-hidden");
 
   const vindoDeAtendimento = !!vendaContexto.agendamentoId;
   qs("#js-venda-cliente-toggle-wrap").classList.toggle("is-hidden", vindoDeAtendimento);
@@ -55,28 +62,31 @@ function renderizarListaVendaProdutos() {
   const produtosAtivos = obterProdutos().filter((p) => p.ativo);
   container.innerHTML = "";
   if (produtosAtivos.length === 0) {
-    container.innerHTML = `<p class="text-muted" style="padding:12px;">Nenhum produto cadastrado ainda.</p>`;
+    container.innerHTML = `<p class="text-muted" style="padding:12px;grid-column:1 / -1;">Nenhum produto cadastrado ainda.</p>`;
     return;
   }
   produtosAtivos.forEach((produto) => {
-    const linha = document.createElement("div");
-    linha.className = "list-item";
-    linha.style.cursor = "pointer";
-    linha.innerHTML = `
-      <div class="list-item__body">
-        <p class="list-item__title"></p>
-        <p class="list-item__subtitle"></p>
-      </div>
-      <div class="list-item__trailing"><p style="font-weight:700;"></p></div>
+    const quantidadeNoCarrinho = vendaCarrinho[produto.id] || 0;
+    const card = document.createElement("div");
+    card.className = "card";
+    card.style.cursor = "pointer";
+    card.style.textAlign = "center";
+    card.style.position = "relative";
+    card.innerHTML = `
+      ${quantidadeNoCarrinho > 0 ? `<span style="position:absolute;top:6px;right:6px;background:var(--primary);color:#fff;border-radius:999px;min-width:20px;height:20px;font-size:var(--text-xs);font-weight:700;display:flex;align-items:center;justify-content:center;padding:0 5px;">${quantidadeNoCarrinho}</span>` : ""}
+      <div class="list-item__avatar" style="margin:0 auto 8px;"></div>
+      <p style="font-weight:600;font-size:var(--text-sm);"></p>
+      <p class="text-secondary" style="font-size:var(--text-xs);"></p>
     `;
-    linha.querySelector(".list-item__title").textContent = produto.nome;
-    linha.querySelector(".list-item__subtitle").textContent = `Estoque: ${produto.estoque}`;
-    linha.querySelector(".list-item__trailing p").textContent = formatarMoeda(produto.precoVenda);
-    linha.addEventListener("click", () => {
+    card.querySelector(".list-item__avatar").textContent = iniciaisCliente(produto.nome);
+    card.querySelectorAll("p")[0].textContent = produto.nome;
+    card.querySelectorAll("p")[1].textContent = formatarMoeda(produto.precoVenda);
+    card.addEventListener("click", () => {
       vendaCarrinho[produto.id] = (vendaCarrinho[produto.id] || 0) + 1;
+      renderizarListaVendaProdutos();
       renderizarCarrinhoVenda();
     });
-    container.appendChild(linha);
+    container.appendChild(card);
   });
 }
 
@@ -89,6 +99,7 @@ function renderizarCarrinhoVenda() {
 
   if (entradas.length === 0) {
     wrap.classList.add("is-hidden");
+    qs("#js-venda-total").textContent = formatarMoeda(0);
     return;
   }
   wrap.classList.remove("is-hidden");
@@ -117,10 +128,12 @@ function renderizarCarrinhoVenda() {
     `;
     linha.querySelector("[data-carrinho-menos]").addEventListener("click", () => {
       vendaCarrinho[produtoId] = Math.max(0, (vendaCarrinho[produtoId] || 0) - 1);
+      renderizarListaVendaProdutos();
       renderizarCarrinhoVenda();
     });
     linha.querySelector("[data-carrinho-mais]").addEventListener("click", () => {
       vendaCarrinho[produtoId] = (vendaCarrinho[produtoId] || 0) + 1;
+      renderizarListaVendaProdutos();
       renderizarCarrinhoVenda();
     });
     container.appendChild(linha);
@@ -140,8 +153,41 @@ function itensCarrinhoVenda() {
     .filter(Boolean);
 }
 
+function subtotalCarrinhoVenda(itens) {
+  return itens.reduce((soma, item) => soma + item.precoUnitario * item.quantidade, 0);
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   aplicarMascaraMoeda(qs("#js-venda-valor-pendente"));
+
+  // Cancelar a venda (Cancelar, ✕ ou tocar fora) sem confirmar avisa quem abriu
+  // o modal — necessário pro fluxo "Vendeu algo?" (js/agenda.js) voltar pro
+  // modal de Finalizar atendimento em vez de deixar tudo fechado.
+  const dispararCancelamentoVenda = () => {
+    if (!vendaAoCancelar) return;
+    const callback = vendaAoCancelar;
+    vendaAoCancelar = null;
+    callback();
+  };
+  qsa("#modal-nova-venda [data-fechar-modal], #modal-nova-venda .modal-close").forEach((el) => {
+    el.addEventListener("click", dispararCancelamentoVenda);
+  });
+  qs("#modal-nova-venda").addEventListener("click", (e) => {
+    if (e.target.id === "modal-nova-venda") dispararCancelamentoVenda();
+  });
+
+  qs("#js-venda-continuar").addEventListener("click", () => {
+    const itens = itensCarrinhoVenda();
+    if (itens.length === 0) return;
+    qs("#js-venda-total-resumo").textContent = formatarMoeda(subtotalCarrinhoVenda(itens));
+    qs("#js-venda-etapa-produtos").classList.add("is-hidden");
+    qs("#js-venda-etapa-pagamento").classList.remove("is-hidden");
+  });
+
+  qs("#js-venda-voltar").addEventListener("click", () => {
+    qs("#js-venda-etapa-pagamento").classList.add("is-hidden");
+    qs("#js-venda-etapa-produtos").classList.remove("is-hidden");
+  });
 
   const tipoClienteContainer = qs("#js-venda-cliente-tipo");
   if (tipoClienteContainer) {
@@ -192,6 +238,7 @@ document.addEventListener("DOMContentLoaded", () => {
   qs("#js-venda-confirmar").addEventListener("click", () => {
     const itens = itensCarrinhoVenda();
     if (itens.length === 0) return;
+    const subtotal = subtotalCarrinhoVenda(itens);
 
     const vindoDeAtendimento = !!vendaContexto.agendamentoId;
     let clienteId = null;
@@ -213,6 +260,8 @@ document.addEventListener("DOMContentLoaded", () => {
       nomeCliente,
       agendamentoId: vendaContexto.agendamentoId,
       itens,
+      subtotal,
+      desconto: 0,
       valorTotal: 0,
       status: "pendente",
       criadaEm: new Date().toISOString(),
@@ -230,6 +279,7 @@ document.addEventListener("DOMContentLoaded", () => {
       venda.valorPendente = valorPendente;
       venda.valorTotal = valorPendente;
     }
+    venda.desconto = Math.max(0, subtotal - venda.valorTotal);
 
     const produtos = obterProdutos();
     itens.forEach((item) => {
@@ -243,6 +293,7 @@ document.addEventListener("DOMContentLoaded", () => {
     salvarVendas(vendas);
 
     mostrarSucesso();
+    vendaAoCancelar = null;
     if (vendaAoConcluir) vendaAoConcluir(venda);
   });
 });
