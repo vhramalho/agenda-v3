@@ -80,6 +80,30 @@ function montarLinhaPago(agendamento) {
   return linha;
 }
 
+function listaVendasPendentes() {
+  return obterVendas()
+    .filter((v) => v.status === "pendente")
+    .sort((a, b) => (a.criadaEm < b.criadaEm ? -1 : 1));
+}
+
+function montarLinhaVendaPendente(venda) {
+  const linha = document.createElement("div");
+  linha.className = "list-item";
+  const quantidadeItens = (venda.itens || []).reduce((s, item) => s + item.quantidade, 0);
+  linha.innerHTML = `
+    <span class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 6h15l-1.5 9h-12z"/><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/></svg></span>
+    <div class="list-item__body">
+      <p class="list-item__title"></p>
+      <p class="list-item__subtitle"></p>
+    </div>
+    <div class="list-item__trailing"><p style="font-weight:700;"></p></div>
+  `;
+  linha.querySelector(".list-item__title").textContent = venda.nomeCliente || "Avulso";
+  linha.querySelector(".list-item__subtitle").textContent = `${quantidadeItens} ite${quantidadeItens === 1 ? "m" : "ns"} · ${formatarDataCurta(venda.criadaEm.slice(0, 10))}`;
+  linha.querySelector(".list-item__trailing p").textContent = formatarMoeda(venda.valorPendente || venda.valorTotal || 0);
+  return linha;
+}
+
 function rankingDevedores(periodo) {
   // Histórico de quantas vezes o cliente já entrou como pendente, mesmo que
   // tenha pago depois — não é só quem está pendente agora (isso é listaPendentes()).
@@ -189,6 +213,41 @@ document.addEventListener("DOMContentLoaded", () => {
 
     toggle.addEventListener("click", () => { expandido = !expandido; renderQuemDeve(); });
     renderQuemDeve();
+  }
+
+  // ---- Vendas pendentes (expansível, limite 2) ----
+  if (qs("#js-vendas-pendentes-lista")) {
+    const vendasPendentes = listaVendasPendentes();
+    const totalVendasPendentes = vendasPendentes.reduce((soma, v) => soma + (v.valorPendente || v.valorTotal || 0), 0);
+    const titulo = qs("#js-vendas-pendentes-titulo");
+    const toggle = qs("#js-vendas-pendentes-toggle");
+    const container = qs("#js-vendas-pendentes-lista");
+    const vazio = qs("#js-vendas-pendentes-vazio");
+    let expandido = false;
+
+    function renderVendasPendentes() {
+      container.innerHTML = "";
+      if (vendasPendentes.length === 0) {
+        container.classList.add("is-hidden");
+        vazio.classList.remove("is-hidden");
+        titulo.textContent = "Vendas pendentes";
+        toggle.classList.add("is-hidden");
+      } else {
+        container.classList.remove("is-hidden");
+        vazio.classList.add("is-hidden");
+        (expandido ? vendasPendentes : vendasPendentes.slice(0, 2)).forEach((v) => container.appendChild(montarLinhaVendaPendente(v)));
+        titulo.textContent = `Vendas pendentes (${formatarMoeda(totalVendasPendentes)})`;
+        if (vendasPendentes.length > 2) {
+          toggle.textContent = expandido ? "Ver menos" : "Ver todos";
+          toggle.classList.remove("is-hidden");
+        } else {
+          toggle.classList.add("is-hidden");
+        }
+      }
+    }
+
+    toggle.addEventListener("click", () => { expandido = !expandido; renderVendasPendentes(); });
+    renderVendasPendentes();
   }
 
   // ---- Pagos recentemente (expansível, resumo 2, máximo 5 na memória) ----

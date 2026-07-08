@@ -59,6 +59,24 @@ function agendamentosNoPeriodo(inicio, fim) {
   return obterAgendamentos().filter((a) => a.status && a.status.startsWith("realizado_") && a.data >= inicioIso && a.data <= fimIso);
 }
 
+function vendasNoPeriodo(inicio, fim) {
+  const inicioIso = dataLocalParaIso(inicio);
+  const fimIso = dataLocalParaIso(fim);
+  return obterVendas().filter((v) => {
+    const dataVenda = v.criadaEm.slice(0, 10);
+    return dataVenda >= inicioIso && dataVenda <= fimIso;
+  });
+}
+
+function calcularResumoVendas(vendas) {
+  const faturamento = vendas.reduce((soma, v) => soma + (v.valorTotal || 0), 0);
+  const desconto = vendas.reduce((soma, v) => soma + (v.desconto || 0), 0);
+  const totalRecebido = vendas
+    .filter((v) => v.status === "paga")
+    .reduce((soma, v) => soma + (v.pagamentos || []).reduce((s, p) => s + p.valor, 0), 0);
+  return { faturamento, desconto, totalRecebido };
+}
+
 function calcularResumo(agendamentos) {
   const formas = obterFormasPagamento();
   const faturamento = agendamentos.reduce((soma, a) => soma + (a.valorTotal || 0), 0);
@@ -311,6 +329,16 @@ document.addEventListener("DOMContentLoaded", () => {
     qs("#js-relatorio-taxas-comparacao").className = `insight-card__comparacao ${compTaxas.classe}`;
 
     montarRecebimentos(resumo);
+
+    const resumoVendas = calcularResumoVendas(vendasNoPeriodo(inicio, fim));
+    const resumoVendasAnterior = calcularResumoVendas(vendasNoPeriodo(inicioAnt, fimAnt));
+    qs("#js-relatorio-vendas-faturamento").textContent = formatarMoeda(resumoVendas.faturamento);
+    const compVendas = formatarComparacao(resumoVendas.faturamento, resumoVendasAnterior.faturamento, rotuloComparacao, "valor");
+    qs("#js-relatorio-vendas-faturamento-comparacao").textContent = compVendas.texto;
+    qs("#js-relatorio-vendas-faturamento-comparacao").className = compVendas.classe;
+    qs("#js-relatorio-vendas-recebido").textContent = formatarMoeda(resumoVendas.totalRecebido);
+    qs("#js-relatorio-vendas-desconto").textContent = formatarMoeda(resumoVendas.desconto);
+    qs("#js-relatorio-total-combinado").textContent = `Total combinado com atendimentos: ${formatarMoeda(resumo.faturamento + resumoVendas.faturamento)}`;
 
     const svgGrafico = qs("#js-relatorio-grafico-svg");
     if (tipoPeriodo === "dia") {

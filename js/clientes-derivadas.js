@@ -30,12 +30,15 @@ function estatisticasRanking(clienteId, periodo) {
   const visitas = realizados.length;
   const totalGasto = realizados.reduce((s, a) => s + (a.valorTotal || 0), 0);
   const ticket = visitas > 0 ? totalGasto / visitas : 0;
-  return { visitas, totalGasto, ticket };
+  const vendasCliente = obterVendas().filter((v) => v.clienteId === clienteId && dataNoPeriodo(v.criadaEm.slice(0, 10), periodo));
+  const totalComprado = vendasCliente.reduce((s, v) => s + (v.valorTotal || 0), 0);
+  return { visitas, totalGasto, ticket, totalComprado };
 }
 
 function valorPorMetrica(stats, metrica) {
   if (metrica === "visitas") return stats.visitas;
   if (metrica === "ticket") return stats.ticket;
+  if (metrica === "compras") return stats.totalComprado;
   return stats.totalGasto;
 }
 
@@ -65,7 +68,7 @@ function renderizarRanking(metrica, periodo) {
   const linhas = obterClientes()
     .filter((c) => c.ativo)
     .map((c) => ({ cliente: c, stats: estatisticasRanking(c.id, periodo) }))
-    .filter((r) => r.stats.visitas > 0)
+    .filter((r) => valorPorMetrica(r.stats, metrica) > 0)
     .sort((a, b) => valorPorMetrica(b.stats, metrica) - valorPorMetrica(a.stats, metrica));
 
   const tabela = qs("#js-ranking-tabela");

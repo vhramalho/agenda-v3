@@ -4,10 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Produtos — Agenda V3</title>
-  <link rel="stylesheet" href="css/tokens.css?v=20260706an" />
-  <link rel="stylesheet" href="css/base.css?v=20260706an" />
-  <link rel="stylesheet" href="css/layout.css?v=20260706an" />
-  <link rel="stylesheet" href="css/components.css?v=20260706an" />
+  <link rel="stylesheet" href="css/tokens.css?v=20260706ao" />
+  <link rel="stylesheet" href="css/base.css?v=20260706ao" />
+  <link rel="stylesheet" href="css/layout.css?v=20260706ao" />
+  <link rel="stylesheet" href="css/components.css?v=20260706ao" />
 </head>
 <body data-page="mais">
   <div class="app">
@@ -32,6 +32,14 @@
           <p class="text-muted">Toque no + acima para criar o primeiro.</p>
         </div>
       </section>
+
+      <a href="ranking-produtos.html" class="card card--destaque is-hidden" id="js-produto-destaque" style="display:block;text-decoration:none;color:inherit;">
+        <div class="row row--between" style="margin-bottom:12px;">
+          <span style="font-weight:700;">Mais vendidos</span>
+        </div>
+        <div id="js-produto-top3"></div>
+        <p class="text-primary-accent" style="text-align:center;font-weight:600;margin-top:12px;">Ver ranking completo</p>
+      </a>
     </main>
 
     <div id="js-bottom-nav-mount"></div>
@@ -133,15 +141,16 @@
     </div>
   </div>
 
-  <script src="js/utils.js?v=20260706an"></script>
-  <script src="js/menu.js?v=20260706an"></script>
-  <script src="js/storage.js?v=20260706an"></script>
-  <script src="js/tema.js?v=20260706an"></script>
-  <script src="js/app.js?v=20260706an"></script>
-  <script src="js/chips.js?v=20260706an"></script>
-  <script src="js/modal.js?v=20260706an"></script>
-  <script src="js/acoes-simuladas.js?v=20260706an"></script>
-  <script src="js/vendas.js?v=20260706an"></script>
-  <script src="js/produtos.js?v=20260706an"></script>
+  <script src="js/utils.js?v=20260706ao"></script>
+  <script src="js/menu.js?v=20260706ao"></script>
+  <script src="js/storage.js?v=20260706ao"></script>
+  <script src="js/tema.js?v=20260706ao"></script>
+  <script src="js/app.js?v=20260706ao"></script>
+  <script src="js/chips.js?v=20260706ao"></script>
+  <script src="js/modal.js?v=20260706ao"></script>
+  <script src="js/acoes-simuladas.js?v=20260706ao"></script>
+  <script src="js/vendas.js?v=20260706ao"></script>
+  <script src="js/ranking-produtos.js?v=20260706ao"></script>
+  <script src="js/produtos.js?v=20260706ao"></script>
 </body>
 </html>

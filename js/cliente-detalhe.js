@@ -81,6 +81,60 @@ function renderizarHistorico() {
   }
 }
 
+let comprasExpandido = false;
+
+function renderizarCompras() {
+  const id = obterIdClienteDaUrl();
+  const produtos = obterProdutos();
+  const vendas = obterVendas()
+    .filter((v) => v.clienteId === id)
+    .sort((a, b) => (a.criadaEm < b.criadaEm ? 1 : -1));
+
+  const compras = qs("#js-cliente-compras");
+  const comprasVazio = qs("#js-cliente-compras-vazio");
+  const toggle = qs("#js-cliente-compras-toggle");
+  compras.innerHTML = "";
+
+  if (vendas.length === 0) {
+    compras.classList.add("is-hidden");
+    comprasVazio.classList.remove("is-hidden");
+    toggle.classList.add("is-hidden");
+    return;
+  }
+
+  compras.classList.remove("is-hidden");
+  comprasVazio.classList.add("is-hidden");
+
+  (comprasExpandido ? vendas : vendas.slice(0, 5)).forEach((v) => {
+    const nomesItens = (v.itens || [])
+      .map((item) => (produtos.find((p) => p.id === item.produtoId) || {}).nome || item.nomeProduto)
+      .filter(Boolean)
+      .join(" + ");
+    const linha = document.createElement("div");
+    linha.className = "list-item";
+    linha.innerHTML = `
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.8"><path d="M6 6h15l-1.5 9h-12z"/><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/></svg>
+      <div class="list-item__body">
+        <p class="list-item__title">${formatarDataCurta(v.criadaEm.slice(0, 10))}</p>
+        <p class="list-item__subtitle"></p>
+      </div>
+      <p style="font-weight:700;" class="js-compra-valor"></p>
+    `;
+    linha.querySelector(".list-item__subtitle").textContent = nomesItens || "—";
+    const valorEl = linha.querySelector(".js-compra-valor");
+    valorEl.textContent = formatarMoeda(v.valorTotal || 0);
+    valorEl.className = `js-compra-valor ${v.status === "paga" ? "text-success" : "text-warning"}`;
+    compras.appendChild(linha);
+  });
+
+  if (vendas.length > 5) {
+    toggle.textContent = comprasExpandido ? "Ver menos" : `Ver todas (${vendas.length})`;
+    toggle.classList.remove("is-hidden");
+  } else {
+    toggle.classList.add("is-hidden");
+  }
+}
+
 function renderizarPagina() {
   const id = obterIdClienteDaUrl();
   const cliente = obterClientes().find((c) => c.id === id);
@@ -127,6 +181,7 @@ function renderizarPagina() {
   qs("#js-cliente-observacao").textContent = cliente.observacao || "Nenhuma observação registrada.";
 
   renderizarHistorico();
+  renderizarCompras();
 
   const whatsapp = qs("#js-cliente-whatsapp");
   if (cliente.telefone) {
@@ -180,6 +235,11 @@ document.addEventListener("DOMContentLoaded", () => {
   qs("#js-cliente-historico-toggle").addEventListener("click", () => {
     historicoExpandido = !historicoExpandido;
     renderizarHistorico();
+  });
+
+  qs("#js-cliente-compras-toggle").addEventListener("click", () => {
+    comprasExpandido = !comprasExpandido;
+    renderizarCompras();
   });
 
   qs("#js-confirmar-mover-lixeira").addEventListener("click", () => {

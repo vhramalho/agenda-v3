@@ -4,10 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Pendentes — Agenda V3</title>
-  <link rel="stylesheet" href="css/tokens.css?v=20260706an" />
-  <link rel="stylesheet" href="css/base.css?v=20260706an" />
-  <link rel="stylesheet" href="css/layout.css?v=20260706an" />
-  <link rel="stylesheet" href="css/components.css?v=20260706an" />
+  <link rel="stylesheet" href="css/tokens.css?v=20260706ao" />
+  <link rel="stylesheet" href="css/base.css?v=20260706ao" />
+  <link rel="stylesheet" href="css/layout.css?v=20260706ao" />
+  <link rel="stylesheet" href="css/components.css?v=20260706ao" />
 </head>
 <body data-page="pendentes">
   <div class="app">
@@ -31,6 +31,15 @@
 
       <section class="section">
         <div class="row row--between" style="margin-bottom:8px;">
+          <h2 class="section__title" style="margin-bottom:0;" id="js-vendas-pendentes-titulo">Vendas pendentes</h2>
+          <button class="text-primary-accent is-hidden" id="js-vendas-pendentes-toggle" style="font-size:var(--text-sm);font-weight:600;background:none;border:none;padding:0;cursor:pointer;font-family:inherit;">Ver todos</button>
+        </div>
+        <div class="card" id="js-vendas-pendentes-lista"></div>
+        <div class="empty-state is-hidden" id="js-vendas-pendentes-vazio"><p class="empty-state__title">Nenhuma venda pendente</p></div>
+      </section>
+
+      <section class="section">
+        <div class="row row--between" style="margin-bottom:8px;">
           <h2 class="section__title" style="margin-bottom:0;">Pagos recentemente</h2>
           <button class="text-primary-accent is-hidden" id="js-pagos-toggle" style="font-size:var(--text-sm);font-weight:600;background:none;border:none;padding:0;cursor:pointer;font-family:inherit;">Ver todos</button>
         </div>
@@ -50,11 +59,11 @@
     <div id="js-bottom-nav-mount"></div>
   </div>
 
-  <script src="js/utils.js?v=20260706an"></script>
-  <script src="js/menu.js?v=20260706an"></script>
-  <script src="js/storage.js?v=20260706an"></script>
-  <script src="js/tema.js?v=20260706an"></script>
-  <script src="js/app.js?v=20260706an"></script>
-  <script src="js/pendentes.js?v=20260706an"></script>
+  <script src="js/utils.js?v=20260706ao"></script>
+  <script src="js/menu.js?v=20260706ao"></script>
+  <script src="js/storage.js?v=20260706ao"></script>
+  <script src="js/tema.js?v=20260706ao"></script>
+  <script src="js/app.js?v=20260706ao"></script>
+  <script src="js/pendentes.js?v=20260706ao"></script>
 </body>
 </html>

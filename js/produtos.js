@@ -44,6 +44,21 @@ function renderizarProdutos() {
     vazio.classList.add("is-hidden");
     produtosAtivos.forEach((produto, i) => container.appendChild(montarLinhaProduto(produto, i)));
   }
+
+  calcularMaisVendido();
+}
+
+function calcularMaisVendido() {
+  const ranking = calcularRankingProdutos({ tipo: "ano", ano: new Date().getFullYear() }).slice(0, 3);
+  const destaque = qs("#js-produto-destaque");
+  if (ranking.length === 0) {
+    destaque.classList.add("is-hidden");
+    return;
+  }
+  const container = qs("#js-produto-top3");
+  container.innerHTML = "";
+  ranking.forEach((item, i) => container.appendChild(montarLinhaRankingProduto(item, i + 1, i)));
+  destaque.classList.remove("is-hidden");
 }
 
 function abrirNovoProduto() {
