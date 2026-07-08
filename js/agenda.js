@@ -760,13 +760,19 @@ function proximoNomeDisponivel(nomeBase) {
   return `${nomeBase} ${n}`;
 }
 
+/* toggle é o card clicável (.list-item por dentro) — o texto some no
+   .list-item__title, nunca no próprio toggle, senão apaga o ícone/seta. */
+function textoToggleObservacao(toggle) {
+  return qs(".list-item__title", toggle) || toggle;
+}
+
 function prepararObservacaoWrap(idTextarea, idToggle, texto) {
   const textarea = qs(`#${idTextarea}`);
   const toggle = qs(`#${idToggle}`);
   textarea.value = texto || "";
   textarea.classList.add("is-hidden");
   toggle.classList.remove("is-hidden");
-  toggle.textContent = "+ Adicionar observação";
+  textoToggleObservacao(toggle).textContent = "+ Adicionar observação";
 }
 
 function alternarObservacaoWrap(idTextarea, idToggle) {
@@ -774,7 +780,7 @@ function alternarObservacaoWrap(idTextarea, idToggle) {
   const toggle = qs(`#${idToggle}`);
   const abrir = textarea.classList.contains("is-hidden");
   textarea.classList.toggle("is-hidden", !abrir);
-  toggle.textContent = abrir ? "- Adicionar observação" : "+ Adicionar observação";
+  textoToggleObservacao(toggle).textContent = abrir ? "- Adicionar observação" : "+ Adicionar observação";
   if (abrir) textarea.focus();
 }
 
@@ -851,9 +857,7 @@ function prepararFinalizarAtendimento(agendamento) {
   const modal = qs("#modal-finalizar-atendimento");
   prepararClientePicker("js-finalizar", agendamento.clienteId || null, agendamento.nomeCliente);
   montarServicosChips("js-finalizar-servicos", agendamento.servicosIds || []);
-  qs("#js-finalizar-observacao").value = agendamento.observacao || "";
-  qs("#js-finalizar-observacao").classList.add("is-hidden");
-  qs("#js-finalizar-observacao-dot").classList.toggle("is-hidden", !agendamento.observacao);
+  prepararObservacaoWrap("js-finalizar-observacao", "js-finalizar-observacao-toggle", agendamento.observacao || "");
   vendaAnexadaId = null;
   qs("#js-finalizar-venda-toggle").classList.remove("is-hidden");
   qs("#js-finalizar-venda-resumo").classList.add("is-hidden");
@@ -918,9 +922,7 @@ function ocultarResumoVendaEditarRealizado() {
 function prepararEditarRealizado(agendamento) {
   prepararClientePicker("js-editar-realizado", agendamento.clienteId || null, agendamento.nomeCliente);
   montarServicosChips("js-editar-realizado-servicos", agendamento.servicosIds || []);
-  qs("#js-editar-realizado-observacao").value = agendamento.observacao || "";
-  qs("#js-editar-realizado-observacao").classList.add("is-hidden");
-  qs("#js-editar-realizado-observacao-dot").classList.toggle("is-hidden", !agendamento.observacao);
+  prepararObservacaoWrap("js-editar-realizado-observacao", "js-editar-realizado-observacao-toggle", agendamento.observacao || "");
   const vendaExistente = agendamento.vendaId ? obterVendas().find((v) => v.id === agendamento.vendaId) : null;
   if (vendaExistente) {
     mostrarResumoVendaEditarRealizado(vendaExistente);
@@ -1163,25 +1165,11 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   qs("#js-finalizar-observacao-toggle").addEventListener("click", () => {
-    const textarea = qs("#js-finalizar-observacao");
-    const abrir = textarea.classList.contains("is-hidden");
-    textarea.classList.toggle("is-hidden", !abrir);
-    if (abrir) textarea.focus();
-  });
-
-  qs("#js-finalizar-observacao").addEventListener("input", (e) => {
-    qs("#js-finalizar-observacao-dot").classList.toggle("is-hidden", !e.target.value.trim());
+    alternarObservacaoWrap("js-finalizar-observacao", "js-finalizar-observacao-toggle");
   });
 
   qs("#js-editar-realizado-observacao-toggle").addEventListener("click", () => {
-    const textarea = qs("#js-editar-realizado-observacao");
-    const abrir = textarea.classList.contains("is-hidden");
-    textarea.classList.toggle("is-hidden", !abrir);
-    if (abrir) textarea.focus();
-  });
-
-  qs("#js-editar-realizado-observacao").addEventListener("input", (e) => {
-    qs("#js-editar-realizado-observacao-dot").classList.toggle("is-hidden", !e.target.value.trim());
+    alternarObservacaoWrap("js-editar-realizado-observacao", "js-editar-realizado-observacao-toggle");
   });
 
   qs("#modal-editar-realizado").addEventListener("click", (evento) => {

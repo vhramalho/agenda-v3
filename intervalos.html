@@ -4,10 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Intervalos — Agenda V3</title>
-  <link rel="stylesheet" href="css/tokens.css?v=20260706ao" />
-  <link rel="stylesheet" href="css/base.css?v=20260706ao" />
-  <link rel="stylesheet" href="css/layout.css?v=20260706ao" />
-  <link rel="stylesheet" href="css/components.css?v=20260706ao" />
+  <link rel="stylesheet" href="css/tokens.css?v=20260708a" />
+  <link rel="stylesheet" href="css/base.css?v=20260708a" />
+  <link rel="stylesheet" href="css/layout.css?v=20260708a" />
+  <link rel="stylesheet" href="css/components.css?v=20260708a" />
 </head>
 <body data-page="mais">
   <div class="app">
@@ -54,14 +54,14 @@
         <div class="field"><label class="field__label">Nome</label><input class="input" placeholder="Ex.: Almoço" id="js-novo-intervalo-nome"/></div>
         <div class="field">
           <label class="field__label">Dias da semana</label>
-          <div class="row" style="gap:8px;flex-wrap:wrap;" data-chips="multi" id="js-novo-intervalo-dias">
+          <div class="chip-group" data-chips="multi" id="js-novo-intervalo-dias">
             <span class="chip" data-dia="seg">Seg</span><span class="chip" data-dia="ter">Ter</span><span class="chip" data-dia="qua">Qua</span><span class="chip" data-dia="qui">Qui</span><span class="chip" data-dia="sex">Sex</span><span class="chip" data-dia="sab">Sáb</span><span class="chip" data-dia="dom">Dom</span>
           </div>
         </div>
         <div class="field">
           <label class="field__label">Horários bloqueados</label>
           <p class="text-secondary" style="font-size:var(--text-sm);margin-bottom:8px;">Toque em todos os horários que ficarão bloqueados.</p>
-          <div class="row" style="gap:8px;flex-wrap:wrap;" data-chips="multi" id="js-novo-intervalo-horarios"></div>
+          <div class="chip-group" data-chips="multi" id="js-novo-intervalo-horarios"></div>
         </div>
         <div class="btn-row"><button class="btn btn--secondary" data-fechar-modal>Cancelar</button><button class="btn btn--primary" id="js-novo-intervalo-salvar">Salvar</button></div>
       </div>
@@ -73,14 +73,14 @@
         <div class="field"><label class="field__label">Nome</label><input class="input" id="js-editar-intervalo-nome"/></div>
         <div class="field">
           <label class="field__label">Dias da semana</label>
-          <div class="row" style="gap:8px;flex-wrap:wrap;" data-chips="multi" id="js-editar-intervalo-dias">
+          <div class="chip-group" data-chips="multi" id="js-editar-intervalo-dias">
             <span class="chip" data-dia="seg">Seg</span><span class="chip" data-dia="ter">Ter</span><span class="chip" data-dia="qua">Qua</span><span class="chip" data-dia="qui">Qui</span><span class="chip" data-dia="sex">Sex</span><span class="chip" data-dia="sab">Sáb</span><span class="chip" data-dia="dom">Dom</span>
           </div>
         </div>
         <div class="field">
           <label class="field__label">Horários bloqueados</label>
           <p class="text-secondary" style="font-size:var(--text-sm);margin-bottom:8px;">Toque em todos os horários que ficarão bloqueados.</p>
-          <div class="row" style="gap:8px;flex-wrap:wrap;" data-chips="multi" id="js-editar-intervalo-horarios"></div>
+          <div class="chip-group" data-chips="multi" id="js-editar-intervalo-horarios"></div>
         </div>
         <div class="btn-row" style="margin-top:16px;"><button class="btn btn--primary" id="js-editar-intervalo-salvar">Salvar</button><button class="btn btn--danger" data-trocar-modal="modal-confirmar-exclusao-intervalo">Excluir</button></div>
       </div>
@@ -95,13 +95,13 @@
     </div>
   </div>
 
-  <script src="js/utils.js?v=20260706ao"></script>
-  <script src="js/menu.js?v=20260706ao"></script>
-  <script src="js/storage.js?v=20260706ao"></script>
-  <script src="js/tema.js?v=20260706ao"></script>
-  <script src="js/app.js?v=20260706ao"></script>
-  <script src="js/chips.js?v=20260706ao"></script>
-  <script src="js/modal.js?v=20260706ao"></script>
-  <script src="js/intervalos.js?v=20260706ao"></script>
+  <script src="js/utils.js?v=20260708a"></script>
+  <script src="js/menu.js?v=20260708a"></script>
+  <script src="js/storage.js?v=20260708a"></script>
+  <script src="js/tema.js?v=20260708a"></script>
+  <script src="js/app.js?v=20260708a"></script>
+  <script src="js/chips.js?v=20260708a"></script>
+  <script src="js/modal.js?v=20260708a"></script>
+  <script src="js/intervalos.js?v=20260708a"></script>
 </body>
 </html>
