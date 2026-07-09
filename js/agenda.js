@@ -1130,11 +1130,28 @@ document.addEventListener("DOMContentLoaded", () => {
     abrirModal("modal-nova-venda");
   });
 
-  qs("#js-finalizar-venda-remover").addEventListener("click", () => {
-    if (vendaAnexadaId) removerVendaAnexada(vendaAnexadaId);
-    vendaAnexadaId = null;
-    qs("#js-finalizar-venda-toggle").classList.remove("is-hidden");
-    qs("#js-finalizar-venda-resumo").classList.add("is-hidden");
+  qs("#js-finalizar-venda-resumo").addEventListener("click", () => {
+    const venda = vendaAnexadaId ? obterVendas().find((v) => v.id === vendaAnexadaId) : null;
+    if (!venda) return;
+    fecharModal("modal-finalizar-atendimento");
+    prepararEditarVenda(
+      venda,
+      (vendaAtualizada) => {
+        fecharModal("modal-nova-venda");
+        abrirModal("modal-finalizar-atendimento");
+        mostrarResumoVendaFinalizar(vendaAtualizada);
+      },
+      () => abrirModal("modal-finalizar-atendimento"),
+      () => {
+        removerVendaAnexada(venda.id);
+        vendaAnexadaId = null;
+        fecharModal("modal-nova-venda");
+        abrirModal("modal-finalizar-atendimento");
+        qs("#js-finalizar-venda-toggle").classList.remove("is-hidden");
+        qs("#js-finalizar-venda-resumo").classList.add("is-hidden");
+      }
+    );
+    abrirModal("modal-nova-venda");
   });
 
   // Se o usuário cancelar (ou tocar fora) o Finalizar atendimento depois de
@@ -1305,10 +1322,27 @@ document.addEventListener("DOMContentLoaded", () => {
     abrirModal("modal-nova-venda");
   });
 
-  qs("#js-editar-realizado-venda-remover").addEventListener("click", () => {
-    if (vendaAnexadaId) removerVendaAnexada(vendaAnexadaId);
-    vendaAnexadaId = null;
-    ocultarResumoVendaEditarRealizado();
+  qs("#js-editar-realizado-venda-resumo").addEventListener("click", () => {
+    const venda = vendaAnexadaId ? obterVendas().find((v) => v.id === vendaAnexadaId) : null;
+    if (!venda) return;
+    fecharModal("modal-editar-realizado");
+    prepararEditarVenda(
+      venda,
+      (vendaAtualizada) => {
+        fecharModal("modal-nova-venda");
+        abrirModal("modal-editar-realizado");
+        mostrarResumoVendaEditarRealizado(vendaAtualizada);
+      },
+      () => abrirModal("modal-editar-realizado"),
+      () => {
+        removerVendaAnexada(venda.id);
+        vendaAnexadaId = null;
+        fecharModal("modal-nova-venda");
+        abrirModal("modal-editar-realizado");
+        ocultarResumoVendaEditarRealizado();
+      }
+    );
+    abrirModal("modal-nova-venda");
   });
 
   qs("#js-editar-realizado-salvar").addEventListener("click", () => {

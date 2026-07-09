@@ -22,6 +22,18 @@ let vendaAoConcluir = null;
 let vendaAoCancelar = null;
 let vendaCarrinho = {};
 let vendaClienteSelecionadoId = null;
+let vendaEditandoId = null;
+let vendaItensOriginais = {};
+let vendaAoExcluir = null;
+
+/* Quantidade disponível pra adicionar ao carrinho — em modo edição, os itens
+   que já pertenciam a esta mesma venda contam como "disponíveis de volta",
+   senão editar uma venda existente pareceria estar sem estoque pro que ela
+   mesma já tinha vendido. */
+function estoqueDisponivelParaCarrinho(produto) {
+  if (!vendaEditandoId) return produto.estoque;
+  return produto.estoque + (vendaItensOriginais[produto.id] || 0);
+}
 
 function prepararNovaVenda(contexto, aoConcluir, aoCancelar) {
   vendaContexto = { clienteId: contexto.clienteId || null, nomeCliente: contexto.nomeCliente || null, agendamentoId: contexto.agendamentoId || null };
@@ -29,6 +41,12 @@ function prepararNovaVenda(contexto, aoConcluir, aoCancelar) {
   vendaAoCancelar = aoCancelar || null;
   vendaCarrinho = {};
   vendaClienteSelecionadoId = contexto.clienteId || null;
+  vendaEditandoId = null;
+  vendaItensOriginais = {};
+  vendaAoExcluir = null;
+  qs("#js-venda-modal-titulo").textContent = "Registrar venda";
+  qs("#js-venda-confirmar").textContent = "Confirmar venda";
+  qs("#js-venda-excluir").classList.add("is-hidden");
 
   const vindoDeAtendimento = !!vendaContexto.agendamentoId;
   qs("#js-venda-cliente-toggle-wrap").classList.toggle("is-hidden", vindoDeAtendimento);
@@ -48,6 +66,67 @@ function prepararNovaVenda(contexto, aoConcluir, aoCancelar) {
   qsa("[data-campo-pago]", qs("#modal-nova-venda")).forEach((campo) => campo.classList.toggle("is-hidden", campo.dataset.campoPago !== "sim"));
   montarFormasChips("js-venda-formas", "js-venda-linhas-pagamento", [], {}, () => subtotalCarrinhoVenda(itensCarrinhoVenda()), "js-venda-desconto-gorjeta-aviso");
   qs("#js-venda-valor-pendente").value = "";
+
+  renderizarListaVendaProdutos();
+  renderizarCarrinhoVenda();
+}
+
+/* Reabre o modal único de venda já preenchido, pra editar produtos/
+   quantidade/cliente/pagamento de uma venda existente (ver "seta" no resumo
+   de venda em Finalizar/Editar atendimento, js/agenda.js). Cliente fica
+   travado quando a venda está presa a um atendimento (mesma regra de
+   prepararNovaVenda), editável numa venda avulsa. Estoque é ajustado pela
+   diferença ao confirmar (js-venda-confirmar), não descontado do zero. */
+function prepararEditarVenda(venda, aoConcluir, aoCancelar, aoExcluir) {
+  vendaContexto = { clienteId: venda.clienteId || null, nomeCliente: venda.nomeCliente || null, agendamentoId: venda.agendamentoId || null };
+  vendaAoConcluir = aoConcluir;
+  vendaAoCancelar = aoCancelar || null;
+  vendaAoExcluir = aoExcluir || null;
+  vendaEditandoId = venda.id;
+  vendaCarrinho = {};
+  vendaItensOriginais = {};
+  (venda.itens || []).forEach((item) => {
+    vendaCarrinho[item.produtoId] = (vendaCarrinho[item.produtoId] || 0) + item.quantidade;
+    vendaItensOriginais[item.produtoId] = (vendaItensOriginais[item.produtoId] || 0) + item.quantidade;
+  });
+  vendaClienteSelecionadoId = venda.clienteId || null;
+  qs("#js-venda-modal-titulo").textContent = "Editar venda";
+  qs("#js-venda-confirmar").textContent = "Salvar alterações";
+  qs("#js-venda-excluir").classList.remove("is-hidden");
+
+  const vindoDeAtendimento = !!vendaContexto.agendamentoId;
+  qs("#js-venda-cliente-toggle-wrap").classList.toggle("is-hidden", vindoDeAtendimento);
+  const fixo = qs("#js-venda-cliente-fixo");
+  if (vindoDeAtendimento) {
+    fixo.textContent = `Vendendo para: ${vendaContexto.nomeCliente || "—"}`;
+    fixo.classList.remove("is-hidden");
+  } else {
+    fixo.classList.add("is-hidden");
+    const ehExistente = !!venda.clienteId;
+    qsa("#js-venda-cliente-tipo .chip").forEach((chip) => chip.classList.toggle("chip--ativo", chip.dataset.tipoCliente === (ehExistente ? "existente" : "avulso")));
+    qs("#js-venda-cliente-busca-wrap").classList.toggle("is-hidden", !ehExistente);
+    qs("#js-venda-cliente-busca").value = ehExistente ? venda.nomeCliente || "" : "";
+    qs("#js-venda-cliente-resultados").classList.add("is-hidden");
+  }
+
+  const modal = qs("#modal-nova-venda");
+  qsa("[data-pago]", modal).forEach((b) => b.classList.toggle("chip--ativo", b.dataset.pago === (venda.status === "paga" ? "sim" : "nao")));
+  qsa("[data-campo-pago]", modal).forEach((campo) => campo.classList.toggle("is-hidden", campo.dataset.campoPago !== (venda.status === "paga" ? "sim" : "nao")));
+
+  if (venda.status === "paga") {
+    const valoresPorNome = {};
+    const nomesSelecionados = [];
+    const formas = obterFormasPagamento();
+    (venda.pagamentos || []).forEach((p) => {
+      const forma = formas.find((f) => f.id === p.formaPagamentoId);
+      if (forma) { nomesSelecionados.push(forma.nome); valoresPorNome[forma.nome] = p.valor; }
+    });
+    montarFormasChips("js-venda-formas", "js-venda-linhas-pagamento", nomesSelecionados, valoresPorNome, () => subtotalCarrinhoVenda(itensCarrinhoVenda()), "js-venda-desconto-gorjeta-aviso");
+    qs("#js-venda-valor-pendente").value = "";
+  } else {
+    montarFormasChips("js-venda-formas", "js-venda-linhas-pagamento", [], {}, () => subtotalCarrinhoVenda(itensCarrinhoVenda()), "js-venda-desconto-gorjeta-aviso");
+    qs("#js-venda-valor-pendente").value = venda.valorPendente != null ? formatarMoeda(venda.valorPendente) : "";
+  }
 
   renderizarListaVendaProdutos();
   renderizarCarrinhoVenda();
@@ -79,7 +158,7 @@ function renderizarListaVendaProdutos() {
     card.querySelectorAll("p")[1].textContent = formatarMoeda(produto.precoVenda);
     card.addEventListener("click", () => {
       const atual = vendaCarrinho[produto.id] || 0;
-      if (atual >= produto.estoque) {
+      if (atual >= estoqueDisponivelParaCarrinho(produto)) {
         mostrarAviso("Estoque insuficiente");
         return;
       }
@@ -133,7 +212,7 @@ function renderizarCarrinhoVenda() {
     });
     linha.querySelector("[data-carrinho-mais]").addEventListener("click", () => {
       const atual = vendaCarrinho[produtoId] || 0;
-      if (atual >= produto.estoque) {
+      if (atual >= estoqueDisponivelParaCarrinho(produto)) {
         mostrarAviso("Estoque insuficiente");
         return;
       }
@@ -247,17 +326,18 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
 
-    const venda = {
-      id: gerarId("venda"),
-      clienteId,
-      nomeCliente,
-      agendamentoId: vendaContexto.agendamentoId,
-      itens,
-      subtotal,
-      valorTotal: 0,
-      status: "pendente",
-      criadaEm: new Date().toISOString(),
-    };
+    const vendas = obterVendas();
+    const venda = vendaEditandoId
+      ? vendas.find((v) => v.id === vendaEditandoId)
+      : { id: gerarId("venda"), criadaEm: new Date().toISOString(), agendamentoId: vendaContexto.agendamentoId };
+    if (!venda) return;
+
+    venda.clienteId = clienteId;
+    venda.nomeCliente = nomeCliente;
+    venda.itens = itens;
+    venda.subtotal = subtotal;
+    delete venda.desconto;
+    delete venda.gorjeta;
 
     const pagoEscolha = qs("[data-pago].chip--ativo", qs("#modal-nova-venda")).dataset.pago;
     if (pagoEscolha === "sim") {
@@ -265,29 +345,53 @@ document.addEventListener("DOMContentLoaded", () => {
       venda.status = "paga";
       venda.pagamentos = pagamentos;
       venda.valorTotal = pagamentos.reduce((s, p) => s + p.valor, 0);
+      delete venda.valorPendente;
     } else {
       const valorPendente = extrairValor(qs("#js-venda-valor-pendente").value) || 0;
       venda.status = "pendente";
       venda.valorPendente = valorPendente;
       venda.valorTotal = valorPendente;
+      delete venda.pagamentos;
     }
     const diferenca = subtotal - venda.valorTotal;
     if (diferenca > 0) venda.desconto = diferenca;
     else if (diferenca < 0) venda.gorjeta = -diferenca;
 
     const produtos = obterProdutos();
-    itens.forEach((item) => {
-      const produto = produtos.find((p) => p.id === item.produtoId);
-      if (produto) produto.estoque -= item.quantidade;
-    });
+    if (vendaEditandoId) {
+      // Ajusta pela diferença entre o que a venda tinha antes e o que tem agora
+      // — nunca desconta do zero, senão dobraria o consumo de estoque.
+      const idsEnvolvidos = new Set([...Object.keys(vendaItensOriginais), ...itens.map((i) => i.produtoId)]);
+      idsEnvolvidos.forEach((produtoId) => {
+        const produto = produtos.find((p) => p.id === produtoId);
+        if (!produto) return;
+        const antes = vendaItensOriginais[produtoId] || 0;
+        const depois = itens.find((i) => i.produtoId === produtoId)?.quantidade || 0;
+        produto.estoque -= (depois - antes);
+      });
+    } else {
+      itens.forEach((item) => {
+        const produto = produtos.find((p) => p.id === item.produtoId);
+        if (produto) produto.estoque -= item.quantidade;
+      });
+    }
     salvarProdutos(produtos);
 
-    const vendas = obterVendas();
-    vendas.push(venda);
+    if (!vendaEditandoId) vendas.push(venda);
     salvarVendas(vendas);
 
     mostrarSucesso();
     vendaAoCancelar = null;
     if (vendaAoConcluir) vendaAoConcluir(venda);
+  });
+
+  qs("#js-venda-excluir").addEventListener("click", () => {
+    abrirModal("modal-confirmar-exclusao-venda");
+  });
+
+  qs("#js-confirmar-exclusao-venda").addEventListener("click", () => {
+    fecharModal("modal-confirmar-exclusao-venda");
+    vendaAoCancelar = null;
+    if (vendaAoExcluir) vendaAoExcluir();
   });
 });
