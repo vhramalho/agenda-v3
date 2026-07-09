@@ -99,8 +99,8 @@
 }
 
 /* Telas muito pequenas: reduz ícone e fonte do menu inferior
-   pra garantir que os 5 itens caibam sem corte */
-@media (max-width: 360px) {
+   pra garantir que os 6 itens caibam sem corte */
+@media (max-width: 400px) {
   .bottom-nav__item {
     font-size: 9px;
     gap: 2px;

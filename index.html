@@ -4,11 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Agenda — Agenda V3</title>
-  <link rel="stylesheet" href="css/tokens.css?v=20260709i" />
-  <link rel="stylesheet" href="css/base.css?v=20260709i" />
-  <link rel="stylesheet" href="css/layout.css?v=20260709i" />
-  <link rel="stylesheet" href="css/components.css?v=20260709i" />
-  <link rel="stylesheet" href="css/agenda.css?v=20260709i" />
+  <link rel="stylesheet" href="css/tokens.css?v=20260709j" />
+  <link rel="stylesheet" href="css/base.css?v=20260709j" />
+  <link rel="stylesheet" href="css/layout.css?v=20260709j" />
+  <link rel="stylesheet" href="css/components.css?v=20260709j" />
+  <link rel="stylesheet" href="css/agenda.css?v=20260709j" />
 </head>
 <body data-page="index">
   <div class="app">
@@ -17,9 +17,6 @@
         <button class="btn-hoje" id="js-btn-hoje">Hoje</button>
         <h1 class="agenda-topo__titulo" id="js-agenda-mes"></h1>
         <div class="agenda-topo__acoes">
-          <button class="icon-btn" aria-label="Registrar venda" id="js-btn-venda-avulsa">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 7h12l1 13H5L6 7z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg>
-          </button>
           <button class="icon-btn" aria-label="Calendário" data-abrir-modal="modal-calendario">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/></svg>
           </button>
@@ -472,7 +469,8 @@
       </div>
     </div>
 
-    <!-- Modal de venda — markup duplicado de produtos.html, lógica compartilhada em js/vendas.js -->
+    <!-- Modal de venda — markup duplicado de vendas.html, lógica compartilhada em js/vendas.js
+         (mesmo padrão já usado por #modal-calendario em index.html/relatorio.html) -->
     <div class="modal-overlay is-hidden" id="modal-nova-venda">
       <div class="modal-sheet">
         <div class="modal-sheet__header"><p class="modal-sheet__title" id="js-venda-modal-titulo">Registrar venda</p><button class="modal-close">✕</button></div>
@@ -536,17 +534,17 @@
     </div>
   </div>
 
-  <script src="js/utils.js?v=20260709i"></script>
-  <script src="js/menu.js?v=20260709i"></script>
-  <script src="js/storage.js?v=20260709i"></script>
-  <script src="js/tema.js?v=20260709i"></script>
-  <script src="js/app.js?v=20260709i"></script>
-  <script src="js/chips.js?v=20260709i"></script>
-  <script src="js/modal.js?v=20260709i"></script>
-  <script src="js/calendario.js?v=20260709i"></script>
-  <script src="js/acoes-simuladas.js?v=20260709i"></script>
-  <script src="js/vendas.js?v=20260709i"></script>
-  <script src="js/agenda.js?v=20260709i"></script>
-  <script src="js/agenda-diario.js?v=20260709i"></script>
+  <script src="js/utils.js?v=20260709j"></script>
+  <script src="js/menu.js?v=20260709j"></script>
+  <script src="js/storage.js?v=20260709j"></script>
+  <script src="js/tema.js?v=20260709j"></script>
+  <script src="js/app.js?v=20260709j"></script>
+  <script src="js/chips.js?v=20260709j"></script>
+  <script src="js/modal.js?v=20260709j"></script>
+  <script src="js/calendario.js?v=20260709j"></script>
+  <script src="js/acoes-simuladas.js?v=20260709j"></script>
+  <script src="js/vendas.js?v=20260709j"></script>
+  <script src="js/agenda.js?v=20260709j"></script>
+  <script src="js/agenda-diario.js?v=20260709j"></script>
 </body>
 </html>

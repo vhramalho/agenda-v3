@@ -1,11 +1,11 @@
 /* ============================================================
    AGENDA V3 — Fluxo de venda
-   Compartilhado entre produtos.html/index.html (venda avulsa,
-   ver js/agenda.js pro atalho na Agenda) e o hook "Vendeu algo
-   pra esse cliente?" dentro de Finalizar/Editar atendimento
-   (js/agenda.js). O modal #modal-nova-venda existe duplicado
-   nos dois documentos (mesmo padrão já usado por #modal-calendario
-   em index.html/relatorio.html, com a lógica centralizada aqui).
+   Compartilhado entre index.html (hook "Vendeu algo pra esse
+   cliente?" dentro de Finalizar/Editar atendimento, js/agenda.js)
+   e vendas.html (venda avulsa + histórico, js/produtos.js). O
+   modal #modal-nova-venda existe duplicado nos dois documentos
+   (mesmo padrão já usado por #modal-calendario em
+   index.html/relatorio.html, com a lógica centralizada aqui).
 
    Tela única rolável (cliente/avulso → produtos → itens
    selecionados → foi pago → forma de pagamento) — sem passos
@@ -240,6 +240,22 @@ function itensCarrinhoVenda() {
 
 function subtotalCarrinhoVenda(itens) {
   return itens.reduce((soma, item) => soma + item.precoUnitario * item.quantidade, 0);
+}
+
+/* Apaga uma venda e devolve o estoque dos produtos que ela consumia — usada
+   tanto ao desanexar uma venda de um atendimento cancelado (js/agenda.js)
+   quanto ao excluir uma venda avulsa direto do histórico (js/produtos.js). */
+function removerVendaAnexada(vendaId) {
+  const vendas = obterVendas();
+  const venda = vendas.find((v) => v.id === vendaId);
+  if (!venda) return;
+  const produtos = obterProdutos();
+  venda.itens.forEach((item) => {
+    const produto = produtos.find((p) => p.id === item.produtoId);
+    if (produto) produto.estoque += item.quantidade;
+  });
+  salvarProdutos(produtos);
+  salvarVendas(vendas.filter((v) => v.id !== vendaId));
 }
 
 document.addEventListener("DOMContentLoaded", () => {

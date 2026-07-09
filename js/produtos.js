@@ -1,7 +1,9 @@
 /* ============================================================
-   AGENDA V3 — Tela Produtos (Vendas, etapa 2)
-   CRUD completo, ligado de verdade a agendaV3:produtos.
-   Exclusão é lógica (ativo:false) — mesmo padrão de servicos.js.
+   AGENDA V3 — Tela Vendas (aba Produtos: CRUD, ligado de verdade
+   a agendaV3:produtos; aba Vendas: venda avulsa + histórico,
+   reaproveitando prepararNovaVenda/prepararEditarVenda de
+   js/vendas.js). Exclusão de produto é lógica (ativo:false) —
+   mesmo padrão de servicos.js.
    ============================================================ */
 
 const ESTOQUE_BAIXO_LIMITE = 3;
@@ -83,14 +85,119 @@ function abrirEdicaoProduto(id) {
   abrirModal("modal-editar-produto");
 }
 
+/* ---------- Aba Vendas: venda avulsa + histórico ---------- */
+
+function montarLinhaVenda(venda, produtos, indice) {
+  const linha = document.createElement("div");
+  linha.className = "list-item";
+  linha.style.cursor = "pointer";
+  const avulsa = !venda.clienteId;
+  const pago = venda.status === "paga";
+  const nomesItens = (venda.itens || [])
+    .map((item) => (produtos.find((p) => p.id === item.produtoId) || {}).nome || item.nomeProduto)
+    .filter(Boolean)
+    .join(", ");
+  linha.innerHTML = `
+    <div class="list-item__avatar ${avulsa ? "" : classeAvatarPorIndice(indice)}"></div>
+    <div class="list-item__body">
+      <p class="list-item__title"></p>
+      <p class="list-item__subtitle"></p>
+    </div>
+    <div class="list-item__trailing">
+      <p style="font-weight:700;"></p>
+      <span class="badge ${pago ? "badge--sucesso" : "badge--alerta"}">${pago ? "Pago" : "Pendente"}</span>
+    </div>
+    <svg class="list-item__chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
+  `;
+  const avatar = linha.querySelector(".list-item__avatar");
+  if (avulsa) {
+    avatar.innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 7h12l1 13H5L6 7z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg>`;
+  } else {
+    avatar.textContent = iniciaisCliente(venda.nomeCliente);
+  }
+  linha.querySelector(".list-item__title").textContent = avulsa ? "Venda avulsa" : venda.nomeCliente;
+  linha.querySelector(".list-item__subtitle").textContent = `${nomesItens || "—"} · ${formatarDataCurta(venda.criadaEm.slice(0, 10))}`;
+  linha.querySelector(".list-item__trailing p").textContent = formatarMoeda(venda.valorTotal || 0);
+  linha.addEventListener("click", () => abrirEdicaoVenda(venda));
+  return linha;
+}
+
+function renderizarHistoricoVendas() {
+  const vendas = obterVendas().slice().sort((a, b) => b.criadaEm.localeCompare(a.criadaEm));
+  const produtos = obterProdutos();
+  const container = qs("#js-lista-historico-vendas");
+  const vazio = qs("#js-historico-vendas-vazio");
+  container.innerHTML = "";
+
+  if (vendas.length === 0) {
+    container.classList.add("is-hidden");
+    vazio.classList.remove("is-hidden");
+  } else {
+    container.classList.remove("is-hidden");
+    vazio.classList.add("is-hidden");
+    vendas.forEach((venda, i) => container.appendChild(montarLinhaVenda(venda, produtos, i)));
+  }
+}
+
+/* Editar uma venda muda produto.estoque por delta (js/vendas.js) — por isso
+   sempre re-renderiza o histórico E a lista/insight de produtos junto. */
+function abrirEdicaoVenda(venda) {
+  prepararEditarVenda(
+    venda,
+    () => {
+      fecharModal("modal-nova-venda");
+      renderizarHistoricoVendas();
+      renderizarProdutos();
+    },
+    null,
+    () => {
+      removerVendaAnexada(venda.id);
+      fecharModal("modal-nova-venda");
+      renderizarHistoricoVendas();
+      renderizarProdutos();
+    }
+  );
+  abrirModal("modal-nova-venda");
+}
+
+function abrirNovaVendaAvulsa() {
+  prepararNovaVenda({ clienteId: null, nomeCliente: null, agendamentoId: null }, () => {
+    fecharModal("modal-nova-venda");
+    renderizarHistoricoVendas();
+    renderizarProdutos();
+  });
+  abrirModal("modal-nova-venda");
+}
+
+/* Botão "+" do header é contextual à aba ativa — mesma ação, sem duplicar
+   lógica: nova venda avulsa na aba Vendas, novo produto na aba Produtos. */
+function atualizarBotaoAcaoHeader(abaVendas) {
+  const btn = qs("#js-btn-vendas-acao");
+  btn.setAttribute("aria-label", abaVendas ? "Nova venda avulsa" : "Novo produto");
+  btn.onclick = abaVendas ? abrirNovaVendaAvulsa : abrirNovoProduto;
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   renderizarProdutos();
+  renderizarHistoricoVendas();
+  atualizarBotaoAcaoHeader(true);
   aplicarMascaraMoeda(qs("#js-novo-produto-preco-venda"));
   aplicarMascaraMoeda(qs("#js-novo-produto-preco-custo"));
   aplicarMascaraMoeda(qs("#js-editar-produto-preco-venda"));
   aplicarMascaraMoeda(qs("#js-editar-produto-preco-custo"));
 
-  qs("#js-btn-novo-produto").addEventListener("click", abrirNovoProduto);
+  qs("#js-btn-nova-venda-avulsa").addEventListener("click", abrirNovaVendaAvulsa);
+
+  qsa(".segmented__item", qs("#js-aba-vendas")).forEach((item) => {
+    item.addEventListener("click", () => {
+      qsa(".segmented__item", qs("#js-aba-vendas")).forEach((i) => i.classList.remove("is-active"));
+      item.classList.add("is-active");
+      const abaVendas = item.dataset.aba === "vendas";
+      qs("#js-conteudo-vendas-vendas").classList.toggle("is-hidden", !abaVendas);
+      qs("#js-conteudo-vendas-produtos").classList.toggle("is-hidden", abaVendas);
+      atualizarBotaoAcaoHeader(abaVendas);
+    });
+  });
 
   qs("#js-novo-produto-salvar").addEventListener("click", () => {
     const nome = qs("#js-novo-produto-nome").value.trim();

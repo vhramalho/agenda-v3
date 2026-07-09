@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Vendas — Agenda V3</title>
+  <link rel="stylesheet" href="css/tokens.css?v=20260709j" />
+  <link rel="stylesheet" href="css/base.css?v=20260709j" />
+  <link rel="stylesheet" href="css/layout.css?v=20260709j" />
+  <link rel="stylesheet" href="css/components.css?v=20260709j" />
+</head>
+<body data-page="vendas">
+  <div class="app">
+    <main class="page">
+      <div class="page-header-principal">
+        <h1 class="page-header-principal__titulo">Vendas</h1>
+        <button class="icon-btn icon-btn--accent" aria-label="Nova venda avulsa" id="js-btn-vendas-acao">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+        </button>
+      </div>
+
+      <div class="segmented section" id="js-aba-vendas">
+        <span class="segmented__item is-active" data-aba="vendas">Vendas</span>
+        <span class="segmented__item" data-aba="produtos">Produtos</span>
+      </div>
+
+      <!-- ===== Aba Vendas: venda avulsa + histórico ===== -->
+      <div id="js-conteudo-vendas-vendas">
+        <button class="btn btn--primary section" id="js-btn-nova-venda-avulsa">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+          Nova venda avulsa
+        </button>
+
+        <section class="section">
+          <h2 class="section__title">Vendas recentes</h2>
+          <div class="card" id="js-lista-historico-vendas"></div>
+          <div class="empty-state is-hidden" id="js-historico-vendas-vazio">
+            <p class="empty-state__title">Nenhuma venda registrada</p>
+            <p class="text-muted">Toque em "Nova venda avulsa" acima pra registrar a primeira.</p>
+          </div>
+        </section>
+
+        <a href="relatorio.html?aba=vendas" class="card card--transparente section" style="display:block;text-decoration:none;color:inherit;">
+          <div class="list-item" style="padding:0;">
+            <div class="list-item__body"><p class="list-item__title">Ver relatório completo de vendas</p></div>
+            <svg class="list-item__chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
+          </div>
+        </a>
+      </div>
+
+      <!-- ===== Aba Produtos: cadastro/estoque (conteúdo igual ao antigo produtos.html) ===== -->
+      <div id="js-conteudo-vendas-produtos" class="is-hidden">
+        <div class="card section" id="js-produtos-insight">
+          <p class="text-secondary" style="margin-bottom:12px;">Estoque</p>
+          <div class="stack" style="gap:10px;">
+            <div class="row row--between">
+              <span class="text-secondary">Total em estoque (custo)</span>
+              <span style="font-weight:700;" id="js-produtos-insight-custo"></span>
+            </div>
+            <div class="row row--between">
+              <span class="text-secondary">Total em venda potencial</span>
+              <span style="font-weight:700;" id="js-produtos-insight-venda"></span>
+            </div>
+            <div class="row row--between">
+              <span class="text-secondary">Lucro potencial</span>
+              <span style="font-weight:700;" id="js-produtos-insight-lucro"></span>
+            </div>
+          </div>
+        </div>
+
+        <section class="section">
+          <h2 class="section__title">Todos os produtos</h2>
+          <div class="card" id="js-lista-produtos"></div>
+          <div class="empty-state is-hidden" id="js-produtos-vazio">
+            <p class="empty-state__title">Nenhum produto cadastrado</p>
+            <p class="text-muted">Toque no + acima pra criar o primeiro.</p>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <div id="js-bottom-nav-mount"></div>
+
+    <!-- Modais de produto -->
+    <div class="modal-overlay is-hidden" id="modal-novo-produto">
+      <div class="modal-sheet">
+        <div class="modal-sheet__header"><p class="modal-sheet__title">Novo produto</p><button class="modal-close">✕</button></div>
+        <div class="field"><label class="field__label">Nome do produto</label><input class="input" id="js-novo-produto-nome" placeholder="Ex.: Óleo de barba"/></div>
+        <div class="field"><label class="field__label">Preço de venda</label><input class="input" id="js-novo-produto-preco-venda" placeholder="R$ 0,00"/></div>
+        <div class="field"><label class="field__label">Preço de custo (opcional)</label><input class="input" id="js-novo-produto-preco-custo" placeholder="R$ 0,00"/></div>
+        <div class="field"><label class="field__label">Estoque</label><input class="input" type="number" min="0" step="1" id="js-novo-produto-estoque" placeholder="0"/></div>
+        <div class="field">
+          <label class="field__label">Avisar se ficar parado</label>
+          <div class="chip-group" data-chips="single" id="js-novo-produto-parado">
+            <span class="chip" data-dias="15">15 dias</span>
+            <span class="chip" data-dias="30">30 dias</span>
+            <span class="chip" data-dias="60">60 dias</span>
+            <span class="chip" data-dias="90">90 dias</span>
+            <span class="chip chip--ativo" data-dias="">Não avisar</span>
+          </div>
+        </div>
+        <div class="btn-row"><button class="btn btn--secondary" data-fechar-modal>Cancelar</button><button class="btn btn--primary" id="js-novo-produto-salvar">Salvar</button></div>
+      </div>
+    </div>
+
+    <div class="modal-overlay is-hidden" id="modal-editar-produto">
+      <div class="modal-sheet">
+        <div class="modal-sheet__header"><p class="modal-sheet__title">Editar produto</p><button class="modal-close">✕</button></div>
+        <div class="field"><label class="field__label">Nome do produto</label><input class="input" id="js-editar-produto-nome"/></div>
+        <div class="field"><label class="field__label">Preço de venda</label><input class="input" id="js-editar-produto-preco-venda"/></div>
+        <div class="field"><label class="field__label">Preço de custo (opcional)</label><input class="input" id="js-editar-produto-preco-custo"/></div>
+        <div class="field"><label class="field__label">Estoque</label><input class="input" type="number" min="0" step="1" id="js-editar-produto-estoque"/></div>
+        <div class="field">
+          <label class="field__label">Avisar se ficar parado</label>
+          <div class="chip-group" data-chips="single" id="js-editar-produto-parado">
+            <span class="chip" data-dias="15">15 dias</span>
+            <span class="chip" data-dias="30">30 dias</span>
+            <span class="chip" data-dias="60">60 dias</span>
+            <span class="chip" data-dias="90">90 dias</span>
+            <span class="chip chip--ativo" data-dias="">Não avisar</span>
+          </div>
+        </div>
+        <div class="btn-row"><button class="btn btn--primary" id="js-editar-produto-salvar">Salvar</button><button class="btn btn--danger" data-trocar-modal="modal-confirmar-exclusao-produto">Excluir</button></div>
+      </div>
+    </div>
+
+    <div class="modal-overlay is-hidden" id="modal-confirmar-exclusao-produto">
+      <div class="modal-sheet" style="text-align:center;">
+        <div class="modal-sheet__header" style="text-align:left;"><p class="modal-sheet__title">Excluir produto?</p><button class="modal-close">✕</button></div>
+        <p class="text-secondary" style="margin-bottom:20px;">Tem certeza que deseja excluir este produto? Essa ação não pode ser desfeita.</p>
+        <div class="btn-row"><button class="btn btn--secondary" data-fechar-modal>Cancelar</button><button class="btn btn--danger-solid" id="js-confirmar-exclusao-produto">Confirmar</button></div>
+      </div>
+    </div>
+
+    <!-- Modal de venda — markup duplicado de index.html, lógica compartilhada em js/vendas.js
+         (mesmo padrão já usado por #modal-calendario em index.html/relatorio.html) -->
+    <div class="modal-overlay is-hidden" id="modal-nova-venda">
+      <div class="modal-sheet">
+        <div class="modal-sheet__header"><p class="modal-sheet__title" id="js-venda-modal-titulo">Registrar venda</p><button class="modal-close">✕</button></div>
+
+        <div class="field" id="js-venda-cliente-toggle-wrap">
+          <label class="field__label">Cliente</label>
+          <div class="chip-group" data-chips="single" id="js-venda-cliente-tipo">
+            <span class="chip chip--ativo" data-tipo-cliente="avulso">Avulso</span>
+            <span class="chip" data-tipo-cliente="existente">Cliente</span>
+          </div>
+          <div class="field is-hidden" id="js-venda-cliente-busca-wrap" style="margin-top:10px;position:relative;">
+            <input class="input" placeholder="Buscar cliente" id="js-venda-cliente-busca" />
+            <div class="card is-hidden" id="js-venda-cliente-resultados" style="position:absolute;top:100%;left:0;z-index:5;width:100%;max-height:150px;overflow-y:auto;margin-top:4px;padding:4px 12px;"></div>
+          </div>
+        </div>
+        <p class="text-secondary is-hidden" id="js-venda-cliente-fixo" style="margin-top:-8px;margin-bottom:16px;"></p>
+
+        <div class="field">
+          <label class="field__label">Produtos</label>
+          <div id="js-venda-lista-produtos" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;max-height:240px;overflow-y:auto;padding:2px;"></div>
+        </div>
+
+        <div class="field is-hidden" id="js-venda-carrinho-wrap">
+          <label class="field__label">Itens selecionados</label>
+          <div class="stack" id="js-venda-carrinho" style="gap:8px;"></div>
+          <div class="row row--between" style="margin-top:12px;font-weight:700;">
+            <span>Total</span>
+            <span id="js-venda-total"></span>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="field__label">Foi pago?</label>
+          <div class="chip-group">
+            <span class="chip chip--ativo" data-pago="sim">Sim</span>
+            <span class="chip" data-pago="nao">Não</span>
+          </div>
+        </div>
+        <div class="field" data-campo-pago="sim">
+          <label class="field__label">Forma de pagamento</label>
+          <div class="chip-group" id="js-venda-formas"></div>
+          <div class="stack" data-linhas-pagamento style="margin-top:12px;gap:8px;" id="js-venda-linhas-pagamento"></div>
+          <p class="text-secondary is-hidden" style="font-size:var(--text-sm);margin-top:8px;" id="js-venda-desconto-gorjeta-aviso"></p>
+        </div>
+        <div class="field is-hidden" data-campo-pago="nao">
+          <label class="field__label" style="color:var(--danger);">Valor pendente</label>
+          <input class="input" placeholder="R$ 0,00" id="js-venda-valor-pendente" />
+        </div>
+
+        <button type="button" class="btn btn--danger is-hidden" id="js-venda-excluir" style="width:100%;margin-bottom:12px;">Excluir venda</button>
+        <div class="btn-row"><button class="btn btn--secondary" data-fechar-modal>Cancelar</button><button class="btn btn--primary" id="js-venda-confirmar">Confirmar venda</button></div>
+      </div>
+    </div>
+
+    <div class="modal-overlay is-hidden" id="modal-confirmar-exclusao-venda">
+      <div class="modal-sheet" style="text-align:center;">
+        <div class="modal-sheet__header" style="text-align:left;"><p class="modal-sheet__title">Excluir venda?</p><button class="modal-close">✕</button></div>
+        <p class="text-secondary" style="margin-bottom:20px;">Tem certeza que deseja excluir esta venda? O estoque dos produtos é devolvido. Essa ação não pode ser desfeita.</p>
+        <div class="btn-row"><button class="btn btn--secondary" data-fechar-modal>Cancelar</button><button class="btn btn--danger-solid" id="js-confirmar-exclusao-venda">Confirmar</button></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/utils.js?v=20260709j"></script>
+  <script src="js/menu.js?v=20260709j"></script>
+  <script src="js/storage.js?v=20260709j"></script>
+  <script src="js/tema.js?v=20260709j"></script>
+  <script src="js/app.js?v=20260709j"></script>
+  <script src="js/chips.js?v=20260709j"></script>
+  <script src="js/modal.js?v=20260709j"></script>
+  <script src="js/acoes-simuladas.js?v=20260709j"></script>
+  <script src="js/vendas.js?v=20260709j"></script>
+  <script src="js/produtos.js?v=20260709j"></script>
+</body>
+</html>

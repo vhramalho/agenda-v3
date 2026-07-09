@@ -908,19 +908,6 @@ function mostrarResumoVendaFinalizar(venda) {
   qs("#js-finalizar-venda-resumo").classList.remove("is-hidden");
 }
 
-function removerVendaAnexada(vendaId) {
-  const vendas = obterVendas();
-  const venda = vendas.find((v) => v.id === vendaId);
-  if (!venda) return;
-  const produtos = obterProdutos();
-  venda.itens.forEach((item) => {
-    const produto = produtos.find((p) => p.id === item.produtoId);
-    if (produto) produto.estoque += item.quantidade;
-  });
-  salvarProdutos(produtos);
-  salvarVendas(vendas.filter((v) => v.id !== vendaId));
-}
-
 /* ---------- Editar realizado ---------- */
 
 function definirPagoEditarRealizado(pago) {
@@ -1394,13 +1381,6 @@ document.addEventListener("DOMContentLoaded", () => {
     fecharModal("modal-horario-realizado");
     renderizarAgendaLista();
     mostrarSucesso();
-  });
-
-  qs("#js-btn-venda-avulsa").addEventListener("click", () => {
-    prepararNovaVenda({ clienteId: null, nomeCliente: null, agendamentoId: null }, () => {
-      fecharModal("modal-nova-venda");
-    });
-    abrirModal("modal-nova-venda");
   });
 
   qs("#js-btn-compartilhar-whatsapp").addEventListener("click", () => {
