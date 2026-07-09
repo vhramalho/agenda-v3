@@ -149,7 +149,9 @@ function salvarListasDiarias(lista) {
 
 /* Vendas (produto + venda) — ver Documentacao/MASTER_CONTEXT.md.
    produto: { id, nome, precoVenda, precoCusto (null se não informado),
-   estoque (number, sempre existe), ativo, criadoEm, atualizadoEm }.
+   estoque (number, sempre existe, editado à mão), diasParaAvisarParado
+   (null = não avisar; senão 15/30/60/90 — prazo sem venda pra entrar no
+   bloco "Parados" do Relatório), ativo, criadoEm, atualizadoEm }.
    Exclusão lógica (ativo:false), igual servico.
    venda: { id, clienteId (null se avulsa), nomeCliente (null ou "Avulso"),
    agendamentoId (null se avulsa), itens: [{ produtoId, nomeProduto,

@@ -4,10 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Produtos — Agenda V3</title>
-  <link rel="stylesheet" href="css/tokens.css?v=20260709d" />
-  <link rel="stylesheet" href="css/base.css?v=20260709d" />
-  <link rel="stylesheet" href="css/layout.css?v=20260709d" />
-  <link rel="stylesheet" href="css/components.css?v=20260709d" />
+  <link rel="stylesheet" href="css/tokens.css?v=20260709e" />
+  <link rel="stylesheet" href="css/base.css?v=20260709e" />
+  <link rel="stylesheet" href="css/layout.css?v=20260709e" />
+  <link rel="stylesheet" href="css/components.css?v=20260709e" />
 </head>
 <body data-page="mais">
   <div class="app">
@@ -21,6 +21,24 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
         </button>
       </header>
+
+      <div class="card section" id="js-produtos-insight">
+        <p class="text-secondary" style="margin-bottom:12px;">Estoque</p>
+        <div class="stack" style="gap:10px;">
+          <div class="row row--between">
+            <span class="text-secondary">Total em estoque (custo)</span>
+            <span style="font-weight:700;" id="js-produtos-insight-custo"></span>
+          </div>
+          <div class="row row--between">
+            <span class="text-secondary">Total em venda potencial</span>
+            <span style="font-weight:700;" id="js-produtos-insight-venda"></span>
+          </div>
+          <div class="row row--between">
+            <span class="text-secondary">Lucro potencial</span>
+            <span style="font-weight:700;" id="js-produtos-insight-lucro"></span>
+          </div>
+        </div>
+      </div>
 
       <section class="section">
         <h2 class="section__title">Todos os produtos</h2>
@@ -50,6 +68,16 @@
         <div class="field"><label class="field__label">Preço de venda</label><input class="input" id="js-novo-produto-preco-venda" placeholder="R$ 0,00"/></div>
         <div class="field"><label class="field__label">Preço de custo (opcional)</label><input class="input" id="js-novo-produto-preco-custo" placeholder="R$ 0,00"/></div>
         <div class="field"><label class="field__label">Estoque</label><input class="input" type="number" min="0" step="1" id="js-novo-produto-estoque" placeholder="0"/></div>
+        <div class="field">
+          <label class="field__label">Avisar se ficar parado</label>
+          <div class="chip-group" data-chips="single" id="js-novo-produto-parado">
+            <span class="chip" data-dias="15">15 dias</span>
+            <span class="chip" data-dias="30">30 dias</span>
+            <span class="chip" data-dias="60">60 dias</span>
+            <span class="chip" data-dias="90">90 dias</span>
+            <span class="chip chip--ativo" data-dias="">Não avisar</span>
+          </div>
+        </div>
         <div class="btn-row"><button class="btn btn--secondary" data-fechar-modal>Cancelar</button><button class="btn btn--primary" id="js-novo-produto-salvar">Salvar</button></div>
       </div>
     </div>
@@ -61,6 +89,16 @@
         <div class="field"><label class="field__label">Preço de venda</label><input class="input" id="js-editar-produto-preco-venda"/></div>
         <div class="field"><label class="field__label">Preço de custo (opcional)</label><input class="input" id="js-editar-produto-preco-custo"/></div>
         <div class="field"><label class="field__label">Estoque</label><input class="input" type="number" min="0" step="1" id="js-editar-produto-estoque"/></div>
+        <div class="field">
+          <label class="field__label">Avisar se ficar parado</label>
+          <div class="chip-group" data-chips="single" id="js-editar-produto-parado">
+            <span class="chip" data-dias="15">15 dias</span>
+            <span class="chip" data-dias="30">30 dias</span>
+            <span class="chip" data-dias="60">60 dias</span>
+            <span class="chip" data-dias="90">90 dias</span>
+            <span class="chip chip--ativo" data-dias="">Não avisar</span>
+          </div>
+        </div>
         <div class="btn-row"><button class="btn btn--primary" id="js-editar-produto-salvar">Salvar</button><button class="btn btn--danger" data-trocar-modal="modal-confirmar-exclusao-produto">Excluir</button></div>
       </div>
     </div>
@@ -74,15 +112,15 @@
     </div>
   </div>
 
-  <script src="js/utils.js?v=20260709d"></script>
-  <script src="js/menu.js?v=20260709d"></script>
-  <script src="js/storage.js?v=20260709d"></script>
-  <script src="js/tema.js?v=20260709d"></script>
-  <script src="js/app.js?v=20260709d"></script>
-  <script src="js/chips.js?v=20260709d"></script>
-  <script src="js/modal.js?v=20260709d"></script>
-  <script src="js/acoes-simuladas.js?v=20260709d"></script>
-  <script src="js/ranking-produtos.js?v=20260709d"></script>
-  <script src="js/produtos.js?v=20260709d"></script>
+  <script src="js/utils.js?v=20260709e"></script>
+  <script src="js/menu.js?v=20260709e"></script>
+  <script src="js/storage.js?v=20260709e"></script>
+  <script src="js/tema.js?v=20260709e"></script>
+  <script src="js/app.js?v=20260709e"></script>
+  <script src="js/chips.js?v=20260709e"></script>
+  <script src="js/modal.js?v=20260709e"></script>
+  <script src="js/acoes-simuladas.js?v=20260709e"></script>
+  <script src="js/ranking-produtos.js?v=20260709e"></script>
+  <script src="js/produtos.js?v=20260709e"></script>
 </body>
 </html>

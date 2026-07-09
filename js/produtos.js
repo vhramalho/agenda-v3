@@ -46,6 +46,20 @@ function renderizarProdutos() {
   }
 
   calcularMaisVendido();
+  calcularInsightEstoque();
+}
+
+function calcularInsightEstoque() {
+  const produtosAtivos = obterProdutos().filter((p) => p.ativo);
+  let totalCusto = 0;
+  let totalVenda = 0;
+  produtosAtivos.forEach((produto) => {
+    if (produto.precoCusto != null) totalCusto += produto.estoque * produto.precoCusto;
+    totalVenda += produto.estoque * produto.precoVenda;
+  });
+  qs("#js-produtos-insight-custo").textContent = formatarMoeda(totalCusto);
+  qs("#js-produtos-insight-venda").textContent = formatarMoeda(totalVenda);
+  qs("#js-produtos-insight-lucro").textContent = formatarMoeda(totalVenda - totalCusto);
 }
 
 function calcularMaisVendido() {
@@ -66,6 +80,7 @@ function abrirNovoProduto() {
   qs("#js-novo-produto-preco-venda").value = "";
   qs("#js-novo-produto-preco-custo").value = "";
   qs("#js-novo-produto-estoque").value = "";
+  qsa("#js-novo-produto-parado .chip").forEach((chip) => chip.classList.toggle("chip--ativo", chip.dataset.dias === ""));
   abrirModal("modal-novo-produto");
 }
 
@@ -77,6 +92,8 @@ function abrirEdicaoProduto(id) {
   qs("#js-editar-produto-preco-venda").value = formatarMoeda(produto.precoVenda);
   qs("#js-editar-produto-preco-custo").value = produto.precoCusto != null ? formatarMoeda(produto.precoCusto) : "";
   qs("#js-editar-produto-estoque").value = produto.estoque;
+  const diasAtual = produto.diasParaAvisarParado != null ? String(produto.diasParaAvisarParado) : "";
+  qsa("#js-editar-produto-parado .chip").forEach((chip) => chip.classList.toggle("chip--ativo", chip.dataset.dias === diasAtual));
   abrirModal("modal-editar-produto");
 }
 
@@ -95,6 +112,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const estoque = parseInt(qs("#js-novo-produto-estoque").value, 10);
     if (!nome || precoVenda == null || isNaN(estoque)) return;
     const hoje = hojeIso();
+    const chipParado = qs("#js-novo-produto-parado .chip--ativo");
+    const diasParaAvisarParado = chipParado && chipParado.dataset.dias ? parseInt(chipParado.dataset.dias, 10) : null;
     const lista = obterProdutos();
     lista.push({
       id: gerarId("prod"),
@@ -102,6 +121,7 @@ document.addEventListener("DOMContentLoaded", () => {
       precoVenda,
       precoCusto: extrairValor(qs("#js-novo-produto-preco-custo").value),
       estoque,
+      diasParaAvisarParado,
       ativo: true,
       criadoEm: hoje,
       atualizadoEm: hoje,
@@ -124,6 +144,8 @@ document.addEventListener("DOMContentLoaded", () => {
     produto.precoVenda = precoVenda;
     produto.precoCusto = extrairValor(qs("#js-editar-produto-preco-custo").value);
     produto.estoque = estoque;
+    const chipParado = qs("#js-editar-produto-parado .chip--ativo");
+    produto.diasParaAvisarParado = chipParado && chipParado.dataset.dias ? parseInt(chipParado.dataset.dias, 10) : null;
     produto.atualizadoEm = hojeIso();
     salvarProdutos(lista);
     fecharModal("modal-editar-produto");
