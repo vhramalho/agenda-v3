@@ -46,7 +46,7 @@ function prepararNovaVenda(contexto, aoConcluir, aoCancelar) {
 
   qsa("[data-pago]", qs("#modal-nova-venda")).forEach((b) => b.classList.toggle("chip--ativo", b.dataset.pago === "sim"));
   qsa("[data-campo-pago]", qs("#modal-nova-venda")).forEach((campo) => campo.classList.toggle("is-hidden", campo.dataset.campoPago !== "sim"));
-  montarFormasChips("js-venda-formas", "js-venda-linhas-pagamento", [], {});
+  montarFormasChips("js-venda-formas", "js-venda-linhas-pagamento", [], {}, () => subtotalCarrinhoVenda(itensCarrinhoVenda()), "js-venda-desconto-gorjeta-aviso");
   qs("#js-venda-valor-pendente").value = "";
 
   renderizarListaVendaProdutos();
@@ -101,6 +101,7 @@ function renderizarCarrinhoVenda() {
   if (entradas.length === 0) {
     wrap.classList.add("is-hidden");
     qs("#js-venda-total").textContent = formatarMoeda(0);
+    atualizarAvisoDescontoGorjeta("js-venda-linhas-pagamento", "js-venda-desconto-gorjeta-aviso", () => 0);
     return;
   }
   wrap.classList.remove("is-hidden");
@@ -144,6 +145,7 @@ function renderizarCarrinhoVenda() {
   });
 
   qs("#js-venda-total").textContent = formatarMoeda(total);
+  atualizarAvisoDescontoGorjeta("js-venda-linhas-pagamento", "js-venda-desconto-gorjeta-aviso", () => total);
 }
 
 function itensCarrinhoVenda() {

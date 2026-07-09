@@ -892,7 +892,7 @@ function prepararFinalizarAtendimento(agendamento) {
   qsa("[data-campo-pago]", modal).forEach((campo) => {
     campo.classList.toggle("is-hidden", campo.dataset.campoPago !== "sim");
   });
-  montarFormasChips("js-finalizar-formas", "js-finalizar-linhas-pagamento", [], {}, valorEsperadoServicos(agendamento.servicosIds || []));
+  montarFormasChips("js-finalizar-formas", "js-finalizar-linhas-pagamento", [], {}, () => valorEsperadoServicos(idsSelecionados("js-finalizar-servicos")), "js-finalizar-desconto-gorjeta-aviso");
   qs("#js-finalizar-valor-pendente").value = "";
 }
 
@@ -964,10 +964,10 @@ function prepararEditarRealizado(agendamento) {
       const forma = formas.find((f) => f.id === p.formaPagamentoId);
       if (forma) { nomesSelecionados.push(forma.nome); valoresPorNome[forma.nome] = p.valor; }
     });
-    montarFormasChips("js-editar-realizado-formas", "js-editar-realizado-linhas-pagamento", nomesSelecionados, valoresPorNome);
+    montarFormasChips("js-editar-realizado-formas", "js-editar-realizado-linhas-pagamento", nomesSelecionados, valoresPorNome, () => valorEsperadoServicos(idsSelecionados("js-editar-realizado-servicos")), "js-editar-realizado-desconto-gorjeta-aviso");
     qs("#js-editar-realizado-valor-pendente").value = "";
   } else {
-    montarFormasChips("js-editar-realizado-formas", "js-editar-realizado-linhas-pagamento", [], {}, valorEsperadoServicos(agendamento.servicosIds || []));
+    montarFormasChips("js-editar-realizado-formas", "js-editar-realizado-linhas-pagamento", [], {}, () => valorEsperadoServicos(idsSelecionados("js-editar-realizado-servicos")), "js-editar-realizado-desconto-gorjeta-aviso");
     qs("#js-editar-realizado-valor-pendente").value = agendamento.valorPendente != null ? formatarMoeda(agendamento.valorPendente) : "";
   }
   definirPagoEditarRealizado(pago);
