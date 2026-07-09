@@ -82,7 +82,12 @@ function renderizarListaVendaProdutos() {
     card.querySelectorAll("p")[0].textContent = produto.nome;
     card.querySelectorAll("p")[1].textContent = formatarMoeda(produto.precoVenda);
     card.addEventListener("click", () => {
-      vendaCarrinho[produto.id] = (vendaCarrinho[produto.id] || 0) + 1;
+      const atual = vendaCarrinho[produto.id] || 0;
+      if (atual >= produto.estoque) {
+        mostrarAviso("Estoque insuficiente");
+        return;
+      }
+      vendaCarrinho[produto.id] = atual + 1;
       renderizarListaVendaProdutos();
       renderizarCarrinhoVenda();
     });
@@ -110,14 +115,12 @@ function renderizarCarrinhoVenda() {
     if (!produto) return;
     const subtotal = produto.precoVenda * quantidade;
     total += subtotal;
-    const estoqueInsuficiente = quantidade > produto.estoque;
 
     const linha = document.createElement("div");
     linha.className = "row row--between";
     linha.innerHTML = `
       <div style="flex:1;">
         <p style="font-weight:600;">${produto.nome}</p>
-        ${estoqueInsuficiente ? `<p class="text-warning" style="font-size:var(--text-sm);">Estoque disponível: ${produto.estoque}</p>` : ""}
       </div>
       <div class="row" style="gap:8px;flex-shrink:0;">
         <button type="button" class="icon-btn" data-carrinho-menos style="width:32px;height:32px;">−</button>
@@ -132,7 +135,12 @@ function renderizarCarrinhoVenda() {
       renderizarCarrinhoVenda();
     });
     linha.querySelector("[data-carrinho-mais]").addEventListener("click", () => {
-      vendaCarrinho[produtoId] = (vendaCarrinho[produtoId] || 0) + 1;
+      const atual = vendaCarrinho[produtoId] || 0;
+      if (atual >= produto.estoque) {
+        mostrarAviso("Estoque insuficiente");
+        return;
+      }
+      vendaCarrinho[produtoId] = atual + 1;
       renderizarListaVendaProdutos();
       renderizarCarrinhoVenda();
     });
@@ -261,7 +269,6 @@ document.addEventListener("DOMContentLoaded", () => {
       agendamentoId: vendaContexto.agendamentoId,
       itens,
       subtotal,
-      desconto: 0,
       valorTotal: 0,
       status: "pendente",
       criadaEm: new Date().toISOString(),
@@ -279,7 +286,9 @@ document.addEventListener("DOMContentLoaded", () => {
       venda.valorPendente = valorPendente;
       venda.valorTotal = valorPendente;
     }
-    venda.desconto = Math.max(0, subtotal - venda.valorTotal);
+    const diferenca = subtotal - venda.valorTotal;
+    if (diferenca > 0) venda.desconto = diferenca;
+    else if (diferenca < 0) venda.gorjeta = -diferenca;
 
     const produtos = obterProdutos();
     itens.forEach((item) => {

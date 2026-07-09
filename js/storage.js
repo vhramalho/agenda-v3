@@ -154,13 +154,15 @@ function salvarListasDiarias(lista) {
    venda: { id, clienteId (null se avulsa), nomeCliente (null ou "Avulso"),
    agendamentoId (null se avulsa), itens: [{ produtoId, nomeProduto,
    quantidade, precoUnitario }], subtotal (soma dos itens, sem desconto),
-   desconto (subtotal - valorTotal, nunca negativo), valorTotal, status
-   ("paga"|"pendente"), pagamentos (só quando paga, mesmo formato de
-   agendamento.pagamentos), valorPendente (só quando pendente), criadaEm }.
+   desconto (subtotal - valorTotal, só quando positivo), gorjeta
+   (valorTotal - subtotal, só quando positivo — nunca os dois ao mesmo
+   tempo), valorTotal, status ("paga"|"pendente"), pagamentos (só quando
+   paga, mesmo formato de agendamento.pagamentos), valorPendente (só
+   quando pendente), criadaEm }.
    Pagamento da venda é sempre independente do pagamento do agendamento
-   vinculado. Desconto é sempre derivado (digitou menos que o subtotal
-   na forma de pagamento ou no valor pendente = a diferença vira
-   desconto) — nunca um campo digitado à parte. */
+   vinculado. Desconto/gorjeta são sempre derivados (nunca campos
+   digitados à parte): pagou menos que o subtotal = desconto; pagou
+   mais = gorjeta. */
 function obterProdutos() {
   return lerChave(CHAVES.produtos, []);
 }
