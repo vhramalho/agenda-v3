@@ -4,10 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Relatório — Agenda V3</title>
-  <link rel="stylesheet" href="css/tokens.css?v=20260709e" />
-  <link rel="stylesheet" href="css/base.css?v=20260709e" />
-  <link rel="stylesheet" href="css/layout.css?v=20260709e" />
-  <link rel="stylesheet" href="css/components.css?v=20260709e" />
+  <link rel="stylesheet" href="css/tokens.css?v=20260709f" />
+  <link rel="stylesheet" href="css/base.css?v=20260709f" />
+  <link rel="stylesheet" href="css/layout.css?v=20260709f" />
+  <link rel="stylesheet" href="css/components.css?v=20260709f" />
 </head>
 <body data-page="relatorio">
   <div class="app">
@@ -19,7 +19,12 @@
         </button>
       </div>
 
-      <div class="segmented section">
+      <div class="segmented section" id="js-aba-relatorio">
+        <span class="segmented__item is-active" data-aba="atendimentos">Atendimentos</span>
+        <span class="segmented__item" data-aba="vendas">Vendas</span>
+      </div>
+
+      <div class="segmented section" id="js-periodo-tabs">
         <span class="segmented__item">Dia</span>
         <span class="segmented__item is-active">Semana</span>
         <span class="segmented__item">Mês</span>
@@ -39,89 +44,133 @@
         </button>
       </div>
 
-      <div class="card card--destaque section">
-        <p class="text-secondary">Faturamento</p>
-        <div class="row row--between" style="align-items:baseline;margin-bottom:8px;">
-          <p style="font-weight:800;font-size:var(--text-xl);" id="js-relatorio-faturamento"></p>
-          <p style="font-weight:600;font-size:calc(var(--text-2xs) + 2px);" id="js-relatorio-faturamento-comparacao"></p>
-        </div>
-        <svg id="js-relatorio-grafico-svg" viewBox="0 0 300 150" preserveAspectRatio="none" style="width:100%;height:140px;">
-          <defs>
-            <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="var(--primary)" stop-opacity="0.35"/>
-              <stop offset="100%" stop-color="var(--primary)" stop-opacity="0"/>
-            </linearGradient>
-          </defs>
-          <line x1="26" y1="10" x2="297" y2="10" stroke="var(--border)" stroke-width="1"/>
-          <line x1="26" y1="68" x2="297" y2="68" stroke="var(--border)" stroke-width="1"/>
-          <line x1="26" y1="126" x2="297" y2="126" stroke="var(--border)" stroke-width="1"/>
-          <text x="22" y="13" text-anchor="end" font-size="9" fill="var(--text-muted)" id="js-relatorio-eixo-max"></text>
-          <text x="22" y="71" text-anchor="end" font-size="9" fill="var(--text-muted)" id="js-relatorio-eixo-meio"></text>
-          <text x="22" y="129" text-anchor="end" font-size="9" fill="var(--text-muted)">R$0</text>
-          <polygon id="js-relatorio-grafico-area" points="" fill="url(#areaGrad)"/>
-          <polyline id="js-relatorio-grafico-linha" points="" fill="none" stroke="var(--primary)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-          <g id="js-relatorio-grafico-pontos"></g>
-          <g id="js-relatorio-grafico-dias" font-size="9" fill="var(--text-muted)" text-anchor="middle"></g>
-        </svg>
-      </div>
-
-      <div class="grid-3 section">
-        <div class="insight-card">
-          <div class="insight-card__label">
-            <span>Atendimentos</span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="8" r="3"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/></svg>
+      <div id="js-conteudo-atendimentos">
+        <div class="card card--destaque section">
+          <p class="text-secondary">Faturamento</p>
+          <div class="row row--between" style="align-items:baseline;margin-bottom:8px;">
+            <p style="font-weight:800;font-size:var(--text-xl);" id="js-relatorio-faturamento"></p>
+            <p style="font-weight:600;font-size:calc(var(--text-2xs) + 2px);" id="js-relatorio-faturamento-comparacao"></p>
           </div>
-          <p class="insight-card__valor" id="js-relatorio-atendimentos"></p>
-          <p class="insight-card__comparacao" id="js-relatorio-atendimentos-comparacao"></p>
-        </div>
-        <div class="insight-card">
-          <div class="insight-card__label">
-            <span>Ticket médio</span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M9 9.5c0-1.5 1.5-2 3-2s3 .8 3 2-1.5 2-3 2-3 .5-3 2 1.5 2 3 2 3-.5 3-2"/></svg>
-          </div>
-          <p class="insight-card__valor" id="js-relatorio-ticket"></p>
-          <p class="insight-card__comparacao" id="js-relatorio-ticket-comparacao"></p>
-        </div>
-        <div class="insight-card">
-          <div class="insight-card__label">
-            <span>Taxas cartão</span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
-          </div>
-          <p class="insight-card__valor" id="js-relatorio-taxas"></p>
-          <p class="insight-card__comparacao" id="js-relatorio-taxas-comparacao"></p>
-        </div>
-      </div>
-
-      <div class="card section">
-        <p class="text-secondary" style="margin-bottom:12px;">Recebimentos</p>
-        <div class="row" style="align-items:center;gap:24px;">
-          <div class="stack" style="flex:1;gap:10px;" id="js-relatorio-formas"></div>
-          <svg width="100" height="100" viewBox="0 0 120 120" style="flex-shrink:0;">
-            <g transform="rotate(-90 60 60)" id="js-relatorio-pizza"></g>
+          <svg id="js-relatorio-grafico-svg" viewBox="0 0 300 150" preserveAspectRatio="none" style="width:100%;height:140px;">
+            <defs>
+              <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="var(--primary)" stop-opacity="0.35"/>
+                <stop offset="100%" stop-color="var(--primary)" stop-opacity="0"/>
+              </linearGradient>
+            </defs>
+            <line x1="26" y1="10" x2="297" y2="10" stroke="var(--border)" stroke-width="1"/>
+            <line x1="26" y1="68" x2="297" y2="68" stroke="var(--border)" stroke-width="1"/>
+            <line x1="26" y1="126" x2="297" y2="126" stroke="var(--border)" stroke-width="1"/>
+            <text x="22" y="13" text-anchor="end" font-size="9" fill="var(--text-muted)" id="js-relatorio-eixo-max"></text>
+            <text x="22" y="71" text-anchor="end" font-size="9" fill="var(--text-muted)" id="js-relatorio-eixo-meio"></text>
+            <text x="22" y="129" text-anchor="end" font-size="9" fill="var(--text-muted)">R$0</text>
+            <polygon id="js-relatorio-grafico-area" points="" fill="url(#areaGrad)"/>
+            <polyline id="js-relatorio-grafico-linha" points="" fill="none" stroke="var(--primary)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <g id="js-relatorio-grafico-pontos"></g>
+            <g id="js-relatorio-grafico-dias" font-size="9" fill="var(--text-muted)" text-anchor="middle"></g>
           </svg>
         </div>
-      </div>
 
-      <div class="card section">
-        <p class="text-secondary" style="margin-bottom:12px;">Vendas</p>
-        <div class="stack" style="gap:10px;">
-          <div class="row row--between">
-            <span class="text-secondary">Faturado em vendas</span>
-            <span class="row" style="gap:8px;">
-              <span style="font-weight:700;" id="js-relatorio-vendas-faturamento"></span>
-              <span style="font-size:var(--text-2xs);font-weight:600;" id="js-relatorio-vendas-faturamento-comparacao"></span>
-            </span>
+        <div class="grid-3 section">
+          <div class="insight-card">
+            <div class="insight-card__label">
+              <span>Atendimentos</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="8" r="3"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/></svg>
+            </div>
+            <p class="insight-card__valor" id="js-relatorio-atendimentos"></p>
+            <p class="insight-card__comparacao" id="js-relatorio-atendimentos-comparacao"></p>
           </div>
-          <div class="row row--between">
-            <span class="text-secondary">Recebido em vendas</span>
-            <span style="font-weight:700;" id="js-relatorio-vendas-recebido"></span>
+          <div class="insight-card">
+            <div class="insight-card__label">
+              <span>Ticket médio</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M9 9.5c0-1.5 1.5-2 3-2s3 .8 3 2-1.5 2-3 2-3 .5-3 2 1.5 2 3 2 3-.5 3-2"/></svg>
+            </div>
+            <p class="insight-card__valor" id="js-relatorio-ticket"></p>
+            <p class="insight-card__comparacao" id="js-relatorio-ticket-comparacao"></p>
           </div>
-          <div class="row row--between">
-            <span class="text-secondary">Desconto dado</span>
-            <span style="font-weight:700;" id="js-relatorio-vendas-desconto"></span>
+          <div class="insight-card">
+            <div class="insight-card__label">
+              <span>Taxas cartão</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+            </div>
+            <p class="insight-card__valor" id="js-relatorio-taxas"></p>
+            <p class="insight-card__comparacao" id="js-relatorio-taxas-comparacao"></p>
           </div>
         </div>
-        <p class="text-secondary" style="font-size:var(--text-sm);margin-top:12px;" id="js-relatorio-total-combinado"></p>
+
+        <div class="card section">
+          <p class="text-secondary" style="margin-bottom:12px;">Recebimentos</p>
+          <div class="row" style="align-items:center;gap:24px;">
+            <div class="stack" style="flex:1;gap:10px;" id="js-relatorio-formas"></div>
+            <svg width="100" height="100" viewBox="0 0 120 120" style="flex-shrink:0;">
+              <g transform="rotate(-90 60 60)" id="js-relatorio-pizza"></g>
+            </svg>
+          </div>
+        </div>
+
+        <div class="card section">
+          <p class="text-secondary" style="margin-bottom:12px;">Mais realizados</p>
+          <div id="js-relatorio-mais-realizados"></div>
+          <div class="empty-state is-hidden" id="js-relatorio-mais-realizados-vazio"><p class="empty-state__title">Nenhum atendimento no período</p></div>
+        </div>
+      </div>
+
+      <div id="js-conteudo-vendas" class="is-hidden">
+        <div class="card card--destaque section">
+          <p class="text-secondary">Faturamento em vendas</p>
+          <div class="row row--between" style="align-items:baseline;">
+            <p style="font-weight:800;font-size:var(--text-xl);" id="js-vendas-faturamento"></p>
+            <p style="font-weight:600;font-size:calc(var(--text-2xs) + 2px);" id="js-vendas-faturamento-comparacao"></p>
+          </div>
+        </div>
+
+        <p class="text-secondary section" id="js-vendas-insight" style="font-size:var(--text-sm);"></p>
+
+        <div class="grid-3 section">
+          <div class="insight-card">
+            <div class="insight-card__label"><span>Vendas</span></div>
+            <p class="insight-card__valor" id="js-vendas-contagem"></p>
+          </div>
+          <div class="insight-card">
+            <div class="insight-card__label"><span>Ticket médio</span></div>
+            <p class="insight-card__valor" id="js-vendas-ticket"></p>
+          </div>
+          <div class="insight-card">
+            <div class="insight-card__label"><span>Desconto médio</span></div>
+            <p class="insight-card__valor" id="js-vendas-desconto-medio"></p>
+          </div>
+          <div class="insight-card">
+            <div class="insight-card__label"><span>Gorjetas</span></div>
+            <p class="insight-card__valor" id="js-vendas-gorjeta"></p>
+          </div>
+          <div class="insight-card">
+            <div class="insight-card__label"><span>Lucro</span></div>
+            <p class="insight-card__valor" id="js-vendas-lucro"></p>
+            <p class="insight-card__comparacao" id="js-vendas-lucro-cobertura"></p>
+          </div>
+        </div>
+
+        <div class="card section">
+          <p class="text-secondary" style="margin-bottom:12px;">Recebimentos em vendas</p>
+          <div class="row" style="align-items:center;gap:24px;">
+            <div class="stack" style="flex:1;gap:10px;" id="js-vendas-formas"></div>
+            <svg width="100" height="100" viewBox="0 0 120 120" style="flex-shrink:0;">
+              <g transform="rotate(-90 60 60)" id="js-vendas-pizza"></g>
+            </svg>
+          </div>
+        </div>
+
+        <div class="card section">
+          <p class="text-secondary" style="margin-bottom:12px;">Mais vendidos</p>
+          <div id="js-vendas-mais-vendidos"></div>
+          <div class="empty-state is-hidden" id="js-vendas-mais-vendidos-vazio"><p class="empty-state__title">Nenhuma venda no período</p></div>
+        </div>
+
+        <div class="card section">
+          <p class="text-secondary" style="margin-bottom:12px;">Parados</p>
+          <div id="js-vendas-parados"></div>
+          <div class="empty-state is-hidden" id="js-vendas-parados-vazio"><p class="empty-state__title">Nenhum produto parado</p></div>
+        </div>
       </div>
     </main>
 
@@ -142,14 +191,14 @@
     </div>
   </div>
 
-  <script src="js/utils.js?v=20260709e"></script>
-  <script src="js/menu.js?v=20260709e"></script>
-  <script src="js/storage.js?v=20260709e"></script>
-  <script src="js/tema.js?v=20260709e"></script>
-  <script src="js/app.js?v=20260709e"></script>
-  <script src="js/chips.js?v=20260709e"></script>
-  <script src="js/modal.js?v=20260709e"></script>
-  <script src="js/calendario.js?v=20260709e"></script>
-  <script src="js/relatorio.js?v=20260709e"></script>
+  <script src="js/utils.js?v=20260709f"></script>
+  <script src="js/menu.js?v=20260709f"></script>
+  <script src="js/storage.js?v=20260709f"></script>
+  <script src="js/tema.js?v=20260709f"></script>
+  <script src="js/app.js?v=20260709f"></script>
+  <script src="js/chips.js?v=20260709f"></script>
+  <script src="js/modal.js?v=20260709f"></script>
+  <script src="js/calendario.js?v=20260709f"></script>
+  <script src="js/relatorio.js?v=20260709f"></script>
 </body>
 </html>

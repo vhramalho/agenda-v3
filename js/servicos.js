@@ -23,19 +23,6 @@ function montarLinhaServico(servico, indice) {
   return linha;
 }
 
-function calcularMaisRealizado() {
-  const ranking = calcularRankingServicos({ tipo: "ano", ano: new Date().getFullYear() }).slice(0, 3);
-  const destaque = qs("#js-servico-destaque");
-  if (ranking.length === 0) {
-    destaque.classList.add("is-hidden");
-    return;
-  }
-  const container = qs("#js-servico-top3");
-  container.innerHTML = "";
-  ranking.forEach((item, i) => container.appendChild(montarLinhaRankingServico(item, i + 1, i)));
-  destaque.classList.remove("is-hidden");
-}
-
 function renderizarServicos() {
   const servicosAtivos = obterServicos().filter((s) => s.ativo);
   const container = qs("#js-lista-servicos");
@@ -50,8 +37,6 @@ function renderizarServicos() {
     vazio.classList.add("is-hidden");
     servicosAtivos.forEach((servico, i) => container.appendChild(montarLinhaServico(servico, i)));
   }
-
-  calcularMaisRealizado();
 }
 
 function abrirNovoServico() {

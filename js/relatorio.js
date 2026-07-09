@@ -68,13 +68,150 @@ function vendasNoPeriodo(inicio, fim) {
   });
 }
 
+function calcularLucroVendas(vendas) {
+  const produtos = obterProdutos();
+  let lucro = 0;
+  const produtosVendidosIds = new Set();
+  const produtosComCustoIds = new Set();
+  vendas.forEach((v) => {
+    (v.itens || []).forEach((item) => {
+      produtosVendidosIds.add(item.produtoId);
+      const produto = produtos.find((p) => p.id === item.produtoId);
+      if (produto && produto.precoCusto != null) {
+        lucro += (item.precoUnitario - produto.precoCusto) * item.quantidade;
+        produtosComCustoIds.add(item.produtoId);
+      }
+    });
+  });
+  return { lucro, cobertura: `${produtosComCustoIds.size} de ${produtosVendidosIds.size} produtos com custo informado` };
+}
+
+function porFormaValorVendas(vendas) {
+  const formas = obterFormasPagamento();
+  const porFormaValor = {};
+  vendas.filter((v) => v.status === "paga").forEach((v) => {
+    (v.pagamentos || []).forEach((p) => {
+      const forma = formas.find((f) => f.id === p.formaPagamentoId);
+      if (!forma) return;
+      porFormaValor[forma.id] = (porFormaValor[forma.id] || 0) + p.valor;
+    });
+  });
+  return porFormaValor;
+}
+
 function calcularResumoVendas(vendas) {
   const faturamento = vendas.reduce((soma, v) => soma + (v.valorTotal || 0), 0);
+  const subtotalTotal = vendas.reduce((soma, v) => soma + (v.subtotal || 0), 0);
   const desconto = vendas.reduce((soma, v) => soma + (v.desconto || 0), 0);
+  const gorjeta = vendas.reduce((soma, v) => soma + (v.gorjeta || 0), 0);
   const totalRecebido = vendas
     .filter((v) => v.status === "paga")
     .reduce((soma, v) => soma + (v.pagamentos || []).reduce((s, p) => s + p.valor, 0), 0);
-  return { faturamento, desconto, totalRecebido };
+  const contagem = vendas.length;
+  const ticketMedio = contagem > 0 ? faturamento / contagem : 0;
+  const descontoMedioPercent = subtotalTotal > 0 ? (desconto / subtotalTotal) * 100 : 0;
+  const { lucro, cobertura } = calcularLucroVendas(vendas);
+  return { faturamento, desconto, gorjeta, totalRecebido, contagem, ticketMedio, descontoMedioPercent, lucro, cobertura, porFormaValor: porFormaValorVendas(vendas) };
+}
+
+/* Mais realizados/vendidos — mesma lógica que existia em ranking-servicos.js/
+   ranking-produtos.js, portada aqui pra usar o período Dia/Semana/Mês/Ano
+   que a página já compartilha, em vez do sistema Ano/Mês/Personalizado
+   daquelas páginas (aposentadas). */
+function calcularMaisRealizados(agendamentos) {
+  const servicosAtivos = obterServicos().filter((s) => s.ativo);
+  const contagem = {};
+  agendamentos.forEach((a) => {
+    (a.servicosIds || []).forEach((id) => { contagem[id] = (contagem[id] || 0) + 1; });
+  });
+  return servicosAtivos
+    .map((servico) => ({ servico, quantidade: contagem[servico.id] || 0 }))
+    .filter((item) => item.quantidade > 0)
+    .sort((a, b) => b.quantidade - a.quantidade);
+}
+
+function calcularMaisVendidos(vendas) {
+  const produtosAtivos = obterProdutos().filter((p) => p.ativo);
+  const contagem = {};
+  vendas.forEach((v) => {
+    (v.itens || []).forEach((item) => { contagem[item.produtoId] = (contagem[item.produtoId] || 0) + item.quantidade; });
+  });
+  return produtosAtivos
+    .map((produto) => ({ produto, quantidade: contagem[produto.id] || 0 }))
+    .filter((item) => item.quantidade > 0)
+    .sort((a, b) => b.quantidade - a.quantidade);
+}
+
+function montarLinhaRankingServico(item, posicao, indice) {
+  const linha = document.createElement("div");
+  linha.className = "list-item";
+  linha.innerHTML = `
+    <span class="ranking-posicao ${classePosicaoRanking(posicao)}">${posicao}</span>
+    <div class="list-item__avatar ${classeAvatarPorIndice(indice)}"></div>
+    <div class="list-item__body"><p class="list-item__title"></p></div>
+    <span class="text-primary-accent" style="font-weight:700;"></span>
+  `;
+  linha.querySelector(".list-item__avatar").textContent = iniciaisCliente(item.servico.nome);
+  linha.querySelector(".list-item__title").textContent = item.servico.nome;
+  linha.querySelector(".text-primary-accent").textContent = `${item.quantidade} atendimento${item.quantidade === 1 ? "" : "s"}`;
+  return linha;
+}
+
+function montarLinhaRankingProduto(item, posicao, indice) {
+  const linha = document.createElement("div");
+  linha.className = "list-item";
+  linha.innerHTML = `
+    <span class="ranking-posicao ${classePosicaoRanking(posicao)}">${posicao}</span>
+    <div class="list-item__avatar ${classeAvatarPorIndice(indice)}"></div>
+    <div class="list-item__body"><p class="list-item__title"></p></div>
+    <span class="text-primary-accent" style="font-weight:700;"></span>
+  `;
+  linha.querySelector(".list-item__avatar").textContent = iniciaisCliente(item.produto.nome);
+  linha.querySelector(".list-item__title").textContent = item.produto.nome;
+  linha.querySelector(".text-primary-accent").textContent = `${item.quantidade} unidade${item.quantidade === 1 ? "" : "s"} vendida${item.quantidade === 1 ? "" : "s"}`;
+  return linha;
+}
+
+/* Parados: produtos ativos, com estoque e com diasParaAvisarParado
+   configurado (ver js/produtos.js), sem venda há pelo menos esse número
+   de dias — checado contra hoje, não contra o período do relatório. */
+function calcularParados() {
+  const hoje = hojeIso();
+  const vendas = obterVendas();
+  return obterProdutos()
+    .filter((p) => p.ativo && p.estoque > 0 && p.diasParaAvisarParado)
+    .map((produto) => {
+      const vendasProduto = vendas.filter((v) => (v.itens || []).some((i) => i.produtoId === produto.id));
+      if (vendasProduto.length === 0) return { produto, diasSemVenda: null };
+      const ultimaVenda = vendasProduto.reduce((max, v) => (v.criadaEm > max ? v.criadaEm : max), vendasProduto[0].criadaEm);
+      const diasSemVenda = Math.floor((new Date(hoje) - new Date(ultimaVenda.slice(0, 10))) / 86400000);
+      return { produto, diasSemVenda };
+    })
+    .filter((item) => item.diasSemVenda === null || item.diasSemVenda >= item.produto.diasParaAvisarParado);
+}
+
+function montarLinhaParado(item) {
+  const linha = document.createElement("div");
+  linha.className = "list-item";
+  linha.innerHTML = `
+    <div class="list-item__avatar"></div>
+    <div class="list-item__body"><p class="list-item__title"></p><p class="list-item__subtitle"></p></div>
+  `;
+  linha.querySelector(".list-item__avatar").textContent = iniciaisCliente(item.produto.nome);
+  linha.querySelector(".list-item__title").textContent = item.produto.nome;
+  linha.querySelector(".list-item__subtitle").textContent = item.diasSemVenda == null ? "Nunca vendido" : `${item.diasSemVenda} dias sem vender`;
+  return linha;
+}
+
+function fraseInsightVendas(resumo, resumoAnterior) {
+  if (resumo.contagem === 0) return "Nenhuma venda neste período.";
+  if (resumo.descontoMedioPercent > 10) {
+    return `Desconto médio de ${resumo.descontoMedioPercent.toFixed(0)}% — acima do que costuma ser saudável (10%).`;
+  }
+  const diff = resumo.descontoMedioPercent - resumoAnterior.descontoMedioPercent;
+  if (Math.abs(diff) < 0.5) return `Desconto médio estável em ${resumo.descontoMedioPercent.toFixed(0)}%.`;
+  const direcao = diff > 0 ? "subiu" : "caiu";
+  return `Desconto médio ${direcao} de ${resumoAnterior.descontoMedioPercent.toFixed(0)}% pra ${resumo.descontoMedioPercent.toFixed(0)}%.`;
 }
 
 function calcularResumo(agendamentos) {
@@ -208,11 +345,11 @@ function montarGraficoSemana(tipoPeriodo, refData) {
   qs("#js-relatorio-eixo-meio").textContent = formatarEixoY(maximo / 2);
 }
 
-function montarRecebimentos(resumo) {
+function montarRecebimentos(resumo, formasContainerId, pizzaContainerId) {
   const todasFormas = obterFormasPagamento();
   const tiposComFormaAtiva = new Set(todasFormas.filter((f) => f.ativo).map((f) => f.tipo));
-  const container = qs("#js-relatorio-formas");
-  const pizza = qs("#js-relatorio-pizza");
+  const container = qs(`#${formasContainerId || "js-relatorio-formas"}`);
+  const pizza = qs(`#${pizzaContainerId || "js-relatorio-pizza"}`);
   container.innerHTML = "";
   pizza.innerHTML = "";
 
@@ -328,17 +465,20 @@ document.addEventListener("DOMContentLoaded", () => {
     qs("#js-relatorio-taxas-comparacao").textContent = compTaxas.texto;
     qs("#js-relatorio-taxas-comparacao").className = `insight-card__comparacao ${compTaxas.classe}`;
 
-    montarRecebimentos(resumo);
+    montarRecebimentos(resumo, "js-relatorio-formas", "js-relatorio-pizza");
 
-    const resumoVendas = calcularResumoVendas(vendasNoPeriodo(inicio, fim));
-    const resumoVendasAnterior = calcularResumoVendas(vendasNoPeriodo(inicioAnt, fimAnt));
-    qs("#js-relatorio-vendas-faturamento").textContent = formatarMoeda(resumoVendas.faturamento);
-    const compVendas = formatarComparacao(resumoVendas.faturamento, resumoVendasAnterior.faturamento, rotuloComparacao, "valor");
-    qs("#js-relatorio-vendas-faturamento-comparacao").textContent = compVendas.texto;
-    qs("#js-relatorio-vendas-faturamento-comparacao").className = compVendas.classe;
-    qs("#js-relatorio-vendas-recebido").textContent = formatarMoeda(resumoVendas.totalRecebido);
-    qs("#js-relatorio-vendas-desconto").textContent = formatarMoeda(resumoVendas.desconto);
-    qs("#js-relatorio-total-combinado").textContent = `Total combinado com atendimentos: ${formatarMoeda(resumo.faturamento + resumoVendas.faturamento)}`;
+    const maisRealizados = calcularMaisRealizados(agendamentosNoPeriodo(inicio, fim));
+    const containerRealizados = qs("#js-relatorio-mais-realizados");
+    const vazioRealizados = qs("#js-relatorio-mais-realizados-vazio");
+    containerRealizados.innerHTML = "";
+    if (maisRealizados.length === 0) {
+      containerRealizados.classList.add("is-hidden");
+      vazioRealizados.classList.remove("is-hidden");
+    } else {
+      containerRealizados.classList.remove("is-hidden");
+      vazioRealizados.classList.add("is-hidden");
+      maisRealizados.forEach((item, i) => containerRealizados.appendChild(montarLinhaRankingServico(item, i + 1, i)));
+    }
 
     const svgGrafico = qs("#js-relatorio-grafico-svg");
     if (tipoPeriodo === "dia") {
@@ -346,6 +486,53 @@ document.addEventListener("DOMContentLoaded", () => {
     } else {
       svgGrafico.classList.remove("is-hidden");
       montarGraficoSemana(tipoPeriodo, refData);
+    }
+
+    /* ---------- Aba Vendas ---------- */
+    const vendasPeriodo = vendasNoPeriodo(inicio, fim);
+    const resumoVendas = calcularResumoVendas(vendasPeriodo);
+    const resumoVendasAnterior = calcularResumoVendas(vendasNoPeriodo(inicioAnt, fimAnt));
+
+    qs("#js-vendas-faturamento").textContent = formatarMoeda(resumoVendas.faturamento);
+    const compVendas = formatarComparacao(resumoVendas.faturamento, resumoVendasAnterior.faturamento, rotuloComparacao, "valor");
+    qs("#js-vendas-faturamento-comparacao").textContent = compVendas.texto;
+    qs("#js-vendas-faturamento-comparacao").className = compVendas.classe;
+
+    qs("#js-vendas-insight").textContent = fraseInsightVendas(resumoVendas, resumoVendasAnterior);
+
+    qs("#js-vendas-contagem").textContent = resumoVendas.contagem;
+    qs("#js-vendas-ticket").textContent = formatarMoeda(resumoVendas.ticketMedio);
+    qs("#js-vendas-desconto-medio").textContent = `${resumoVendas.descontoMedioPercent.toFixed(0)}%`;
+    qs("#js-vendas-gorjeta").textContent = formatarMoeda(resumoVendas.gorjeta);
+    qs("#js-vendas-lucro").textContent = formatarMoeda(resumoVendas.lucro);
+    qs("#js-vendas-lucro-cobertura").textContent = resumoVendas.cobertura;
+
+    montarRecebimentos(resumoVendas, "js-vendas-formas", "js-vendas-pizza");
+
+    const maisVendidos = calcularMaisVendidos(vendasPeriodo);
+    const containerVendidos = qs("#js-vendas-mais-vendidos");
+    const vazioVendidos = qs("#js-vendas-mais-vendidos-vazio");
+    containerVendidos.innerHTML = "";
+    if (maisVendidos.length === 0) {
+      containerVendidos.classList.add("is-hidden");
+      vazioVendidos.classList.remove("is-hidden");
+    } else {
+      containerVendidos.classList.remove("is-hidden");
+      vazioVendidos.classList.add("is-hidden");
+      maisVendidos.forEach((item, i) => containerVendidos.appendChild(montarLinhaRankingProduto(item, i + 1, i)));
+    }
+
+    const parados = calcularParados();
+    const containerParados = qs("#js-vendas-parados");
+    const vazioParados = qs("#js-vendas-parados-vazio");
+    containerParados.innerHTML = "";
+    if (parados.length === 0) {
+      containerParados.classList.add("is-hidden");
+      vazioParados.classList.remove("is-hidden");
+    } else {
+      containerParados.classList.remove("is-hidden");
+      vazioParados.classList.add("is-hidden");
+      parados.forEach((item) => containerParados.appendChild(montarLinhaParado(item)));
     }
   }
 
@@ -361,15 +548,29 @@ document.addEventListener("DOMContentLoaded", () => {
   qs("#js-periodo-proximo").addEventListener("click", () => avancarPeriodo(1));
 
   const mapaAba = { "dia": "dia", "semana": "semana", "mês": "mes", "ano": "ano" };
-  qsa(".segmented__item").forEach((item) => {
+  qsa(".segmented__item", qs("#js-periodo-tabs")).forEach((item) => {
     item.addEventListener("click", () => {
-      qsa(".segmented__item").forEach((i) => i.classList.remove("is-active"));
+      qsa(".segmented__item", qs("#js-periodo-tabs")).forEach((i) => i.classList.remove("is-active"));
       item.classList.add("is-active");
       const chave = item.textContent.trim().toLowerCase();
       tipoPeriodo = mapaAba[chave] || tipoPeriodo;
       atualizarRelatorio();
     });
   });
+
+  const parametrosUrl = new URLSearchParams(window.location.search);
+  const abaInicial = parametrosUrl.get("aba") === "vendas" ? "vendas" : "atendimentos";
+  qsa(".segmented__item", qs("#js-aba-relatorio")).forEach((item) => {
+    item.classList.toggle("is-active", item.dataset.aba === abaInicial);
+    item.addEventListener("click", () => {
+      qsa(".segmented__item", qs("#js-aba-relatorio")).forEach((i) => i.classList.remove("is-active"));
+      item.classList.add("is-active");
+      qs("#js-conteudo-atendimentos").classList.toggle("is-hidden", item.dataset.aba !== "atendimentos");
+      qs("#js-conteudo-vendas").classList.toggle("is-hidden", item.dataset.aba !== "vendas");
+    });
+  });
+  qs("#js-conteudo-atendimentos").classList.toggle("is-hidden", abaInicial !== "atendimentos");
+  qs("#js-conteudo-vendas").classList.toggle("is-hidden", abaInicial !== "vendas");
 
   atualizarRelatorio();
 
