@@ -124,6 +124,20 @@
   border: none;
 }
 
+/* Ação secundária opcional ("+ Completar cadastro", "+ Adicionar observação",
+   "+ Vendeu algo?") — mesmo card+list-item+seta de qualquer linha clicável,
+   só que discreta: sem fundo, texto no mesmo tom/peso/tamanho do texto
+   de dentro dos chips, pra não competir com os campos principais do modal. */
+.card--transparente {
+  background: transparent;
+}
+
+.card--transparente .list-item__title {
+  font-weight: 400;
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+
 .card-metrica {
   background: var(--card);
   border: none;
@@ -155,6 +169,9 @@
   color: var(--text-secondary);
   border: 1px solid var(--border);
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
 }
 
 .chip--ativo {
@@ -183,24 +200,6 @@
   border-radius: var(--radius-md);
 }
 
-/* Chip de forma de pagamento — ícone em cima, nome embaixo, mais alto
-   e tocável que um chip de texto comum. Usado por montarFormasChips()
-   (js/utils.js), então aparece em todo lugar que escolhe forma de
-   pagamento (Finalizar atendimento, Editar realizado, Venda). */
-.chip--pagamento {
-  flex-direction: column;
-  gap: 4px;
-  padding: 10px 6px;
-  border-radius: var(--radius-md);
-  white-space: normal;
-  text-align: center;
-}
-
-.chip--pagamento svg {
-  width: 18px;
-  height: 18px;
-}
-
 .chip--dia .chip-dia__label {
   font-size: 10px;
   font-weight: 600;
@@ -223,13 +222,6 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
   gap: 8px;
-}
-
-/* 4 cartões de forma de pagamento por linha, independente da largura
-   do nome (diferente do chip-group padrão, que ajusta a coluna ao
-   texto — aqui o ícone já identifica a forma, então cabe mais apertado). */
-.chip-group--pagamento {
-  grid-template-columns: repeat(4, 1fr);
 }
 
 .chip-group .chip {

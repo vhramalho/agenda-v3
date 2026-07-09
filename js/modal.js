@@ -13,7 +13,9 @@
 
 function abrirModal(id) {
   const overlay = document.getElementById(id);
-  if (overlay) overlay.classList.remove("is-hidden");
+  if (!overlay) return;
+  overlay.classList.remove("is-hidden");
+  ajustarTextoChips(overlay);
 }
 
 function fecharModal(origem) {

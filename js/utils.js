@@ -411,11 +411,10 @@ function montarFormasChips(chipsContainerId, linhasContainerId, nomesSelecionado
   const nomesAtivos = formasAtivas.map((f) => f.nome);
   formasAtivas.forEach((forma) => {
     const ativo = nomesSelecionados.includes(forma.nome);
-    const icone = ICONES_TIPO_PAGAMENTO[forma.tipo] || ICONES_TIPO_PAGAMENTO.outras;
     const chip = document.createElement("span");
-    chip.className = "chip chip--pagamento" + (ativo ? " chip--ativo" : "");
+    chip.className = "chip" + (ativo ? " chip--ativo" : "");
     chip.dataset.nome = forma.nome;
-    chip.innerHTML = `${icone.svg}<span>${forma.nome}</span>`;
+    chip.textContent = forma.nome;
     chipsContainer.appendChild(chip);
     if (ativo) adicionarLinhaForma(linhasContainer, forma.nome, valoresPorNome && valoresPorNome[forma.nome]);
   });
@@ -424,6 +423,7 @@ function montarFormasChips(chipsContainerId, linhasContainerId, nomesSelecionado
   nomesSelecionados.filter((nome) => !nomesAtivos.includes(nome)).forEach((nome) => {
     adicionarLinhaForma(linhasContainer, nome, valoresPorNome && valoresPorNome[nome], true);
   });
+  distribuirChipGroup(chipsContainer);
   qsa(".chip", chipsContainer).forEach((chip) => {
     chip.addEventListener("click", () => {
       chip.classList.toggle("chip--ativo");

@@ -4,11 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Agenda — Agenda V3</title>
-  <link rel="stylesheet" href="css/tokens.css?v=20260708a" />
-  <link rel="stylesheet" href="css/base.css?v=20260708a" />
-  <link rel="stylesheet" href="css/layout.css?v=20260708a" />
-  <link rel="stylesheet" href="css/components.css?v=20260708a" />
-  <link rel="stylesheet" href="css/agenda.css?v=20260708a" />
+  <link rel="stylesheet" href="css/tokens.css?v=20260708b" />
+  <link rel="stylesheet" href="css/base.css?v=20260708b" />
+  <link rel="stylesheet" href="css/layout.css?v=20260708b" />
+  <link rel="stylesheet" href="css/components.css?v=20260708b" />
+  <link rel="stylesheet" href="css/agenda.css?v=20260708b" />
 </head>
 <body data-page="index">
   <div class="app">
@@ -190,7 +190,7 @@
           </button>
         </div>
         <div class="field is-hidden" id="js-novo-agendamento-cadastro-wrap">
-          <div class="card" id="js-novo-agendamento-cadastro-toggle" style="cursor:pointer;">
+          <div class="card card--transparente" id="js-novo-agendamento-cadastro-toggle" style="cursor:pointer;">
             <div class="list-item" style="padding:0;">
               <div class="list-item__body"><p class="list-item__title">+ Completar cadastro</p></div>
               <svg class="list-item__chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
@@ -206,7 +206,7 @@
           <div class="chip-group" data-chips="single" id="js-novo-agendamento-duracao"></div>
         </div>
         <div class="field">
-          <div class="card" id="js-novo-agendamento-observacao-toggle" style="cursor:pointer;">
+          <div class="card card--transparente" id="js-novo-agendamento-observacao-toggle" style="cursor:pointer;">
             <div class="list-item" style="padding:0;">
               <div class="list-item__body"><p class="list-item__title">+ Adicionar observação</p></div>
               <svg class="list-item__chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
@@ -250,7 +250,7 @@
         </div>
 
         <div class="field is-hidden" id="js-finalizar-cadastro-wrap">
-          <div class="card" id="js-finalizar-cadastro-toggle" style="cursor:pointer;">
+          <div class="card card--transparente" id="js-finalizar-cadastro-toggle" style="cursor:pointer;">
             <div class="list-item" style="padding:0;">
               <div class="list-item__body"><p class="list-item__title">+ Completar cadastro</p></div>
               <svg class="list-item__chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
@@ -272,7 +272,7 @@
         </div>
         <div class="field" data-campo-pago="sim">
           <label class="field__label">Forma de pagamento</label>
-          <div class="chip-group chip-group--pagamento" id="js-finalizar-formas"></div>
+          <div class="chip-group" id="js-finalizar-formas"></div>
           <div class="stack" data-linhas-pagamento style="margin-top:12px;gap:8px;" id="js-finalizar-linhas-pagamento"></div>
         </div>
         <div class="field is-hidden" data-campo-pago="nao">
@@ -282,7 +282,7 @@
         </div>
 
         <div class="field">
-          <div class="card" id="js-finalizar-venda-toggle" style="cursor:pointer;">
+          <div class="card card--transparente" id="js-finalizar-venda-toggle" style="cursor:pointer;">
             <div class="list-item" style="padding:0;">
               <div class="list-item__body"><p class="list-item__title">+ Vendeu algo pra esse cliente?</p></div>
               <svg class="list-item__chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
@@ -297,7 +297,7 @@
         </div>
 
         <div class="field">
-          <div class="card" id="js-finalizar-observacao-toggle" style="cursor:pointer;">
+          <div class="card card--transparente" id="js-finalizar-observacao-toggle" style="cursor:pointer;">
             <div class="list-item" style="padding:0;">
               <div class="list-item__body"><p class="list-item__title">+ Adicionar observação</p></div>
               <svg class="list-item__chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
@@ -357,7 +357,7 @@
         </div>
 
         <div class="field is-hidden" id="js-editar-realizado-cadastro-wrap">
-          <div class="card" id="js-editar-realizado-cadastro-toggle" style="cursor:pointer;">
+          <div class="card card--transparente" id="js-editar-realizado-cadastro-toggle" style="cursor:pointer;">
             <div class="list-item" style="padding:0;">
               <div class="list-item__body"><p class="list-item__title">+ Completar cadastro</p></div>
               <svg class="list-item__chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
@@ -379,7 +379,7 @@
         </div>
         <div class="field is-hidden" id="js-editar-realizado-campo-formas">
           <label class="field__label">Formas de pagamento</label>
-          <div class="chip-group chip-group--pagamento" id="js-editar-realizado-formas"></div>
+          <div class="chip-group" id="js-editar-realizado-formas"></div>
           <div class="stack" data-linhas-pagamento style="margin-top:12px;gap:8px;" id="js-editar-realizado-linhas-pagamento"></div>
         </div>
         <div class="field is-hidden" id="js-editar-realizado-campo-pendente">
@@ -388,7 +388,7 @@
         </div>
 
         <div class="field">
-          <div class="card" id="js-editar-realizado-venda-toggle" style="cursor:pointer;">
+          <div class="card card--transparente" id="js-editar-realizado-venda-toggle" style="cursor:pointer;">
             <div class="list-item" style="padding:0;">
               <div class="list-item__body"><p class="list-item__title">+ Vendeu algo pra esse cliente?</p></div>
               <svg class="list-item__chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
@@ -403,7 +403,7 @@
         </div>
 
         <div class="field">
-          <div class="card" id="js-editar-realizado-observacao-toggle" style="cursor:pointer;">
+          <div class="card card--transparente" id="js-editar-realizado-observacao-toggle" style="cursor:pointer;">
             <div class="list-item" style="padding:0;">
               <div class="list-item__body"><p class="list-item__title">+ Adicionar observação</p></div>
               <svg class="list-item__chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
@@ -530,17 +530,17 @@
     </div>
   </div>
 
-  <script src="js/utils.js?v=20260708a"></script>
-  <script src="js/menu.js?v=20260708a"></script>
-  <script src="js/storage.js?v=20260708a"></script>
-  <script src="js/tema.js?v=20260708a"></script>
-  <script src="js/app.js?v=20260708a"></script>
-  <script src="js/chips.js?v=20260708a"></script>
-  <script src="js/modal.js?v=20260708a"></script>
-  <script src="js/calendario.js?v=20260708a"></script>
-  <script src="js/acoes-simuladas.js?v=20260708a"></script>
-  <script src="js/vendas.js?v=20260708a"></script>
-  <script src="js/agenda.js?v=20260708a"></script>
-  <script src="js/agenda-diario.js?v=20260708a"></script>
+  <script src="js/utils.js?v=20260708b"></script>
+  <script src="js/menu.js?v=20260708b"></script>
+  <script src="js/storage.js?v=20260708b"></script>
+  <script src="js/tema.js?v=20260708b"></script>
+  <script src="js/app.js?v=20260708b"></script>
+  <script src="js/chips.js?v=20260708b"></script>
+  <script src="js/modal.js?v=20260708b"></script>
+  <script src="js/calendario.js?v=20260708b"></script>
+  <script src="js/acoes-simuladas.js?v=20260708b"></script>
+  <script src="js/vendas.js?v=20260708b"></script>
+  <script src="js/agenda.js?v=20260708b"></script>
+  <script src="js/agenda-diario.js?v=20260708b"></script>
 </body>
 </html>

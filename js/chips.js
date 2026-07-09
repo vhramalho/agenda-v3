@@ -6,23 +6,41 @@
    Não salva nada ainda — isso é Fase 3.
    ============================================================ */
 
-/* Distribuição do chip-group pela quantidade de chips, não por largura de
-   texto — 1 chip fica centralizado (sem esticar), 2 a 4 dividem a mesma
-   linha em partes iguais, 5+ quebra em linhas de 4 (mesma regra que já
-   existia só pra forma de pagamento, generalizada pra todo chip-group). */
+/* Distribuição do chip-group por um tamanho de coluna fixo (referência: 5
+   por linha), não por quantidade real nem largura de texto — um grupo com
+   2 chips tem chips do mesmo tamanho que um grupo com 5, só que centralizado
+   em vez de esticado. 5+ quebra em linhas de 5. `calc()`/`%` são resolvidos
+   pelo navegador só na hora de desenhar a tela, então funciona mesmo
+   chamado com o modal ainda escondido (`display:none`, `clientWidth` 0). */
+const CHIP_GROUP_COLUNAS_REFERENCIA = 5;
+const CHIP_GROUP_GAP_PX = 8; // precisa bater com `gap` de `.chip-group` (css/components.css)
+
 function distribuirChipGroup(container) {
   if (!container.classList.contains("chip-group")) return;
   const chips = qsa(".chip", container);
   if (chips.length === 0) return;
-  if (chips.length === 1) {
-    container.style.gridTemplateColumns = "";
-    container.style.justifyContent = "center";
-    container.style.display = "flex";
-  } else {
-    container.style.display = "grid";
-    container.style.justifyContent = "";
-    container.style.gridTemplateColumns = `repeat(${Math.min(chips.length, 4)}, 1fr)`;
-  }
+  const colunas = Math.min(chips.length, CHIP_GROUP_COLUNAS_REFERENCIA);
+  const larguraColuna = `calc((100% - ${CHIP_GROUP_GAP_PX * (CHIP_GROUP_COLUNAS_REFERENCIA - 1)}px) / ${CHIP_GROUP_COLUNAS_REFERENCIA})`;
+  container.style.display = "grid";
+  container.style.gridTemplateColumns = `repeat(${colunas}, ${larguraColuna})`;
+  container.style.justifyContent = chips.length < CHIP_GROUP_COLUNAS_REFERENCIA ? "center" : "";
+}
+
+/* Se o texto de um chip não coube na coluna (nome de forma de pagamento
+   comprido, ex. "Cartão de crédito"), diminui a fonte até caber em vez de
+   deixar a coluna crescer ou o texto cortar — só roda quando o modal já
+   está visível de verdade (chamado por abrirModal, js/modal.js), senão
+   scrollWidth/clientWidth vêm zerados. */
+function ajustarTextoChips(raiz) {
+  qsa(".chip-group .chip", raiz).forEach((chip) => {
+    chip.style.fontSize = "";
+    if (chip.scrollWidth <= chip.clientWidth) return;
+    let tamanho = parseFloat(getComputedStyle(chip).fontSize);
+    while (chip.scrollWidth > chip.clientWidth && tamanho > 9) {
+      tamanho -= 1;
+      chip.style.fontSize = `${tamanho}px`;
+    }
+  });
 }
 
 function inicializarGrupoChips(container, multiplo) {
