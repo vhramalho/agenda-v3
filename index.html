@@ -4,11 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Agenda — Agenda V3</title>
-  <link rel="stylesheet" href="css/tokens.css?v=20260708b" />
-  <link rel="stylesheet" href="css/base.css?v=20260708b" />
-  <link rel="stylesheet" href="css/layout.css?v=20260708b" />
-  <link rel="stylesheet" href="css/components.css?v=20260708b" />
-  <link rel="stylesheet" href="css/agenda.css?v=20260708b" />
+  <link rel="stylesheet" href="css/tokens.css?v=20260708c" />
+  <link rel="stylesheet" href="css/base.css?v=20260708c" />
+  <link rel="stylesheet" href="css/layout.css?v=20260708c" />
+  <link rel="stylesheet" href="css/components.css?v=20260708c" />
+  <link rel="stylesheet" href="css/agenda.css?v=20260708c" />
 </head>
 <body data-page="index">
   <div class="app">
@@ -179,15 +179,16 @@
           <input class="input" placeholder="Buscar ou digitar nome" id="js-novo-agendamento-nome" />
           <div class="card is-hidden" id="js-novo-agendamento-resultados" style="position:absolute;top:100%;left:0;z-index:5;width:100%;max-height:150px;overflow-y:auto;margin-top:4px;padding:4px 12px;"></div>
         </div>
-        <div class="card row is-hidden" id="js-novo-agendamento-cliente-card" style="margin-bottom:16px;">
-          <div class="list-item__avatar" id="js-novo-agendamento-cliente-avatar"></div>
-          <div style="flex:1;">
-            <p style="font-weight:700;" id="js-novo-agendamento-cliente-nome"></p>
-            <p class="text-secondary" style="font-size:var(--text-sm);" id="js-novo-agendamento-cliente-info"></p>
+        <div class="card is-hidden" id="js-novo-agendamento-cliente-card" style="margin-bottom:16px;">
+          <div class="row">
+            <div class="list-item__avatar" id="js-novo-agendamento-cliente-avatar"></div>
+            <div style="flex:1;">
+              <p style="font-weight:700;" id="js-novo-agendamento-cliente-nome"></p>
+            </div>
+            <button type="button" id="js-novo-agendamento-cliente-remover" class="icon-btn" aria-label="Remover seleção" style="background:none;flex-shrink:0;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+            </button>
           </div>
-          <button type="button" id="js-novo-agendamento-cliente-remover" class="icon-btn" aria-label="Remover seleção" style="background:none;flex-shrink:0;">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
-          </button>
         </div>
         <div class="field is-hidden" id="js-novo-agendamento-cadastro-wrap">
           <div class="card card--transparente" id="js-novo-agendamento-cadastro-toggle" style="cursor:pointer;">
@@ -238,15 +239,16 @@
           <div class="card is-hidden" id="js-finalizar-resultados" style="position:absolute;top:100%;left:0;z-index:5;width:100%;max-height:150px;overflow-y:auto;margin-top:4px;padding:4px 12px;"></div>
         </div>
 
-        <div class="card row is-hidden" id="js-finalizar-cliente-card" style="margin-bottom:16px;">
-          <div class="list-item__avatar" id="js-finalizar-cliente-avatar"></div>
-          <div style="flex:1;min-width:0;">
-            <p style="font-weight:700;" id="js-finalizar-cliente-nome"></p>
-            <p class="text-secondary" style="font-size:var(--text-sm);" id="js-finalizar-cliente-info"></p>
+        <div class="card is-hidden" id="js-finalizar-cliente-card" style="margin-bottom:16px;">
+          <div class="row">
+            <div class="list-item__avatar" id="js-finalizar-cliente-avatar"></div>
+            <div style="flex:1;min-width:0;">
+              <p style="font-weight:700;" id="js-finalizar-cliente-nome"></p>
+            </div>
+            <button type="button" id="js-finalizar-cliente-remover" class="icon-btn" aria-label="Remover seleção" style="background:none;flex-shrink:0;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+            </button>
           </div>
-          <button type="button" id="js-finalizar-cliente-remover" class="icon-btn" aria-label="Remover seleção" style="background:none;flex-shrink:0;">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
-          </button>
         </div>
 
         <div class="field is-hidden" id="js-finalizar-cadastro-wrap">
@@ -345,15 +347,16 @@
           <div class="card is-hidden" id="js-editar-realizado-resultados" style="position:absolute;top:100%;left:0;z-index:5;width:100%;max-height:150px;overflow-y:auto;margin-top:4px;padding:4px 12px;"></div>
         </div>
 
-        <div class="card row is-hidden" id="js-editar-realizado-cliente-card" style="margin-bottom:16px;">
-          <div class="list-item__avatar" id="js-editar-realizado-cliente-avatar"></div>
-          <div style="flex:1;min-width:0;">
-            <p style="font-weight:700;" id="js-editar-realizado-cliente-nome"></p>
-            <p class="text-secondary" style="font-size:var(--text-sm);" id="js-editar-realizado-cliente-info"></p>
+        <div class="card is-hidden" id="js-editar-realizado-cliente-card" style="margin-bottom:16px;">
+          <div class="row">
+            <div class="list-item__avatar" id="js-editar-realizado-cliente-avatar"></div>
+            <div style="flex:1;min-width:0;">
+              <p style="font-weight:700;" id="js-editar-realizado-cliente-nome"></p>
+            </div>
+            <button type="button" id="js-editar-realizado-cliente-remover" class="icon-btn" aria-label="Remover seleção" style="background:none;flex-shrink:0;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+            </button>
           </div>
-          <button type="button" id="js-editar-realizado-cliente-remover" class="icon-btn" aria-label="Remover seleção" style="background:none;flex-shrink:0;">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
-          </button>
         </div>
 
         <div class="field is-hidden" id="js-editar-realizado-cadastro-wrap">
@@ -530,17 +533,17 @@
     </div>
   </div>
 
-  <script src="js/utils.js?v=20260708b"></script>
-  <script src="js/menu.js?v=20260708b"></script>
-  <script src="js/storage.js?v=20260708b"></script>
-  <script src="js/tema.js?v=20260708b"></script>
-  <script src="js/app.js?v=20260708b"></script>
-  <script src="js/chips.js?v=20260708b"></script>
-  <script src="js/modal.js?v=20260708b"></script>
-  <script src="js/calendario.js?v=20260708b"></script>
-  <script src="js/acoes-simuladas.js?v=20260708b"></script>
-  <script src="js/vendas.js?v=20260708b"></script>
-  <script src="js/agenda.js?v=20260708b"></script>
-  <script src="js/agenda-diario.js?v=20260708b"></script>
+  <script src="js/utils.js?v=20260708c"></script>
+  <script src="js/menu.js?v=20260708c"></script>
+  <script src="js/storage.js?v=20260708c"></script>
+  <script src="js/tema.js?v=20260708c"></script>
+  <script src="js/app.js?v=20260708c"></script>
+  <script src="js/chips.js?v=20260708c"></script>
+  <script src="js/modal.js?v=20260708c"></script>
+  <script src="js/calendario.js?v=20260708c"></script>
+  <script src="js/acoes-simuladas.js?v=20260708c"></script>
+  <script src="js/vendas.js?v=20260708c"></script>
+  <script src="js/agenda.js?v=20260708c"></script>
+  <script src="js/agenda-diario.js?v=20260708c"></script>
 </body>
 </html>

@@ -15,6 +15,10 @@ function abrirModal(id) {
   const overlay = document.getElementById(id);
   if (!overlay) return;
   overlay.classList.remove("is-hidden");
+  // Garante o tamanho certo em TODO chip-group do modal, mesmo os que não
+  // passam por inicializarGrupoChips (ex.: "Foi pago?", que usa seu próprio
+  // mecanismo de clique em js/acoes-simuladas.js e nunca chamava isso).
+  qsa(".chip-group", overlay).forEach(distribuirChipGroup);
   ajustarTextoChips(overlay);
 }
 

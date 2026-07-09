@@ -615,21 +615,11 @@ function abrirHorarioBloqueado(item) {
   abrirModal("modal-horario-bloqueado");
 }
 
-/* ---------- Novo / editar agendamento (com busca de cliente) ---------- */
-
-function infoVisitaCliente(clienteId) {
-  const realizados = obterAgendamentos().filter((a) => a.clienteId === clienteId && a.status && a.status.startsWith("realizado_"));
-  if (realizados.length === 0) return "ainda sem atendimentos";
-  const maisRecente = realizados.reduce((max, a) => (a.data > max ? a.data : max), realizados[0].data);
-  const dias = Math.max(0, Math.floor((new Date() - new Date(`${maisRecente}T00:00:00`)) / 86400000));
-  return dias === 0 ? "última visita hoje" : `última visita há ${dias} dia${dias === 1 ? "" : "s"}`;
-}
-
 /* ---------- Seletor de cliente genérico (busca ao vivo + card + completar cadastro) ----------
    Usado em 3 modais (Novo/Editar agendamento, Finalizar atendimento, Editar realizado),
    identificados por um "prefixo" que segue a convenção de ids:
    {prefixo}-nome-wrap, {prefixo}-nome, {prefixo}-resultados, {prefixo}-cliente-card,
-   {prefixo}-cliente-avatar, {prefixo}-cliente-nome, {prefixo}-cliente-info,
+   {prefixo}-cliente-avatar, {prefixo}-cliente-nome,
    {prefixo}-cliente-remover, {prefixo}-cadastro-wrap, {prefixo}-cadastro-toggle. */
 
 const clientePickerEstado = {};
@@ -638,7 +628,7 @@ function clientePickerIds(prefixo) {
   return {
     nomeWrap: `${prefixo}-nome-wrap`, nome: `${prefixo}-nome`, resultados: `${prefixo}-resultados`,
     card: `${prefixo}-cliente-card`, avatar: `${prefixo}-cliente-avatar`, nomeCard: `${prefixo}-cliente-nome`,
-    info: `${prefixo}-cliente-info`, remover: `${prefixo}-cliente-remover`,
+    remover: `${prefixo}-cliente-remover`,
     cadastroWrap: `${prefixo}-cadastro-wrap`, cadastroToggle: `${prefixo}-cadastro-toggle`,
   };
 }
@@ -653,17 +643,26 @@ function mostrarClienteCardPicker(prefixo, cliente) {
   const ids = clientePickerIds(prefixo);
   const card = qs(`#${ids.card}`);
   const nomeWrap = qs(`#${ids.nomeWrap}`);
+  const cadastroWrap = qs(`#${ids.cadastroWrap}`);
   if (!cliente) {
     card.classList.add("is-hidden");
     nomeWrap.classList.remove("is-hidden");
+    // Sem cliente casado ainda: "+ Completar cadastro" não tem card pra morar
+    // dentro, então fica como linha solta logo abaixo do campo de busca.
+    cadastroWrap.style.marginTop = "";
+    nomeWrap.insertAdjacentElement("afterend", cadastroWrap);
     atualizarCadastroWrapPicker(prefixo);
     return;
   }
   qs(`#${ids.avatar}`).textContent = iniciaisCliente(cliente.nome);
   qs(`#${ids.nomeCard}`).textContent = cliente.nome;
-  qs(`#${ids.info}`).textContent = infoVisitaCliente(cliente.id);
   card.classList.remove("is-hidden");
   nomeWrap.classList.add("is-hidden");
+  // Cliente já identificado: "+ Completar cadastro" edita essa mesma pessoa,
+  // então passa a morar dentro do card dela, não solto embaixo.
+  cadastroWrap.style.marginTop = "var(--space-3)";
+  cadastroWrap.style.marginBottom = "0";
+  card.appendChild(cadastroWrap);
   atualizarCadastroWrapPicker(prefixo);
 }
 
