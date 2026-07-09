@@ -795,8 +795,12 @@ function prepararObservacaoWrap(idTextarea, idToggle, texto) {
   const textarea = qs(`#${idTextarea}`);
   const toggle = qs(`#${idToggle}`);
   textarea.value = texto || "";
-  textarea.classList.add("is-hidden");
-  toggle.classList.remove("is-hidden");
+  // Já existe observação salva (ex.: editando um agendamento/realizado) —
+  // mostra o campo direto, sem esconder atrás do "+ Adicionar observação"
+  // (esse convite só faz sentido quando ainda não tem nada escrito).
+  const jaTemTexto = !!(texto || "").trim();
+  textarea.classList.toggle("is-hidden", !jaTemTexto);
+  toggle.classList.toggle("is-hidden", jaTemTexto);
   textoToggleObservacao(toggle).textContent = "+ Adicionar observação";
 }
 
@@ -817,6 +821,12 @@ function prepararNovoAgendamento() {
   montarServicosChips("js-novo-agendamento-servicos", []);
   montarDuracaoChips("js-novo-agendamento-duracao", null);
   prepararObservacaoWrap("js-novo-agendamento-observacao", "js-novo-agendamento-observacao-toggle", "");
+  // Botão "Agendar cliente" (modal-horario-livre) troca de modal via
+  // data-trocar-modal — abrirModal roda ANTES desta função (listener
+  // genérico do modal.js é anexado antes do listener que chama esta
+  // função), então os chips recém-montados acima ainda não tinham
+  // passado pelo ajuste de tamanho de texto. Refaz aqui.
+  ajustarTextoChips(qs("#modal-novo-agendamento"));
 }
 
 function prepararEdicaoAgendamento(agendamento) {
@@ -828,6 +838,7 @@ function prepararEdicaoAgendamento(agendamento) {
   montarServicosChips("js-novo-agendamento-servicos", agendamento.servicosIds || []);
   montarDuracaoChips("js-novo-agendamento-duracao", agendamento.duracaoMinutos || null);
   prepararObservacaoWrap("js-novo-agendamento-observacao", "js-novo-agendamento-observacao-toggle", agendamento.observacao || "");
+  ajustarTextoChips(qs("#modal-novo-agendamento"));
 }
 
 function finalizarCriacaoOuEdicaoAgendamento(clienteId, nome) {
@@ -894,7 +905,7 @@ function prepararFinalizarAtendimento(agendamento) {
 
 function textoResumoVenda(venda) {
   const statusTexto = venda.status === "paga" ? "Pago" : "Pendente";
-  return `🛒 ${venda.itens.length} ite${venda.itens.length === 1 ? "m" : "ns"} — ${formatarMoeda(venda.valorTotal)} — ${statusTexto}`;
+  return `${venda.itens.length} ite${venda.itens.length === 1 ? "m" : "ns"} — ${formatarMoeda(venda.valorTotal)} — ${statusTexto}`;
 }
 
 function mostrarResumoVendaFinalizar(venda) {
