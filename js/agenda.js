@@ -1334,6 +1334,13 @@ document.addEventListener("DOMContentLoaded", () => {
     mostrarSucesso();
   });
 
+  qs("#js-btn-venda-avulsa").addEventListener("click", () => {
+    prepararNovaVenda({ clienteId: null, nomeCliente: null, agendamentoId: null }, () => {
+      fecharModal("modal-nova-venda");
+    });
+    abrirModal("modal-nova-venda");
+  });
+
   qs("#js-btn-compartilhar-whatsapp").addEventListener("click", () => {
     const container = qs("#js-whatsapp-dias");
     container.innerHTML = "";

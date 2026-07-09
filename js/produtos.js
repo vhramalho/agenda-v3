@@ -143,12 +143,4 @@ document.addEventListener("DOMContentLoaded", () => {
     fecharModal("modal-confirmar-exclusao-produto");
     renderizarProdutos();
   });
-
-  qs("#js-btn-registrar-venda").addEventListener("click", () => {
-    prepararNovaVenda({ clienteId: null, nomeCliente: null, agendamentoId: null }, () => {
-      fecharModal("modal-nova-venda");
-      renderizarProdutos();
-    });
-    abrirModal("modal-nova-venda");
-  });
 });
