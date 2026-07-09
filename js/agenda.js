@@ -785,32 +785,63 @@ function proximoNomeDisponivel(nomeBase) {
   return `${nomeBase} ${n}`;
 }
 
-/* toggle é o card clicável (.list-item por dentro) — o texto some no
-   .list-item__title, nunca no próprio toggle, senão apaga o ícone/seta. */
-function textoToggleObservacao(toggle) {
-  return qs(".list-item__title", toggle) || toggle;
+/* ---------- Observação (modal compartilhado #modal-observacao) ----------
+   Mesmo padrão de fluxo encadeado do #modal-nova-venda: quem chama
+   prepararObservacaoModal decide o que fazer ao concluir/cancelar/excluir,
+   este arquivo só prepara o estado do modal. O valor de verdade mora num
+   <input type="hidden"> por contexto (idCampo) — nunca editado direto,
+   só através deste modal — pra não mexer nos pontos que já leem
+   `qs("#js-...-observacao").value` na hora de salvar o agendamento/realizado. */
+let observacaoAoConcluir = null;
+let observacaoAoCancelar = null;
+let observacaoAoExcluir = null;
+
+function prepararObservacaoModal(textoAtual, aoConcluir, aoCancelar, aoExcluir) {
+  observacaoAoConcluir = aoConcluir;
+  observacaoAoCancelar = aoCancelar || null;
+  observacaoAoExcluir = aoExcluir || null;
+  qs("#js-observacao-titulo").textContent = textoAtual ? "Editar observação" : "Adicionar observação";
+  qs("#js-observacao-texto").value = textoAtual || "";
+  qs("#js-observacao-excluir").classList.toggle("is-hidden", !textoAtual);
 }
 
-function prepararObservacaoWrap(idTextarea, idToggle, texto) {
-  const textarea = qs(`#${idTextarea}`);
-  const toggle = qs(`#${idToggle}`);
-  textarea.value = texto || "";
-  // Já existe observação salva (ex.: editando um agendamento/realizado) —
-  // mostra o campo direto, sem esconder atrás do "+ Adicionar observação"
-  // (esse convite só faz sentido quando ainda não tem nada escrito).
-  const jaTemTexto = !!(texto || "").trim();
-  textarea.classList.toggle("is-hidden", !jaTemTexto);
-  toggle.classList.toggle("is-hidden", jaTemTexto);
-  textoToggleObservacao(toggle).textContent = "+ Adicionar observação";
+/* Mostra o resumo (texto salvo, tom suave) no lugar do convite "+ Adicionar
+   observação" quando há texto — e vice-versa. */
+function atualizarResumoObservacao(idToggle, idResumo, idResumoTexto, texto) {
+  const temTexto = !!(texto || "").trim();
+  qs(`#${idToggle}`).classList.toggle("is-hidden", temTexto);
+  qs(`#${idResumo}`).classList.toggle("is-hidden", !temTexto);
+  if (temTexto) qs(`#${idResumoTexto}`).textContent = texto;
 }
 
-function alternarObservacaoWrap(idTextarea, idToggle) {
-  const textarea = qs(`#${idTextarea}`);
-  const toggle = qs(`#${idToggle}`);
-  const abrir = textarea.classList.contains("is-hidden");
-  textarea.classList.toggle("is-hidden", !abrir);
-  textoToggleObservacao(toggle).textContent = abrir ? "- Adicionar observação" : "+ Adicionar observação";
-  if (abrir) textarea.focus();
+function prepararObservacaoWrap(idCampo, idToggle, idResumo, idResumoTexto, texto) {
+  qs(`#${idCampo}`).value = texto || "";
+  atualizarResumoObservacao(idToggle, idResumo, idResumoTexto, texto || "");
+}
+
+/* Abre o modal de observação a partir de qualquer um dos 3 contextos
+   (Novo/Editar agendamento, Finalizar atendimento, Editar realizado) —
+   fecha o modal-pai (como o hook "Vendeu algo?" faz com a venda) e
+   reabre ao concluir/cancelar/excluir. */
+function abrirObservacao(idCampo, idToggle, idResumo, idResumoTexto, idModalPai) {
+  const campo = qs(`#${idCampo}`);
+  const textoAtual = campo.value;
+  fecharModal(idModalPai);
+  prepararObservacaoModal(
+    textoAtual,
+    (novoTexto) => {
+      campo.value = novoTexto;
+      atualizarResumoObservacao(idToggle, idResumo, idResumoTexto, novoTexto);
+      abrirModal(idModalPai);
+    },
+    () => abrirModal(idModalPai),
+    () => {
+      campo.value = "";
+      atualizarResumoObservacao(idToggle, idResumo, idResumoTexto, "");
+      abrirModal(idModalPai);
+    }
+  );
+  abrirModal("modal-observacao");
 }
 
 function prepararNovoAgendamento() {
@@ -820,7 +851,7 @@ function prepararNovoAgendamento() {
   prepararClientePicker("js-novo-agendamento", null, "");
   montarServicosChips("js-novo-agendamento-servicos", []);
   montarDuracaoChips("js-novo-agendamento-duracao", null);
-  prepararObservacaoWrap("js-novo-agendamento-observacao", "js-novo-agendamento-observacao-toggle", "");
+  prepararObservacaoWrap("js-novo-agendamento-observacao", "js-novo-agendamento-observacao-toggle", "js-novo-agendamento-observacao-resumo", "js-novo-agendamento-observacao-resumo-texto", "");
   // Botão "Agendar cliente" (modal-horario-livre) troca de modal via
   // data-trocar-modal — abrirModal roda ANTES desta função (listener
   // genérico do modal.js é anexado antes do listener que chama esta
@@ -837,7 +868,7 @@ function prepararEdicaoAgendamento(agendamento) {
   prepararClientePicker("js-novo-agendamento", agendamento.clienteId || null, agendamento.nomeCliente);
   montarServicosChips("js-novo-agendamento-servicos", agendamento.servicosIds || []);
   montarDuracaoChips("js-novo-agendamento-duracao", agendamento.duracaoMinutos || null);
-  prepararObservacaoWrap("js-novo-agendamento-observacao", "js-novo-agendamento-observacao-toggle", agendamento.observacao || "");
+  prepararObservacaoWrap("js-novo-agendamento-observacao", "js-novo-agendamento-observacao-toggle", "js-novo-agendamento-observacao-resumo", "js-novo-agendamento-observacao-resumo-texto", agendamento.observacao || "");
   ajustarTextoChips(qs("#modal-novo-agendamento"));
 }
 
@@ -893,7 +924,7 @@ function prepararFinalizarAtendimento(agendamento) {
   const modal = qs("#modal-finalizar-atendimento");
   prepararClientePicker("js-finalizar", agendamento.clienteId || null, agendamento.nomeCliente);
   montarServicosChips("js-finalizar-servicos", agendamento.servicosIds || []);
-  prepararObservacaoWrap("js-finalizar-observacao", "js-finalizar-observacao-toggle", agendamento.observacao || "");
+  prepararObservacaoWrap("js-finalizar-observacao", "js-finalizar-observacao-toggle", "js-finalizar-observacao-resumo", "js-finalizar-observacao-resumo-texto", agendamento.observacao || "");
   vendaAnexadaId = null;
   qs("#js-finalizar-venda-toggle").classList.remove("is-hidden");
   qs("#js-finalizar-venda-resumo").classList.add("is-hidden");
@@ -941,7 +972,7 @@ function ocultarResumoVendaEditarRealizado() {
 function prepararEditarRealizado(agendamento) {
   prepararClientePicker("js-editar-realizado", agendamento.clienteId || null, agendamento.nomeCliente);
   montarServicosChips("js-editar-realizado-servicos", agendamento.servicosIds || []);
-  prepararObservacaoWrap("js-editar-realizado-observacao", "js-editar-realizado-observacao-toggle", agendamento.observacao || "");
+  prepararObservacaoWrap("js-editar-realizado-observacao", "js-editar-realizado-observacao-toggle", "js-editar-realizado-observacao-resumo", "js-editar-realizado-observacao-resumo-texto", agendamento.observacao || "");
   const vendaExistente = agendamento.vendaId ? obterVendas().find((v) => v.id === agendamento.vendaId) : null;
   if (vendaExistente) {
     mostrarResumoVendaEditarRealizado(vendaExistente);
@@ -1196,16 +1227,48 @@ document.addEventListener("DOMContentLoaded", () => {
     if (cadastroAgendaAoSalvar) cadastroAgendaAoSalvar(cliente);
   });
 
-  qs("#js-novo-agendamento-observacao-toggle").addEventListener("click", () => {
-    alternarObservacaoWrap("js-novo-agendamento-observacao", "js-novo-agendamento-observacao-toggle");
+  [
+    ["js-novo-agendamento-observacao", "js-novo-agendamento-observacao-toggle", "js-novo-agendamento-observacao-resumo", "js-novo-agendamento-observacao-resumo-texto", "modal-novo-agendamento"],
+    ["js-finalizar-observacao", "js-finalizar-observacao-toggle", "js-finalizar-observacao-resumo", "js-finalizar-observacao-resumo-texto", "modal-finalizar-atendimento"],
+    ["js-editar-realizado-observacao", "js-editar-realizado-observacao-toggle", "js-editar-realizado-observacao-resumo", "js-editar-realizado-observacao-resumo-texto", "modal-editar-realizado"],
+  ].forEach(([idCampo, idToggle, idResumo, idResumoTexto, idModalPai]) => {
+    const abrir = () => abrirObservacao(idCampo, idToggle, idResumo, idResumoTexto, idModalPai);
+    qs(`#${idToggle}`).addEventListener("click", abrir);
+    qs(`#${idResumo}`).addEventListener("click", abrir);
   });
 
-  qs("#js-finalizar-observacao-toggle").addEventListener("click", () => {
-    alternarObservacaoWrap("js-finalizar-observacao", "js-finalizar-observacao-toggle");
+  // Cancelar (✕/Cancelar/tocar fora) sem salvar avisa quem abriu o modal —
+  // mesmo mecanismo do #modal-nova-venda, pra sempre voltar pro modal-pai
+  // certo em vez de deixar tudo fechado.
+  const dispararCancelamentoObservacao = () => {
+    if (!observacaoAoCancelar) return;
+    const callback = observacaoAoCancelar;
+    observacaoAoCancelar = null;
+    callback();
+  };
+  qsa("#modal-observacao [data-fechar-modal], #modal-observacao .modal-close").forEach((el) => {
+    el.addEventListener("click", dispararCancelamentoObservacao);
+  });
+  qs("#modal-observacao").addEventListener("click", (e) => {
+    if (e.target.id === "modal-observacao") dispararCancelamentoObservacao();
   });
 
-  qs("#js-editar-realizado-observacao-toggle").addEventListener("click", () => {
-    alternarObservacaoWrap("js-editar-realizado-observacao", "js-editar-realizado-observacao-toggle");
+  qs("#js-observacao-salvar").addEventListener("click", () => {
+    const texto = qs("#js-observacao-texto").value.trim();
+    fecharModal("modal-observacao");
+    observacaoAoCancelar = null;
+    if (observacaoAoConcluir) observacaoAoConcluir(texto);
+  });
+
+  qs("#js-observacao-excluir").addEventListener("click", () => {
+    abrirModal("modal-confirmar-exclusao-observacao");
+  });
+
+  qs("#js-confirmar-exclusao-observacao").addEventListener("click", () => {
+    fecharModal("modal-confirmar-exclusao-observacao");
+    fecharModal("modal-observacao");
+    observacaoAoCancelar = null;
+    if (observacaoAoExcluir) observacaoAoExcluir();
   });
 
   qs("#modal-editar-realizado").addEventListener("click", (evento) => {
