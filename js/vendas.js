@@ -1,16 +1,15 @@
 /* ============================================================
-   AGENDA V3 — Fluxo de venda (Vendas, etapa 3 + refinamento)
-   Compartilhado entre produtos.html (venda avulsa, botão
-   "Registrar venda") e index.html (venda ligada a um atendimento,
-   via "Vendeu algo pra esse cliente?" dentro de Finalizar
-   atendimento — ver js/agenda.js). O modal #modal-nova-venda
-   existe duplicado nos dois documentos (mesmo padrão já usado
-   por #modal-calendario em index.html/relatorio.html, com a
-   lógica centralizada aqui).
+   AGENDA V3 — Fluxo de venda
+   Compartilhado entre produtos.html/index.html (venda avulsa,
+   ver js/agenda.js pro atalho na Agenda) e o hook "Vendeu algo
+   pra esse cliente?" dentro de Finalizar/Editar atendimento
+   (js/agenda.js). O modal #modal-nova-venda existe duplicado
+   nos dois documentos (mesmo padrão já usado por #modal-calendario
+   em index.html/relatorio.html, com a lógica centralizada aqui).
 
-   Duas etapas dentro do mesmo modal (estilo "maquininha"): primeiro
-   só produtos, num grid de 2 colunas; "Continuar" leva pra cliente
-   + pagamento. "Voltar" retorna sem perder o carrinho.
+   Tela única rolável (cliente/avulso → produtos → itens
+   selecionados → foi pago → forma de pagamento) — sem passos
+   intermediários.
 
    prepararNovaVenda(contexto, aoConcluir) só prepara o estado —
    quem chama decide quando abrir/fechar o modal, igual
@@ -30,9 +29,6 @@ function prepararNovaVenda(contexto, aoConcluir, aoCancelar) {
   vendaAoCancelar = aoCancelar || null;
   vendaCarrinho = {};
   vendaClienteSelecionadoId = contexto.clienteId || null;
-
-  qs("#js-venda-etapa-pagamento").classList.add("is-hidden");
-  qs("#js-venda-etapa-produtos").classList.remove("is-hidden");
 
   const vindoDeAtendimento = !!vendaContexto.agendamentoId;
   qs("#js-venda-cliente-toggle-wrap").classList.toggle("is-hidden", vindoDeAtendimento);
@@ -182,19 +178,6 @@ document.addEventListener("DOMContentLoaded", () => {
   });
   qs("#modal-nova-venda").addEventListener("click", (e) => {
     if (e.target.id === "modal-nova-venda") dispararCancelamentoVenda();
-  });
-
-  qs("#js-venda-continuar").addEventListener("click", () => {
-    const itens = itensCarrinhoVenda();
-    if (itens.length === 0) return;
-    qs("#js-venda-total-resumo").textContent = formatarMoeda(subtotalCarrinhoVenda(itens));
-    qs("#js-venda-etapa-produtos").classList.add("is-hidden");
-    qs("#js-venda-etapa-pagamento").classList.remove("is-hidden");
-  });
-
-  qs("#js-venda-voltar").addEventListener("click", () => {
-    qs("#js-venda-etapa-pagamento").classList.add("is-hidden");
-    qs("#js-venda-etapa-produtos").classList.remove("is-hidden");
   });
 
   const tipoClienteContainer = qs("#js-venda-cliente-tipo");
