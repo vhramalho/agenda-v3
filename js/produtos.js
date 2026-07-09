@@ -186,8 +186,6 @@ document.addEventListener("DOMContentLoaded", () => {
   aplicarMascaraMoeda(qs("#js-editar-produto-preco-venda"));
   aplicarMascaraMoeda(qs("#js-editar-produto-preco-custo"));
 
-  qs("#js-btn-nova-venda-avulsa").addEventListener("click", abrirNovaVendaAvulsa);
-
   qsa(".segmented__item", qs("#js-aba-vendas")).forEach((item) => {
     item.addEventListener("click", () => {
       qsa(".segmented__item", qs("#js-aba-vendas")).forEach((i) => i.classList.remove("is-active"));

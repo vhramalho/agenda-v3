@@ -886,12 +886,8 @@ function prepararFinalizarAtendimento(agendamento) {
   vendaAnexadaId = null;
   qs("#js-finalizar-venda-toggle").classList.remove("is-hidden");
   qs("#js-finalizar-venda-resumo").classList.add("is-hidden");
-  qsa("[data-pago]", modal).forEach((b) => {
-    b.classList.toggle("chip--ativo", b.dataset.pago === "sim");
-  });
-  qsa("[data-campo-pago]", modal).forEach((campo) => {
-    campo.classList.toggle("is-hidden", campo.dataset.campoPago !== "sim");
-  });
+  qsa("[data-pago]", modal).forEach((b) => b.classList.remove("chip--ativo"));
+  qsa("[data-campo-pago]", modal).forEach((campo) => campo.classList.add("is-hidden"));
   montarFormasChips("js-finalizar-formas", "js-finalizar-linhas-pagamento", [], {}, () => valorEsperadoServicos(idsSelecionados("js-finalizar-servicos")), "js-finalizar-desconto-gorjeta-aviso");
   qs("#js-finalizar-valor-pendente").value = "";
 }
@@ -1106,7 +1102,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!agendamento) return;
     fecharModal("modal-finalizar-atendimento");
     prepararNovaVenda(
-      { clienteId: agendamento.clienteId, nomeCliente: agendamento.nomeCliente, agendamentoId: agendamento.id },
+      { clienteId: agendamento.clienteId, nomeCliente: agendamento.nomeCliente, agendamentoId: agendamento.id, data: agendamento.data },
       (venda) => {
         fecharModal("modal-nova-venda");
         abrirModal("modal-finalizar-atendimento");
@@ -1261,8 +1257,13 @@ document.addEventListener("DOMContentLoaded", () => {
     salvarNomeClienteInline(ag, "js-finalizar");
     ag.servicosIds = idsSelecionados("js-finalizar-servicos");
     ag.observacao = qs("#js-finalizar-observacao").value.trim();
+    const pagoAtivo = qs("[data-pago].chip--ativo", qs("#modal-finalizar-atendimento"));
+    if (!pagoAtivo) {
+      mostrarAviso("Selecione se foi pago");
+      return;
+    }
     ag.realizadoEm = new Date().toISOString();
-    const pagoEscolha = qs("[data-pago].chip--ativo", qs("#modal-finalizar-atendimento")).dataset.pago;
+    const pagoEscolha = pagoAtivo.dataset.pago;
     if (pagoEscolha === "sim") {
       const pagamentos = lerPagamentosDeLinhas("js-finalizar-linhas-pagamento");
       ag.status = "realizado_pago";
@@ -1298,7 +1299,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!agendamento) return;
     fecharModal("modal-editar-realizado");
     prepararNovaVenda(
-      { clienteId: agendamento.clienteId, nomeCliente: agendamento.nomeCliente, agendamentoId: agendamento.id },
+      { clienteId: agendamento.clienteId, nomeCliente: agendamento.nomeCliente, agendamentoId: agendamento.id, data: agendamento.data },
       (venda) => {
         fecharModal("modal-nova-venda");
         abrirModal("modal-editar-realizado");

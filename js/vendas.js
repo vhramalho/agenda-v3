@@ -36,7 +36,7 @@ function estoqueDisponivelParaCarrinho(produto) {
 }
 
 function prepararNovaVenda(contexto, aoConcluir, aoCancelar) {
-  vendaContexto = { clienteId: contexto.clienteId || null, nomeCliente: contexto.nomeCliente || null, agendamentoId: contexto.agendamentoId || null };
+  vendaContexto = { clienteId: contexto.clienteId || null, nomeCliente: contexto.nomeCliente || null, agendamentoId: contexto.agendamentoId || null, data: contexto.data || null };
   vendaAoConcluir = aoConcluir;
   vendaAoCancelar = aoCancelar || null;
   vendaCarrinho = {};
@@ -62,8 +62,8 @@ function prepararNovaVenda(contexto, aoConcluir, aoCancelar) {
     qs("#js-venda-cliente-resultados").classList.add("is-hidden");
   }
 
-  qsa("[data-pago]", qs("#modal-nova-venda")).forEach((b) => b.classList.toggle("chip--ativo", b.dataset.pago === "sim"));
-  qsa("[data-campo-pago]", qs("#modal-nova-venda")).forEach((campo) => campo.classList.toggle("is-hidden", campo.dataset.campoPago !== "sim"));
+  qsa("[data-pago]", qs("#modal-nova-venda")).forEach((b) => b.classList.remove("chip--ativo"));
+  qsa("[data-campo-pago]", qs("#modal-nova-venda")).forEach((campo) => campo.classList.add("is-hidden"));
   montarFormasChips("js-venda-formas", "js-venda-linhas-pagamento", [], {}, () => subtotalCarrinhoVenda(itensCarrinhoVenda()), "js-venda-desconto-gorjeta-aviso");
   qs("#js-venda-valor-pendente").value = "";
 
@@ -342,10 +342,24 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
 
+    const pagoAtivo = qs("[data-pago].chip--ativo", qs("#modal-nova-venda"));
+    if (!pagoAtivo) {
+      mostrarAviso("Selecione se foi pago");
+      return;
+    }
+
     const vendas = obterVendas();
     const venda = vendaEditandoId
       ? vendas.find((v) => v.id === vendaEditandoId)
-      : { id: gerarId("venda"), criadaEm: new Date().toISOString(), agendamentoId: vendaContexto.agendamentoId };
+      : {
+          id: gerarId("venda"),
+          // Venda presa a um atendimento herda a data do atendimento (não a
+          // do momento em que a venda foi registrada) — senão editar um
+          // realizado de outro dia e vender algo ali gravaria a venda como
+          // se fosse de hoje.
+          criadaEm: vendaContexto.agendamentoId && vendaContexto.data ? `${vendaContexto.data}T12:00:00.000Z` : new Date().toISOString(),
+          agendamentoId: vendaContexto.agendamentoId,
+        };
     if (!venda) return;
 
     venda.clienteId = clienteId;
@@ -355,7 +369,7 @@ document.addEventListener("DOMContentLoaded", () => {
     delete venda.desconto;
     delete venda.gorjeta;
 
-    const pagoEscolha = qs("[data-pago].chip--ativo", qs("#modal-nova-venda")).dataset.pago;
+    const pagoEscolha = pagoAtivo.dataset.pago;
     if (pagoEscolha === "sim") {
       const pagamentos = lerPagamentosDeLinhas("js-venda-linhas-pagamento");
       venda.status = "paga";
