@@ -402,7 +402,7 @@ function adicionarLinhaForma(container, nome, valor, formaExcluida) {
   aplicarMascaraMoeda(linha.querySelector("input"));
 }
 
-function montarFormasChips(chipsContainerId, linhasContainerId, nomesSelecionados, valoresPorNome) {
+function montarFormasChips(chipsContainerId, linhasContainerId, nomesSelecionados, valoresPorNome, valorPreFill) {
   const chipsContainer = qs(`#${chipsContainerId}`);
   const linhasContainer = qs(`#${linhasContainerId}`);
   chipsContainer.innerHTML = "";
@@ -439,7 +439,11 @@ function montarFormasChips(chipsContainerId, linhasContainerId, nomesSelecionado
             linhasExcluidas.forEach((linha) => linha.remove());
             adicionarLinhaForma(linhasContainer, nome, somaExcluidas);
           } else {
-            adicionarLinhaForma(linhasContainer, nome);
+            // Primeira linha do pagamento: se veio um valor esperado (soma do
+            // valorOpcional dos serviços selecionados), pré-preenche com ele —
+            // digitar outra coisa vira desconto/gorjeta automaticamente ao salvar.
+            const primeiraLinha = linhasContainer.children.length === 0;
+            adicionarLinhaForma(linhasContainer, nome, primeiraLinha && valorPreFill > 0 ? valorPreFill : null);
           }
         }
       } else if (existente) {

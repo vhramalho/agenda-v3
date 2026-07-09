@@ -4,11 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Agenda — Agenda V3</title>
-  <link rel="stylesheet" href="css/tokens.css?v=20260709c" />
-  <link rel="stylesheet" href="css/base.css?v=20260709c" />
-  <link rel="stylesheet" href="css/layout.css?v=20260709c" />
-  <link rel="stylesheet" href="css/components.css?v=20260709c" />
-  <link rel="stylesheet" href="css/agenda.css?v=20260709c" />
+  <link rel="stylesheet" href="css/tokens.css?v=20260709d" />
+  <link rel="stylesheet" href="css/base.css?v=20260709d" />
+  <link rel="stylesheet" href="css/layout.css?v=20260709d" />
+  <link rel="stylesheet" href="css/components.css?v=20260709d" />
+  <link rel="stylesheet" href="css/agenda.css?v=20260709d" />
 </head>
 <body data-page="index">
   <div class="app">
@@ -279,6 +279,7 @@
           <label class="field__label">Forma de pagamento</label>
           <div class="chip-group" id="js-finalizar-formas"></div>
           <div class="stack" data-linhas-pagamento style="margin-top:12px;gap:8px;" id="js-finalizar-linhas-pagamento"></div>
+          <p class="text-secondary" style="font-size:var(--text-sm);margin-top:8px;">Um valor diferente do combinado com o cliente vira desconto (se for menor) ou gorjeta (se for maior).</p>
         </div>
         <div class="field is-hidden" data-campo-pago="nao">
           <label class="field__label" style="color:var(--danger);">Valor pendente *</label>
@@ -387,6 +388,7 @@
           <label class="field__label">Formas de pagamento</label>
           <div class="chip-group" id="js-editar-realizado-formas"></div>
           <div class="stack" data-linhas-pagamento style="margin-top:12px;gap:8px;" id="js-editar-realizado-linhas-pagamento"></div>
+          <p class="text-secondary" style="font-size:var(--text-sm);margin-top:8px;">Um valor diferente do combinado com o cliente vira desconto (se for menor) ou gorjeta (se for maior).</p>
         </div>
         <div class="field is-hidden" id="js-editar-realizado-campo-pendente">
           <label class="field__label" style="color:var(--danger);">Valor pendente</label>
@@ -525,17 +527,17 @@
     </div>
   </div>
 
-  <script src="js/utils.js?v=20260709c"></script>
-  <script src="js/menu.js?v=20260709c"></script>
-  <script src="js/storage.js?v=20260709c"></script>
-  <script src="js/tema.js?v=20260709c"></script>
-  <script src="js/app.js?v=20260709c"></script>
-  <script src="js/chips.js?v=20260709c"></script>
-  <script src="js/modal.js?v=20260709c"></script>
-  <script src="js/calendario.js?v=20260709c"></script>
-  <script src="js/acoes-simuladas.js?v=20260709c"></script>
-  <script src="js/vendas.js?v=20260709c"></script>
-  <script src="js/agenda.js?v=20260709c"></script>
-  <script src="js/agenda-diario.js?v=20260709c"></script>
+  <script src="js/utils.js?v=20260709d"></script>
+  <script src="js/menu.js?v=20260709d"></script>
+  <script src="js/storage.js?v=20260709d"></script>
+  <script src="js/tema.js?v=20260709d"></script>
+  <script src="js/app.js?v=20260709d"></script>
+  <script src="js/chips.js?v=20260709d"></script>
+  <script src="js/modal.js?v=20260709d"></script>
+  <script src="js/calendario.js?v=20260709d"></script>
+  <script src="js/acoes-simuladas.js?v=20260709d"></script>
+  <script src="js/vendas.js?v=20260709d"></script>
+  <script src="js/agenda.js?v=20260709d"></script>
+  <script src="js/agenda-diario.js?v=20260709d"></script>
 </body>
 </html>

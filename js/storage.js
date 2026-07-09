@@ -162,7 +162,12 @@ function salvarListasDiarias(lista) {
    Pagamento da venda é sempre independente do pagamento do agendamento
    vinculado. Desconto/gorjeta são sempre derivados (nunca campos
    digitados à parte): pagou menos que o subtotal = desconto; pagou
-   mais = gorjeta. */
+   mais = gorjeta.
+   Mesma mecânica de desconto/gorjeta existe em agendamento (ver
+   js/agenda.js valorEsperadoServicos/aplicarDescontoGorjeta): a soma do
+   valorOpcional dos serviços selecionados faz o papel do "subtotal" —
+   sem nenhum serviço com valorOpcional preenchido, não há base de
+   comparação e nem desconto nem gorjeta são gravados. */
 function obterProdutos() {
   return lerChave(CHAVES.produtos, []);
 }

@@ -505,6 +505,32 @@ function idsSelecionados(containerId) {
   return qsa(".chip--ativo", qs(`#${containerId}`)).map((c) => c.dataset.id);
 }
 
+/* Soma do valorOpcional (preço de referência, opcional) dos serviços
+   selecionados — usada pra pré-preencher a primeira linha de pagamento
+   e, ao salvar, detectar desconto/gorjeta automaticamente (mesma lógica
+   simétrica já usada em Vendas, ver js/vendas.js). Sem valorOpcional
+   cadastrado em nenhum serviço selecionado, não há base de comparação
+   (retorna 0) e nenhum desconto/gorjeta é gravado. */
+function valorEsperadoServicos(servicosIds) {
+  const servicos = obterServicos();
+  return servicosIds.reduce((soma, id) => {
+    const servico = servicos.find((s) => s.id === id);
+    return soma + (servico && servico.valorOpcional ? servico.valorOpcional : 0);
+  }, 0);
+}
+
+/* Grava ag.desconto/ag.gorjeta a partir da diferença entre o valor
+   esperado (soma de valorOpcional dos serviços) e o valor final do
+   atendimento — simétrico ao cálculo já usado em venda.desconto/gorjeta. */
+function aplicarDescontoGorjeta(ag, valorEsperado) {
+  delete ag.desconto;
+  delete ag.gorjeta;
+  if (valorEsperado <= 0) return;
+  const diferenca = valorEsperado - ag.valorTotal;
+  if (diferenca > 0) ag.desconto = diferenca;
+  else if (diferenca < 0) ag.gorjeta = -diferenca;
+}
+
 /* Duração mais usada nos agendamentos já criados (dentre as opções válidas
    pra grade atual) — a sugestão de duração é "aprendida" pelo uso real, sem
    precisar de uma configuração manual de "duração padrão" que ficaria
@@ -866,7 +892,7 @@ function prepararFinalizarAtendimento(agendamento) {
   qsa("[data-campo-pago]", modal).forEach((campo) => {
     campo.classList.toggle("is-hidden", campo.dataset.campoPago !== "sim");
   });
-  montarFormasChips("js-finalizar-formas", "js-finalizar-linhas-pagamento", [], {});
+  montarFormasChips("js-finalizar-formas", "js-finalizar-linhas-pagamento", [], {}, valorEsperadoServicos(agendamento.servicosIds || []));
   qs("#js-finalizar-valor-pendente").value = "";
 }
 
@@ -941,7 +967,7 @@ function prepararEditarRealizado(agendamento) {
     montarFormasChips("js-editar-realizado-formas", "js-editar-realizado-linhas-pagamento", nomesSelecionados, valoresPorNome);
     qs("#js-editar-realizado-valor-pendente").value = "";
   } else {
-    montarFormasChips("js-editar-realizado-formas", "js-editar-realizado-linhas-pagamento", [], {});
+    montarFormasChips("js-editar-realizado-formas", "js-editar-realizado-linhas-pagamento", [], {}, valorEsperadoServicos(agendamento.servicosIds || []));
     qs("#js-editar-realizado-valor-pendente").value = agendamento.valorPendente != null ? formatarMoeda(agendamento.valorPendente) : "";
   }
   definirPagoEditarRealizado(pago);
@@ -1248,6 +1274,7 @@ document.addEventListener("DOMContentLoaded", () => {
       ag.valorTotal = valorPendente;
       delete ag.pagamentos;
     }
+    aplicarDescontoGorjeta(ag, valorEsperadoServicos(ag.servicosIds));
     if (vendaAnexadaId) ag.vendaId = vendaAnexadaId;
     salvarAgendamentos(lista);
     vendaAnexadaId = null;
@@ -1314,6 +1341,7 @@ document.addEventListener("DOMContentLoaded", () => {
       ag.valorTotal = valorPendente;
       delete ag.pagamentos;
     }
+    aplicarDescontoGorjeta(ag, valorEsperadoServicos(ag.servicosIds));
     if (vendaAnexadaId) ag.vendaId = vendaAnexadaId;
     else delete ag.vendaId;
     salvarAgendamentos(lista);
