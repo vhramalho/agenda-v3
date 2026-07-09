@@ -4,66 +4,89 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Pendentes — Agenda V3</title>
-  <link rel="stylesheet" href="css/tokens.css?v=20260709f" />
-  <link rel="stylesheet" href="css/base.css?v=20260709f" />
-  <link rel="stylesheet" href="css/layout.css?v=20260709f" />
-  <link rel="stylesheet" href="css/components.css?v=20260709f" />
+  <link rel="stylesheet" href="css/tokens.css?v=20260709g" />
+  <link rel="stylesheet" href="css/base.css?v=20260709g" />
+  <link rel="stylesheet" href="css/layout.css?v=20260709g" />
+  <link rel="stylesheet" href="css/components.css?v=20260709g" />
 </head>
 <body data-page="pendentes">
   <div class="app">
     <main class="page">
       <h1 class="page-header-principal__titulo section">Pendentes</h1>
 
-      <div class="card card--destaque section">
-        <p class="text-secondary">A receber</p>
-        <p style="font-weight:800;font-size:var(--text-xl);margin:4px 0;" id="js-pendentes-valor"></p>
-        <p class="text-primary-accent" style="font-weight:600;font-size:var(--text-sm);" id="js-pendentes-contagem"></p>
+      <div class="segmented section" id="js-aba-pendentes">
+        <span class="segmented__item is-active" data-aba="atendimento">Atendimento</span>
+        <span class="segmented__item" data-aba="vendas">Vendas</span>
       </div>
 
-      <section class="section">
-        <div class="row row--between" style="margin-bottom:8px;">
-          <h2 class="section__title" style="margin-bottom:0;" id="js-quem-deve-titulo">Quem deve</h2>
-          <button class="text-primary-accent is-hidden" id="js-quem-deve-toggle" style="font-size:var(--text-sm);font-weight:600;background:none;border:none;padding:0;cursor:pointer;font-family:inherit;">Ver todos</button>
+      <div id="js-conteudo-pendentes-atendimento">
+        <div class="card card--destaque section">
+          <p class="text-secondary">A receber</p>
+          <p style="font-weight:800;font-size:var(--text-xl);margin:4px 0;" id="js-pendentes-valor"></p>
+          <p class="text-primary-accent" style="font-weight:600;font-size:var(--text-sm);" id="js-pendentes-contagem"></p>
         </div>
-        <div class="card" id="js-quem-deve-lista"></div>
-        <div class="empty-state is-hidden" id="js-quem-deve-vazio"><p class="empty-state__title">Nenhuma cobrança pendente</p></div>
-      </section>
 
-      <section class="section">
-        <div class="row row--between" style="margin-bottom:8px;">
-          <h2 class="section__title" style="margin-bottom:0;" id="js-vendas-pendentes-titulo">Vendas pendentes</h2>
-          <button class="text-primary-accent is-hidden" id="js-vendas-pendentes-toggle" style="font-size:var(--text-sm);font-weight:600;background:none;border:none;padding:0;cursor:pointer;font-family:inherit;">Ver todos</button>
-        </div>
-        <div class="card" id="js-vendas-pendentes-lista"></div>
-        <div class="empty-state is-hidden" id="js-vendas-pendentes-vazio"><p class="empty-state__title">Nenhuma venda pendente</p></div>
-      </section>
+        <section class="section">
+          <div class="row row--between" style="margin-bottom:8px;">
+            <h2 class="section__title" style="margin-bottom:0;" id="js-quem-deve-titulo">Quem deve</h2>
+            <button class="text-primary-accent is-hidden" id="js-quem-deve-toggle" style="font-size:var(--text-sm);font-weight:600;background:none;border:none;padding:0;cursor:pointer;font-family:inherit;">Ver todos</button>
+          </div>
+          <div class="card" id="js-quem-deve-lista"></div>
+          <div class="empty-state is-hidden" id="js-quem-deve-vazio"><p class="empty-state__title">Nenhuma cobrança pendente</p></div>
+        </section>
 
-      <section class="section">
-        <div class="row row--between" style="margin-bottom:8px;">
-          <h2 class="section__title" style="margin-bottom:0;">Pagos recentemente</h2>
-          <button class="text-primary-accent is-hidden" id="js-pagos-toggle" style="font-size:var(--text-sm);font-weight:600;background:none;border:none;padding:0;cursor:pointer;font-family:inherit;">Ver todos</button>
-        </div>
-        <div class="card" id="js-pagos-lista"></div>
-        <div class="empty-state is-hidden" id="js-pagos-vazio"><p class="empty-state__title">Nenhum pagamento recente</p></div>
-      </section>
+        <section class="section">
+          <div class="row row--between" style="margin-bottom:8px;">
+            <h2 class="section__title" style="margin-bottom:0;">Pagos recentemente</h2>
+            <button class="text-primary-accent is-hidden" id="js-pagos-toggle" style="font-size:var(--text-sm);font-weight:600;background:none;border:none;padding:0;cursor:pointer;font-family:inherit;">Ver todos</button>
+          </div>
+          <div class="card" id="js-pagos-lista"></div>
+          <div class="empty-state is-hidden" id="js-pagos-vazio"><p class="empty-state__title">Nenhum pagamento recente</p></div>
+        </section>
 
-      <a href="pendentes-devedores.html" class="card card--destaque section" style="display:block;text-decoration:none;color:inherit;">
-        <div class="row row--between" style="margin-bottom:12px;">
-          <span style="font-weight:700;">Devedores</span>
+        <a href="pendentes-devedores.html" class="card card--destaque section" style="display:block;text-decoration:none;color:inherit;">
+          <div class="row row--between" style="margin-bottom:12px;">
+            <span style="font-weight:700;">Devedores</span>
+          </div>
+          <div id="js-devedores-top3"></div>
+          <p class="text-primary-accent" style="text-align:center;font-weight:600;margin-top:12px;">Ver ranking completo</p>
+        </a>
+      </div>
+
+      <div id="js-conteudo-pendentes-vendas" class="is-hidden">
+        <div class="card card--destaque section">
+          <p class="text-secondary">A receber em vendas</p>
+          <p style="font-weight:800;font-size:var(--text-xl);margin:4px 0;" id="js-pendentes-vendas-valor"></p>
+          <p class="text-primary-accent" style="font-weight:600;font-size:var(--text-sm);" id="js-pendentes-vendas-contagem"></p>
         </div>
-        <div id="js-devedores-top3"></div>
-        <p class="text-primary-accent" style="text-align:center;font-weight:600;margin-top:12px;">Ver ranking completo</p>
-      </a>
+
+        <section class="section">
+          <div class="row row--between" style="margin-bottom:8px;">
+            <h2 class="section__title" style="margin-bottom:0;" id="js-quem-deve-vendas-titulo">Quem deve</h2>
+            <button class="text-primary-accent is-hidden" id="js-quem-deve-vendas-toggle" style="font-size:var(--text-sm);font-weight:600;background:none;border:none;padding:0;cursor:pointer;font-family:inherit;">Ver todos</button>
+          </div>
+          <div class="card" id="js-quem-deve-vendas-lista"></div>
+          <div class="empty-state is-hidden" id="js-quem-deve-vendas-vazio"><p class="empty-state__title">Nenhuma venda pendente</p></div>
+        </section>
+
+        <a href="pendentes-devedores-vendas.html" class="card card--destaque section" style="display:block;text-decoration:none;color:inherit;">
+          <div class="row row--between" style="margin-bottom:12px;">
+            <span style="font-weight:700;">Devedores</span>
+          </div>
+          <div id="js-devedores-vendas-top3"></div>
+          <p class="text-primary-accent" style="text-align:center;font-weight:600;margin-top:12px;">Ver ranking completo</p>
+        </a>
+      </div>
     </main>
 
     <div id="js-bottom-nav-mount"></div>
   </div>
 
-  <script src="js/utils.js?v=20260709f"></script>
-  <script src="js/menu.js?v=20260709f"></script>
-  <script src="js/storage.js?v=20260709f"></script>
-  <script src="js/tema.js?v=20260709f"></script>
-  <script src="js/app.js?v=20260709f"></script>
-  <script src="js/pendentes.js?v=20260709f"></script>
+  <script src="js/utils.js?v=20260709g"></script>
+  <script src="js/menu.js?v=20260709g"></script>
+  <script src="js/storage.js?v=20260709g"></script>
+  <script src="js/tema.js?v=20260709g"></script>
+  <script src="js/app.js?v=20260709g"></script>
+  <script src="js/pendentes.js?v=20260709g"></script>
 </body>
 </html>

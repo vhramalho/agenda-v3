@@ -160,7 +160,9 @@ function salvarListasDiarias(lista) {
    (valorTotal - subtotal, só quando positivo — nunca os dois ao mesmo
    tempo), valorTotal, status ("paga"|"pendente"), pagamentos (só quando
    paga, mesmo formato de agendamento.pagamentos), valorPendente (só
-   quando pendente), criadaEm }.
+   quando pendente), excluidoDoRanking (opcional, mesmo padrão de
+   agendamento.excluidoDoRanking — marca uma ocorrência pendente como "não
+   conta" no ranking de devedores de vendas), criadaEm }.
    Pagamento da venda é sempre independente do pagamento do agendamento
    vinculado. Desconto/gorjeta são sempre derivados (nunca campos
    digitados à parte): pagou menos que o subtotal = desconto; pagou

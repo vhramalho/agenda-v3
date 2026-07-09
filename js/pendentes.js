@@ -1,8 +1,13 @@
 /* ============================================================
-   AGENDA V3 — Telas Pendentes (Fase 3, Etapa 7)
-   Atende pendentes.html, pendentes-quem-deve.html,
-   pendentes-pagos.html e pendentes-devedores.html — cada função
-   só roda se os elementos daquela tela existirem no documento.
+   AGENDA V3 — Telas Pendentes
+   Atende pendentes.html, pendentes-devedores.html e
+   pendentes-devedores-vendas.html — cada função só roda se os
+   elementos daquela tela existirem no documento.
+   pendentes.html tem abas Atendimento/Vendas (mesmo padrão visual
+   da aba Atendimentos/Vendas do Relatório); a aba Vendas espelha a
+   estrutura da aba Atendimento (A receber + Quem deve + Devedores),
+   sem "Pagos recentemente" (venda nunca muda de status depois de
+   criada, não há dado pra essa seção).
    "Receber" leva à Agenda na data exata do pendente (?data=...).
    ============================================================ */
 
@@ -140,6 +145,71 @@ function montarLinhaDevedorCompleta(item, indice, posicao, aoAtualizar) {
   return linha;
 }
 
+/* Devedores de vendas — mesmo padrão de rankingDevedores/montarLinhaDevedorCompleta,
+   mas venda não tem foiPendente (nunca muda de status depois de criada, ver
+   js/storage.js), então o candidato é só quem está pendente agora mesmo. */
+function rankingDevedoresVendas(periodo) {
+  const candidatos = obterVendas().filter((v) => v.status === "pendente" && dataNoPeriodo(v.criadaEm.slice(0, 10), periodo));
+  const contagem = {};
+  candidatos.forEach((v) => {
+    const chave = v.clienteId || `avulso:${v.nomeCliente}`;
+    if (!contagem[chave]) contagem[chave] = { nome: v.nomeCliente || "Avulso", vezes: 0, ocorrenciaIds: [] };
+    contagem[chave].ocorrenciaIds.push(v.id);
+    if (!v.excluidoDoRanking) contagem[chave].vezes += 1;
+  });
+  return Object.values(contagem).sort((a, b) => b.vezes - a.vezes);
+}
+
+function montarLinhaDevedorVendaCompleta(item, indice, posicao, aoAtualizar) {
+  const linha = document.createElement("div");
+  linha.className = "list-item";
+  linha.innerHTML = `
+    <span class="ranking-posicao ${classePosicaoRanking(posicao)}">${posicao}</span>
+    <div class="list-item__avatar ${classeAvatarPorIndice(indice)}"></div>
+    <div class="list-item__body"><p class="list-item__title"></p></div>
+    <span class="text-primary-accent" style="font-weight:700;"></span>
+    ${aoAtualizar ? '<svg class="list-item__chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>' : ""}
+  `;
+  linha.querySelector(".list-item__avatar").textContent = iniciaisCliente(item.nome);
+  linha.querySelector(".list-item__title").textContent = item.nome;
+  linha.querySelector(".text-primary-accent").textContent = `${item.vezes} ${item.vezes === 1 ? "vez" : "vezes"}`;
+  if (aoAtualizar) {
+    linha.style.cursor = "pointer";
+    linha.addEventListener("click", () => abrirOcorrenciasDevedorVenda(item, aoAtualizar));
+  }
+  return linha;
+}
+
+let aoAtualizarOcorrenciasVendaAtual = null;
+
+function abrirOcorrenciasDevedorVenda(item, aoAtualizar) {
+  aoAtualizarOcorrenciasVendaAtual = aoAtualizar;
+  qs("#js-devedor-ocorrencias-vendas-titulo").textContent = item.nome;
+  renderizarOcorrenciasDevedorVenda(item);
+  abrirModal("modal-devedor-ocorrencias-vendas");
+}
+
+function renderizarOcorrenciasDevedorVenda(item) {
+  const lista = qs("#js-devedor-ocorrencias-vendas-lista");
+  lista.innerHTML = "";
+  const ocorrencias = obterVendas()
+    .filter((v) => item.ocorrenciaIds.includes(v.id))
+    .sort((a, b) => (a.criadaEm < b.criadaEm ? 1 : -1));
+  ocorrencias.forEach((v) => {
+    const conta = !v.excluidoDoRanking;
+    const linha = document.createElement("div");
+    linha.className = "card row row--between";
+    linha.innerHTML = `
+      <div>
+        <p style="font-weight:600;">${formatarDataCurta(v.criadaEm.slice(0, 10))}</p>
+        <p class="text-secondary" style="font-size:var(--text-sm);">${formatarMoeda(v.valorPendente || v.valorTotal || 0)} · Pendente</p>
+      </div>
+      <span class="chip${conta ? " chip--ativo" : ""}" data-venda-id="${v.id}">${conta ? "Conta" : "Não conta"}</span>
+    `;
+    lista.appendChild(linha);
+  });
+}
+
 let aoAtualizarOcorrenciasAtual = null;
 
 function abrirOcorrenciasDevedor(item, aoAtualizar) {
@@ -215,39 +285,58 @@ document.addEventListener("DOMContentLoaded", () => {
     renderQuemDeve();
   }
 
-  // ---- Vendas pendentes (expansível, limite 2) ----
-  if (qs("#js-vendas-pendentes-lista")) {
+  // ---- Aba Vendas: A receber + Quem deve (mesmo padrão da aba Atendimento) ----
+  if (qs("#js-pendentes-vendas-valor")) {
     const vendasPendentes = listaVendasPendentes();
     const totalVendasPendentes = vendasPendentes.reduce((soma, v) => soma + (v.valorPendente || v.valorTotal || 0), 0);
-    const titulo = qs("#js-vendas-pendentes-titulo");
-    const toggle = qs("#js-vendas-pendentes-toggle");
-    const container = qs("#js-vendas-pendentes-lista");
-    const vazio = qs("#js-vendas-pendentes-vazio");
+    qs("#js-pendentes-vendas-valor").textContent = formatarMoeda(totalVendasPendentes);
+    qs("#js-pendentes-vendas-contagem").textContent = `${vendasPendentes.length} venda${vendasPendentes.length === 1 ? "" : "s"} pendente${vendasPendentes.length === 1 ? "" : "s"}`;
+  }
+
+  if (qs("#js-quem-deve-vendas-lista")) {
+    const vendasPendentes = listaVendasPendentes();
+    const titulo = qs("#js-quem-deve-vendas-titulo");
+    const toggle = qs("#js-quem-deve-vendas-toggle");
+    const container = qs("#js-quem-deve-vendas-lista");
+    const vazio = qs("#js-quem-deve-vendas-vazio");
     let expandido = false;
 
-    function renderVendasPendentes() {
+    function renderQuemDeveVendas() {
       container.innerHTML = "";
       if (vendasPendentes.length === 0) {
         container.classList.add("is-hidden");
         vazio.classList.remove("is-hidden");
-        titulo.textContent = "Vendas pendentes";
+        titulo.textContent = "Quem deve";
         toggle.classList.add("is-hidden");
       } else {
         container.classList.remove("is-hidden");
         vazio.classList.add("is-hidden");
         (expandido ? vendasPendentes : vendasPendentes.slice(0, 2)).forEach((v) => container.appendChild(montarLinhaVendaPendente(v)));
-        titulo.textContent = `Vendas pendentes (${formatarMoeda(totalVendasPendentes)})`;
         if (vendasPendentes.length > 2) {
+          titulo.textContent = `Quem deve (${vendasPendentes.length})`;
           toggle.textContent = expandido ? "Ver menos" : "Ver todos";
           toggle.classList.remove("is-hidden");
         } else {
+          titulo.textContent = "Quem deve";
           toggle.classList.add("is-hidden");
         }
       }
     }
 
-    toggle.addEventListener("click", () => { expandido = !expandido; renderVendasPendentes(); });
-    renderVendasPendentes();
+    toggle.addEventListener("click", () => { expandido = !expandido; renderQuemDeveVendas(); });
+    renderQuemDeveVendas();
+  }
+
+  // ---- Troca de aba Atendimento/Vendas (pendentes.html) ----
+  if (qs("#js-aba-pendentes")) {
+    qsa(".segmented__item", qs("#js-aba-pendentes")).forEach((item) => {
+      item.addEventListener("click", () => {
+        qsa(".segmented__item", qs("#js-aba-pendentes")).forEach((i) => i.classList.remove("is-active"));
+        item.classList.add("is-active");
+        qs("#js-conteudo-pendentes-atendimento").classList.toggle("is-hidden", item.dataset.aba !== "atendimento");
+        qs("#js-conteudo-pendentes-vendas").classList.toggle("is-hidden", item.dataset.aba !== "vendas");
+      });
+    });
   }
 
   // ---- Pagos recentemente (expansível, resumo 2, máximo 5 na memória) ----
@@ -291,6 +380,66 @@ document.addEventListener("DOMContentLoaded", () => {
     } else {
       top3.forEach((item, i) => container.appendChild(montarLinhaDevedorCompleta(item, i, i + 1)));
     }
+  }
+
+  // ---- Devedores de vendas — card resumo top 3 (pendentes.html) ----
+  if (qs("#js-devedores-vendas-top3")) {
+    const top3 = rankingDevedoresVendas({ tipo: "ano", ano: new Date().getFullYear() }).slice(0, 3);
+    const container = qs("#js-devedores-vendas-top3");
+    container.innerHTML = "";
+    if (top3.length === 0) {
+      container.innerHTML = `<p class="text-secondary" style="text-align:center;">Nenhuma venda com pendência no momento.</p>`;
+    } else {
+      top3.forEach((item, i) => container.appendChild(montarLinhaDevedorVendaCompleta(item, i, i + 1)));
+    }
+  }
+
+  // ---- Devedores de vendas — lista completa (pendentes-devedores-vendas.html) ----
+  if (qs("#js-devedores-vendas-lista-completa")) {
+    const container = qs("#js-devedores-vendas-lista-completa");
+    const vazio = qs("#js-devedores-vendas-vazio-completo");
+    let periodoAtual = { tipo: "ano", ano: new Date().getFullYear() };
+
+    function renderDevedoresVendasCompleto() {
+      qs("#js-ano-label").textContent = rotuloPeriodo(periodoAtual);
+      qs("#js-ano-anterior").classList.toggle("is-hidden", periodoAtual.tipo === "personalizado");
+      qs("#js-ano-proximo").classList.toggle("is-hidden", periodoAtual.tipo === "personalizado");
+      const ranking = rankingDevedoresVendas(periodoAtual);
+      container.innerHTML = "";
+      if (ranking.length === 0) {
+        container.classList.add("is-hidden");
+        vazio.classList.remove("is-hidden");
+      } else {
+        container.classList.remove("is-hidden");
+        vazio.classList.add("is-hidden");
+        ranking.forEach((item, i) => container.appendChild(montarLinhaDevedorVendaCompleta(item, i, i + 1, renderDevedoresVendasCompleto)));
+      }
+    }
+
+    qs("#js-ano-anterior").addEventListener("click", () => { periodoAtual = periodoAnterior(periodoAtual); renderDevedoresVendasCompleto(); });
+    qs("#js-ano-proximo").addEventListener("click", () => { periodoAtual = periodoProximo(periodoAtual); renderDevedoresVendasCompleto(); });
+    renderDevedoresVendasCompleto();
+
+    configurarFiltroPeriodo(() => periodoAtual, (novoPeriodo) => {
+      periodoAtual = novoPeriodo;
+      renderDevedoresVendasCompleto();
+    });
+  }
+
+  // ---- Toggle "Conta"/"Não conta" nas ocorrências de um devedor de vendas ----
+  if (qs("#js-devedor-ocorrencias-vendas-lista")) {
+    qs("#js-devedor-ocorrencias-vendas-lista").addEventListener("click", (evento) => {
+      const chip = evento.target.closest("[data-venda-id]");
+      if (!chip) return;
+      const lista = obterVendas();
+      const v = lista.find((venda) => venda.id === chip.dataset.vendaId);
+      if (!v) return;
+      v.excluidoDoRanking = !v.excluidoDoRanking;
+      salvarVendas(lista);
+      chip.classList.toggle("chip--ativo", !v.excluidoDoRanking);
+      chip.textContent = v.excluidoDoRanking ? "Não conta" : "Conta";
+      if (aoAtualizarOcorrenciasVendaAtual) aoAtualizarOcorrenciasVendaAtual();
+    });
   }
 
   // ---- Devedores — lista completa (pendentes-devedores.html) ----
