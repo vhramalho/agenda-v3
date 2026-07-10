@@ -1,7 +1,8 @@
 /* ============================================================
    AGENDA V3 — Onboarding
    Fluxo de 6 telas internas (boas-vindas + 5 passos), trocadas
-   via js/onboarding.js. Sem menu inferior (não é tela principal).
+   via js/onboarding.js com transição em slide. Sem menu inferior
+   (não é tela principal).
    ============================================================ */
 
 .onboarding-topo {
@@ -25,13 +26,20 @@
   color: var(--text-muted);
 }
 
+/* ---------- Passos: só o ativo é visível, com slide+fade na troca ---------- */
 .onboarding-step {
   display: none;
 }
 
 .onboarding-step.is-active {
   display: block;
+  transition: transform 0.22s ease-out, opacity 0.2s ease-out;
 }
+
+.onboarding-step.saindo-esq { transform: translateX(-24px); opacity: 0; }
+.onboarding-step.saindo-dir { transform: translateX(24px); opacity: 0; }
+.onboarding-step.entrando-esq { transform: translateX(-24px); opacity: 0; transition: none; }
+.onboarding-step.entrando-dir { transform: translateX(24px); opacity: 0; transition: none; }
 
 .onboarding-ilustracao {
   width: 96px;
@@ -43,6 +51,57 @@
   align-items: center;
   justify-content: center;
   color: var(--primary);
+  position: relative;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(10px) scale(0.9);
+  animation: onboarding-entra-suave 0.35s ease-out 0.1s forwards;
+}
+
+.onboarding-ilustracao::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  width: 60%;
+  height: 200%;
+  top: -50%;
+  background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+  transform: translateX(-140%) rotate(12deg);
+  animation: onboarding-brilho 0.6s ease 0.5s forwards;
+}
+
+#ilustracao-final {
+  animation: onboarding-entra-suave 0.35s ease-out 0.1s forwards, onboarding-pulso-sucesso 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.45s;
+}
+
+@keyframes onboarding-entra-suave {
+  from { opacity: 0; transform: translateY(10px) scale(0.9); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes onboarding-brilho {
+  from { transform: translateX(-140%) rotate(12deg); }
+  to { transform: translateX(140%) rotate(12deg); }
+}
+
+@keyframes onboarding-pulso-sucesso {
+  0% { box-shadow: 0 0 0 0 var(--success-soft); }
+  100% { box-shadow: 0 0 0 18px transparent; }
+}
+
+.intro-cascata > * {
+  opacity: 0;
+  transform: translateY(10px);
+  animation: onboarding-entra-cima 0.3s ease-out forwards;
+}
+.intro-cascata > *:nth-child(1) { animation-delay: 0.55s; }
+.intro-cascata > *:nth-child(2) { animation-delay: 0.61s; }
+.intro-cascata > *:nth-child(3) { animation-delay: 0.67s; }
+.intro-cascata > *:nth-child(4) { animation-delay: 0.73s; }
+
+@keyframes onboarding-entra-cima {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .onboarding-titulo {
@@ -50,6 +109,7 @@
   font-weight: 800;
   text-align: center;
   margin-bottom: var(--space-2);
+  text-wrap: balance;
 }
 
 .onboarding-subtitulo {
@@ -58,38 +118,18 @@
   margin-bottom: var(--space-6);
 }
 
+.onboarding-legenda {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  margin-top: 6px;
+}
+
 .onboarding-passo-label {
   text-align: center;
   color: var(--primary);
   font-weight: 700;
   font-size: var(--text-sm);
   margin-bottom: var(--space-2);
-}
-
-.onboarding-resumo-item {
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
-  padding: var(--space-3) 0;
-  border-bottom: 1px solid var(--border);
-}
-
-.onboarding-resumo-item:last-child {
-  border-bottom: none;
-}
-
-.onboarding-resumo-numero {
-  width: 28px;
-  height: 28px;
-  border-radius: var(--radius-full);
-  background: var(--primary);
-  color: var(--text-on-primary);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  font-size: var(--text-sm);
-  flex-shrink: 0;
 }
 
 .onboarding-dots {
@@ -105,7 +145,7 @@
   height: 8px;
   border-radius: var(--radius-full);
   background: var(--border-strong);
-  transition: all 0.15s ease;
+  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .onboarding-dot.is-active {
@@ -113,7 +153,7 @@
   background: var(--primary);
 }
 
-/* Cartões de seleção (tema) */
+/* ---------- Cartões de seleção (tema) ---------- */
 .opcao-card {
   flex: 1;
   border: 1px solid var(--border-strong);
@@ -121,11 +161,15 @@
   padding: var(--space-4);
   text-align: center;
   background: var(--card);
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease, transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease;
 }
 
 .opcao-card.is-selecionada {
   border-color: var(--primary);
   background: var(--primary-soft);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18);
 }
 
 .opcao-card__amostra {
@@ -133,6 +177,152 @@
   height: 48px;
   border-radius: var(--radius-md);
   margin-bottom: var(--space-3);
+  transition: background 0.3s ease;
 }
 
-/* .cor-swatch mudou para css/components.css (reaproveitado em Configurações) */
+/* cor-swatch mora em css/components.css (reaproveitado em Configurações) — só o
+   "lift" ao selecionar é específico do onboarding */
+.cor-swatch { transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.2s ease; }
+.cor-swatch.is-selecionada { transform: scale(1.15); }
+
+/* ---------- Mini-mockup: prévia ao vivo (Aparência/Agenda) ---------- */
+.mockup-wrap {
+  margin-bottom: var(--space-6);
+  display: flex;
+  justify-content: center;
+}
+
+.mockup {
+  width: 220px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-xl);
+  padding: 18px 12px 12px;
+  position: relative;
+  box-shadow: var(--shadow-card);
+}
+
+.mockup__notch {
+  position: absolute;
+  top: 7px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 36px;
+  height: 4px;
+  border-radius: var(--radius-full);
+  background: var(--border-strong);
+}
+
+.mockup__topo {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.mockup__hoje {
+  font-weight: 800;
+  font-size: var(--text-sm);
+  color: var(--text-primary);
+}
+
+.mockup__data {
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+.mockup__grade {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-height: 190px;
+  overflow-y: auto;
+}
+
+.mockup__linha {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  opacity: 0;
+  transform: translateY(4px);
+  animation: onboarding-entra-cima 0.2s ease-out forwards;
+}
+
+.mockup__hora {
+  font-size: 10px;
+  color: var(--text-muted);
+  width: 30px;
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.mockup__slot {
+  flex: 1;
+  height: 18px;
+  border-radius: 5px;
+  background: var(--card);
+  font-size: 9px;
+  display: flex;
+  align-items: center;
+  padding: 0 6px;
+  color: transparent;
+  transition: background 0.2s ease;
+}
+
+.mockup__slot--ocupado {
+  background: var(--primary-soft);
+  color: var(--primary);
+  font-weight: 700;
+}
+
+/* ---------- Cadastro rápido (passo 4) ---------- */
+.cadastro-card + .cadastro-card {
+  margin-top: var(--space-3);
+}
+
+.cadastro-card__topo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.cadastro-card__corpo {
+  flex: 1;
+  min-width: 0;
+}
+
+.cadastro-card__lista {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: var(--space-3);
+}
+
+.cadastro-card__lista:empty {
+  margin-top: 0;
+}
+
+.cadastro-card__lista .chip {
+  opacity: 0;
+  transform: scale(0.85);
+  animation: onboarding-chip-entra 0.25s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes onboarding-chip-entra {
+  to { opacity: 1; transform: scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .onboarding-step,
+  .onboarding-ilustracao,
+  .onboarding-ilustracao::after,
+  .intro-cascata > *,
+  .mockup__linha,
+  .cadastro-card__lista .chip,
+  .onboarding-dot,
+  .opcao-card,
+  .cor-swatch {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}
