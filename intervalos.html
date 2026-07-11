@@ -4,14 +4,14 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, interactive-widget=resizes-content" />
   <title>Intervalos — Agenda V3</title>
-  <link rel="stylesheet" href="css/tokens.css?v=20260711l" />
-  <link rel="stylesheet" href="css/base.css?v=20260711l" />
-  <link rel="stylesheet" href="css/layout.css?v=20260711l" />
-  <link rel="stylesheet" href="css/components.css?v=20260711l" />
+  <link rel="stylesheet" href="css/tokens.css?v=20260711m" />
+  <link rel="stylesheet" href="css/base.css?v=20260711m" />
+  <link rel="stylesheet" href="css/layout.css?v=20260711m" />
+  <link rel="stylesheet" href="css/components.css?v=20260711m" />
 </head>
 <body data-page="mais">
   <div class="app">
-    <main class="page">
+    <main class="page" style="padding-bottom:calc(var(--bottom-nav-height) + var(--safe-bottom) + var(--space-6) + 84px);">
       <header class="app-header" style="padding:0;margin-bottom:var(--space-5);">
         <button class="icon-btn" onclick="voltarOuInicio()" aria-label="Voltar">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
@@ -38,12 +38,14 @@
         <p class="empty-state__title">Nenhum intervalo cadastrado</p>
         <p class="text-muted">Toque no + acima para criar o primeiro.</p>
       </div>
+    </main>
 
-      <div class="card row section">
+    <div class="dica-fixa-wrap">
+      <div class="card row">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.8" style="flex-shrink:0;"><path d="M9 21h6"/><path d="M12 3a6 6 0 0 0-4 10.5c.7.6 1 1.5 1 2.5h6c0-1 .3-1.9 1-2.5A6 6 0 0 0 12 3z"/></svg>
         <p class="text-secondary">Não se preocupe! Criar um intervalo não afeta os agendamentos já marcados.</p>
       </div>
-    </main>
+    </div>
 
     <div id="js-bottom-nav-mount"></div>
 
@@ -95,13 +97,13 @@
     </div>
   </div>
 
-  <script src="js/utils.js?v=20260711l"></script>
-  <script src="js/menu.js?v=20260711l"></script>
-  <script src="js/storage.js?v=20260711l"></script>
-  <script src="js/tema.js?v=20260711l"></script>
-  <script src="js/app.js?v=20260711l"></script>
-  <script src="js/chips.js?v=20260711l"></script>
-  <script src="js/modal.js?v=20260711l"></script>
-  <script src="js/intervalos.js?v=20260711l"></script>
+  <script src="js/utils.js?v=20260711m"></script>
+  <script src="js/menu.js?v=20260711m"></script>
+  <script src="js/storage.js?v=20260711m"></script>
+  <script src="js/tema.js?v=20260711m"></script>
+  <script src="js/app.js?v=20260711m"></script>
+  <script src="js/chips.js?v=20260711m"></script>
+  <script src="js/modal.js?v=20260711m"></script>
+  <script src="js/intervalos.js?v=20260711m"></script>
 </body>
 </html>

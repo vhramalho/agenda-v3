@@ -4,14 +4,14 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, interactive-widget=resizes-content" />
   <title>Sem retornar — Agenda V3</title>
-  <link rel="stylesheet" href="css/tokens.css?v=20260711l" />
-  <link rel="stylesheet" href="css/base.css?v=20260711l" />
-  <link rel="stylesheet" href="css/layout.css?v=20260711l" />
-  <link rel="stylesheet" href="css/components.css?v=20260711l" />
+  <link rel="stylesheet" href="css/tokens.css?v=20260711m" />
+  <link rel="stylesheet" href="css/base.css?v=20260711m" />
+  <link rel="stylesheet" href="css/layout.css?v=20260711m" />
+  <link rel="stylesheet" href="css/components.css?v=20260711m" />
 </head>
 <body data-page="clientes">
   <div class="app">
-    <main class="page">
+    <main class="page" style="padding-bottom:calc(var(--bottom-nav-height) + var(--safe-bottom) + var(--space-6) + 84px);">
       <header class="app-header" style="padding:0;margin-bottom:var(--space-5);">
         <button class="icon-btn" onclick="voltarOuInicio()" aria-label="Voltar">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
@@ -30,12 +30,14 @@
 
       <div class="card section" id="js-semretornar-lista"></div>
       <div class="empty-state is-hidden" id="js-semretornar-vazio"><p class="empty-state__title">Nenhum cliente nesse filtro</p></div>
+    </main>
 
-      <div class="card row section" style="margin-top:var(--space-5);">
+    <div class="dica-fixa-wrap">
+      <div class="card row">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.8" style="flex-shrink:0;"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.8 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>
         <p class="text-secondary">Uma mensagem pode ser o convite que seu cliente precisava para voltar.</p>
       </div>
-    </main>
+    </div>
 
     <div id="js-bottom-nav-mount"></div>
 
@@ -76,13 +78,13 @@
     </div>
   </div>
 
-  <script src="js/utils.js?v=20260711l"></script>
-  <script src="js/menu.js?v=20260711l"></script>
-  <script src="js/storage.js?v=20260711l"></script>
-  <script src="js/tema.js?v=20260711l"></script>
-  <script src="js/app.js?v=20260711l"></script>
-  <script src="js/chips.js?v=20260711l"></script>
-  <script src="js/modal.js?v=20260711l"></script>
-  <script src="js/clientes-derivadas.js?v=20260711l"></script>
+  <script src="js/utils.js?v=20260711m"></script>
+  <script src="js/menu.js?v=20260711m"></script>
+  <script src="js/storage.js?v=20260711m"></script>
+  <script src="js/tema.js?v=20260711m"></script>
+  <script src="js/app.js?v=20260711m"></script>
+  <script src="js/chips.js?v=20260711m"></script>
+  <script src="js/modal.js?v=20260711m"></script>
+  <script src="js/clientes-derivadas.js?v=20260711m"></script>
 </body>
 </html>

@@ -927,3 +927,17 @@
   background: var(--primary);
   color: var(--text-on-primary);
 }
+
+/* ---------- Card de dica fixo (Aniversariantes, Sem retornar, Intervalos) ----------
+   Fica preso acima do menu inferior em vez de rolar junto com a lista —
+   mesmo truque de centralização de .bottom-nav (max-width + margin:auto). */
+.dica-fixa-wrap {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: calc(var(--bottom-nav-height) + var(--safe-bottom));
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 0 var(--space-4) var(--space-3);
+  z-index: 90;
+}
