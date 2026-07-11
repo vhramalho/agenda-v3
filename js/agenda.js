@@ -619,14 +619,6 @@ function abrirHorarioRealizado(agendamento) {
   agendamentoModalAtual = agendamento;
   qs("#js-realizado-nome").textContent = agendamento.nomeCliente;
   qs("#js-realizado-info").textContent = `${agendamento.hora} · ${nomesServicosPorIds(agendamento.servicosIds) || "—"}`;
-  const vendaInfo = qs("#js-realizado-venda-info");
-  const venda = agendamento.vendaId ? obterVendas().find((v) => v.id === agendamento.vendaId) : null;
-  if (venda) {
-    vendaInfo.textContent = textoResumoVenda(venda);
-    vendaInfo.classList.remove("is-hidden");
-  } else {
-    vendaInfo.classList.add("is-hidden");
-  }
   abrirModal("modal-horario-realizado");
 }
 
