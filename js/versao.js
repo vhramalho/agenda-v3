@@ -7,8 +7,8 @@
    tags <link>/<script> nas páginas .html.
    ============================================================ */
 
-const VERSAO_APP = "1.24.2";
-const BUILD_VERSAO = "20260711d";
+const VERSAO_APP = "1.24.3";
+const BUILD_VERSAO = "20260711e";
 
 document.addEventListener("DOMContentLoaded", () => {
   const botao = qs("#js-btn-versao");
@@ -38,6 +38,11 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   qs("#js-versao-atualizar").addEventListener("click", () => {
-    location.href = location.pathname + "?atualizado=" + Date.now();
+    // replace() em vez de href= -- não empurra uma entrada nova no
+    // histórico. Com href=, "Voltar" (voltarOuInicio -> history.back())
+    // caía na versão PRÉ-atualização desta mesma página (que ficava
+    // presa no histórico logo atrás da recarregada), parecendo que a
+    // atualização nunca tinha acontecido.
+    location.replace(location.pathname + "?atualizado=" + Date.now());
   });
 });
