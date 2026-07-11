@@ -166,7 +166,7 @@ function montarLinhaRankingProduto(item, posicao, indice) {
   `;
   linha.querySelector(".list-item__avatar").textContent = iniciaisCliente(item.produto.nome);
   linha.querySelector(".list-item__title").textContent = item.produto.nome;
-  linha.querySelector(".text-primary-accent").textContent = `${item.quantidade} unidade${item.quantidade === 1 ? "" : "s"} vendida${item.quantidade === 1 ? "" : "s"}`;
+  linha.querySelector(".text-primary-accent").textContent = item.quantidade;
   return linha;
 }
 
