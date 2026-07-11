@@ -70,22 +70,22 @@ function vendasNoPeriodo(inicio, fim) {
   });
 }
 
-function calcularLucroVendas(vendas) {
+/* Custo/lucro só consideram itens de produtos com precoCusto informado
+   (campo opcional) — sem isso não há como saber o custo daquele item. */
+function calcularCustoLucroVendas(vendas) {
   const produtos = obterProdutos();
+  let custo = 0;
   let lucro = 0;
-  const produtosVendidosIds = new Set();
-  const produtosComCustoIds = new Set();
   vendas.forEach((v) => {
     (v.itens || []).forEach((item) => {
-      produtosVendidosIds.add(item.produtoId);
       const produto = produtos.find((p) => p.id === item.produtoId);
       if (produto && produto.precoCusto != null) {
+        custo += produto.precoCusto * item.quantidade;
         lucro += (item.precoUnitario - produto.precoCusto) * item.quantidade;
-        produtosComCustoIds.add(item.produtoId);
       }
     });
   });
-  return { lucro, cobertura: `${produtosComCustoIds.size} de ${produtosVendidosIds.size} produtos com custo informado` };
+  return { custo, lucro };
 }
 
 function porFormaValorVendas(vendas) {
@@ -108,9 +108,8 @@ function calcularResumoVendas(vendas) {
     .reduce((soma, v) => soma + (v.pagamentos || []).reduce((s, p) => s + p.valor, 0), 0);
   const pendente = vendas.filter((v) => v.status === "pendente").reduce((soma, v) => soma + (v.valorTotal || 0), 0);
   const contagem = vendas.length;
-  const ticketMedio = contagem > 0 ? faturamento / contagem : 0;
-  const { lucro, cobertura } = calcularLucroVendas(vendas);
-  return { faturamento, totalRecebido, pendente, contagem, ticketMedio, lucro, cobertura, porFormaValor: porFormaValorVendas(vendas) };
+  const { custo, lucro } = calcularCustoLucroVendas(vendas);
+  return { faturamento, totalRecebido, pendente, contagem, custo, lucro, porFormaValor: porFormaValorVendas(vendas) };
 }
 
 /* Mais realizados/vendidos — mesma lógica que existia em ranking-servicos.js/
@@ -293,14 +292,18 @@ function formatarEixoY(v) {
   return `R$${Math.round(v)}`;
 }
 
-function calcularPontosGrafico(tipoPeriodo, refData) {
+/* obterValorPeriodo(inicio, fim) => number — abstrai a fonte dos pontos
+   (faturamento de atendimentos ou de vendas) pra essa função e o
+   desenho do gráfico (montarGraficoFaturamento, abaixo) servirem as
+   duas abas do Relatório sem duplicar a lógica de dia/mês/ano. */
+function calcularPontosGrafico(tipoPeriodo, refData, obterValorPeriodo) {
   if (tipoPeriodo === "mes") {
     const ultimoDia = new Date(refData.getFullYear(), refData.getMonth() + 1, 0).getDate();
     const pontos = [];
     const rotulos = [];
     for (let dia = 1; dia <= ultimoDia; dia++) {
       const data = new Date(refData.getFullYear(), refData.getMonth(), dia);
-      const valor = agendamentosNoPeriodo(data, data).reduce((s, a) => s + (a.valorTotal || 0), 0);
+      const valor = obterValorPeriodo(data, data);
       const frac = (dia - 1) / (ultimoDia - 1 || 1);
       pontos.push({ frac, valor, marcado: true });
       if (dia === 1 || dia % 5 === 0) rotulos.push({ frac, texto: String(dia) });
@@ -314,7 +317,7 @@ function calcularPontosGrafico(tipoPeriodo, refData) {
     for (let mes = 0; mes < 12; mes++) {
       const inicio = new Date(refData.getFullYear(), mes, 1);
       const fim = new Date(refData.getFullYear(), mes + 1, 0);
-      const valor = agendamentosNoPeriodo(inicio, fim).reduce((s, a) => s + (a.valorTotal || 0), 0);
+      const valor = obterValorPeriodo(inicio, fim);
       const frac = mes / 11;
       pontos.push({ frac, valor, marcado: true });
       rotulos.push({ frac, texto: MESES_ABREV_RELATORIO[mes][0].toUpperCase() + MESES_ABREV_RELATORIO[mes].slice(1) });
@@ -329,7 +332,7 @@ function calcularPontosGrafico(tipoPeriodo, refData) {
   for (let i = 0; i < 7; i++) {
     const dia = new Date(inicio);
     dia.setDate(dia.getDate() + i);
-    const valor = agendamentosNoPeriodo(dia, dia).reduce((s, a) => s + (a.valorTotal || 0), 0);
+    const valor = obterValorPeriodo(dia, dia);
     const frac = i / 6;
     pontos.push({ frac, valor, marcado: true });
     rotulos.push({ frac, texto: DIAS_ABREV_RELATORIO[i] });
@@ -337,8 +340,19 @@ function calcularPontosGrafico(tipoPeriodo, refData) {
   return { pontos, rotulos };
 }
 
-function montarGraficoSemana(tipoPeriodo, refData) {
-  const { pontos, rotulos } = calcularPontosGrafico(tipoPeriodo, refData);
+function valorFaturamentoAtendimentos(inicio, fim) {
+  return agendamentosNoPeriodo(inicio, fim).reduce((s, a) => s + (a.valorTotal || 0), 0);
+}
+
+function valorFaturamentoVendas(inicio, fim) {
+  return vendasNoPeriodo(inicio, fim).reduce((s, v) => s + (v.valorTotal || 0), 0);
+}
+
+/* ids = { linha, area, pontos, dias, eixoMax, eixoMeio } — os ids dos
+   elementos do SVG a preencher (o gráfico existe duas vezes na página,
+   um por aba, com ids "js-relatorio-*" e "js-vendas-*"). */
+function montarGraficoFaturamento(tipoPeriodo, refData, obterValorPeriodo, ids) {
+  const { pontos, rotulos } = calcularPontosGrafico(tipoPeriodo, refData, obterValorPeriodo);
   const maximo = Math.max(...pontos.map((p) => p.valor), 1);
   const plotTop = 10;
   const plotBottom = 126;
@@ -347,10 +361,10 @@ function montarGraficoSemana(tipoPeriodo, refData) {
   const paraXY = (p) => [plotLeft + p.frac * (plotRight - plotLeft), plotBottom - (p.valor / maximo) * (plotBottom - plotTop)];
 
   const pontosTexto = pontos.map((p) => paraXY(p).join(",")).join(" ");
-  qs("#js-relatorio-grafico-linha").setAttribute("points", pontosTexto);
-  qs("#js-relatorio-grafico-area").setAttribute("points", `${pontosTexto} ${plotRight},${plotBottom} ${plotLeft},${plotBottom}`);
+  qs(`#${ids.linha}`).setAttribute("points", pontosTexto);
+  qs(`#${ids.area}`).setAttribute("points", `${pontosTexto} ${plotRight},${plotBottom} ${plotLeft},${plotBottom}`);
 
-  const grupoPontos = qs("#js-relatorio-grafico-pontos");
+  const grupoPontos = qs(`#${ids.pontos}`);
   grupoPontos.innerHTML = "";
   pontos.filter((p) => p.marcado).forEach((p) => {
     const [x, y] = paraXY(p);
@@ -362,7 +376,7 @@ function montarGraficoSemana(tipoPeriodo, refData) {
     grupoPontos.appendChild(circulo);
   });
 
-  const grupoDias = qs("#js-relatorio-grafico-dias");
+  const grupoDias = qs(`#${ids.dias}`);
   grupoDias.innerHTML = "";
   rotulos.forEach((r) => {
     const texto = document.createElementNS("http://www.w3.org/2000/svg", "text");
@@ -372,9 +386,12 @@ function montarGraficoSemana(tipoPeriodo, refData) {
     grupoDias.appendChild(texto);
   });
 
-  qs("#js-relatorio-eixo-max").textContent = formatarEixoY(maximo);
-  qs("#js-relatorio-eixo-meio").textContent = formatarEixoY(maximo / 2);
+  qs(`#${ids.eixoMax}`).textContent = formatarEixoY(maximo);
+  qs(`#${ids.eixoMeio}`).textContent = formatarEixoY(maximo / 2);
 }
+
+const IDS_GRAFICO_ATENDIMENTOS = { linha: "js-relatorio-grafico-linha", area: "js-relatorio-grafico-area", pontos: "js-relatorio-grafico-pontos", dias: "js-relatorio-grafico-dias", eixoMax: "js-relatorio-eixo-max", eixoMeio: "js-relatorio-eixo-meio" };
+const IDS_GRAFICO_VENDAS = { linha: "js-vendas-grafico-linha", area: "js-vendas-grafico-area", pontos: "js-vendas-grafico-pontos", dias: "js-vendas-grafico-dias", eixoMax: "js-vendas-eixo-max", eixoMeio: "js-vendas-eixo-meio" };
 
 function montarRecebimentos(resumo, formasContainerId, pizzaContainerId) {
   const todasFormas = obterFormasPagamento();
@@ -501,7 +518,7 @@ document.addEventListener("DOMContentLoaded", () => {
       svgGrafico.classList.add("is-hidden");
     } else {
       svgGrafico.classList.remove("is-hidden");
-      montarGraficoSemana(tipoPeriodo, refData);
+      montarGraficoFaturamento(tipoPeriodo, refData, valorFaturamentoAtendimentos, IDS_GRAFICO_ATENDIMENTOS);
     }
 
     /* ---------- Aba Vendas ---------- */
@@ -514,10 +531,21 @@ document.addEventListener("DOMContentLoaded", () => {
     qs("#js-vendas-faturamento-comparacao").innerHTML = compVendas.texto;
     qs("#js-vendas-faturamento-comparacao").className = `texto-variacao ${compVendas.classe}`;
 
+    const svgGraficoVendas = qs("#js-vendas-grafico-svg");
+    if (tipoPeriodo === "dia") {
+      svgGraficoVendas.classList.add("is-hidden");
+    } else {
+      svgGraficoVendas.classList.remove("is-hidden");
+      montarGraficoFaturamento(tipoPeriodo, refData, valorFaturamentoVendas, IDS_GRAFICO_VENDAS);
+    }
+
     qs("#js-vendas-contagem").textContent = resumoVendas.contagem;
-    qs("#js-vendas-ticket").textContent = formatarMoeda(resumoVendas.ticketMedio);
+    const compVendasContagem = formatarComparacao(resumoVendas.contagem, resumoVendasAnterior.contagem, rotuloComparacao, "contagem", false);
+    qs("#js-vendas-contagem-comparacao").textContent = compVendasContagem.texto;
+    qs("#js-vendas-contagem-comparacao").className = `insight-card__comparacao ${compVendasContagem.classe}`;
+
+    qs("#js-vendas-custo").textContent = formatarMoeda(resumoVendas.custo);
     qs("#js-vendas-lucro").textContent = formatarMoeda(resumoVendas.lucro);
-    qs("#js-vendas-lucro-cobertura").textContent = resumoVendas.cobertura;
 
     montarRecebimentos(resumoVendas, "js-vendas-formas", "js-vendas-pizza");
 
