@@ -30,33 +30,6 @@ function montarLinhaForma(forma) {
   return linha;
 }
 
-function calcularMaisUtilizada(formasAtivas) {
-  const totais = {};
-  let totalGeral = 0;
-  obterAgendamentos().forEach((agendamento) => {
-    if (agendamento.status !== "realizado_pago") return;
-    (agendamento.pagamentos || []).forEach((p) => {
-      if (!p.formaPagamentoId) return;
-      totais[p.formaPagamentoId] = (totais[p.formaPagamentoId] || 0) + p.valor;
-      totalGeral += p.valor;
-    });
-  });
-  const destaque = qs("#js-forma-destaque");
-  let melhorId = null;
-  let melhorValor = 0;
-  Object.entries(totais).forEach(([id, valor]) => {
-    if (valor > melhorValor) { melhorValor = valor; melhorId = id; }
-  });
-  const forma = formasAtivas.find((f) => f.id === melhorId);
-  if (!forma || totalGeral === 0) {
-    destaque.classList.add("is-hidden");
-    return;
-  }
-  qs("#js-forma-destaque-nome").textContent = forma.nome;
-  qs("#js-forma-destaque-percentual").textContent = `${Math.round((melhorValor / totalGeral) * 100)}% dos recebimentos`;
-  destaque.classList.remove("is-hidden");
-}
-
 function renderizarFormas() {
   const formasAtivas = ordenarFormasPorTipo(obterFormasPagamento().filter((f) => f.ativo));
   const container = qs("#js-lista-formas");
@@ -71,8 +44,6 @@ function renderizarFormas() {
     vazio.classList.add("is-hidden");
     formasAtivas.forEach((forma) => container.appendChild(montarLinhaForma(forma)));
   }
-
-  calcularMaisUtilizada(formasAtivas);
 }
 
 function selecionarChipTipo(containerId, tipo) {
