@@ -26,3 +26,30 @@ document.addEventListener("DOMContentLoaded", async () => {
 window.addEventListener("pageshow", (evento) => {
   if (evento.persisted) location.reload();
 });
+
+/* Bug conhecido do Safari/iOS: depois que o teclado do sistema fecha
+   (ao sair de um input), a página às vezes não resincroniza o viewport
+   — os elementos aparecem no lugar certo visualmente, mas o toque
+   seguinte acerta a posição de ANTES do teclado fechar (um toque em
+   "Agendar" cai no botão de baixo, por exemplo), e o header fixo fica
+   cortado até um pinch manual forçar o recálculo. Um jiggle de 1px no
+   scroll (da janela e do modal aberto, se houver) força esse recálculo
+   sem depender do usuário — 300ms de espera pra dar tempo da animação
+   de fechar o teclado terminar antes. */
+document.addEventListener("focusout", (evento) => {
+  if (!evento.target.matches("input, textarea, select")) return;
+  setTimeout(() => {
+    const modalVisivel = qs(".modal-overlay:not(.is-hidden) .modal-sheet");
+    [window, modalVisivel].forEach((alvo) => {
+      if (!alvo) return;
+      const scrollAtual = alvo === window ? window.scrollY : alvo.scrollTop;
+      if (alvo === window) {
+        window.scrollTo(0, scrollAtual + 1);
+        requestAnimationFrame(() => window.scrollTo(0, scrollAtual));
+      } else {
+        alvo.scrollTop = scrollAtual + 1;
+        requestAnimationFrame(() => { alvo.scrollTop = scrollAtual; });
+      }
+    });
+  }, 300);
+});
