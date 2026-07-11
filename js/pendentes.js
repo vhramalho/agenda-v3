@@ -5,22 +5,14 @@
    elementos daquela tela existirem no documento.
    pendentes.html tem abas Atendimento/Vendas (mesmo padrão visual
    da aba Atendimentos/Vendas do Relatório); a aba Vendas espelha a
-   estrutura da aba Atendimento (A receber + Quem deve + Devedores),
-   sem "Pagos recentemente" (venda nunca muda de status depois de
-   criada, não há dado pra essa seção).
-   "Receber" leva à Agenda na data exata do pendente (?data=...).
+   estrutura da aba Atendimento (A receber + Quem deve + Devedores).
+   "Quem deve" leva à Agenda na data exata do pendente (?data=...).
    ============================================================ */
 
 function listaPendentes() {
   return obterAgendamentos()
     .filter((a) => a.status === "realizado_pendente")
     .sort((a, b) => (a.data < b.data ? -1 : a.data > b.data ? 1 : 0));
-}
-
-function listaPagosRecentes() {
-  return obterAgendamentos()
-    .filter((a) => a.status === "realizado_pago" && a.foiPendente)
-    .sort((a, b) => (b.pagoEm || "").localeCompare(a.pagoEm || ""));
 }
 
 function diasEmAberto(dataIso) {
@@ -30,14 +22,6 @@ function diasEmAberto(dataIso) {
 
 function isoParaDate(iso) {
   return new Date(`${iso}T00:00:00`);
-}
-
-function formatarPagoEm(agendamento) {
-  const dataPagamento = (agendamento.pagoEm || "").slice(0, 10) || agendamento.data;
-  const dias = diasEmAberto(dataPagamento);
-  if (dias === 0) return "Pago hoje";
-  if (dias === 1) return "Pago ontem";
-  return `Pago em ${formatarDataCurta(dataPagamento)}`;
 }
 
 function montarLinhaPendente(agendamento, indice) {
@@ -66,46 +50,39 @@ function montarLinhaPendente(agendamento, indice) {
   return linha;
 }
 
-function montarLinhaPago(agendamento) {
-  const linha = document.createElement("a");
-  linha.href = `index.html?data=${agendamento.data}`;
-  linha.className = "list-item";
-  linha.style.textDecoration = "none";
-  linha.style.color = "inherit";
-  linha.innerHTML = `
-    <span class="icon-circle icon-circle--green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg></span>
-    <div class="list-item__body">
-      <p class="list-item__title"></p>
-      <p class="list-item__subtitle"></p>
-    </div>
-    <svg class="list-item__chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
-  `;
-  linha.querySelector(".list-item__title").textContent = agendamento.nomeCliente;
-  linha.querySelector(".list-item__subtitle").innerHTML = `${formatarMoeda(agendamento.valorTotal || 0)} · <span class="text-success">${formatarPagoEm(agendamento)}</span>`;
-  return linha;
-}
-
 function listaVendasPendentes() {
   return obterVendas()
     .filter((v) => v.status === "pendente")
     .sort((a, b) => (a.criadaEm < b.criadaEm ? -1 : 1));
 }
 
-function montarLinhaVendaPendente(venda) {
-  const linha = document.createElement("div");
+/* Mesmo formato/comportamento de montarLinhaPendente (atendimentos):
+   avatar, nome, "data · X dias em aberto", valor, chevron, clicável
+   levando à Agenda no dia da venda. */
+function montarLinhaVendaPendente(venda, indice) {
+  const linha = document.createElement("a");
+  const dataVenda = venda.criadaEm.slice(0, 10);
+  linha.href = `index.html?data=${dataVenda}`;
   linha.className = "list-item";
-  const quantidadeItens = (venda.itens || []).reduce((s, item) => s + item.quantidade, 0);
+  linha.style.textDecoration = "none";
+  linha.style.color = "inherit";
+  const dias = diasEmAberto(dataVenda);
   linha.innerHTML = `
-    <span class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 6h15l-1.5 9h-12z"/><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/></svg></span>
+    <div class="list-item__avatar ${classeAvatarPorIndice(indice)}"></div>
     <div class="list-item__body">
       <p class="list-item__title"></p>
-      <p class="list-item__subtitle"></p>
+      <p class="list-item__subtitle"><span class="js-data"></span> · <span class="text-danger js-dias"></span></p>
     </div>
-    <div class="list-item__trailing"><p style="font-weight:700;"></p></div>
+    <div class="list-item__trailing">
+      <p style="font-weight:700;" class="js-valor"></p>
+    </div>
+    <svg class="list-item__chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
   `;
+  linha.querySelector(".list-item__avatar").textContent = iniciaisCliente(venda.nomeCliente || "Avulso");
   linha.querySelector(".list-item__title").textContent = venda.nomeCliente || "Avulso";
-  linha.querySelector(".list-item__subtitle").textContent = `${quantidadeItens} ite${quantidadeItens === 1 ? "m" : "ns"} · ${formatarDataCurta(venda.criadaEm.slice(0, 10))}`;
-  linha.querySelector(".list-item__trailing p").textContent = formatarMoeda(venda.valorPendente || venda.valorTotal || 0);
+  linha.querySelector(".js-data").textContent = formatarDataCurta(dataVenda).slice(0, 5);
+  linha.querySelector(".js-dias").textContent = dias === 0 ? "hoje" : `${dias} dia${dias === 1 ? "" : "s"} em aberto`;
+  linha.querySelector(".js-valor").textContent = formatarMoeda(venda.valorPendente || venda.valorTotal || 0);
   return linha;
 }
 
@@ -311,7 +288,7 @@ document.addEventListener("DOMContentLoaded", () => {
       } else {
         container.classList.remove("is-hidden");
         vazio.classList.add("is-hidden");
-        (expandido ? vendasPendentes : vendasPendentes.slice(0, 2)).forEach((v) => container.appendChild(montarLinhaVendaPendente(v)));
+        (expandido ? vendasPendentes : vendasPendentes.slice(0, 2)).forEach((v, i) => container.appendChild(montarLinhaVendaPendente(v, i)));
         if (vendasPendentes.length > 2) {
           titulo.textContent = `Quem deve (${vendasPendentes.length})`;
           toggle.textContent = expandido ? "Ver menos" : "Ver todos";
@@ -337,37 +314,6 @@ document.addEventListener("DOMContentLoaded", () => {
         qs("#js-conteudo-pendentes-vendas").classList.toggle("is-hidden", item.dataset.aba !== "vendas");
       });
     });
-  }
-
-  // ---- Pagos recentemente (expansível, resumo 2, máximo 5 na memória) ----
-  if (qs("#js-pagos-lista")) {
-    const pagos = listaPagosRecentes().slice(0, 5);
-    const toggle = qs("#js-pagos-toggle");
-    const container = qs("#js-pagos-lista");
-    const vazio = qs("#js-pagos-vazio");
-    let expandido = false;
-
-    function renderPagos() {
-      container.innerHTML = "";
-      if (pagos.length === 0) {
-        container.classList.add("is-hidden");
-        vazio.classList.remove("is-hidden");
-        toggle.classList.add("is-hidden");
-      } else {
-        container.classList.remove("is-hidden");
-        vazio.classList.add("is-hidden");
-        (expandido ? pagos : pagos.slice(0, 2)).forEach((a) => container.appendChild(montarLinhaPago(a)));
-        if (pagos.length > 2) {
-          toggle.textContent = expandido ? "Ver menos" : "Ver todos";
-          toggle.classList.remove("is-hidden");
-        } else {
-          toggle.classList.add("is-hidden");
-        }
-      }
-    }
-
-    toggle.addEventListener("click", () => { expandido = !expandido; renderPagos(); });
-    renderPagos();
   }
 
   // ---- Devedores — card resumo top 3 (pendentes.html) ----
