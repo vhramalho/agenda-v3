@@ -506,29 +506,15 @@ function idsSelecionados(containerId) {
 }
 
 /* Soma do valorOpcional (preço de referência, opcional) dos serviços
-   selecionados — usada pra pré-preencher a primeira linha de pagamento
-   e, ao salvar, detectar desconto/gorjeta automaticamente (mesma lógica
-   simétrica já usada em Vendas, ver js/vendas.js). Sem valorOpcional
-   cadastrado em nenhum serviço selecionado, não há base de comparação
-   (retorna 0) e nenhum desconto/gorjeta é gravado. */
+   selecionados — usada só pra pré-preencher a primeira linha de
+   pagamento com um valor sensato. Sem valorOpcional cadastrado em
+   nenhum serviço selecionado, retorna 0 (sem pré-preenchimento). */
 function valorEsperadoServicos(servicosIds) {
   const servicos = obterServicos();
   return servicosIds.reduce((soma, id) => {
     const servico = servicos.find((s) => s.id === id);
     return soma + (servico && servico.valorOpcional ? servico.valorOpcional : 0);
   }, 0);
-}
-
-/* Grava ag.desconto/ag.gorjeta a partir da diferença entre o valor
-   esperado (soma de valorOpcional dos serviços) e o valor final do
-   atendimento — simétrico ao cálculo já usado em venda.desconto/gorjeta. */
-function aplicarDescontoGorjeta(ag, valorEsperado) {
-  delete ag.desconto;
-  delete ag.gorjeta;
-  if (valorEsperado <= 0) return;
-  const diferenca = valorEsperado - ag.valorTotal;
-  if (diferenca > 0) ag.desconto = diferenca;
-  else if (diferenca < 0) ag.gorjeta = -diferenca;
 }
 
 /* Duração mais usada nos agendamentos já criados (dentre as opções válidas
@@ -930,7 +916,7 @@ function prepararFinalizarAtendimento(agendamento) {
   qs("#js-finalizar-venda-resumo").classList.add("is-hidden");
   qsa("[data-pago]", modal).forEach((b) => b.classList.remove("chip--ativo"));
   qsa("[data-campo-pago]", modal).forEach((campo) => campo.classList.add("is-hidden"));
-  montarFormasChips("js-finalizar-formas", "js-finalizar-linhas-pagamento", [], {}, () => valorEsperadoServicos(idsSelecionados("js-finalizar-servicos")), "js-finalizar-desconto-gorjeta-aviso");
+  montarFormasChips("js-finalizar-formas", "js-finalizar-linhas-pagamento", [], {}, () => valorEsperadoServicos(idsSelecionados("js-finalizar-servicos")));
   qs("#js-finalizar-valor-pendente").value = "";
 }
 
@@ -989,10 +975,10 @@ function prepararEditarRealizado(agendamento) {
       const forma = formas.find((f) => f.id === p.formaPagamentoId);
       if (forma) { nomesSelecionados.push(forma.nome); valoresPorNome[forma.nome] = p.valor; }
     });
-    montarFormasChips("js-editar-realizado-formas", "js-editar-realizado-linhas-pagamento", nomesSelecionados, valoresPorNome, () => valorEsperadoServicos(idsSelecionados("js-editar-realizado-servicos")), "js-editar-realizado-desconto-gorjeta-aviso");
+    montarFormasChips("js-editar-realizado-formas", "js-editar-realizado-linhas-pagamento", nomesSelecionados, valoresPorNome, () => valorEsperadoServicos(idsSelecionados("js-editar-realizado-servicos")));
     qs("#js-editar-realizado-valor-pendente").value = "";
   } else {
-    montarFormasChips("js-editar-realizado-formas", "js-editar-realizado-linhas-pagamento", [], {}, () => valorEsperadoServicos(idsSelecionados("js-editar-realizado-servicos")), "js-editar-realizado-desconto-gorjeta-aviso");
+    montarFormasChips("js-editar-realizado-formas", "js-editar-realizado-linhas-pagamento", [], {}, () => valorEsperadoServicos(idsSelecionados("js-editar-realizado-servicos")));
     qs("#js-editar-realizado-valor-pendente").value = agendamento.valorPendente != null ? formatarMoeda(agendamento.valorPendente) : "";
   }
   definirPagoEditarRealizado(pago);
@@ -1353,7 +1339,6 @@ document.addEventListener("DOMContentLoaded", () => {
       ag.valorTotal = valorPendente;
       delete ag.pagamentos;
     }
-    aplicarDescontoGorjeta(ag, valorEsperadoServicos(ag.servicosIds));
     if (vendaAnexadaId) ag.vendaId = vendaAnexadaId;
     salvarAgendamentos(lista);
     vendaAnexadaId = null;
@@ -1437,7 +1422,6 @@ document.addEventListener("DOMContentLoaded", () => {
       ag.valorTotal = valorPendente;
       delete ag.pagamentos;
     }
-    aplicarDescontoGorjeta(ag, valorEsperadoServicos(ag.servicosIds));
     if (vendaAnexadaId) ag.vendaId = vendaAnexadaId;
     else delete ag.vendaId;
     salvarAgendamentos(lista);

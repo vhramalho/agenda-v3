@@ -4,10 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Relatório — Agenda V3</title>
-  <link rel="stylesheet" href="css/tokens.css?v=20260711a" />
-  <link rel="stylesheet" href="css/base.css?v=20260711a" />
-  <link rel="stylesheet" href="css/layout.css?v=20260711a" />
-  <link rel="stylesheet" href="css/components.css?v=20260711a" />
+  <link rel="stylesheet" href="css/tokens.css?v=20260711b" />
+  <link rel="stylesheet" href="css/base.css?v=20260711b" />
+  <link rel="stylesheet" href="css/layout.css?v=20260711b" />
+  <link rel="stylesheet" href="css/components.css?v=20260711b" />
 </head>
 <body data-page="relatorio">
   <div class="app">
@@ -77,8 +77,10 @@
               <span>Atendimentos</span>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="8" r="3"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/></svg>
             </div>
-            <p class="insight-card__valor" id="js-relatorio-atendimentos"></p>
-            <p class="insight-card__comparacao" id="js-relatorio-atendimentos-comparacao"></p>
+            <div class="row row--between" style="align-items:baseline;">
+              <p class="insight-card__valor" id="js-relatorio-atendimentos"></p>
+              <p class="insight-card__comparacao" id="js-relatorio-atendimentos-comparacao"></p>
+            </div>
           </div>
           <div class="insight-card">
             <div class="insight-card__label">
@@ -86,7 +88,6 @@
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M9 9.5c0-1.5 1.5-2 3-2s3 .8 3 2-1.5 2-3 2-3 .5-3 2 1.5 2 3 2 3-.5 3-2"/></svg>
             </div>
             <p class="insight-card__valor" id="js-relatorio-ticket"></p>
-            <p class="insight-card__comparacao" id="js-relatorio-ticket-comparacao"></p>
           </div>
           <div class="insight-card">
             <div class="insight-card__label">
@@ -94,31 +95,6 @@
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
             </div>
             <p class="insight-card__valor" id="js-relatorio-taxas"></p>
-            <p class="insight-card__comparacao" id="js-relatorio-taxas-comparacao"></p>
-          </div>
-          <div class="insight-card">
-            <div class="insight-card__label">
-              <span>Descontos</span>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 19L19 5"/><circle cx="7.5" cy="6.5" r="2"/><circle cx="16.5" cy="17.5" r="2"/></svg>
-            </div>
-            <p class="insight-card__valor" id="js-relatorio-desconto"></p>
-            <p class="insight-card__comparacao" id="js-relatorio-desconto-comparacao"></p>
-          </div>
-          <div class="insight-card">
-            <div class="insight-card__label">
-              <span>Gorjetas</span>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 20s-6.5-4.2-8.8-8.2A4.5 4.5 0 0112 8a4.5 4.5 0 018.8 3.8C18.5 15.8 12 20 12 20z"/></svg>
-            </div>
-            <p class="insight-card__valor" id="js-relatorio-gorjeta"></p>
-            <p class="insight-card__comparacao" id="js-relatorio-gorjeta-comparacao"></p>
-          </div>
-          <div class="insight-card">
-            <div class="insight-card__label">
-              <span>Diferença</span>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M7 14l5-5 5 5"/><path d="M7 19l5-5 5 5" opacity="0.4"/></svg>
-            </div>
-            <p class="insight-card__valor" id="js-relatorio-diferenca"></p>
-            <p class="insight-card__comparacao" id="js-relatorio-diferenca-legenda">gorjeta − desconto</p>
           </div>
         </div>
 
@@ -149,8 +125,6 @@
           </div>
         </div>
 
-        <p class="text-secondary section" id="js-vendas-insight" style="font-size:var(--text-sm);"></p>
-
         <div class="grid-3 section">
           <div class="insight-card">
             <div class="insight-card__label"><span>Vendas</span></div>
@@ -161,22 +135,9 @@
             <p class="insight-card__valor" id="js-vendas-ticket"></p>
           </div>
           <div class="insight-card">
-            <div class="insight-card__label"><span>Desconto médio</span></div>
-            <p class="insight-card__valor" id="js-vendas-desconto-medio"></p>
-          </div>
-          <div class="insight-card">
-            <div class="insight-card__label"><span>Gorjetas</span></div>
-            <p class="insight-card__valor" id="js-vendas-gorjeta"></p>
-          </div>
-          <div class="insight-card">
             <div class="insight-card__label"><span>Lucro</span></div>
             <p class="insight-card__valor" id="js-vendas-lucro"></p>
             <p class="insight-card__comparacao" id="js-vendas-lucro-cobertura"></p>
-          </div>
-          <div class="insight-card">
-            <div class="insight-card__label"><span>Diferença</span></div>
-            <p class="insight-card__valor" id="js-vendas-diferenca"></p>
-            <p class="insight-card__comparacao">gorjeta − desconto</p>
           </div>
         </div>
 
@@ -222,14 +183,14 @@
     </div>
   </div>
 
-  <script src="js/utils.js?v=20260711a"></script>
-  <script src="js/menu.js?v=20260711a"></script>
-  <script src="js/storage.js?v=20260711a"></script>
-  <script src="js/tema.js?v=20260711a"></script>
-  <script src="js/app.js?v=20260711a"></script>
-  <script src="js/chips.js?v=20260711a"></script>
-  <script src="js/modal.js?v=20260711a"></script>
-  <script src="js/calendario.js?v=20260711a"></script>
-  <script src="js/relatorio.js?v=20260711a"></script>
+  <script src="js/utils.js?v=20260711b"></script>
+  <script src="js/menu.js?v=20260711b"></script>
+  <script src="js/storage.js?v=20260711b"></script>
+  <script src="js/tema.js?v=20260711b"></script>
+  <script src="js/app.js?v=20260711b"></script>
+  <script src="js/chips.js?v=20260711b"></script>
+  <script src="js/modal.js?v=20260711b"></script>
+  <script src="js/calendario.js?v=20260711b"></script>
+  <script src="js/relatorio.js?v=20260711b"></script>
 </body>
 </html>

@@ -4,15 +4,17 @@
    números calculados de verdade a partir de agendaV3:agendamentos.
    "Faturamento" conta realizado_pago + realizado_pendente (regra
    já fechada: pendente conta no dia do atendimento). "Recebimentos"
-   só conta realizado_pago, já que é dinheiro que entrou de fato
-   numa forma de pagamento conhecida.
+   mostra o que já entrou por forma de pagamento (só realizado_pago)
+   mais uma fatia "Pendentes" com o que ainda está em aberto no
+   período, pra dar a foto completa do que é dinheiro na mão vs.
+   dinheiro a receber.
    ============================================================ */
 
 const MESES_NOME_RELATORIO = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
 const MESES_ABREV_RELATORIO = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"];
-const CORES_FORMA = { pix: "#3B82F6", dinheiro: "#22C55E", credito: "#EC4899", debito: "#EAB308", outras: "#94A3B8" };
-const ROTULO_TIPO_FORMA = { pix: "Pix", dinheiro: "Dinheiro", credito: "Crédito", debito: "Débito", outras: "Outras" };
-const ORDEM_TIPOS_FORMA = ["pix", "dinheiro", "credito", "debito", "outras"];
+const CORES_FORMA = { pix: "#3B82F6", dinheiro: "#22C55E", credito: "#EC4899", debito: "#EAB308", outras: "#94A3B8", pendentes: "var(--warning)" };
+const ROTULO_TIPO_FORMA = { pix: "Pix", dinheiro: "Dinheiro", credito: "Crédito", debito: "Débito", outras: "Outras", pendentes: "Pendentes" };
+const ORDEM_TIPOS_FORMA = ["pix", "dinheiro", "credito", "debito", "outras", "pendentes"];
 
 function dataLocalParaIso(date) {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
@@ -101,17 +103,14 @@ function porFormaValorVendas(vendas) {
 
 function calcularResumoVendas(vendas) {
   const faturamento = vendas.reduce((soma, v) => soma + (v.valorTotal || 0), 0);
-  const subtotalTotal = vendas.reduce((soma, v) => soma + (v.subtotal || 0), 0);
-  const desconto = vendas.reduce((soma, v) => soma + (v.desconto || 0), 0);
-  const gorjeta = vendas.reduce((soma, v) => soma + (v.gorjeta || 0), 0);
   const totalRecebido = vendas
     .filter((v) => v.status === "paga")
     .reduce((soma, v) => soma + (v.pagamentos || []).reduce((s, p) => s + p.valor, 0), 0);
+  const pendente = vendas.filter((v) => v.status === "pendente").reduce((soma, v) => soma + (v.valorTotal || 0), 0);
   const contagem = vendas.length;
   const ticketMedio = contagem > 0 ? faturamento / contagem : 0;
-  const descontoMedioPercent = subtotalTotal > 0 ? (desconto / subtotalTotal) * 100 : 0;
   const { lucro, cobertura } = calcularLucroVendas(vendas);
-  return { faturamento, desconto, gorjeta, totalRecebido, contagem, ticketMedio, descontoMedioPercent, lucro, cobertura, porFormaValor: porFormaValorVendas(vendas) };
+  return { faturamento, totalRecebido, pendente, contagem, ticketMedio, lucro, cobertura, porFormaValor: porFormaValorVendas(vendas) };
 }
 
 /* Mais realizados/vendidos — mesma lógica que existia em ranking-servicos.js/
@@ -238,23 +237,11 @@ function montarLinhaParado(item) {
   return linha;
 }
 
-function fraseInsightVendas(resumo, resumoAnterior) {
-  if (resumo.contagem === 0) return "Nenhuma venda neste período.";
-  if (resumo.descontoMedioPercent > 10) {
-    return `Desconto médio de ${resumo.descontoMedioPercent.toFixed(0)}% — acima do que costuma ser saudável (10%).`;
-  }
-  const diff = resumo.descontoMedioPercent - resumoAnterior.descontoMedioPercent;
-  if (Math.abs(diff) < 0.5) return `Desconto médio estável em ${resumo.descontoMedioPercent.toFixed(0)}%.`;
-  const direcao = diff > 0 ? "subiu" : "caiu";
-  return `Desconto médio ${direcao} de ${resumoAnterior.descontoMedioPercent.toFixed(0)}% pra ${resumo.descontoMedioPercent.toFixed(0)}%.`;
-}
-
 function calcularResumo(agendamentos) {
   const formas = obterFormasPagamento();
   const faturamento = agendamentos.reduce((soma, a) => soma + (a.valorTotal || 0), 0);
   const atendimentos = agendamentos.length;
-  const desconto = agendamentos.reduce((soma, a) => soma + (a.desconto || 0), 0);
-  const gorjeta = agendamentos.reduce((soma, a) => soma + (a.gorjeta || 0), 0);
+  const pendente = agendamentos.filter((a) => a.status === "realizado_pendente").reduce((soma, a) => soma + (a.valorTotal || 0), 0);
 
   const porFormaValor = {};
   let totalRecebido = 0;
@@ -270,20 +257,15 @@ function calcularResumo(agendamentos) {
     });
   });
 
-  return { faturamento, atendimentos, totalRecebido, taxas, desconto, gorjeta, porFormaValor };
+  return { faturamento, atendimentos, totalRecebido, taxas, pendente, porFormaValor };
 }
 
-function classeDiferenca(valor) {
-  if (valor > 0) return "text-success";
-  if (valor < 0) return "text-danger";
-  return "text-secondary";
-}
-
-/* incluirRotulo=true só no card de Faturamento (destaque da tela); os
-   insight-cards menores mostram só a seta + valor, sem "vs X anterior".
-   Quando incluirRotulo=true, o "vs X anterior" vem num <span> à parte
-   (texto é HTML, não texto puro) pra poder ficar em cor secundária,
-   diferente da seta+valor que fica verde/vermelho. */
+/* incluirRotulo=true só no card de Faturamento e Atendimentos (destaques
+   com espaço de sobra); os insight-cards menores (Ticket médio, Taxas)
+   mostram só a seta + valor, sem "vs X anterior". Quando incluirRotulo=true,
+   o "vs X anterior" vem num <span> à parte (texto é HTML, não texto puro)
+   pra poder ficar em cor secundária, diferente da seta+valor que fica
+   verde/vermelho. */
 function formatarComparacao(atual, anterior, rotuloPeriodo, tipo = "valor", incluirRotulo = true) {
   const diff = atual - anterior;
   const sufixo = incluirRotulo ? ` <span class="text-secondary">vs ${rotuloPeriodo} anterior</span>` : "";
@@ -407,15 +389,17 @@ function montarRecebimentos(resumo, formasContainerId, pizzaContainerId) {
     const valor = resumo.porFormaValor[forma.id] || 0;
     if (valor > 0) valorPorTipo[forma.tipo] = (valorPorTipo[forma.tipo] || 0) + valor;
   });
+  if (resumo.pendente > 0) valorPorTipo.pendentes = resumo.pendente;
 
   const tipos = ORDEM_TIPOS_FORMA.filter((tipo) => tiposComFormaAtiva.has(tipo) || valorPorTipo[tipo] > 0);
 
+  const totalComPendente = resumo.totalRecebido + (resumo.pendente || 0);
   const circunferencia = 2 * Math.PI * 45;
   let acumulado = 0;
 
   tipos.forEach((tipo) => {
     const valor = valorPorTipo[tipo] || 0;
-    const percentual = resumo.totalRecebido > 0 ? (valor / resumo.totalRecebido) * 100 : 0;
+    const percentual = totalComPendente > 0 ? (valor / totalComPendente) * 100 : 0;
     const cor = CORES_FORMA[tipo] || "var(--text-muted)";
 
     const linha = document.createElement("div");
@@ -500,33 +484,12 @@ document.addEventListener("DOMContentLoaded", () => {
     qs("#js-relatorio-faturamento-comparacao").style.fontSize = "calc(var(--text-2xs) + 2px)";
 
     qs("#js-relatorio-atendimentos").textContent = resumo.atendimentos;
-    const compAtendimentos = formatarComparacao(resumo.atendimentos, resumoAnterior.atendimentos, rotuloComparacao, "contagem", false);
-    qs("#js-relatorio-atendimentos-comparacao").textContent = compAtendimentos.texto;
-    qs("#js-relatorio-atendimentos-comparacao").className = `insight-card__comparacao ${compAtendimentos.classe}`;
+    const compAtendimentos = formatarComparacao(resumo.atendimentos, resumoAnterior.atendimentos, rotuloComparacao, "contagem");
+    qs("#js-relatorio-atendimentos-comparacao").innerHTML = compAtendimentos.texto;
+    qs("#js-relatorio-atendimentos-comparacao").className = `texto-variacao ${compAtendimentos.classe}`;
 
     qs("#js-relatorio-ticket").textContent = formatarMoeda(ticketMedio);
-    const compTicket = formatarComparacao(ticketMedio, ticketMedioAnterior, rotuloComparacao, "valor", false);
-    qs("#js-relatorio-ticket-comparacao").textContent = compTicket.texto;
-    qs("#js-relatorio-ticket-comparacao").className = `insight-card__comparacao ${compTicket.classe}`;
-
     qs("#js-relatorio-taxas").textContent = formatarMoeda(resumo.taxas);
-    const compTaxas = formatarComparacao(resumo.taxas, resumoAnterior.taxas, rotuloComparacao, "valor", false);
-    qs("#js-relatorio-taxas-comparacao").textContent = compTaxas.texto;
-    qs("#js-relatorio-taxas-comparacao").className = `insight-card__comparacao ${compTaxas.classe}`;
-
-    qs("#js-relatorio-desconto").textContent = formatarMoeda(resumo.desconto);
-    const compDesconto = formatarComparacao(resumo.desconto, resumoAnterior.desconto, rotuloComparacao, "valor", false);
-    qs("#js-relatorio-desconto-comparacao").textContent = compDesconto.texto;
-    qs("#js-relatorio-desconto-comparacao").className = `insight-card__comparacao ${compDesconto.classe}`;
-
-    qs("#js-relatorio-gorjeta").textContent = formatarMoeda(resumo.gorjeta);
-    const compGorjeta = formatarComparacao(resumo.gorjeta, resumoAnterior.gorjeta, rotuloComparacao, "valor", false);
-    qs("#js-relatorio-gorjeta-comparacao").textContent = compGorjeta.texto;
-    qs("#js-relatorio-gorjeta-comparacao").className = `insight-card__comparacao ${compGorjeta.classe}`;
-
-    const diferenca = resumo.gorjeta - resumo.desconto;
-    qs("#js-relatorio-diferenca").textContent = `${diferenca > 0 ? "+" : diferenca < 0 ? "−" : ""}${formatarMoeda(Math.abs(diferenca))}`;
-    qs("#js-relatorio-diferenca").className = `insight-card__valor ${classeDiferenca(diferenca)}`;
 
     montarRecebimentos(resumo, "js-relatorio-formas", "js-relatorio-pizza");
 
@@ -551,18 +514,10 @@ document.addEventListener("DOMContentLoaded", () => {
     qs("#js-vendas-faturamento-comparacao").innerHTML = compVendas.texto;
     qs("#js-vendas-faturamento-comparacao").className = `texto-variacao ${compVendas.classe}`;
 
-    qs("#js-vendas-insight").textContent = fraseInsightVendas(resumoVendas, resumoVendasAnterior);
-
     qs("#js-vendas-contagem").textContent = resumoVendas.contagem;
     qs("#js-vendas-ticket").textContent = formatarMoeda(resumoVendas.ticketMedio);
-    qs("#js-vendas-desconto-medio").textContent = `${resumoVendas.descontoMedioPercent.toFixed(0)}%`;
-    qs("#js-vendas-gorjeta").textContent = formatarMoeda(resumoVendas.gorjeta);
     qs("#js-vendas-lucro").textContent = formatarMoeda(resumoVendas.lucro);
     qs("#js-vendas-lucro-cobertura").textContent = resumoVendas.cobertura;
-
-    const diferencaVendas = resumoVendas.gorjeta - resumoVendas.desconto;
-    qs("#js-vendas-diferenca").textContent = `${diferencaVendas > 0 ? "+" : diferencaVendas < 0 ? "−" : ""}${formatarMoeda(Math.abs(diferencaVendas))}`;
-    qs("#js-vendas-diferenca").className = `insight-card__valor ${classeDiferenca(diferencaVendas)}`;
 
     montarRecebimentos(resumoVendas, "js-vendas-formas", "js-vendas-pizza");
 

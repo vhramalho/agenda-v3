@@ -402,34 +402,7 @@ function adicionarLinhaForma(container, nome, valor, formaExcluida) {
   aplicarMascaraMoeda(linha.querySelector("input"));
 }
 
-/* Mostra "Desconto: R$X"/"Gorjeta: R$X" em avisoId, ao vivo, comparando a
-   soma das linhas de pagamento com valorEsperadoFn() — mesma mecânica em
-   Vendas e Atendimentos (ver js/vendas.js e js/agenda.js). Sem linha
-   nenhuma ainda, ou sem valor esperado (nenhum valorOpcional/subtotal),
-   o aviso fica escondido — só aparece quando há de fato uma diferença. */
-function atualizarAvisoDescontoGorjeta(linhasContainerId, avisoId, valorEsperadoFn) {
-  const aviso = qs(`#${avisoId}`);
-  if (!aviso) return;
-  const valorEsperado = valorEsperadoFn ? valorEsperadoFn() : 0;
-  const linhas = qsa(`#${linhasContainerId} [data-linha-forma]`);
-  if (valorEsperado <= 0 || linhas.length === 0) {
-    aviso.classList.add("is-hidden");
-    return;
-  }
-  const soma = lerPagamentosDeLinhas(linhasContainerId).reduce((s, p) => s + p.valor, 0);
-  const diferenca = valorEsperado - soma;
-  if (diferenca > 0.004) {
-    aviso.textContent = `Desconto: ${formatarMoeda(diferenca)}`;
-    aviso.classList.remove("is-hidden");
-  } else if (diferenca < -0.004) {
-    aviso.textContent = `Gorjeta: ${formatarMoeda(-diferenca)}`;
-    aviso.classList.remove("is-hidden");
-  } else {
-    aviso.classList.add("is-hidden");
-  }
-}
-
-function montarFormasChips(chipsContainerId, linhasContainerId, nomesSelecionados, valoresPorNome, valorEsperadoFn, avisoId) {
+function montarFormasChips(chipsContainerId, linhasContainerId, nomesSelecionados, valoresPorNome, valorEsperadoFn) {
   const chipsContainer = qs(`#${chipsContainerId}`);
   const linhasContainer = qs(`#${linhasContainerId}`);
   chipsContainer.innerHTML = "";
@@ -452,12 +425,6 @@ function montarFormasChips(chipsContainerId, linhasContainerId, nomesSelecionado
   });
   distribuirChipGroup(chipsContainer);
 
-  if (avisoId && !linhasContainer.dataset.avisoWired) {
-    linhasContainer.dataset.avisoWired = "true";
-    linhasContainer.addEventListener("input", () => atualizarAvisoDescontoGorjeta(linhasContainerId, avisoId, valorEsperadoFn));
-  }
-  if (avisoId) atualizarAvisoDescontoGorjeta(linhasContainerId, avisoId, valorEsperadoFn);
-
   qsa(".chip", chipsContainer).forEach((chip) => {
     chip.addEventListener("click", () => {
       chip.classList.toggle("chip--ativo");
@@ -475,8 +442,7 @@ function montarFormasChips(chipsContainerId, linhasContainerId, nomesSelecionado
           } else {
             // Primeira linha do pagamento: se há um valor esperado (soma do
             // valorOpcional dos serviços, ou subtotal do carrinho em Vendas),
-            // pré-preenche com ele — digitar outra coisa vira desconto/gorjeta
-            // automaticamente ao salvar (e já aparece no aviso ao vivo).
+            // pré-preenche com ele — economiza digitação quando o valor bate certinho.
             const primeiraLinha = linhasContainer.children.length === 0;
             const valorEsperado = valorEsperadoFn ? valorEsperadoFn() : 0;
             adicionarLinhaForma(linhasContainer, nome, primeiraLinha && valorEsperado > 0 ? valorEsperado : null);
@@ -485,7 +451,6 @@ function montarFormasChips(chipsContainerId, linhasContainerId, nomesSelecionado
       } else if (existente) {
         existente.remove();
       }
-      if (avisoId) atualizarAvisoDescontoGorjeta(linhasContainerId, avisoId, valorEsperadoFn);
     });
   });
 }
