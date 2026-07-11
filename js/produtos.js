@@ -177,6 +177,10 @@ function atualizarBotaoAcaoHeader(abaVendas) {
   btn.onclick = abaVendas ? abrirNovaVendaAvulsa : abrirNovoProduto;
 }
 
+function atualizarTituloHeader(abaVendas) {
+  qs("#js-vendas-titulo").textContent = abaVendas ? "Vendas" : "Produtos";
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   renderizarProdutos();
   renderizarHistoricoVendas();
@@ -194,6 +198,7 @@ document.addEventListener("DOMContentLoaded", () => {
       qs("#js-conteudo-vendas-vendas").classList.toggle("is-hidden", !abaVendas);
       qs("#js-conteudo-vendas-produtos").classList.toggle("is-hidden", abaVendas);
       atualizarBotaoAcaoHeader(abaVendas);
+      atualizarTituloHeader(abaVendas);
     });
   });
 
