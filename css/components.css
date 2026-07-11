@@ -30,6 +30,16 @@
   border: none;
 }
 
+.icon-btn--pequeno {
+  width: 30px;
+  height: 30px;
+}
+
+.icon-btn--pequeno svg {
+  width: 15px;
+  height: 15px;
+}
+
 .icon-btn__dot {
   position: absolute;
   top: 2px;
@@ -449,6 +459,18 @@
 .segmented__item.is-active {
   background: var(--primary);
   color: var(--text-on-primary);
+}
+
+/* Variante compacta — telas que empilham vários segmented seguidos
+   (ex.: relatório: abas + período + navegação) e não podem gastar
+   tanta altura de tela com cada um. */
+.segmented--compacto {
+  padding: 2px;
+}
+
+.segmented--compacto .segmented__item {
+  padding: 6px;
+  font-size: var(--text-xs);
 }
 
 /* ---------- Card de ranking: lista top 3 com leve destaque ouro/prata/bronze ---------- */

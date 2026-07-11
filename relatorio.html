@@ -19,28 +19,28 @@
         </button>
       </div>
 
-      <div class="segmented section" id="js-aba-relatorio">
+      <div class="segmented segmented--compacto section" id="js-aba-relatorio">
         <span class="segmented__item is-active" data-aba="atendimentos">Atendimentos</span>
         <span class="segmented__item" data-aba="vendas">Vendas</span>
       </div>
 
-      <div class="segmented section" id="js-periodo-tabs">
+      <div class="segmented segmented--compacto section" id="js-periodo-tabs">
         <span class="segmented__item">Dia</span>
         <span class="segmented__item is-active">Semana</span>
         <span class="segmented__item">Mês</span>
         <span class="segmented__item">Ano</span>
       </div>
 
-      <div class="segmented section">
-        <button class="icon-btn" id="js-periodo-anterior" aria-label="Período anterior">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+      <div class="segmented segmented--compacto section" style="padding:4px 8px;">
+        <button class="icon-btn icon-btn--pequeno" id="js-periodo-anterior" aria-label="Período anterior">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
         </button>
         <span id="js-periodo-label" style="flex:1;text-align:center;">
-          <span id="js-periodo-principal" style="display:block;font-weight:700;font-size:var(--text-sm);"></span>
-          <span id="js-periodo-secundario" style="display:block;font-size:var(--text-xs);color:var(--text-secondary);margin-top:1px;"></span>
+          <span id="js-periodo-principal" style="display:block;font-weight:700;font-size:var(--text-xs);"></span>
+          <span id="js-periodo-secundario" style="display:block;font-size:var(--text-2xs);color:var(--text-secondary);margin-top:1px;"></span>
         </span>
-        <button class="icon-btn" id="js-periodo-proximo" aria-label="Próximo período">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+        <button class="icon-btn icon-btn--pequeno" id="js-periodo-proximo" aria-label="Próximo período">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
         </button>
       </div>
 
@@ -58,12 +58,12 @@
                 <stop offset="100%" stop-color="var(--primary)" stop-opacity="0"/>
               </linearGradient>
             </defs>
-            <line x1="26" y1="10" x2="297" y2="10" stroke="var(--border)" stroke-width="1"/>
-            <line x1="26" y1="68" x2="297" y2="68" stroke="var(--border)" stroke-width="1"/>
-            <line x1="26" y1="126" x2="297" y2="126" stroke="var(--border)" stroke-width="1"/>
-            <text x="22" y="13" text-anchor="end" font-size="9" fill="var(--text-muted)" id="js-relatorio-eixo-max"></text>
-            <text x="22" y="71" text-anchor="end" font-size="9" fill="var(--text-muted)" id="js-relatorio-eixo-meio"></text>
-            <text x="22" y="129" text-anchor="end" font-size="9" fill="var(--text-muted)">R$0</text>
+            <line x1="34" y1="10" x2="297" y2="10" stroke="var(--border)" stroke-width="1"/>
+            <line x1="34" y1="68" x2="297" y2="68" stroke="var(--border)" stroke-width="1"/>
+            <line x1="34" y1="126" x2="297" y2="126" stroke="var(--border)" stroke-width="1"/>
+            <text x="30" y="13" text-anchor="end" font-size="8.5" fill="var(--text-muted)" id="js-relatorio-eixo-max"></text>
+            <text x="30" y="71" text-anchor="end" font-size="8.5" fill="var(--text-muted)" id="js-relatorio-eixo-meio"></text>
+            <text x="30" y="129" text-anchor="end" font-size="8.5" fill="var(--text-muted)">R$0</text>
             <polygon id="js-relatorio-grafico-area" points="" fill="url(#areaGrad)"/>
             <polyline id="js-relatorio-grafico-linha" points="" fill="none" stroke="var(--primary)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
             <g id="js-relatorio-grafico-pontos"></g>
@@ -96,6 +96,30 @@
             <p class="insight-card__valor" id="js-relatorio-taxas"></p>
             <p class="insight-card__comparacao" id="js-relatorio-taxas-comparacao"></p>
           </div>
+          <div class="insight-card">
+            <div class="insight-card__label">
+              <span>Descontos</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 19L19 5"/><circle cx="7.5" cy="6.5" r="2"/><circle cx="16.5" cy="17.5" r="2"/></svg>
+            </div>
+            <p class="insight-card__valor" id="js-relatorio-desconto"></p>
+            <p class="insight-card__comparacao" id="js-relatorio-desconto-comparacao"></p>
+          </div>
+          <div class="insight-card">
+            <div class="insight-card__label">
+              <span>Gorjetas</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 20s-6.5-4.2-8.8-8.2A4.5 4.5 0 0112 8a4.5 4.5 0 018.8 3.8C18.5 15.8 12 20 12 20z"/></svg>
+            </div>
+            <p class="insight-card__valor" id="js-relatorio-gorjeta"></p>
+            <p class="insight-card__comparacao" id="js-relatorio-gorjeta-comparacao"></p>
+          </div>
+          <div class="insight-card">
+            <div class="insight-card__label">
+              <span>Diferença</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M7 14l5-5 5 5"/><path d="M7 19l5-5 5 5" opacity="0.4"/></svg>
+            </div>
+            <p class="insight-card__valor" id="js-relatorio-diferenca"></p>
+            <p class="insight-card__comparacao" id="js-relatorio-diferenca-legenda">gorjeta − desconto</p>
+          </div>
         </div>
 
         <div class="card section">
@@ -109,7 +133,10 @@
         </div>
 
         <div class="card section">
-          <p class="text-secondary" style="margin-bottom:12px;">Mais realizados</p>
+          <div class="row row--between" style="margin-bottom:12px;">
+            <p class="text-secondary">Serviços mais realizados</p>
+            <button class="text-primary-accent is-hidden" id="js-relatorio-mais-realizados-ver-todos" style="border:none;background:none;padding:0;font-weight:700;font-size:var(--text-xs);">Ver todos</button>
+          </div>
           <div id="js-relatorio-mais-realizados"></div>
           <div class="empty-state is-hidden" id="js-relatorio-mais-realizados-vazio"><p class="empty-state__title">Nenhum atendimento no período</p></div>
         </div>
@@ -148,6 +175,11 @@
             <p class="insight-card__valor" id="js-vendas-lucro"></p>
             <p class="insight-card__comparacao" id="js-vendas-lucro-cobertura"></p>
           </div>
+          <div class="insight-card">
+            <div class="insight-card__label"><span>Diferença</span></div>
+            <p class="insight-card__valor" id="js-vendas-diferenca"></p>
+            <p class="insight-card__comparacao">gorjeta − desconto</p>
+          </div>
         </div>
 
         <div class="card section">
@@ -161,7 +193,10 @@
         </div>
 
         <div class="card section">
-          <p class="text-secondary" style="margin-bottom:12px;">Mais vendidos</p>
+          <div class="row row--between" style="margin-bottom:12px;">
+            <p class="text-secondary">Mais vendidos</p>
+            <button class="text-primary-accent is-hidden" id="js-vendas-mais-vendidos-ver-todos" style="border:none;background:none;padding:0;font-weight:700;font-size:var(--text-xs);">Ver todos</button>
+          </div>
           <div id="js-vendas-mais-vendidos"></div>
           <div class="empty-state is-hidden" id="js-vendas-mais-vendidos-vazio"><p class="empty-state__title">Nenhuma venda no período</p></div>
         </div>

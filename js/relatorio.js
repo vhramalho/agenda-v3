@@ -190,6 +190,41 @@ function calcularParados() {
     .filter((item) => item.diasSemVenda === null || item.diasSemVenda >= item.produto.diasParaAvisarParado);
 }
 
+/* Cards de ranking (Serviços mais realizados / Mais vendidos) mostram só o
+   top 3 por padrão — "Ver todos" expande a lista inteira na mesma tela,
+   sem navegar pra outra página (não existe mais ranking-servicos.html/
+   ranking-produtos.html, ver comentário acima). O estado de expandido fica
+   fora do closure do DOMContentLoaded pra sobreviver a atualizarRelatorio(). */
+const estadoExpandidoRanking = { realizados: false, vendidos: false };
+
+function montarListaRanking(lista, containerId, vazioId, botaoId, montarLinha, chaveEstado) {
+  const container = qs(`#${containerId}`);
+  const vazio = qs(`#${vazioId}`);
+  const botao = qs(`#${botaoId}`);
+  container.innerHTML = "";
+
+  if (lista.length === 0) {
+    container.classList.add("is-hidden");
+    vazio.classList.remove("is-hidden");
+    botao.classList.add("is-hidden");
+    return;
+  }
+
+  container.classList.remove("is-hidden");
+  vazio.classList.add("is-hidden");
+
+  const expandido = estadoExpandidoRanking[chaveEstado];
+  const visiveis = expandido ? lista : lista.slice(0, 3);
+  visiveis.forEach((item, i) => container.appendChild(montarLinha(item, i + 1, i)));
+
+  if (lista.length > 3) {
+    botao.classList.remove("is-hidden");
+    botao.textContent = expandido ? "Ver menos" : "Ver todos";
+  } else {
+    botao.classList.add("is-hidden");
+  }
+}
+
 function montarLinhaParado(item) {
   const linha = document.createElement("div");
   linha.className = "list-item";
@@ -218,6 +253,8 @@ function calcularResumo(agendamentos) {
   const formas = obterFormasPagamento();
   const faturamento = agendamentos.reduce((soma, a) => soma + (a.valorTotal || 0), 0);
   const atendimentos = agendamentos.length;
+  const desconto = agendamentos.reduce((soma, a) => soma + (a.desconto || 0), 0);
+  const gorjeta = agendamentos.reduce((soma, a) => soma + (a.gorjeta || 0), 0);
 
   const porFormaValor = {};
   let totalRecebido = 0;
@@ -233,7 +270,13 @@ function calcularResumo(agendamentos) {
     });
   });
 
-  return { faturamento, atendimentos, totalRecebido, taxas, porFormaValor };
+  return { faturamento, atendimentos, totalRecebido, taxas, desconto, gorjeta, porFormaValor };
+}
+
+function classeDiferenca(valor) {
+  if (valor > 0) return "text-success";
+  if (valor < 0) return "text-danger";
+  return "text-secondary";
 }
 
 function formatarComparacao(atual, anterior, rotuloPeriodo, tipo = "valor") {
@@ -311,7 +354,7 @@ function montarGraficoSemana(tipoPeriodo, refData) {
   const maximo = Math.max(...pontos.map((p) => p.valor), 1);
   const plotTop = 10;
   const plotBottom = 126;
-  const plotLeft = 26;
+  const plotLeft = 34;
   const plotRight = 297;
   const paraXY = (p) => [plotLeft + p.frac * (plotRight - plotLeft), plotBottom - (p.valor / maximo) * (plotBottom - plotTop)];
 
@@ -465,20 +508,24 @@ document.addEventListener("DOMContentLoaded", () => {
     qs("#js-relatorio-taxas-comparacao").textContent = compTaxas.texto;
     qs("#js-relatorio-taxas-comparacao").className = `insight-card__comparacao ${compTaxas.classe}`;
 
+    qs("#js-relatorio-desconto").textContent = formatarMoeda(resumo.desconto);
+    const compDesconto = formatarComparacao(resumo.desconto, resumoAnterior.desconto, rotuloComparacao, "valor");
+    qs("#js-relatorio-desconto-comparacao").textContent = compDesconto.texto;
+    qs("#js-relatorio-desconto-comparacao").className = `insight-card__comparacao ${compDesconto.classe}`;
+
+    qs("#js-relatorio-gorjeta").textContent = formatarMoeda(resumo.gorjeta);
+    const compGorjeta = formatarComparacao(resumo.gorjeta, resumoAnterior.gorjeta, rotuloComparacao, "valor");
+    qs("#js-relatorio-gorjeta-comparacao").textContent = compGorjeta.texto;
+    qs("#js-relatorio-gorjeta-comparacao").className = `insight-card__comparacao ${compGorjeta.classe}`;
+
+    const diferenca = resumo.gorjeta - resumo.desconto;
+    qs("#js-relatorio-diferenca").textContent = `${diferenca > 0 ? "+" : diferenca < 0 ? "−" : ""}${formatarMoeda(Math.abs(diferenca))}`;
+    qs("#js-relatorio-diferenca").className = `insight-card__valor ${classeDiferenca(diferenca)}`;
+
     montarRecebimentos(resumo, "js-relatorio-formas", "js-relatorio-pizza");
 
     const maisRealizados = calcularMaisRealizados(agendamentosNoPeriodo(inicio, fim));
-    const containerRealizados = qs("#js-relatorio-mais-realizados");
-    const vazioRealizados = qs("#js-relatorio-mais-realizados-vazio");
-    containerRealizados.innerHTML = "";
-    if (maisRealizados.length === 0) {
-      containerRealizados.classList.add("is-hidden");
-      vazioRealizados.classList.remove("is-hidden");
-    } else {
-      containerRealizados.classList.remove("is-hidden");
-      vazioRealizados.classList.add("is-hidden");
-      maisRealizados.forEach((item, i) => containerRealizados.appendChild(montarLinhaRankingServico(item, i + 1, i)));
-    }
+    montarListaRanking(maisRealizados, "js-relatorio-mais-realizados", "js-relatorio-mais-realizados-vazio", "js-relatorio-mais-realizados-ver-todos", montarLinhaRankingServico, "realizados");
 
     const svgGrafico = qs("#js-relatorio-grafico-svg");
     if (tipoPeriodo === "dia") {
@@ -507,20 +554,14 @@ document.addEventListener("DOMContentLoaded", () => {
     qs("#js-vendas-lucro").textContent = formatarMoeda(resumoVendas.lucro);
     qs("#js-vendas-lucro-cobertura").textContent = resumoVendas.cobertura;
 
+    const diferencaVendas = resumoVendas.gorjeta - resumoVendas.desconto;
+    qs("#js-vendas-diferenca").textContent = `${diferencaVendas > 0 ? "+" : diferencaVendas < 0 ? "−" : ""}${formatarMoeda(Math.abs(diferencaVendas))}`;
+    qs("#js-vendas-diferenca").className = `insight-card__valor ${classeDiferenca(diferencaVendas)}`;
+
     montarRecebimentos(resumoVendas, "js-vendas-formas", "js-vendas-pizza");
 
     const maisVendidos = calcularMaisVendidos(vendasPeriodo);
-    const containerVendidos = qs("#js-vendas-mais-vendidos");
-    const vazioVendidos = qs("#js-vendas-mais-vendidos-vazio");
-    containerVendidos.innerHTML = "";
-    if (maisVendidos.length === 0) {
-      containerVendidos.classList.add("is-hidden");
-      vazioVendidos.classList.remove("is-hidden");
-    } else {
-      containerVendidos.classList.remove("is-hidden");
-      vazioVendidos.classList.add("is-hidden");
-      maisVendidos.forEach((item, i) => containerVendidos.appendChild(montarLinhaRankingProduto(item, i + 1, i)));
-    }
+    montarListaRanking(maisVendidos, "js-vendas-mais-vendidos", "js-vendas-mais-vendidos-vazio", "js-vendas-mais-vendidos-ver-todos", montarLinhaRankingProduto, "vendidos");
 
     const parados = calcularParados();
     const containerParados = qs("#js-vendas-parados");
@@ -536,11 +577,22 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  qs("#js-relatorio-mais-realizados-ver-todos").addEventListener("click", () => {
+    estadoExpandidoRanking.realizados = !estadoExpandidoRanking.realizados;
+    atualizarRelatorio();
+  });
+  qs("#js-vendas-mais-vendidos-ver-todos").addEventListener("click", () => {
+    estadoExpandidoRanking.vendidos = !estadoExpandidoRanking.vendidos;
+    atualizarRelatorio();
+  });
+
   function avancarPeriodo(direcao) {
     if (tipoPeriodo === "dia") refData.setDate(refData.getDate() + direcao);
     else if (tipoPeriodo === "semana") refData.setDate(refData.getDate() + direcao * 7);
     else if (tipoPeriodo === "mes") refData.setMonth(refData.getMonth() + direcao);
     else refData.setFullYear(refData.getFullYear() + direcao);
+    estadoExpandidoRanking.realizados = false;
+    estadoExpandidoRanking.vendidos = false;
     atualizarRelatorio();
   }
 
@@ -554,6 +606,8 @@ document.addEventListener("DOMContentLoaded", () => {
       item.classList.add("is-active");
       const chave = item.textContent.trim().toLowerCase();
       tipoPeriodo = mapaAba[chave] || tipoPeriodo;
+      estadoExpandidoRanking.realizados = false;
+      estadoExpandidoRanking.vendidos = false;
       atualizarRelatorio();
     });
   });
@@ -582,6 +636,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   window.aoSelecionarDiaCalendarioAgenda = (ano, mes, dia) => {
     refData = new Date(ano, mes, dia);
+    estadoExpandidoRanking.realizados = false;
+    estadoExpandidoRanking.vendidos = false;
     atualizarRelatorio();
   };
 });
