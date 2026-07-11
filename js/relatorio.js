@@ -279,19 +279,22 @@ function classeDiferenca(valor) {
   return "text-secondary";
 }
 
-function formatarComparacao(atual, anterior, rotuloPeriodo, tipo = "valor") {
+/* incluirRotulo=true só no card de Faturamento (destaque da tela); os
+   insight-cards menores mostram só a seta + valor, sem "vs X anterior". */
+function formatarComparacao(atual, anterior, rotuloPeriodo, tipo = "valor", incluirRotulo = true) {
   const diff = atual - anterior;
-  if (diff === 0) return { texto: `sem variação vs ${rotuloPeriodo} anterior`, classe: "text-secondary" };
+  const sufixo = incluirRotulo ? ` vs ${rotuloPeriodo} anterior` : "";
+  if (diff === 0) return { texto: incluirRotulo ? `sem variação${sufixo}` : "sem variação", classe: "text-secondary" };
 
   const seta = diff > 0 ? "▲" : "▼";
   const classe = diff > 0 ? "text-success" : "text-danger";
 
   if (tipo === "contagem") {
-    return { texto: `${seta}${Math.abs(diff)} vs ${rotuloPeriodo} anterior`, classe };
+    return { texto: `${seta}${Math.abs(diff)}${sufixo}`, classe };
   }
 
   // tipo "valor" (dinheiro)
-  return { texto: `${seta}${formatarMoeda(Math.abs(diff))} vs ${rotuloPeriodo} anterior`, classe };
+  return { texto: `${seta}${formatarMoeda(Math.abs(diff))}${sufixo}`, classe };
 }
 
 const DIAS_ABREV_RELATORIO = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
@@ -494,27 +497,27 @@ document.addEventListener("DOMContentLoaded", () => {
     qs("#js-relatorio-faturamento-comparacao").style.fontSize = "calc(var(--text-2xs) + 2px)";
 
     qs("#js-relatorio-atendimentos").textContent = resumo.atendimentos;
-    const compAtendimentos = formatarComparacao(resumo.atendimentos, resumoAnterior.atendimentos, rotuloComparacao, "contagem");
+    const compAtendimentos = formatarComparacao(resumo.atendimentos, resumoAnterior.atendimentos, rotuloComparacao, "contagem", false);
     qs("#js-relatorio-atendimentos-comparacao").textContent = compAtendimentos.texto;
     qs("#js-relatorio-atendimentos-comparacao").className = `insight-card__comparacao ${compAtendimentos.classe}`;
 
     qs("#js-relatorio-ticket").textContent = formatarMoeda(ticketMedio);
-    const compTicket = formatarComparacao(ticketMedio, ticketMedioAnterior, rotuloComparacao, "valor");
+    const compTicket = formatarComparacao(ticketMedio, ticketMedioAnterior, rotuloComparacao, "valor", false);
     qs("#js-relatorio-ticket-comparacao").textContent = compTicket.texto;
     qs("#js-relatorio-ticket-comparacao").className = `insight-card__comparacao ${compTicket.classe}`;
 
     qs("#js-relatorio-taxas").textContent = formatarMoeda(resumo.taxas);
-    const compTaxas = formatarComparacao(resumo.taxas, resumoAnterior.taxas, rotuloComparacao, "valor");
+    const compTaxas = formatarComparacao(resumo.taxas, resumoAnterior.taxas, rotuloComparacao, "valor", false);
     qs("#js-relatorio-taxas-comparacao").textContent = compTaxas.texto;
     qs("#js-relatorio-taxas-comparacao").className = `insight-card__comparacao ${compTaxas.classe}`;
 
     qs("#js-relatorio-desconto").textContent = formatarMoeda(resumo.desconto);
-    const compDesconto = formatarComparacao(resumo.desconto, resumoAnterior.desconto, rotuloComparacao, "valor");
+    const compDesconto = formatarComparacao(resumo.desconto, resumoAnterior.desconto, rotuloComparacao, "valor", false);
     qs("#js-relatorio-desconto-comparacao").textContent = compDesconto.texto;
     qs("#js-relatorio-desconto-comparacao").className = `insight-card__comparacao ${compDesconto.classe}`;
 
     qs("#js-relatorio-gorjeta").textContent = formatarMoeda(resumo.gorjeta);
-    const compGorjeta = formatarComparacao(resumo.gorjeta, resumoAnterior.gorjeta, rotuloComparacao, "valor");
+    const compGorjeta = formatarComparacao(resumo.gorjeta, resumoAnterior.gorjeta, rotuloComparacao, "valor", false);
     qs("#js-relatorio-gorjeta-comparacao").textContent = compGorjeta.texto;
     qs("#js-relatorio-gorjeta-comparacao").className = `insight-card__comparacao ${compGorjeta.classe}`;
 
