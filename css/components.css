@@ -30,16 +30,6 @@
   border: none;
 }
 
-.icon-btn--pequeno {
-  width: 30px;
-  height: 30px;
-}
-
-.icon-btn--pequeno svg {
-  width: 15px;
-  height: 15px;
-}
-
 .icon-btn__dot {
   position: absolute;
   top: 2px;
@@ -418,7 +408,7 @@
 .list-item__avatar--c4 { background: rgba(245, 158, 11, 0.18); color: #F59E0B; }
 .list-item__avatar--c5 { background: var(--success-soft); color: var(--success); }
 
-/* ---------- Controle segmentado (abas de filtro) ---------- */
+/* ---------- Controle segmentado (abas de filtro, seleção, troca de período) ---------- */
 .segmented {
   display: flex;
   align-items: center;
@@ -426,7 +416,7 @@
   background: var(--card);
   border: none;
   border-radius: var(--radius-md);
-  padding: 4px;
+  padding: 2px;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
@@ -443,9 +433,9 @@
   align-items: center;
   justify-content: center;
   gap: 6px;
-  padding: 10px 8px;
+  padding: 6px;
   border-radius: var(--radius-sm);
-  font-size: var(--text-sm);
+  font-size: var(--text-xs);
   font-weight: 600;
   color: var(--text-secondary);
   white-space: nowrap;
@@ -461,16 +451,17 @@
   color: var(--text-on-primary);
 }
 
-/* Variante compacta — telas que empilham vários segmented seguidos
-   (ex.: relatório: abas + período + navegação) e não podem gastar
-   tanta altura de tela com cada um. */
-.segmented--compacto {
-  padding: 2px;
+/* Botão de navegação (< / >) dentro de um segmented de troca de período
+   (ex.: "05 jul – 11 jul" com setas) — menor que o icon-btn padrão pra
+   caber na mesma altura enxuta do resto do controle. */
+.segmented .icon-btn {
+  width: 30px;
+  height: 30px;
 }
 
-.segmented--compacto .segmented__item {
-  padding: 6px;
-  font-size: var(--text-xs);
+.segmented .icon-btn svg {
+  width: 15px;
+  height: 15px;
 }
 
 /* ---------- Card de ranking: lista top 3 com leve destaque ouro/prata/bronze ---------- */
