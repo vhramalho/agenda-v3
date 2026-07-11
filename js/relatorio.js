@@ -360,8 +360,8 @@ function montarGraficoSemana(tipoPeriodo, refData) {
   const maximo = Math.max(...pontos.map((p) => p.valor), 1);
   const plotTop = 10;
   const plotBottom = 126;
-  const plotLeft = 12;
-  const plotRight = 288;
+  const plotLeft = 42;
+  const plotRight = 258;
   const paraXY = (p) => [plotLeft + p.frac * (plotRight - plotLeft), plotBottom - (p.valor / maximo) * (plotBottom - plotTop)];
 
   const pontosTexto = pontos.map((p) => paraXY(p).join(",")).join(" ");
