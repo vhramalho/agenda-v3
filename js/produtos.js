@@ -122,20 +122,34 @@ function montarLinhaVenda(venda, produtos, indice) {
   return linha;
 }
 
+const LIMITE_HISTORICO_VENDAS = 10;
+let historicoVendasExpandido = false;
+
 function renderizarHistoricoVendas() {
   const vendas = obterVendas().slice().sort((a, b) => b.criadaEm.localeCompare(a.criadaEm));
   const produtos = obterProdutos();
   const container = qs("#js-lista-historico-vendas");
   const vazio = qs("#js-historico-vendas-vazio");
+  const toggle = qs("#js-historico-vendas-toggle");
   container.innerHTML = "";
 
   if (vendas.length === 0) {
     container.classList.add("is-hidden");
     vazio.classList.remove("is-hidden");
+    toggle.classList.add("is-hidden");
+    return;
+  }
+
+  container.classList.remove("is-hidden");
+  vazio.classList.add("is-hidden");
+  const visiveis = historicoVendasExpandido ? vendas : vendas.slice(0, LIMITE_HISTORICO_VENDAS);
+  visiveis.forEach((venda, i) => container.appendChild(montarLinhaVenda(venda, produtos, i)));
+
+  if (vendas.length > LIMITE_HISTORICO_VENDAS) {
+    toggle.classList.remove("is-hidden");
+    toggle.textContent = historicoVendasExpandido ? "Ver menos" : "Ver todas";
   } else {
-    container.classList.remove("is-hidden");
-    vazio.classList.add("is-hidden");
-    vendas.forEach((venda, i) => container.appendChild(montarLinhaVenda(venda, produtos, i)));
+    toggle.classList.add("is-hidden");
   }
 }
 
@@ -185,6 +199,11 @@ document.addEventListener("DOMContentLoaded", () => {
   renderizarProdutos();
   renderizarHistoricoVendas();
   atualizarBotaoAcaoHeader(true);
+
+  qs("#js-historico-vendas-toggle").addEventListener("click", () => {
+    historicoVendasExpandido = !historicoVendasExpandido;
+    renderizarHistoricoVendas();
+  });
   aplicarMascaraMoeda(qs("#js-novo-produto-preco-venda"));
   aplicarMascaraMoeda(qs("#js-novo-produto-preco-custo"));
   aplicarMascaraMoeda(qs("#js-editar-produto-preco-venda"));
