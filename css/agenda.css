@@ -228,6 +228,28 @@ body[data-page="index"] #js-agenda-lista {
   white-space: nowrap;
 }
 
+/* Card de realizado com venda anexada: duas seções empilhadas
+   (atendimento, depois venda), cada uma com seu próprio corpo + status
+   pago/pendente + valor — os dois pagamentos são sempre independentes. */
+.agenda-slot__conteudo {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.agenda-slot__secao {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+}
+
+.agenda-slot__secao + .agenda-slot__secao {
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+}
+
 .agenda-slot--livre {
   background: transparent;
   border-color: var(--border);

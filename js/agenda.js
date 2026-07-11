@@ -234,30 +234,61 @@ function montarSlotAgendado(item) {
   return el;
 }
 
+function montarSecaoStatusPago(pago) {
+  return `
+    <p class="${pago ? "text-success" : "text-warning"}" style="font-weight:600;font-size:var(--text-sm);">${pago ? "Pago" : "Pendente"}</p>
+    <p class="agenda-slot__status-valor"></p>
+  `;
+}
+
 function montarSlotRealizado(item) {
   const a = item.agendamento;
+  const venda = a.vendaId ? obterVendas().find((v) => v.id === a.vendaId) : null;
   const el = document.createElement("a");
   el.href = "#";
   el.className = "agenda-slot";
   el.innerHTML = `
     <span class="agenda-slot__hora">${item.hora}</span>
     <svg class="agenda-slot__icone--realizado" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></svg>
-    <div class="agenda-slot__body">
-      <p class="agenda-slot__titulo"></p>
-      <p class="agenda-slot__subtitulo"></p>
-      <p class="agenda-slot__observacao"></p>
-    </div>
-    <div class="agenda-slot__status">
-      <p class="${a.status === "realizado_pago" ? "text-success" : "text-warning"}" style="font-weight:600;font-size:var(--text-sm);">${a.status === "realizado_pago" ? "Pago" : "Pendente"}</p>
-      <p class="agenda-slot__status-valor"></p>
+    <div class="agenda-slot__conteudo">
+      <div class="agenda-slot__secao">
+        <div class="agenda-slot__body">
+          <p class="agenda-slot__titulo"></p>
+          <p class="agenda-slot__subtitulo"></p>
+          <p class="agenda-slot__observacao" data-campo="observacao"></p>
+          <p class="agenda-slot__observacao" data-campo="duracao"></p>
+        </div>
+        <div class="agenda-slot__status">${montarSecaoStatusPago(a.status === "realizado_pago")}</div>
+      </div>
+      ${venda ? `
+      <div class="agenda-slot__secao">
+        <div class="agenda-slot__body">
+          <p class="agenda-slot__titulo" data-campo="venda-titulo"></p>
+          <p class="agenda-slot__subtitulo" data-campo="venda-produtos"></p>
+        </div>
+        <div class="agenda-slot__status">${montarSecaoStatusPago(venda.status === "paga")}</div>
+      </div>` : ""}
     </div>
     <svg class="list-item__chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
   `;
-  el.querySelector(".agenda-slot__titulo").textContent = a.nomeCliente;
-  el.querySelector(".agenda-slot__subtitulo").textContent = nomesServicosPorIds(a.servicosIds) || "—";
-  const obsEl = el.querySelector(".agenda-slot__observacao");
+
+  const secaoAtendimento = el.querySelector(".agenda-slot__secao");
+  secaoAtendimento.querySelector(".agenda-slot__titulo").textContent = a.nomeCliente;
+  secaoAtendimento.querySelector(".agenda-slot__subtitulo").textContent = nomesServicosPorIds(a.servicosIds) || "—";
+  const obsEl = secaoAtendimento.querySelector('[data-campo="observacao"]');
   if (a.observacao) obsEl.textContent = a.observacao; else obsEl.remove();
-  el.querySelector(".agenda-slot__status-valor").textContent = formatarMoeda(a.valorTotal || 0);
+  const duracaoEl = secaoAtendimento.querySelector('[data-campo="duracao"]');
+  if (a.duracaoMinutos) duracaoEl.textContent = `${a.duracaoMinutos}min`; else duracaoEl.remove();
+  secaoAtendimento.querySelector(".agenda-slot__status-valor").textContent = formatarMoeda(a.valorTotal || 0);
+
+  if (venda) {
+    const totalItens = (venda.itens || []).reduce((soma, i) => soma + (i.quantidade || 0), 0);
+    const secaoVenda = el.querySelector('[data-campo="venda-titulo"]').closest(".agenda-slot__secao");
+    secaoVenda.querySelector('[data-campo="venda-titulo"]').textContent = `Vendido (${totalItens} ${totalItens === 1 ? "item" : "itens"})`;
+    secaoVenda.querySelector('[data-campo="venda-produtos"]').textContent = (venda.itens || []).map((i) => i.nomeProduto).filter(Boolean).join(" + ") || "—";
+    secaoVenda.querySelector(".agenda-slot__status-valor").textContent = formatarMoeda(venda.valorTotal || 0);
+  }
+
   el.addEventListener("click", (e) => { e.preventDefault(); abrirHorarioRealizado(a); });
   return el;
 }
