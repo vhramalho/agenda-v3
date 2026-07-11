@@ -280,10 +280,13 @@ function classeDiferenca(valor) {
 }
 
 /* incluirRotulo=true só no card de Faturamento (destaque da tela); os
-   insight-cards menores mostram só a seta + valor, sem "vs X anterior". */
+   insight-cards menores mostram só a seta + valor, sem "vs X anterior".
+   Quando incluirRotulo=true, o "vs X anterior" vem num <span> à parte
+   (texto é HTML, não texto puro) pra poder ficar em cor secundária,
+   diferente da seta+valor que fica verde/vermelho. */
 function formatarComparacao(atual, anterior, rotuloPeriodo, tipo = "valor", incluirRotulo = true) {
   const diff = atual - anterior;
-  const sufixo = incluirRotulo ? ` vs ${rotuloPeriodo} anterior` : "";
+  const sufixo = incluirRotulo ? ` <span class="text-secondary">vs ${rotuloPeriodo} anterior</span>` : "";
   if (diff === 0) return { texto: incluirRotulo ? `sem variação${sufixo}` : "sem variação", classe: "text-secondary" };
 
   const seta = diff > 0 ? "▲" : "▼";
@@ -357,8 +360,8 @@ function montarGraficoSemana(tipoPeriodo, refData) {
   const maximo = Math.max(...pontos.map((p) => p.valor), 1);
   const plotTop = 10;
   const plotBottom = 126;
-  const plotLeft = 34;
-  const plotRight = 297;
+  const plotLeft = 12;
+  const plotRight = 288;
   const paraXY = (p) => [plotLeft + p.frac * (plotRight - plotLeft), plotBottom - (p.valor / maximo) * (plotBottom - plotTop)];
 
   const pontosTexto = pontos.map((p) => paraXY(p).join(",")).join(" ");
@@ -491,7 +494,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     qs("#js-relatorio-faturamento").textContent = formatarMoeda(resumo.faturamento);
     const compFaturamento = formatarComparacao(resumo.faturamento, resumoAnterior.faturamento, rotuloComparacao, "valor");
-    qs("#js-relatorio-faturamento-comparacao").textContent = compFaturamento.texto;
+    qs("#js-relatorio-faturamento-comparacao").innerHTML = compFaturamento.texto;
     qs("#js-relatorio-faturamento-comparacao").className = `texto-variacao ${compFaturamento.classe}`;
     qs("#js-relatorio-faturamento-comparacao").style.fontWeight = "600";
     qs("#js-relatorio-faturamento-comparacao").style.fontSize = "calc(var(--text-2xs) + 2px)";
@@ -545,7 +548,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     qs("#js-vendas-faturamento").textContent = formatarMoeda(resumoVendas.faturamento);
     const compVendas = formatarComparacao(resumoVendas.faturamento, resumoVendasAnterior.faturamento, rotuloComparacao, "valor");
-    qs("#js-vendas-faturamento-comparacao").textContent = compVendas.texto;
+    qs("#js-vendas-faturamento-comparacao").innerHTML = compVendas.texto;
     qs("#js-vendas-faturamento-comparacao").className = `texto-variacao ${compVendas.classe}`;
 
     qs("#js-vendas-insight").textContent = fraseInsightVendas(resumoVendas, resumoVendasAnterior);
