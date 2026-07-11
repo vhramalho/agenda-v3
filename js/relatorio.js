@@ -492,7 +492,7 @@ document.addEventListener("DOMContentLoaded", () => {
     qs("#js-relatorio-faturamento").textContent = formatarMoeda(resumo.faturamento);
     const compFaturamento = formatarComparacao(resumo.faturamento, resumoAnterior.faturamento, rotuloComparacao, "valor");
     qs("#js-relatorio-faturamento-comparacao").textContent = compFaturamento.texto;
-    qs("#js-relatorio-faturamento-comparacao").className = compFaturamento.classe;
+    qs("#js-relatorio-faturamento-comparacao").className = `texto-variacao ${compFaturamento.classe}`;
     qs("#js-relatorio-faturamento-comparacao").style.fontWeight = "600";
     qs("#js-relatorio-faturamento-comparacao").style.fontSize = "calc(var(--text-2xs) + 2px)";
 
@@ -546,7 +546,7 @@ document.addEventListener("DOMContentLoaded", () => {
     qs("#js-vendas-faturamento").textContent = formatarMoeda(resumoVendas.faturamento);
     const compVendas = formatarComparacao(resumoVendas.faturamento, resumoVendasAnterior.faturamento, rotuloComparacao, "valor");
     qs("#js-vendas-faturamento-comparacao").textContent = compVendas.texto;
-    qs("#js-vendas-faturamento-comparacao").className = compVendas.classe;
+    qs("#js-vendas-faturamento-comparacao").className = `texto-variacao ${compVendas.classe}`;
 
     qs("#js-vendas-insight").textContent = fraseInsightVendas(resumoVendas, resumoVendasAnterior);
 
