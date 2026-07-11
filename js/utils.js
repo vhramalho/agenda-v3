@@ -460,7 +460,13 @@ function lerPagamentosDeLinhas(linhasContainerId) {
   return qsa(`#${linhasContainerId} [data-linha-forma]`).map((linha) => {
     const nome = linha.dataset.linhaForma;
     const valor = extrairValor(linha.querySelector("input").value) || 0;
-    const forma = formas.find((f) => f.nome === nome);
+    // Prefere a forma ATIVA com esse nome — se uma forma foi excluída e
+    // recriada do zero com o mesmo nome (ex.: "Débito" cadastrada errada
+    // como tipo Crédito, depois excluída e recriada certa), as duas
+    // continuam no array (exclusão é lógica) e sem essa preferência o
+    // pagamento linkava silenciosamente com a antiga, entrando no
+    // Relatório sob o tipo errado.
+    const forma = formas.find((f) => f.nome === nome && f.ativo) || formas.find((f) => f.nome === nome);
     return { formaPagamentoId: forma ? forma.id : null, valor };
   });
 }
