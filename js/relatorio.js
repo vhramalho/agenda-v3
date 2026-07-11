@@ -12,7 +12,7 @@
 
 const MESES_NOME_RELATORIO = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
 const MESES_ABREV_RELATORIO = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"];
-const CORES_FORMA = { pix: "#3B82F6", dinheiro: "#22C55E", credito: "#EC4899", debito: "#EAB308", outras: "#94A3B8", pendentes: "var(--warning)" };
+const CORES_FORMA = { pix: "#3B82F6", dinheiro: "#22C55E", credito: "#EC4899", debito: "#EAB308", outras: "#94A3B8", pendentes: "var(--danger)" };
 const ROTULO_TIPO_FORMA = { pix: "Pix", dinheiro: "Dinheiro", credito: "Crédito", debito: "Débito", outras: "Outras", pendentes: "Pendentes" };
 const ORDEM_TIPOS_FORMA = ["pix", "dinheiro", "credito", "debito", "outras", "pendentes"];
 
@@ -152,7 +152,7 @@ function montarLinhaRankingServico(item, posicao, indice) {
   `;
   linha.querySelector(".list-item__avatar").textContent = iniciaisCliente(item.servico.nome);
   linha.querySelector(".list-item__title").textContent = item.servico.nome;
-  linha.querySelector(".text-primary-accent").textContent = `${item.quantidade} atendimento${item.quantidade === 1 ? "" : "s"}`;
+  linha.querySelector(".text-primary-accent").textContent = item.quantidade;
   return linha;
 }
 
@@ -452,7 +452,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const fim = new Date(ini);
       fim.setDate(fim.getDate() + 6);
       labelPrincipal.textContent = `${formatarCurto(ini)} – ${formatarCurto(fim)}`;
-      labelSecundario.textContent = "domingo à sábado";
+      labelSecundario.textContent = "domingo a sábado";
     } else if (tipoPeriodo === "mes") {
       labelPrincipal.textContent = `${MESES_NOME_RELATORIO[refData.getMonth()]} ${refData.getFullYear()}`;
       labelSecundario.textContent = "";
@@ -486,7 +486,7 @@ document.addEventListener("DOMContentLoaded", () => {
     qs("#js-relatorio-atendimentos").textContent = resumo.atendimentos;
     const compAtendimentos = formatarComparacao(resumo.atendimentos, resumoAnterior.atendimentos, rotuloComparacao, "contagem");
     qs("#js-relatorio-atendimentos-comparacao").innerHTML = compAtendimentos.texto;
-    qs("#js-relatorio-atendimentos-comparacao").className = `texto-variacao ${compAtendimentos.classe}`;
+    qs("#js-relatorio-atendimentos-comparacao").className = `insight-card__comparacao texto-variacao ${compAtendimentos.classe}`;
 
     qs("#js-relatorio-ticket").textContent = formatarMoeda(ticketMedio);
     qs("#js-relatorio-taxas").textContent = formatarMoeda(resumo.taxas);

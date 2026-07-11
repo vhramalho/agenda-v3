@@ -60,36 +60,44 @@
 }
 
 /* Cor principal — padrão roxo. Trocada via data-accent no <html>.
-   Nunca reaproveita os tons de success/warning/danger acima. */
+   Nunca reaproveita os tons de success/warning/danger acima.
+   --primary-destaque é só pro degradê dos cards principais (card--destaque)
+   — mais forte que --primary-soft (usado em ícones/chips/badges) pra não
+   ficar escuro/apagado demais no card de maior destaque da tela. */
 :root,
 :root[data-accent="roxo"] {
   --primary: #7C3AED;
   --primary-strong: #8B5CF6;
   --primary-soft: rgba(124, 58, 237, 0.18);
+  --primary-destaque: rgba(124, 58, 237, 0.28);
 }
 
 :root[data-accent="azul"] {
   --primary: #2563EB;
   --primary-strong: #3B82F6;
   --primary-soft: rgba(37, 99, 235, 0.18);
+  --primary-destaque: rgba(37, 99, 235, 0.28);
 }
 
 :root[data-accent="ciano"] {
   --primary: #0891B2;
   --primary-strong: #06B6D4;
   --primary-soft: rgba(8, 145, 178, 0.18);
+  --primary-destaque: rgba(8, 145, 178, 0.28);
 }
 
 :root[data-accent="verde"] {
   --primary: #15803D;
   --primary-strong: #16A34A;
   --primary-soft: rgba(21, 128, 61, 0.18);
+  --primary-destaque: rgba(21, 128, 61, 0.28);
 }
 
 :root[data-accent="rosa"] {
   --primary: #DB2777;
   --primary-strong: #EC4899;
   --primary-soft: rgba(219, 39, 119, 0.18);
+  --primary-destaque: rgba(219, 39, 119, 0.28);
 }
 
 :root[data-accent="vermelho"] {
@@ -97,18 +105,21 @@
   --primary: #B91C1C;
   --primary-strong: #DC2626;
   --primary-soft: rgba(185, 28, 28, 0.18);
+  --primary-destaque: rgba(185, 28, 28, 0.28);
 }
 
 :root[data-accent="dourado"] {
   --primary: #B45309;
   --primary-strong: #D97706;
   --primary-soft: rgba(180, 83, 9, 0.18);
+  --primary-destaque: rgba(180, 83, 9, 0.28);
 }
 
 :root[data-accent="cinza"] {
   --primary: #71717A;
   --primary-strong: #A1A1AA;
   --primary-soft: rgba(113, 113, 122, 0.18);
+  --primary-destaque: rgba(113, 113, 122, 0.28);
 }
 
 :root {

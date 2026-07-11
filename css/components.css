@@ -120,7 +120,7 @@
 }
 
 .card--destaque {
-  background: linear-gradient(180deg, var(--primary-soft), transparent);
+  background: linear-gradient(180deg, var(--primary-destaque), transparent);
   border: none;
 }
 
