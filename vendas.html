@@ -4,10 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, interactive-widget=resizes-content" />
   <title>Vendas — Agenda V3</title>
-  <link rel="stylesheet" href="css/tokens.css?v=20260711p" />
-  <link rel="stylesheet" href="css/base.css?v=20260711p" />
-  <link rel="stylesheet" href="css/layout.css?v=20260711p" />
-  <link rel="stylesheet" href="css/components.css?v=20260711p" />
+  <link rel="stylesheet" href="css/tokens.css?v=20260711q" />
+  <link rel="stylesheet" href="css/base.css?v=20260711q" />
+  <link rel="stylesheet" href="css/layout.css?v=20260711q" />
+  <link rel="stylesheet" href="css/components.css?v=20260711q" />
 </head>
 <body data-page="vendas">
   <div class="app">
@@ -38,21 +38,27 @@
 
       <!-- ===== Aba Produtos: cadastro/estoque (conteúdo igual ao antigo produtos.html) ===== -->
       <div id="js-conteudo-vendas-produtos" class="is-hidden">
-        <div class="card section" id="js-produtos-insight">
-          <p class="text-secondary" style="margin-bottom:12px;">Estoque</p>
-          <div class="stack" style="gap:10px;">
-            <div class="row row--between">
-              <span class="text-secondary">Total em estoque (custo)</span>
-              <span style="font-weight:700;" id="js-produtos-insight-custo"></span>
+        <div class="grid-3 section" id="js-produtos-insight">
+          <div class="insight-card">
+            <div class="insight-card__label">
+              <span>Em estoque</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 7l9-4 9 4-9 4-9-4z"/><path d="M3 7v10l9 4 9-4V7"/><path d="M12 11v10"/></svg>
             </div>
-            <div class="row row--between">
-              <span class="text-secondary">Total em venda potencial</span>
-              <span style="font-weight:700;" id="js-produtos-insight-venda"></span>
+            <p class="insight-card__valor" id="js-produtos-insight-custo"></p>
+          </div>
+          <div class="insight-card">
+            <div class="insight-card__label">
+              <span>Venda potencial</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.59 13.41L12 22l-9-9V4a1 1 0 0 1 1-1h9l9 9a1 1 0 0 1 0 1.41z"/><circle cx="7.5" cy="7.5" r="1.5"/></svg>
             </div>
-            <div class="row row--between">
-              <span class="text-secondary">Lucro potencial</span>
-              <span style="font-weight:700;" id="js-produtos-insight-lucro"></span>
+            <p class="insight-card__valor" id="js-produtos-insight-venda"></p>
+          </div>
+          <div class="insight-card">
+            <div class="insight-card__label">
+              <span>Lucro potencial</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="1.8"><path d="M23 6l-9.5 9.5-5-5L1 18"/><path d="M17 6h6v6"/></svg>
             </div>
+            <p class="insight-card__valor" style="color:var(--success);" id="js-produtos-insight-lucro"></p>
           </div>
         </div>
 
@@ -184,15 +190,15 @@
     </div>
   </div>
 
-  <script src="js/utils.js?v=20260711p"></script>
-  <script src="js/menu.js?v=20260711p"></script>
-  <script src="js/storage.js?v=20260711p"></script>
-  <script src="js/tema.js?v=20260711p"></script>
-  <script src="js/app.js?v=20260711p"></script>
-  <script src="js/chips.js?v=20260711p"></script>
-  <script src="js/modal.js?v=20260711p"></script>
-  <script src="js/acoes-simuladas.js?v=20260711p"></script>
-  <script src="js/vendas.js?v=20260711p"></script>
-  <script src="js/produtos.js?v=20260711p"></script>
+  <script src="js/utils.js?v=20260711q"></script>
+  <script src="js/menu.js?v=20260711q"></script>
+  <script src="js/storage.js?v=20260711q"></script>
+  <script src="js/tema.js?v=20260711q"></script>
+  <script src="js/app.js?v=20260711q"></script>
+  <script src="js/chips.js?v=20260711q"></script>
+  <script src="js/modal.js?v=20260711q"></script>
+  <script src="js/acoes-simuladas.js?v=20260711q"></script>
+  <script src="js/vendas.js?v=20260711q"></script>
+  <script src="js/produtos.js?v=20260711q"></script>
 </body>
 </html>
