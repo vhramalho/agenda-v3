@@ -361,7 +361,7 @@ function montarGraficoSemana(tipoPeriodo, refData) {
   const plotTop = 10;
   const plotBottom = 126;
   const plotLeft = 42;
-  const plotRight = 258;
+  const plotRight = 288;
   const paraXY = (p) => [plotLeft + p.frac * (plotRight - plotLeft), plotBottom - (p.valor / maximo) * (plotBottom - plotTop)];
 
   const pontosTexto = pontos.map((p) => paraXY(p).join(",")).join(" ");
