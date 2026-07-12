@@ -356,6 +356,7 @@
 .list-item__subtitle {
   font-size: var(--text-sm);
   color: var(--text-secondary);
+  overflow-wrap: anywhere;
 }
 
 .list-item__terciario {
