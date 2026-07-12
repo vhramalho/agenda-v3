@@ -10,6 +10,7 @@ const TITULOS_MENSAGEM = {
   mensagemLembrete: "Lembrete de horário",
   mensagemAniversario: "Aniversário",
   mensagemEndereco: "Endereço",
+  mensagemSemRetornar: "Sem retornar",
 };
 
 const PLACEHOLDERS_MENSAGEM = {
@@ -31,6 +32,11 @@ const PLACEHOLDERS_MENSAGEM = {
     { token: "{endereco}", label: "Endereço" },
     { token: "{mapa}", label: "Mapa" },
   ],
+  mensagemSemRetornar: [
+    { token: "{saudacao}", label: "Saudação" },
+    { token: "{nome}", label: "Nome" },
+    { token: "{dias}", label: "Dias sem vir" },
+  ],
 };
 
 function dadosExemploPreview() {
@@ -40,6 +46,7 @@ function dadosExemploPreview() {
     nome: "Maria",
     hora: "14:00",
     dia: "amanhã",
+    dias: "30",
     endereco,
     mapa: gerarLinkMapa(endereco, config.linkMapa) || "(link do mapa)",
   };
@@ -125,6 +132,7 @@ document.addEventListener("DOMContentLoaded", () => {
     config.mensagemLembrete = padrao.mensagemLembrete;
     config.mensagemAniversario = padrao.mensagemAniversario;
     config.mensagemEndereco = padrao.mensagemEndereco;
+    config.mensagemSemRetornar = padrao.mensagemSemRetornar;
     salvarWhatsapp(config);
     renderizarWhatsapp();
     fecharModal("modal-confirmar-restaurar-mensagens");

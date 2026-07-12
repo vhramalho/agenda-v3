@@ -239,6 +239,7 @@ function substituirPlaceholders(texto, dados) {
   if (dados.dia !== undefined) resultado = resultado.split("{dia}").join(dados.dia);
   if (dados.endereco !== undefined) resultado = resultado.split("{endereco}").join(dados.endereco);
   if (dados.mapa !== undefined) resultado = resultado.split("{mapa}").join(dados.mapa);
+  if (dados.dias !== undefined) resultado = resultado.split("{dias}").join(dados.dias);
   return resultado;
 }
 

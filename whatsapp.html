@@ -4,10 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, interactive-widget=resizes-content" />
   <title>WhatsApp — Agenda V3</title>
-  <link rel="stylesheet" href="css/tokens.css?v=20260711s" />
-  <link rel="stylesheet" href="css/base.css?v=20260711s" />
-  <link rel="stylesheet" href="css/layout.css?v=20260711s" />
-  <link rel="stylesheet" href="css/components.css?v=20260711s" />
+  <link rel="stylesheet" href="css/tokens.css?v=20260711t" />
+  <link rel="stylesheet" href="css/base.css?v=20260711t" />
+  <link rel="stylesheet" href="css/layout.css?v=20260711t" />
+  <link rel="stylesheet" href="css/components.css?v=20260711t" />
 </head>
 <body data-page="mais">
   <div class="app">
@@ -67,6 +67,14 @@
             </div>
             <svg class="list-item__chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
           </button>
+          <button class="list-item" data-campo="mensagemSemRetornar" style="text-decoration:none;color:inherit;background:none;border:none;width:100%;text-align:left;">
+            <div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></div>
+            <div class="list-item__body">
+              <p class="list-item__title">Sem retornar</p>
+              <p class="list-item__subtitle js-msg-preview" data-campo-preview="mensagemSemRetornar"></p>
+            </div>
+            <svg class="list-item__chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
+          </button>
         </div>
       </section>
 
@@ -74,7 +82,7 @@
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.8" style="flex-shrink:0;"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z"/></svg>
         <div>
           <p style="font-weight:700;margin-bottom:4px;">Como as mensagens são usadas</p>
-          <p class="text-secondary">Essas mensagens serão utilizadas ao compartilhar horários, Lembretes, Aniversariantes e ao enviar o endereço para seus clientes no WhatsApp.</p>
+          <p class="text-secondary">Essas mensagens serão utilizadas ao compartilhar horários, Lembretes, Aniversariantes, Sem retornar e ao enviar o endereço para seus clientes no WhatsApp.</p>
         </div>
       </div>
 
@@ -106,18 +114,18 @@
     <div class="modal-overlay is-hidden" id="modal-confirmar-restaurar-mensagens">
       <div class="modal-sheet" style="text-align:center;">
         <div class="modal-sheet__header" style="text-align:left;"><p class="modal-sheet__title">Restaurar mensagens padrão</p><button class="modal-close">✕</button></div>
-        <p class="text-secondary" style="margin-bottom:20px;">Isso substitui as 4 mensagens pelos modelos originais do app. O número do WhatsApp não é alterado.</p>
+        <p class="text-secondary" style="margin-bottom:20px;">Isso substitui as 5 mensagens pelos modelos originais do app. O número do WhatsApp não é alterado.</p>
         <div class="btn-row"><button class="btn btn--secondary" data-fechar-modal>Cancelar</button><button class="btn btn--primary" id="js-confirmar-restaurar-mensagens">Restaurar</button></div>
       </div>
     </div>
   </div>
 
-  <script src="js/utils.js?v=20260711s"></script>
-  <script src="js/menu.js?v=20260711s"></script>
-  <script src="js/storage.js?v=20260711s"></script>
-  <script src="js/tema.js?v=20260711s"></script>
-  <script src="js/app.js?v=20260711s"></script>
-  <script src="js/modal.js?v=20260711s"></script>
-  <script src="js/whatsapp.js?v=20260711s"></script>
+  <script src="js/utils.js?v=20260711t"></script>
+  <script src="js/menu.js?v=20260711t"></script>
+  <script src="js/storage.js?v=20260711t"></script>
+  <script src="js/tema.js?v=20260711t"></script>
+  <script src="js/app.js?v=20260711t"></script>
+  <script src="js/modal.js?v=20260711t"></script>
+  <script src="js/whatsapp.js?v=20260711t"></script>
 </body>
 </html>

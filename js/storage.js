@@ -205,6 +205,7 @@ function seedWhatsapp() {
     mensagemLembrete: "{saudacao}, {nome}! Passando para lembrar do seu horário agendado para {dia} às {hora}, em {endereco}.",
     mensagemAniversario: "{saudacao}, {nome}! Feliz aniversário! Que seu dia seja incrível e cheio de conquistas!",
     mensagemEndereco: "{saudacao}, {nome}! Nosso endereço é: {endereco}. Veja no mapa: {mapa}",
+    mensagemSemRetornar: "{saudacao}, {nome}! Já faz {dias} dias que você não aparece por aqui. Que tal agendar um horário?",
   };
 }
 

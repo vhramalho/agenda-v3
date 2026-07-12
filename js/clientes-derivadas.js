@@ -228,7 +228,11 @@ function montarLinhaSemRetornar(item, indice) {
   linha.querySelector(".js-sr-data").textContent = item.info.data ? `última visita em ${formatarDataCurta(item.info.data)}` : "Nunca atendido";
   linha.querySelector(".js-sr-dias").textContent = item.info.dias === null ? "—" : `${item.info.dias} dias`;
 
-  const botao = montarBotaoWhatsapp(item.cliente, "");
+  const mensagem = substituirPlaceholders(obterWhatsapp().mensagemSemRetornar || "", {
+    nome: item.cliente.nome,
+    dias: item.info.dias === null ? "" : String(item.info.dias),
+  });
+  const botao = montarBotaoWhatsapp(item.cliente, mensagem);
   botao.style.marginLeft = "8px";
   linha.appendChild(botao);
   return linha;
