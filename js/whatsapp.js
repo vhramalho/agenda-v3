@@ -52,10 +52,21 @@ function dadosExemploPreview() {
   };
 }
 
+/* Só a mensagem de introdução é editável aqui — a lista de horários em si
+   é gerada na hora (js/agenda.js, montarMensagemHorarios), com os dias e
+   horários reais do período escolhido em "Compartilhar horários". Pra dar
+   uma ideia de como a mensagem completa fica, a prévia de mensagemHorarios
+   acrescenta um exemplo ilustrativo de 2 dias, no mesmo formato usado de
+   verdade (formatarDataWhatsapp: "Dia da semana DD/MM" + um horário por
+   linha) — são só dados de exemplo, não vêm da agenda real. */
+const EXEMPLO_LISTA_HORARIOS = "\n\nDomingo 12/07\n09:00\n09:30\n10:00\n10:30\n\nSegunda-feira 13/07\n09:00\n14:00\n15:30";
+
 function atualizarPreviewMensagem() {
   const preview = qs("#js-mensagem-preview");
   if (!preview) return;
-  preview.textContent = substituirPlaceholders(qs("#js-mensagem-texto").value, dadosExemploPreview());
+  let texto = substituirPlaceholders(qs("#js-mensagem-texto").value, dadosExemploPreview());
+  if (campoMensagemAtual === "mensagemHorarios") texto += EXEMPLO_LISTA_HORARIOS;
+  preview.textContent = texto;
 }
 
 function inserirTokenNoTextarea(textarea, token) {
