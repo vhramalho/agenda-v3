@@ -1435,7 +1435,10 @@ document.addEventListener("DOMContentLoaded", () => {
       delete ag.valorPendente;
       if (eraPendente) {
         ag.foiPendente = true;
-        ag.pagoEm = new Date().toISOString();
+        // Data local, não new Date().toISOString() (UTC) — à noite, no fuso
+        // do Brasil, isso virava a data do dia seguinte em "Pago em X" (ver
+        // mesmo bug corrigido em venda.criadaEm, js/vendas.js).
+        ag.pagoEm = `${hojeIso()}T12:00:00.000Z`;
       }
     } else {
       const valorPendente = extrairValor(qs("#js-editar-realizado-valor-pendente").value) || 0;
