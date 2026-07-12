@@ -4,10 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, interactive-widget=resizes-content" />
   <title>WhatsApp — Agenda V3</title>
-  <link rel="stylesheet" href="css/tokens.css?v=20260712r" />
-  <link rel="stylesheet" href="css/base.css?v=20260712r" />
-  <link rel="stylesheet" href="css/layout.css?v=20260712r" />
-  <link rel="stylesheet" href="css/components.css?v=20260712r" />
+  <link rel="stylesheet" href="css/tokens.css?v=20260712s" />
+  <link rel="stylesheet" href="css/base.css?v=20260712s" />
+  <link rel="stylesheet" href="css/layout.css?v=20260712s" />
+  <link rel="stylesheet" href="css/components.css?v=20260712s" />
 </head>
 <body data-page="mais">
   <div class="app">
@@ -26,8 +26,7 @@
           <p style="font-weight:800;font-size:var(--text-lg);" id="js-whatsapp-numero"></p>
         </div>
         <div style="display:flex;flex-direction:column;gap:var(--space-2);flex-shrink:0;">
-          <a href="perfil.html" class="btn btn--primary btn--sm">Editar</a>
-          <button class="btn btn--ghost btn--sm" id="js-whatsapp-testar">Testar</button>
+          <button class="btn btn--primary btn--sm" data-abrir-modal="modal-editar-numero">Editar</button>
         </div>
       </div>
 
@@ -80,6 +79,16 @@
 
     <div id="js-bottom-nav-mount"></div>
 
+    <!-- Markup duplicado de perfil.html (mesmo #modal-editar-numero, mesmo
+         padrão de #modal-calendario duplicado entre páginas). -->
+    <div class="modal-overlay is-hidden" id="modal-editar-numero">
+      <div class="modal-sheet">
+        <div class="modal-sheet__header"><p class="modal-sheet__title">Meu WhatsApp</p><button class="modal-close">✕</button></div>
+        <div class="field"><label class="field__label">Número</label><input class="input" id="js-numero-input" placeholder="(00) 00000-0000"/></div>
+        <div class="btn-row"><button class="btn btn--secondary" data-fechar-modal>Cancelar</button><button class="btn btn--primary" id="js-numero-salvar">Salvar</button></div>
+      </div>
+    </div>
+
     <div class="modal-overlay is-hidden" id="modal-editar-mensagem">
       <div class="modal-sheet">
         <div class="modal-sheet__header"><p class="modal-sheet__title" id="js-mensagem-titulo">Editar mensagem</p><button class="modal-close">✕</button></div>
@@ -106,12 +115,12 @@
     </div>
   </div>
 
-  <script src="js/utils.js?v=20260712r"></script>
-  <script src="js/menu.js?v=20260712r"></script>
-  <script src="js/storage.js?v=20260712r"></script>
-  <script src="js/tema.js?v=20260712r"></script>
-  <script src="js/app.js?v=20260712r"></script>
-  <script src="js/modal.js?v=20260712r"></script>
-  <script src="js/whatsapp.js?v=20260712r"></script>
+  <script src="js/utils.js?v=20260712s"></script>
+  <script src="js/menu.js?v=20260712s"></script>
+  <script src="js/storage.js?v=20260712s"></script>
+  <script src="js/tema.js?v=20260712s"></script>
+  <script src="js/app.js?v=20260712s"></script>
+  <script src="js/modal.js?v=20260712s"></script>
+  <script src="js/whatsapp.js?v=20260712s"></script>
 </body>
 </html>

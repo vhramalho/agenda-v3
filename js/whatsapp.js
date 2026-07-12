@@ -102,11 +102,17 @@ function renderizarWhatsapp() {
 document.addEventListener("DOMContentLoaded", () => {
   renderizarWhatsapp();
 
-  qs("#js-whatsapp-testar").addEventListener("click", () => {
-    const numero = obterWhatsapp().numero || "";
-    const digitos = numero.replace(/\D/g, "");
-    if (!digitos) return;
-    window.open(`https://wa.me/55${digitos}`, "_blank");
+  qs("[data-abrir-modal='modal-editar-numero']").addEventListener("click", () => {
+    qs("#js-numero-input").value = obterWhatsapp().numero || "";
+  });
+
+  qs("#js-numero-salvar").addEventListener("click", () => {
+    const config = obterWhatsapp();
+    config.numero = qs("#js-numero-input").value.trim();
+    salvarWhatsapp(config);
+    renderizarWhatsapp();
+    fecharModal("modal-editar-numero");
+    mostrarSucesso();
   });
 
   qs("#js-mensagem-texto").addEventListener("input", atualizarPreviewMensagem);
