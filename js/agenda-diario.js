@@ -64,14 +64,11 @@ function montarResumoDiaDiario(iso) {
   const valorVendas = vendasDia.reduce((s, v) => s + (v.valorTotal || 0), 0);
 
   container.innerHTML = `
-    <div class="agenda-resumo-dia__linha">
-      <span class="agenda-resumo-dia__rotulo">Atendimentos</span>
-      <span class="agenda-resumo-dia__valor">${atendimentosDia.length} · ${formatarMoeda(valorAtendimentos)}</span>
-    </div>
-    <div class="agenda-resumo-dia__linha">
-      <span class="agenda-resumo-dia__rotulo">Vendas</span>
-      <span class="agenda-resumo-dia__valor">${vendasDia.length} · ${formatarMoeda(valorVendas)}</span>
-    </div>
+    <span class="agenda-resumo-dia__rotulo">Atendimentos</span>
+    <span class="agenda-resumo-dia__valor">${atendimentosDia.length} · ${formatarMoeda(valorAtendimentos)}</span>
+    <span class="agenda-resumo-dia__separador">—</span>
+    <span class="agenda-resumo-dia__rotulo">Vendas</span>
+    <span class="agenda-resumo-dia__valor">${vendasDia.length} · ${formatarMoeda(valorVendas)}</span>
   `;
 }
 
@@ -96,8 +93,7 @@ function montarAgendaDiario(iso) {
     <div class="agenda-diario__cabecalho">
       <span class="agenda-diario__icone">${iconeClipeSvg()}</span>
       <div class="agenda-diario__body">
-        <p class="agenda-diario__titulo">${titulo}</p>
-        ${subtitulo ? `<p class="agenda-diario__subtitulo">${subtitulo}</p>` : ""}
+        <p class="agenda-diario__titulo">${titulo}${subtitulo ? ` <span class="agenda-diario__subtitulo">· ${subtitulo}</span>` : ""}</p>
       </div>
       <svg class="agenda-diario__chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
     </div>
