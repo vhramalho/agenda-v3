@@ -4,10 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, interactive-widget=resizes-content" />
   <title>Meu perfil — Agenda V3</title>
-  <link rel="stylesheet" href="css/tokens.css?v=20260712l" />
-  <link rel="stylesheet" href="css/base.css?v=20260712l" />
-  <link rel="stylesheet" href="css/layout.css?v=20260712l" />
-  <link rel="stylesheet" href="css/components.css?v=20260712l" />
+  <link rel="stylesheet" href="css/tokens.css?v=20260712m" />
+  <link rel="stylesheet" href="css/base.css?v=20260712m" />
+  <link rel="stylesheet" href="css/layout.css?v=20260712m" />
+  <link rel="stylesheet" href="css/components.css?v=20260712m" />
 </head>
 <body data-page="mais">
   <div class="app">
@@ -23,16 +23,21 @@
       <div class="card section row" style="align-items:flex-start;">
         <div class="avatar-wrap">
           <div class="list-item__avatar list-item__avatar--lg" style="border:2px solid var(--primary);" id="js-perfil-avatar">VH</div>
+          <!-- Upload de foto de perfil desativado (2026-07-12) — não usa em
+               lugar nenhum do app. Comentado, não removido; ver também
+               js/perfil.js (renderizarAvatarPerfil, redimensionarImagem e os
+               3 listeners de editar/remover foto).
           <button type="button" id="js-perfil-editar-foto" aria-label="Trocar foto de perfil" style="position:absolute;bottom:-2px;right:-2px;width:24px;height:24px;border-radius:50%;background:var(--primary);display:flex;align-items:center;justify-content:center;border:2px solid var(--card);padding:0;cursor:pointer;">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
           </button>
           <input type="file" accept="image/*" id="js-perfil-foto-input" class="is-hidden" />
+          -->
         </div>
         <div>
           <p style="font-weight:800;font-size:var(--text-lg);" id="js-perfil-profissional-topo">Victor Henrique</p>
           <p class="text-primary-accent" style="font-weight:600;" id="js-perfil-estabelecimento-topo">Primos Barbearia</p>
           <p class="text-secondary row" style="font-size:var(--text-sm);margin-top:4px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/></svg>Membro desde jan/2025</p>
-          <button type="button" id="js-perfil-remover-foto" class="text-danger is-hidden" style="font-weight:600;font-size:var(--text-sm);background:none;border:none;padding:0;margin-top:6px;cursor:pointer;">Remover foto</button>
+          <!-- <button type="button" id="js-perfil-remover-foto" class="text-danger is-hidden" style="font-weight:600;font-size:var(--text-sm);background:none;border:none;padding:0;margin-top:6px;cursor:pointer;">Remover foto</button> -->
         </div>
       </div>
 
@@ -42,7 +47,7 @@
           <button class="list-item" data-abrir-modal="modal-editar-estabelecimento" style="text-decoration:none;color:inherit;background:none;border:none;width:100%;text-align:left;">
             <div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l1-5h16l1 5M4 9v10h16V9M4 9a2 2 0 1 0 4 0M8 9a2 2 0 1 0 4 0M12 9a2 2 0 1 0 4 0M16 9a2 2 0 1 0 4 0"/></svg></div>
             <div class="list-item__body">
-              <p class="list-item__title">Nome da barbearia</p>
+              <p class="list-item__title">Nome do estabelecimento</p>
               <p class="list-item__subtitle" id="js-perfil-estabelecimento"></p>
             </div>
             <svg class="list-item__chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
@@ -158,7 +163,7 @@
 
     <div class="modal-overlay is-hidden" id="modal-editar-estabelecimento">
       <div class="modal-sheet">
-        <div class="modal-sheet__header"><p class="modal-sheet__title">Nome da barbearia</p><button class="modal-close">✕</button></div>
+        <div class="modal-sheet__header"><p class="modal-sheet__title">Nome do estabelecimento</p><button class="modal-close">✕</button></div>
         <div class="field"><label class="field__label">Nome do estabelecimento</label><input class="input" id="js-estabelecimento-input" placeholder="Ex.: Primos Barbearia"/></div>
         <div class="btn-row"><button class="btn btn--secondary" data-fechar-modal>Cancelar</button><button class="btn btn--primary" id="js-estabelecimento-salvar">Salvar</button></div>
       </div>
@@ -190,12 +195,12 @@
     </div>
   </div>
 
-  <script src="js/utils.js?v=20260712l"></script>
-  <script src="js/menu.js?v=20260712l"></script>
-  <script src="js/storage.js?v=20260712l"></script>
-  <script src="js/tema.js?v=20260712l"></script>
-  <script src="js/app.js?v=20260712l"></script>
-  <script src="js/modal.js?v=20260712l"></script>
-  <script src="js/perfil.js?v=20260712l"></script>
+  <script src="js/utils.js?v=20260712m"></script>
+  <script src="js/menu.js?v=20260712m"></script>
+  <script src="js/storage.js?v=20260712m"></script>
+  <script src="js/tema.js?v=20260712m"></script>
+  <script src="js/app.js?v=20260712m"></script>
+  <script src="js/modal.js?v=20260712m"></script>
+  <script src="js/perfil.js?v=20260712m"></script>
 </body>
 </html>
