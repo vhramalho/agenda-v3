@@ -4,11 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, interactive-widget=resizes-content" />
   <title>Agenda — Agenda V3</title>
-  <link rel="stylesheet" href="css/tokens.css?v=20260712f" />
-  <link rel="stylesheet" href="css/base.css?v=20260712f" />
-  <link rel="stylesheet" href="css/layout.css?v=20260712f" />
-  <link rel="stylesheet" href="css/components.css?v=20260712f" />
-  <link rel="stylesheet" href="css/agenda.css?v=20260712f" />
+  <link rel="stylesheet" href="css/tokens.css?v=20260712g" />
+  <link rel="stylesheet" href="css/base.css?v=20260712g" />
+  <link rel="stylesheet" href="css/layout.css?v=20260712g" />
+  <link rel="stylesheet" href="css/components.css?v=20260712g" />
+  <link rel="stylesheet" href="css/agenda.css?v=20260712g" />
 </head>
 <body data-page="index">
   <div class="app">
@@ -33,7 +33,11 @@
         <div class="week-carousel week-carousel--preview is-hidden" id="js-week-carousel-preview"></div>
       </div>
 
+      <!-- Funcionalidade de lembrete desativada (2026-07-12) — ver
+           js/agenda-diario.js (script comentado no fim do arquivo) e os
+           modais correspondentes, também comentados, mais abaixo.
       <div class="agenda-diario" id="js-agenda-diario"></div>
+      -->
 
       <div class="agenda-lista" id="js-agenda-lista"></div>
     </main>
@@ -447,7 +451,8 @@
       </div>
     </div>
 
-    <!-- Agenda diário — Anotação/Tarefa/Lista do dia (ver Documentacao/MASTER_CONTEXT.md §24) -->
+    <!-- Agenda diário — Anotação/Tarefa/Lista do dia (ver Documentacao/MASTER_CONTEXT.md §24)
+         Funcionalidade de lembrete desativada (2026-07-12) — modais comentados.
     <div class="modal-overlay is-hidden" id="modal-agenda-diario-lembrete">
       <div class="modal-sheet">
         <p class="modal-sheet__title" id="js-agenda-diario-lembrete-titulo">Novo lembrete</p>
@@ -494,6 +499,7 @@
         <div class="btn-row"><button class="btn btn--secondary" data-fechar-modal>Cancelar</button><button class="btn btn--danger-solid" id="js-agenda-diario-confirmar-exclusao-btn">Confirmar</button></div>
       </div>
     </div>
+    -->
 
     <!-- Modal de venda — markup duplicado de vendas.html, lógica compartilhada em js/vendas.js
          (mesmo padrão já usado por #modal-calendario em index.html/relatorio.html) -->
@@ -582,17 +588,21 @@
     </div>
   </div>
 
-  <script src="js/utils.js?v=20260712f"></script>
-  <script src="js/menu.js?v=20260712f"></script>
-  <script src="js/storage.js?v=20260712f"></script>
-  <script src="js/tema.js?v=20260712f"></script>
-  <script src="js/app.js?v=20260712f"></script>
-  <script src="js/chips.js?v=20260712f"></script>
-  <script src="js/modal.js?v=20260712f"></script>
-  <script src="js/calendario.js?v=20260712f"></script>
-  <script src="js/acoes-simuladas.js?v=20260712f"></script>
-  <script src="js/vendas.js?v=20260712f"></script>
-  <script src="js/agenda.js?v=20260712f"></script>
-  <script src="js/agenda-diario.js?v=20260712f"></script>
+  <script src="js/utils.js?v=20260712g"></script>
+  <script src="js/menu.js?v=20260712g"></script>
+  <script src="js/storage.js?v=20260712g"></script>
+  <script src="js/tema.js?v=20260712g"></script>
+  <script src="js/app.js?v=20260712g"></script>
+  <script src="js/chips.js?v=20260712g"></script>
+  <script src="js/modal.js?v=20260712g"></script>
+  <script src="js/calendario.js?v=20260712g"></script>
+  <script src="js/acoes-simuladas.js?v=20260712g"></script>
+  <script src="js/vendas.js?v=20260712g"></script>
+  <script src="js/agenda.js?v=20260712g"></script>
+  <!-- Funcionalidade de lembrete desativada (2026-07-12) -- js/agenda.js já
+       guarda a chamada com "typeof window.renderizarAgendaDiario === 'function'",
+       então não carregar este arquivo não quebra nada.
+  <script src="js/agenda-diario.js?v=20260712g"></script>
+  -->
 </body>
 </html>
