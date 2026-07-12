@@ -484,6 +484,35 @@
 .ranking-posicao--prata { background: #94A3B8; color: #0f172a; }
 .ranking-posicao--bronze { background: #B45309; color: #1a1200; }
 
+/* ---------- Gráfico de barras horizontais (ex.: Mais vendidos em Vendas) ---------- */
+.grafico-barras__linha + .grafico-barras__linha {
+  margin-top: var(--space-3);
+}
+
+.grafico-barras__rotulo {
+  font-weight: 600;
+  font-size: var(--text-sm);
+}
+
+.grafico-barras__valor {
+  font-weight: 700;
+  font-size: var(--text-sm);
+  flex-shrink: 0;
+}
+
+.grafico-barras__trilha {
+  height: 8px;
+  border-radius: var(--radius-full);
+  background: var(--card-elevated);
+  overflow: hidden;
+}
+
+.grafico-barras__preenchimento {
+  height: 100%;
+  border-radius: var(--radius-full);
+  background: var(--primary);
+}
+
 /* ---------- Linha de cabeçalho de tabela simples ---------- */
 .table-header-row {
   display: flex;

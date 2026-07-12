@@ -4,10 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, interactive-widget=resizes-content" />
   <title>Relatório — Agenda V3</title>
-  <link rel="stylesheet" href="css/tokens.css?v=20260712g" />
-  <link rel="stylesheet" href="css/base.css?v=20260712g" />
-  <link rel="stylesheet" href="css/layout.css?v=20260712g" />
-  <link rel="stylesheet" href="css/components.css?v=20260712g" />
+  <link rel="stylesheet" href="css/tokens.css?v=20260712h" />
+  <link rel="stylesheet" href="css/base.css?v=20260712h" />
+  <link rel="stylesheet" href="css/layout.css?v=20260712h" />
+  <link rel="stylesheet" href="css/components.css?v=20260712h" />
 </head>
 <body data-page="relatorio">
   <div class="app">
@@ -121,6 +121,9 @@
             <p style="font-weight:800;font-size:var(--text-xl);" id="js-vendas-faturamento"></p>
             <p style="font-weight:600;font-size:calc(var(--text-2xs) + 2px);" id="js-vendas-faturamento-comparacao"></p>
           </div>
+          <!-- Gráfico de faturamento desativado (2026-07-12) — apenas comentado,
+               ver js/relatorio.js (bloco correspondente também comentado).
+               Substituído pelo gráfico de barras de "Mais vendidos" abaixo.
           <svg id="js-vendas-grafico-svg" viewBox="0 0 300 150" preserveAspectRatio="none" style="width:100%;height:140px;">
             <defs>
               <linearGradient id="areaGradVendas" x1="0" y1="0" x2="0" y2="1">
@@ -139,6 +142,7 @@
             <g id="js-vendas-grafico-pontos"></g>
             <g id="js-vendas-grafico-dias" font-size="9" fill="var(--text-muted)" text-anchor="middle"></g>
           </svg>
+          -->
         </div>
 
         <div class="grid-3 section">
@@ -199,14 +203,14 @@
     </div>
   </div>
 
-  <script src="js/utils.js?v=20260712g"></script>
-  <script src="js/menu.js?v=20260712g"></script>
-  <script src="js/storage.js?v=20260712g"></script>
-  <script src="js/tema.js?v=20260712g"></script>
-  <script src="js/app.js?v=20260712g"></script>
-  <script src="js/chips.js?v=20260712g"></script>
-  <script src="js/modal.js?v=20260712g"></script>
-  <script src="js/calendario.js?v=20260712g"></script>
-  <script src="js/relatorio.js?v=20260712g"></script>
+  <script src="js/utils.js?v=20260712h"></script>
+  <script src="js/menu.js?v=20260712h"></script>
+  <script src="js/storage.js?v=20260712h"></script>
+  <script src="js/tema.js?v=20260712h"></script>
+  <script src="js/app.js?v=20260712h"></script>
+  <script src="js/chips.js?v=20260712h"></script>
+  <script src="js/modal.js?v=20260712h"></script>
+  <script src="js/calendario.js?v=20260712h"></script>
+  <script src="js/relatorio.js?v=20260712h"></script>
 </body>
 </html>

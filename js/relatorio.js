@@ -223,6 +223,58 @@ function montarListaRanking(lista, containerId, vazioId, botaoId, montarLinha, c
   }
 }
 
+/* Gráfico de barras (quantidade × produto) — substitui a lista de "Mais
+   vendidos" (2026-07-12). Top 5 por padrão, "Ver todos" expande igual ao
+   padrão de montarListaRanking, mesmo estadoExpandidoRanking.vendidos.
+   Escala das barras é sempre contra o maior item da lista inteira (não só
+   dos visíveis), pra não redimensionar ao expandir/recolher. */
+function montarLinhaBarraProduto(item, maiorQuantidade) {
+  const linha = document.createElement("div");
+  linha.className = "grafico-barras__linha";
+  linha.innerHTML = `
+    <div class="row row--between" style="margin-bottom:4px;">
+      <p class="grafico-barras__rotulo"></p>
+      <span class="grafico-barras__valor"></span>
+    </div>
+    <div class="grafico-barras__trilha">
+      <div class="grafico-barras__preenchimento"></div>
+    </div>
+  `;
+  linha.querySelector(".grafico-barras__rotulo").textContent = item.produto.nome;
+  linha.querySelector(".grafico-barras__valor").textContent = item.quantidade;
+  linha.querySelector(".grafico-barras__preenchimento").style.width = `${maiorQuantidade > 0 ? (item.quantidade / maiorQuantidade) * 100 : 0}%`;
+  return linha;
+}
+
+function montarGraficoBarrasProdutos(lista, containerId, vazioId, botaoId, chaveEstado) {
+  const container = qs(`#${containerId}`);
+  const vazio = qs(`#${vazioId}`);
+  const botao = qs(`#${botaoId}`);
+  container.innerHTML = "";
+
+  if (lista.length === 0) {
+    container.classList.add("is-hidden");
+    vazio.classList.remove("is-hidden");
+    botao.classList.add("is-hidden");
+    return;
+  }
+
+  container.classList.remove("is-hidden");
+  vazio.classList.add("is-hidden");
+
+  const expandido = estadoExpandidoRanking[chaveEstado];
+  const visiveis = expandido ? lista : lista.slice(0, 5);
+  const maiorQuantidade = lista[0].quantidade;
+  visiveis.forEach((item) => container.appendChild(montarLinhaBarraProduto(item, maiorQuantidade)));
+
+  if (lista.length > 5) {
+    botao.classList.remove("is-hidden");
+    botao.textContent = expandido ? "Ver menos" : "Ver todos";
+  } else {
+    botao.classList.add("is-hidden");
+  }
+}
+
 function montarLinhaParado(item) {
   const linha = document.createElement("div");
   linha.className = "list-item";
@@ -531,13 +583,15 @@ document.addEventListener("DOMContentLoaded", () => {
     qs("#js-vendas-faturamento-comparacao").innerHTML = compVendas.texto;
     qs("#js-vendas-faturamento-comparacao").className = `texto-variacao ${compVendas.classe}`;
 
-    const svgGraficoVendas = qs("#js-vendas-grafico-svg");
-    if (tipoPeriodo === "dia") {
-      svgGraficoVendas.classList.add("is-hidden");
-    } else {
-      svgGraficoVendas.classList.remove("is-hidden");
-      montarGraficoFaturamento(tipoPeriodo, refData, valorFaturamentoVendas, IDS_GRAFICO_VENDAS);
-    }
+    // Gráfico de faturamento da aba Vendas desativado (2026-07-12) — substituído
+    // pelo gráfico de barras de produtos mais vendidos, mais útil pra retail.
+    // const svgGraficoVendas = qs("#js-vendas-grafico-svg");
+    // if (tipoPeriodo === "dia") {
+    //   svgGraficoVendas.classList.add("is-hidden");
+    // } else {
+    //   svgGraficoVendas.classList.remove("is-hidden");
+    //   montarGraficoFaturamento(tipoPeriodo, refData, valorFaturamentoVendas, IDS_GRAFICO_VENDAS);
+    // }
 
     qs("#js-vendas-contagem").textContent = resumoVendas.contagem;
     const compVendasContagem = formatarComparacao(resumoVendas.contagem, resumoVendasAnterior.contagem, rotuloComparacao, "contagem", false);
@@ -550,7 +604,7 @@ document.addEventListener("DOMContentLoaded", () => {
     montarRecebimentos(resumoVendas, "js-vendas-formas", "js-vendas-pizza");
 
     const maisVendidos = calcularMaisVendidos(vendasPeriodo);
-    montarListaRanking(maisVendidos, "js-vendas-mais-vendidos", "js-vendas-mais-vendidos-vazio", "js-vendas-mais-vendidos-ver-todos", montarLinhaRankingProduto, "vendidos");
+    montarGraficoBarrasProdutos(maisVendidos, "js-vendas-mais-vendidos", "js-vendas-mais-vendidos-vazio", "js-vendas-mais-vendidos-ver-todos", "vendidos");
 
     const parados = calcularParados();
     const containerParados = qs("#js-vendas-parados");
