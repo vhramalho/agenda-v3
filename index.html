@@ -4,11 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, interactive-widget=resizes-content" />
   <title>Agenda — Agenda V3</title>
-  <link rel="stylesheet" href="css/tokens.css?v=20260712a" />
-  <link rel="stylesheet" href="css/base.css?v=20260712a" />
-  <link rel="stylesheet" href="css/layout.css?v=20260712a" />
-  <link rel="stylesheet" href="css/components.css?v=20260712a" />
-  <link rel="stylesheet" href="css/agenda.css?v=20260712a" />
+  <link rel="stylesheet" href="css/tokens.css?v=20260712b" />
+  <link rel="stylesheet" href="css/base.css?v=20260712b" />
+  <link rel="stylesheet" href="css/layout.css?v=20260712b" />
+  <link rel="stylesheet" href="css/components.css?v=20260712b" />
+  <link rel="stylesheet" href="css/agenda.css?v=20260712b" />
 </head>
 <body data-page="index">
   <div class="app">
@@ -157,6 +157,9 @@
           <label class="field__label">Horários que cabem um atendimento de:</label>
           <div class="chip-group" data-chips="single" id="js-whatsapp-duracao"></div>
         </div>
+        <!-- Escolha Livre/Encaixe desativada (2026-07-12) — mostra sempre só
+             Livres. Pra reativar, descomente este campo e o trecho
+             correspondente em js/agenda.js (montarMensagemHorarios).
         <div class="field">
           <label class="field__label">Mostrar horários:</label>
           <div class="chip-group" data-chips="multi" id="js-whatsapp-mostrar">
@@ -164,6 +167,7 @@
             <span class="chip" data-valor="encaixe">Encaixes</span>
           </div>
         </div>
+        -->
         <div class="field">
           <label class="field__label">Prévia da mensagem (você pode editar antes de enviar)</label>
           <textarea class="textarea" id="js-whatsapp-previa" style="min-height:140px;"></textarea>
@@ -578,17 +582,17 @@
     </div>
   </div>
 
-  <script src="js/utils.js?v=20260712a"></script>
-  <script src="js/menu.js?v=20260712a"></script>
-  <script src="js/storage.js?v=20260712a"></script>
-  <script src="js/tema.js?v=20260712a"></script>
-  <script src="js/app.js?v=20260712a"></script>
-  <script src="js/chips.js?v=20260712a"></script>
-  <script src="js/modal.js?v=20260712a"></script>
-  <script src="js/calendario.js?v=20260712a"></script>
-  <script src="js/acoes-simuladas.js?v=20260712a"></script>
-  <script src="js/vendas.js?v=20260712a"></script>
-  <script src="js/agenda.js?v=20260712a"></script>
-  <script src="js/agenda-diario.js?v=20260712a"></script>
+  <script src="js/utils.js?v=20260712b"></script>
+  <script src="js/menu.js?v=20260712b"></script>
+  <script src="js/storage.js?v=20260712b"></script>
+  <script src="js/tema.js?v=20260712b"></script>
+  <script src="js/app.js?v=20260712b"></script>
+  <script src="js/chips.js?v=20260712b"></script>
+  <script src="js/modal.js?v=20260712b"></script>
+  <script src="js/calendario.js?v=20260712b"></script>
+  <script src="js/acoes-simuladas.js?v=20260712b"></script>
+  <script src="js/vendas.js?v=20260712b"></script>
+  <script src="js/agenda.js?v=20260712b"></script>
+  <script src="js/agenda-diario.js?v=20260712b"></script>
 </body>
 </html>

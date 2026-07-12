@@ -1487,7 +1487,8 @@ document.addEventListener("DOMContentLoaded", () => {
     abrirModal("modal-compartilhar-whatsapp");
   });
 
-  [qs("#js-whatsapp-dias"), qs("#js-whatsapp-duracao"), qs("#js-whatsapp-mostrar")].forEach((container) => {
+  // "#js-whatsapp-mostrar" fora da lista abaixo — campo desativado (ver index.html).
+  [qs("#js-whatsapp-dias"), qs("#js-whatsapp-duracao")].forEach((container) => {
     container.addEventListener("click", (e) => {
       if (e.target.closest(".chip")) atualizarPreviaWhatsapp();
     });
@@ -1506,9 +1507,13 @@ function montarMensagemHorarios() {
   const diasSelecionados = qsa(".chip--ativo", qs("#js-whatsapp-dias")).map((c) => c.dataset.iso);
   if (diasSelecionados.length === 0) return "";
   const duracao = duracaoSelecionada("js-whatsapp-duracao");
-  const mostrarValores = qsa(".chip--ativo", qs("#js-whatsapp-mostrar")).map((c) => c.dataset.valor);
-  const mostrarLivre = mostrarValores.includes("livre");
-  const mostrarEncaixe = mostrarValores.includes("encaixe");
+  // Escolha Livre/Encaixe desativada (2026-07-12) — mostra sempre só Livres.
+  // Pra reativar, descomente as 3 linhas abaixo e o campo em index.html.
+  // const mostrarValores = qsa(".chip--ativo", qs("#js-whatsapp-mostrar")).map((c) => c.dataset.valor);
+  // const mostrarLivre = mostrarValores.includes("livre");
+  // const mostrarEncaixe = mostrarValores.includes("encaixe");
+  const mostrarLivre = true;
+  const mostrarEncaixe = false;
   const whatsapp = obterWhatsapp();
   let mensagem = substituirPlaceholders(whatsapp.mensagemHorarios || "Horários disponíveis:");
   diasSelecionados.sort().forEach((iso) => {
