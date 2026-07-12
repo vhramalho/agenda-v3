@@ -513,7 +513,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const labelSecundario = qs("#js-periodo-secundario");
 
   let refData = new Date();
-  let tipoPeriodo = "semana";
+  let tipoPeriodo = "dia";
   const rotulosPeriodo = { dia: "dia", semana: "semana", mes: "mês", ano: "ano" };
 
   function formatarCurto(data) {
