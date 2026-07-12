@@ -20,6 +20,36 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 });
 
+/* Menu inferior some ao rolar pra baixo, volta ao rolar pra cima — libera
+   mais espaço de tela pra listas longas (Agenda, Clientes, Pendentes etc.).
+   Sempre visível perto do topo, pra não sumir num scroll minúsculo assim
+   que a tela carrega. A Agenda (index.html) tem um layout de app-shell
+   próprio — quem rola de verdade é #js-agenda-lista, não a window, ao
+   contrário de todas as outras páginas — por isso escuta os dois. */
+function monitorarScrollParaMenu(alvo, obterScroll) {
+  let ultimoScroll = obterScroll();
+  alvo.addEventListener("scroll", () => {
+    const bottomNav = qs(".bottom-nav");
+    if (!bottomNav) return;
+    const scrollAtual = obterScroll();
+    const diferenca = scrollAtual - ultimoScroll;
+    if (scrollAtual <= 0) {
+      bottomNav.classList.remove("is-oculto");
+    } else if (diferenca > 8) {
+      bottomNav.classList.add("is-oculto");
+    } else if (diferenca < -8) {
+      bottomNav.classList.remove("is-oculto");
+    }
+    ultimoScroll = scrollAtual;
+  }, { passive: true });
+}
+
+monitorarScrollParaMenu(window, () => window.scrollY);
+document.addEventListener("DOMContentLoaded", () => {
+  const listaAgenda = qs("#js-agenda-lista");
+  if (listaAgenda) monitorarScrollParaMenu(listaAgenda, () => listaAgenda.scrollTop);
+});
+
 /* Toda tela renderiza seus dados uma vez, no carregamento. Ao voltar
    (history.back()) o navegador pode restaurar a página do bfcache sem
    reexecutar nenhum script — recarrega pra garantir dado sempre fresco. */
