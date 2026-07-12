@@ -25,6 +25,12 @@ let vendaClienteSelecionadoId = null;
 let vendaEditandoId = null;
 let vendaItensOriginais = {};
 let vendaAoExcluir = null;
+let vendaDataSelecionada = hojeIso();
+
+function atualizarTextoDataVenda() {
+  const texto = qs("#js-venda-data-texto");
+  if (texto) texto.textContent = formatarDataCurta(vendaDataSelecionada);
+}
 
 /* Quantidade disponível pra adicionar ao carrinho — em modo edição, os itens
    que já pertenciam a esta mesma venda contam como "disponíveis de volta",
@@ -60,6 +66,13 @@ function prepararNovaVenda(contexto, aoConcluir, aoCancelar) {
     qs("#js-venda-cliente-busca-wrap").classList.add("is-hidden");
     qs("#js-venda-cliente-busca").value = "";
     qs("#js-venda-cliente-resultados").classList.add("is-hidden");
+  }
+
+  const dataWrap = qs("#js-venda-data-wrap");
+  if (dataWrap) {
+    dataWrap.classList.toggle("is-hidden", vindoDeAtendimento);
+    vendaDataSelecionada = hojeIso();
+    atualizarTextoDataVenda();
   }
 
   qsa("[data-pago]", qs("#modal-nova-venda")).forEach((b) => b.classList.remove("chip--ativo"));
@@ -107,6 +120,13 @@ function prepararEditarVenda(venda, aoConcluir, aoCancelar, aoExcluir) {
     qs("#js-venda-cliente-busca-wrap").classList.toggle("is-hidden", !ehExistente);
     qs("#js-venda-cliente-busca").value = ehExistente ? venda.nomeCliente || "" : "";
     qs("#js-venda-cliente-resultados").classList.add("is-hidden");
+  }
+
+  const dataWrap = qs("#js-venda-data-wrap");
+  if (dataWrap) {
+    dataWrap.classList.toggle("is-hidden", vindoDeAtendimento);
+    vendaDataSelecionada = (venda.criadaEm || "").slice(0, 10) || hojeIso();
+    atualizarTextoDataVenda();
   }
 
   const modal = qs("#modal-nova-venda");
@@ -275,6 +295,20 @@ document.addEventListener("DOMContentLoaded", () => {
     if (e.target.id === "modal-nova-venda") dispararCancelamentoVenda();
   });
 
+  const dataBtn = qs("#js-venda-data-btn");
+  if (dataBtn) {
+    dataBtn.addEventListener("click", () => {
+      const [ano, mes, dia] = vendaDataSelecionada.split("-").map(Number);
+      if (typeof window.irParaMesCalendarioAgenda === "function") {
+        window.irParaMesCalendarioAgenda(ano, mes - 1, dia);
+      }
+    });
+    window.aoSelecionarDiaCalendarioAgenda = (ano, mes, dia) => {
+      vendaDataSelecionada = `${ano}-${String(mes + 1).padStart(2, "0")}-${String(dia).padStart(2, "0")}`;
+      atualizarTextoDataVenda();
+    };
+  }
+
   const tipoClienteContainer = qs("#js-venda-cliente-tipo");
   if (tipoClienteContainer) {
     tipoClienteContainer.addEventListener("click", (e) => {
@@ -349,16 +383,20 @@ document.addEventListener("DOMContentLoaded", () => {
     const vendas = obterVendas();
     const venda = vendaEditandoId
       ? vendas.find((v) => v.id === vendaEditandoId)
-      : {
-          id: gerarId("venda"),
-          // Venda presa a um atendimento herda a data do atendimento (não a
-          // do momento em que a venda foi registrada) — senão editar um
-          // realizado de outro dia e vender algo ali gravaria a venda como
-          // se fosse de hoje.
-          criadaEm: vendaContexto.agendamentoId && vendaContexto.data ? `${vendaContexto.data}T12:00:00.000Z` : new Date().toISOString(),
-          agendamentoId: vendaContexto.agendamentoId,
-        };
+      : { id: gerarId("venda"), agendamentoId: vendaContexto.agendamentoId };
     if (!venda) return;
+
+    if (!vindoDeAtendimento) {
+      // Venda avulsa: data escolhida no seletor de calendário (padrão: hoje,
+      // sempre a data LOCAL — nunca new Date().toISOString(), que é UTC e
+      // podia cair no dia seguinte à noite, fuso do Brasil sendo negativo).
+      venda.criadaEm = `${vendaDataSelecionada}T12:00:00.000Z`;
+    } else if (!vendaEditandoId) {
+      // Venda presa a um atendimento herda a data do atendimento (não a do
+      // momento em que a venda foi registrada) — senão editar um realizado
+      // de outro dia e vender algo ali gravaria a venda como se fosse hoje.
+      venda.criadaEm = `${vendaContexto.data || hojeIso()}T12:00:00.000Z`;
+    }
 
     venda.clienteId = clienteId;
     venda.nomeCliente = nomeCliente;

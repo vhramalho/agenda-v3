@@ -4,10 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, interactive-widget=resizes-content" />
   <title>Vendas — Agenda V3</title>
-  <link rel="stylesheet" href="css/tokens.css?v=20260711u" />
-  <link rel="stylesheet" href="css/base.css?v=20260711u" />
-  <link rel="stylesheet" href="css/layout.css?v=20260711u" />
-  <link rel="stylesheet" href="css/components.css?v=20260711u" />
+  <link rel="stylesheet" href="css/tokens.css?v=20260711v" />
+  <link rel="stylesheet" href="css/base.css?v=20260711v" />
+  <link rel="stylesheet" href="css/layout.css?v=20260711v" />
+  <link rel="stylesheet" href="css/components.css?v=20260711v" />
 </head>
 <body data-page="vendas">
   <div class="app">
@@ -146,6 +146,14 @@
         </div>
         <p class="text-secondary is-hidden" id="js-venda-cliente-fixo" style="margin-top:-8px;margin-bottom:16px;"></p>
 
+        <div class="field" id="js-venda-data-wrap">
+          <label class="field__label">Data da venda</label>
+          <button type="button" class="input" data-abrir-modal="modal-calendario" id="js-venda-data-btn" style="text-align:left;display:flex;align-items:center;justify-content:space-between;cursor:pointer;">
+            <span id="js-venda-data-texto"></span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/></svg>
+          </button>
+        </div>
+
         <div class="field">
           <label class="field__label">Produtos</label>
           <div id="js-venda-lista-produtos" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;max-height:240px;overflow-y:auto;padding:2px;"></div>
@@ -189,17 +197,33 @@
         <div class="btn-row"><button class="btn btn--secondary" data-fechar-modal>Cancelar</button><button class="btn btn--danger-solid" id="js-confirmar-exclusao-venda">Confirmar</button></div>
       </div>
     </div>
+
+    <!-- markup duplicado de index.html/relatorio.html, lógica em js/calendario.js -->
+    <div class="modal-overlay is-hidden modal-overlay--centro" id="modal-calendario">
+      <div class="modal-sheet modal-sheet--centro">
+        <div class="row row--between" style="margin-bottom:16px;">
+          <button class="icon-btn" id="js-cal-anterior" aria-label="Mês anterior"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
+          <p style="font-weight:700;" id="js-cal-mes-label">Julho 2026</p>
+          <button class="icon-btn" id="js-cal-proximo" aria-label="Próximo mês"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></button>
+        </div>
+        <div class="cal-grid" style="margin-bottom:4px;">
+          <span class="cal-grid__weekday">D</span><span class="cal-grid__weekday">S</span><span class="cal-grid__weekday">T</span><span class="cal-grid__weekday">Q</span><span class="cal-grid__weekday">Q</span><span class="cal-grid__weekday">S</span><span class="cal-grid__weekday">S</span>
+        </div>
+        <div class="cal-grid" id="js-cal-dias"></div>
+      </div>
+    </div>
   </div>
 
-  <script src="js/utils.js?v=20260711u"></script>
-  <script src="js/menu.js?v=20260711u"></script>
-  <script src="js/storage.js?v=20260711u"></script>
-  <script src="js/tema.js?v=20260711u"></script>
-  <script src="js/app.js?v=20260711u"></script>
-  <script src="js/chips.js?v=20260711u"></script>
-  <script src="js/modal.js?v=20260711u"></script>
-  <script src="js/acoes-simuladas.js?v=20260711u"></script>
-  <script src="js/vendas.js?v=20260711u"></script>
-  <script src="js/produtos.js?v=20260711u"></script>
+  <script src="js/utils.js?v=20260711v"></script>
+  <script src="js/menu.js?v=20260711v"></script>
+  <script src="js/storage.js?v=20260711v"></script>
+  <script src="js/tema.js?v=20260711v"></script>
+  <script src="js/app.js?v=20260711v"></script>
+  <script src="js/chips.js?v=20260711v"></script>
+  <script src="js/modal.js?v=20260711v"></script>
+  <script src="js/calendario.js?v=20260711v"></script>
+  <script src="js/acoes-simuladas.js?v=20260711v"></script>
+  <script src="js/vendas.js?v=20260711v"></script>
+  <script src="js/produtos.js?v=20260711v"></script>
 </body>
 </html>
