@@ -500,6 +500,13 @@
   flex-shrink: 0;
 }
 
+.grafico-barras__valor-secundario {
+  font-weight: 400;
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  flex-shrink: 0;
+}
+
 .grafico-barras__trilha {
   height: 8px;
   border-radius: var(--radius-full);

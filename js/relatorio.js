@@ -131,11 +131,15 @@ function calcularMaisRealizados(agendamentos) {
 function calcularMaisVendidos(vendas) {
   const produtosAtivos = obterProdutos().filter((p) => p.ativo);
   const contagem = {};
+  const valorPorProduto = {};
   vendas.forEach((v) => {
-    (v.itens || []).forEach((item) => { contagem[item.produtoId] = (contagem[item.produtoId] || 0) + item.quantidade; });
+    (v.itens || []).forEach((item) => {
+      contagem[item.produtoId] = (contagem[item.produtoId] || 0) + item.quantidade;
+      valorPorProduto[item.produtoId] = (valorPorProduto[item.produtoId] || 0) + item.quantidade * item.precoUnitario;
+    });
   });
   return produtosAtivos
-    .map((produto) => ({ produto, quantidade: contagem[produto.id] || 0 }))
+    .map((produto) => ({ produto, quantidade: contagem[produto.id] || 0, valor: valorPorProduto[produto.id] || 0 }))
     .filter((item) => item.quantidade > 0)
     .sort((a, b) => b.quantidade - a.quantidade);
 }
@@ -234,7 +238,10 @@ function montarLinhaBarraProduto(item, maiorQuantidade) {
   linha.innerHTML = `
     <div class="row row--between" style="margin-bottom:4px;">
       <p class="grafico-barras__rotulo"></p>
-      <span class="grafico-barras__valor"></span>
+      <span>
+        <span class="grafico-barras__valor"></span>
+        <span class="grafico-barras__valor-secundario"></span>
+      </span>
     </div>
     <div class="grafico-barras__trilha">
       <div class="grafico-barras__preenchimento"></div>
@@ -242,6 +249,7 @@ function montarLinhaBarraProduto(item, maiorQuantidade) {
   `;
   linha.querySelector(".grafico-barras__rotulo").textContent = item.produto.nome;
   linha.querySelector(".grafico-barras__valor").textContent = item.quantidade;
+  linha.querySelector(".grafico-barras__valor-secundario").textContent = ` · ${formatarMoeda(item.valor)}`;
   linha.querySelector(".grafico-barras__preenchimento").style.width = `${maiorQuantidade > 0 ? (item.quantidade / maiorQuantidade) * 100 : 0}%`;
   return linha;
 }
