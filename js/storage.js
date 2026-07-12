@@ -202,7 +202,7 @@ function seedWhatsapp() {
   return {
     numero: "(32) 99999-9999",
     mensagemHorarios: "{saudacao}! Tenho estes horários disponíveis para você:",
-    mensagemLembrete: "{saudacao}, {nome}! Passando para lembrar do seu horário agendado para {dia} às {hora}, em {endereco}.",
+    mensagemLembrete: "{saudacao}, {nome}! Passando para lembrar do seu horário agendado para {dia} às {hora}.",
     mensagemAniversario: "{saudacao}, {nome}! Feliz aniversário! Que seu dia seja incrível e cheio de conquistas!",
     mensagemEndereco: "{saudacao}, {nome}! Nosso endereço é: {endereco}. Veja no mapa: {mapa}",
     mensagemSemRetornar: "{saudacao}, {nome}! Já faz {dias} dias que você não aparece por aqui. Que tal agendar um horário?",
