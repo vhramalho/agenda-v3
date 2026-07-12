@@ -4,10 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, interactive-widget=resizes-content" />
   <title>Relatório — Agenda V3</title>
-  <link rel="stylesheet" href="css/tokens.css?v=20260712h" />
-  <link rel="stylesheet" href="css/base.css?v=20260712h" />
-  <link rel="stylesheet" href="css/layout.css?v=20260712h" />
-  <link rel="stylesheet" href="css/components.css?v=20260712h" />
+  <link rel="stylesheet" href="css/tokens.css?v=20260712i" />
+  <link rel="stylesheet" href="css/base.css?v=20260712i" />
+  <link rel="stylesheet" href="css/layout.css?v=20260712i" />
+  <link rel="stylesheet" href="css/components.css?v=20260712i" />
 </head>
 <body data-page="relatorio">
   <div class="app">
@@ -145,6 +145,13 @@
           -->
         </div>
 
+        <div class="card card--destaque section">
+          <p class="text-secondary" style="margin-bottom:12px;">Mais vendidos</p>
+          <div id="js-vendas-mais-vendidos"></div>
+          <div class="empty-state is-hidden" id="js-vendas-mais-vendidos-vazio"><p class="empty-state__title">Nenhuma venda no período</p></div>
+          <button class="text-primary-accent is-hidden" id="js-vendas-mais-vendidos-ver-todos" style="border:none;background:none;padding:0;margin-top:10px;font-weight:700;font-size:var(--text-xs);width:100%;text-align:center;">Ver todos</button>
+        </div>
+
         <div class="grid-3 section">
           <div class="insight-card">
             <div class="insight-card__label"><span>Vendas</span></div>
@@ -172,13 +179,6 @@
         </div>
 
         <div class="card section">
-          <p class="text-secondary" style="margin-bottom:12px;">Mais vendidos</p>
-          <div id="js-vendas-mais-vendidos"></div>
-          <div class="empty-state is-hidden" id="js-vendas-mais-vendidos-vazio"><p class="empty-state__title">Nenhuma venda no período</p></div>
-          <button class="text-primary-accent is-hidden" id="js-vendas-mais-vendidos-ver-todos" style="border:none;background:none;padding:0;margin-top:10px;font-weight:700;font-size:var(--text-xs);width:100%;text-align:center;">Ver todos</button>
-        </div>
-
-        <div class="card section">
           <p class="text-secondary" style="margin-bottom:12px;">Parados</p>
           <div id="js-vendas-parados"></div>
           <div class="empty-state is-hidden" id="js-vendas-parados-vazio"><p class="empty-state__title">Nenhum produto parado</p></div>
@@ -203,14 +203,14 @@
     </div>
   </div>
 
-  <script src="js/utils.js?v=20260712h"></script>
-  <script src="js/menu.js?v=20260712h"></script>
-  <script src="js/storage.js?v=20260712h"></script>
-  <script src="js/tema.js?v=20260712h"></script>
-  <script src="js/app.js?v=20260712h"></script>
-  <script src="js/chips.js?v=20260712h"></script>
-  <script src="js/modal.js?v=20260712h"></script>
-  <script src="js/calendario.js?v=20260712h"></script>
-  <script src="js/relatorio.js?v=20260712h"></script>
+  <script src="js/utils.js?v=20260712i"></script>
+  <script src="js/menu.js?v=20260712i"></script>
+  <script src="js/storage.js?v=20260712i"></script>
+  <script src="js/tema.js?v=20260712i"></script>
+  <script src="js/app.js?v=20260712i"></script>
+  <script src="js/chips.js?v=20260712i"></script>
+  <script src="js/modal.js?v=20260712i"></script>
+  <script src="js/calendario.js?v=20260712i"></script>
+  <script src="js/relatorio.js?v=20260712i"></script>
 </body>
 </html>
