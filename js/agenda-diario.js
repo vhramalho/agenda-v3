@@ -45,32 +45,8 @@ function iconeCheckDiario(feito) {
 function renderizarAgendaDiario(iso) {
   agendaDiarioAberto = false;
   montarAgendaDiario(iso);
-  montarResumoDiaDiario(iso);
 }
 window.renderizarAgendaDiario = renderizarAgendaDiario;
-
-/* Só conta atendimentos já realizados (pago ou pendente) — mesmo critério de
-   "Faturamento" do Relatório, não os ainda agendados/por vir. Vendas contam
-   todas do dia (pagas ou pendentes), já que uma venda só existe depois de
-   feita de verdade, ao contrário de um agendamento. */
-function montarResumoDiaDiario(iso) {
-  const container = qs("#js-agenda-resumo-dia");
-  if (!container) return;
-
-  const atendimentosDia = obterAgendamentos().filter((a) => a.data === iso && a.status && a.status.startsWith("realizado_"));
-  const valorAtendimentos = atendimentosDia.reduce((s, a) => s + (a.valorTotal || 0), 0);
-
-  const vendasDia = obterVendas().filter((v) => v.criadaEm.slice(0, 10) === iso);
-  const valorVendas = vendasDia.reduce((s, v) => s + (v.valorTotal || 0), 0);
-
-  container.innerHTML = `
-    <span class="agenda-resumo-dia__rotulo">Atendimentos</span>
-    <span class="agenda-resumo-dia__valor">${atendimentosDia.length} · ${formatarMoeda(valorAtendimentos)}</span>
-    <span class="agenda-resumo-dia__separador">—</span>
-    <span class="agenda-resumo-dia__rotulo">Vendas</span>
-    <span class="agenda-resumo-dia__valor">${vendasDia.length} · ${formatarMoeda(valorVendas)}</span>
-  `;
-}
 
 function montarAgendaDiario(iso) {
   const container = qs("#js-agenda-diario");

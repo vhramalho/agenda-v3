@@ -277,37 +277,12 @@ body[data-page="index"] #js-agenda-lista {
   font-size: var(--text-sm);
 }
 
-/* ---------- Agenda diário (Anotação/Tarefa/Lista por dia) + Resumo do dia ---------- */
+/* ---------- Agenda diário (Anotação/Tarefa/Lista por dia) ---------- */
 .agenda-diario {
   border-radius: var(--radius-md);
   background: var(--card);
   border: 1px solid var(--border);
   margin-bottom: var(--space-2);
-}
-
-.agenda-resumo-dia {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 6px;
-  padding: 8px 14px;
-  margin-bottom: var(--space-2);
-  border-radius: var(--radius-md);
-  background: var(--card);
-  border: 1px solid var(--border);
-  font-size: var(--text-sm);
-}
-
-.agenda-resumo-dia__rotulo {
-  color: var(--text-secondary);
-}
-
-.agenda-resumo-dia__valor {
-  font-weight: 700;
-}
-
-.agenda-resumo-dia__separador {
-  color: var(--text-muted);
 }
 
 .agenda-diario__cabecalho {
