@@ -86,10 +86,6 @@ function renderizarChipsMensagem(campo) {
 function renderizarWhatsapp() {
   const config = obterWhatsapp();
   qs("#js-whatsapp-numero").textContent = config.numero || "Nenhum número cadastrado";
-  const exemplo = dadosExemploPreview();
-  qsa(".js-msg-preview").forEach((el) => {
-    el.textContent = substituirPlaceholders(config[el.dataset.campoPreview] || "", exemplo);
-  });
 }
 
 document.addEventListener("DOMContentLoaded", () => {

@@ -4,10 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, interactive-widget=resizes-content" />
   <title>WhatsApp — Agenda V3</title>
-  <link rel="stylesheet" href="css/tokens.css?v=20260712m" />
-  <link rel="stylesheet" href="css/base.css?v=20260712m" />
-  <link rel="stylesheet" href="css/layout.css?v=20260712m" />
-  <link rel="stylesheet" href="css/components.css?v=20260712m" />
+  <link rel="stylesheet" href="css/tokens.css?v=20260712n" />
+  <link rel="stylesheet" href="css/base.css?v=20260712n" />
+  <link rel="stylesheet" href="css/layout.css?v=20260712n" />
+  <link rel="stylesheet" href="css/components.css?v=20260712n" />
 </head>
 <body data-page="mais">
   <div class="app">
@@ -24,7 +24,6 @@
         <div>
           <p class="text-primary-accent" style="font-weight:700;font-size:var(--text-sm);">MEU WHATSAPP</p>
           <p style="font-weight:800;font-size:var(--text-lg);" id="js-whatsapp-numero"></p>
-          <p class="text-secondary" style="font-size:var(--text-sm);">Este número será usado para enviar mensagens aos seus clientes.</p>
         </div>
         <div style="display:flex;flex-direction:column;gap:var(--space-2);flex-shrink:0;">
           <a href="perfil.html" class="btn btn--primary btn--sm">Editar</a>
@@ -39,7 +38,6 @@
             <div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/></svg></div>
             <div class="list-item__body">
               <p class="list-item__title">Horários disponíveis</p>
-              <p class="list-item__subtitle js-msg-preview" data-campo-preview="mensagemHorarios"></p>
             </div>
             <svg class="list-item__chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
           </button>
@@ -47,7 +45,6 @@
             <div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg></div>
             <div class="list-item__body">
               <p class="list-item__title">Lembrete de horário</p>
-              <p class="list-item__subtitle js-msg-preview" data-campo-preview="mensagemLembrete"></p>
             </div>
             <svg class="list-item__chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
           </button>
@@ -55,7 +52,6 @@
             <div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 21V11h16v10M2 11l2-4h16l2 4M9 7V4M12 7V3M15 7V4"/></svg></div>
             <div class="list-item__body">
               <p class="list-item__title">Aniversário</p>
-              <p class="list-item__subtitle js-msg-preview" data-campo-preview="mensagemAniversario"></p>
             </div>
             <svg class="list-item__chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
           </button>
@@ -63,7 +59,6 @@
             <div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7-5.5-7-11a7 7 0 0 1 14 0c0 5.5-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg></div>
             <div class="list-item__body">
               <p class="list-item__title">Endereço</p>
-              <p class="list-item__subtitle js-msg-preview" data-campo-preview="mensagemEndereco"></p>
             </div>
             <svg class="list-item__chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
           </button>
@@ -71,20 +66,11 @@
             <div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></div>
             <div class="list-item__body">
               <p class="list-item__title">Sem retornar</p>
-              <p class="list-item__subtitle js-msg-preview" data-campo-preview="mensagemSemRetornar"></p>
             </div>
             <svg class="list-item__chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
           </button>
         </div>
       </section>
-
-      <div class="card section row">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.8" style="flex-shrink:0;"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z"/></svg>
-        <div>
-          <p style="font-weight:700;margin-bottom:4px;">Como as mensagens são usadas</p>
-          <p class="text-secondary">Essas mensagens serão utilizadas ao compartilhar horários, Lembretes, Aniversariantes, Sem retornar e ao enviar o endereço para seus clientes no WhatsApp.</p>
-        </div>
-      </div>
 
       <button class="btn btn--ghost" data-abrir-modal="modal-confirmar-restaurar-mensagens">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 12a9 9 0 1 0 3-6.7M3 4v5h5"/></svg>
@@ -120,12 +106,12 @@
     </div>
   </div>
 
-  <script src="js/utils.js?v=20260712m"></script>
-  <script src="js/menu.js?v=20260712m"></script>
-  <script src="js/storage.js?v=20260712m"></script>
-  <script src="js/tema.js?v=20260712m"></script>
-  <script src="js/app.js?v=20260712m"></script>
-  <script src="js/modal.js?v=20260712m"></script>
-  <script src="js/whatsapp.js?v=20260712m"></script>
+  <script src="js/utils.js?v=20260712n"></script>
+  <script src="js/menu.js?v=20260712n"></script>
+  <script src="js/storage.js?v=20260712n"></script>
+  <script src="js/tema.js?v=20260712n"></script>
+  <script src="js/app.js?v=20260712n"></script>
+  <script src="js/modal.js?v=20260712n"></script>
+  <script src="js/whatsapp.js?v=20260712n"></script>
 </body>
 </html>
