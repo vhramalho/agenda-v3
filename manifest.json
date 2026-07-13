@@ -1,11 +1,11 @@
 {
-  "name": "Swipo",
-  "short_name": "Swipo",
+  "name": "Swipo Agenda",
+  "short_name": "Swipo Agenda",
   "description": "Sua agenda. Seu ritmo.",
   "start_url": "index.html",
   "display": "standalone",
-  "background_color": "#0B0B10",
-  "theme_color": "#0B0B10",
+  "background_color": "#01082A",
+  "theme_color": "#01082A",
   "lang": "pt-BR",
   "icons": [
     {

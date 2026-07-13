@@ -22,6 +22,13 @@ html[data-theme="light"] {
   color-scheme: light;
 }
 
+/* Assets que trocam de arquivo conforme o tema (ex.: logo com fundo
+   sólido, que não pode só herdar cor via CSS). Padrão = escuro. */
+.tema-so-escuro { display: block; }
+.tema-so-claro { display: none; }
+html[data-theme="light"] .tema-so-escuro { display: none; }
+html[data-theme="light"] .tema-so-claro { display: block; }
+
 body {
   font-family: var(--font-family);
   font-size: var(--text-base);

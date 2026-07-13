@@ -34,7 +34,7 @@ function definirCorPrincipal(cor) {
 }
 
 const CORES_PRINCIPAIS = [
-  { id: "roxo", nome: "Roxo", hex: "#7B4DFF" },
+  { id: "roxo", nome: "Roxo", hex: "#9D4EFF" },
   { id: "azul", nome: "Azul", hex: "#2563EB" },
   { id: "ciano", nome: "Ciano", hex: "#0891B2" },
   { id: "verde", nome: "Verde", hex: "#15803D" },

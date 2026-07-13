@@ -67,7 +67,7 @@ document.addEventListener("DOMContentLoaded", () => {
         arquivoBackupPendente = json.dados;
         abrirModal("modal-confirmar-importar-backup");
       } catch (erro) {
-        alert("Não foi possível ler esse arquivo. Verifique se é um backup válido do Swipo.");
+        alert("Não foi possível ler esse arquivo. Verifique se é um backup válido do Swipo Agenda.");
       }
     };
     leitor.readAsText(arquivo);

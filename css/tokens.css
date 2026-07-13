@@ -8,7 +8,7 @@
 :root,
 :root[data-theme="dark"] {
   /* Fundos */
-  --bg: #0B0B10;
+  --bg: #01082A;
   --bg-secondary: #11111A;
   --card: #171724;
   --card-elevated: #1E1E2E;
@@ -17,7 +17,7 @@
   --overlay: rgba(0, 0, 0, 0.6);
 
   /* Textos */
-  --text-primary: #F4F4F5;
+  --text-primary: #FFFFFF;
   --text-secondary: #A1A1AA;
   --text-muted: #71717A;
   --text-on-primary: #FFFFFF;
@@ -43,7 +43,7 @@
   --border-strong: rgba(0, 0, 0, 0.14);
   --overlay: rgba(0, 0, 0, 0.4);
 
-  --text-primary: #18181B;
+  --text-primary: #01082A;
   --text-secondary: #52525B;
   --text-muted: #A1A1AA;
   --text-on-primary: #FFFFFF;
@@ -59,7 +59,7 @@
   --shadow-modal: 0 -8px 24px rgba(0, 0, 0, 0.12);
 }
 
-/* Cor principal — padrão roxo (tom oficial da marca Swipo: #7B4DFF).
+/* Cor principal — padrão roxo (tom oficial da marca Swipo Agenda: #9D4EFF).
    Trocada via data-accent no <html>.
    Nunca reaproveita os tons de success/warning/danger acima.
    --primary-destaque é só pro degradê dos cards principais (card--destaque)
@@ -67,10 +67,10 @@
    ficar escuro/apagado demais no card de maior destaque da tela. */
 :root,
 :root[data-accent="roxo"] {
-  --primary: #7B4DFF;
-  --primary-strong: #9270FF;
-  --primary-soft: rgba(123, 77, 255, 0.18);
-  --primary-destaque: rgba(123, 77, 255, 0.28);
+  --primary: #9D4EFF;
+  --primary-strong: #AF16F6;
+  --primary-soft: rgba(157, 78, 255, 0.18);
+  --primary-destaque: rgba(157, 78, 255, 0.28);
 }
 
 :root[data-accent="azul"] {
