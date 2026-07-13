@@ -1,5 +1,5 @@
 /* ============================================================
-   AGENDA V3 — Verificação de versão do aplicativo (Fase 4)
+   SWIPO — Verificação de versão do aplicativo (Fase 4)
    Compara a versão carregada com version.json no servidor
    (fetch sem cache) para avisar quando há uma atualização.
    Ao commitar mudanças relevantes, atualizar em conjunto:
@@ -7,8 +7,8 @@
    tags <link>/<script> nas páginas .html.
    ============================================================ */
 
-const VERSAO_APP = "1.45.0";
-const BUILD_VERSAO = "20260712u";
+const VERSAO_APP = "1.46.0";
+const BUILD_VERSAO = "20260713a";
 
 document.addEventListener("DOMContentLoaded", () => {
   const botao = qs("#js-btn-versao");

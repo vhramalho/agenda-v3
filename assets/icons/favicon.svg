@@ -1,0 +1,11 @@
+<!-- PLACEHOLDER — trocar por este mesmo caminho quando o logo final do Swipo chegar. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 56 56">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="56" y2="56" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#9270FF"/>
+      <stop offset="1" stop-color="#5A2DDB"/>
+    </linearGradient>
+  </defs>
+  <rect width="56" height="56" rx="14" fill="url(#g)"/>
+  <text x="28" y="39" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-weight="800" font-size="30" fill="white">S</text>
+</svg>

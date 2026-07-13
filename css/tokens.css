@@ -1,5 +1,5 @@
 /* ============================================================
-   AGENDA V3 — Design Tokens
+   SWIPO — Design Tokens
    Tema escuro é o padrão. Tema claro é selecionado via
    <html data-theme="light">. Cor principal é selecionada via
    <html data-accent="roxo|azul|ciano|verde|rosa|vermelho|dourado|cinza">.
@@ -59,17 +59,18 @@
   --shadow-modal: 0 -8px 24px rgba(0, 0, 0, 0.12);
 }
 
-/* Cor principal — padrão roxo. Trocada via data-accent no <html>.
+/* Cor principal — padrão roxo (tom oficial da marca Swipo: #7B4DFF).
+   Trocada via data-accent no <html>.
    Nunca reaproveita os tons de success/warning/danger acima.
    --primary-destaque é só pro degradê dos cards principais (card--destaque)
    — mais forte que --primary-soft (usado em ícones/chips/badges) pra não
    ficar escuro/apagado demais no card de maior destaque da tela. */
 :root,
 :root[data-accent="roxo"] {
-  --primary: #7C3AED;
-  --primary-strong: #8B5CF6;
-  --primary-soft: rgba(124, 58, 237, 0.18);
-  --primary-destaque: rgba(124, 58, 237, 0.28);
+  --primary: #7B4DFF;
+  --primary-strong: #9270FF;
+  --primary-soft: rgba(123, 77, 255, 0.18);
+  --primary-destaque: rgba(123, 77, 255, 0.28);
 }
 
 :root[data-accent="azul"] {

@@ -1,5 +1,5 @@
 /* ============================================================
-   AGENDA V3 — Tema e cor principal
+   SWIPO — Tema e cor principal
    Lê/grava em agendaV3:config através de js/storage.js (que
    precisa ser incluído ANTES deste arquivo). "lerConfig" é só
    um nome de apoio — chama obterConfig() de storage.js por
@@ -34,7 +34,7 @@ function definirCorPrincipal(cor) {
 }
 
 const CORES_PRINCIPAIS = [
-  { id: "roxo", nome: "Roxo", hex: "#7C3AED" },
+  { id: "roxo", nome: "Roxo", hex: "#7B4DFF" },
   { id: "azul", nome: "Azul", hex: "#2563EB" },
   { id: "ciano", nome: "Ciano", hex: "#0891B2" },
   { id: "verde", nome: "Verde", hex: "#15803D" },

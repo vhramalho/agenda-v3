@@ -1,5 +1,5 @@
 /* ============================================================
-   AGENDA V3 — Tela Backup (Fase 3, Etapa 10)
+   SWIPO — Tela Backup (Fase 3, Etapa 10)
    Exporta/importa as 9 chaves agendaV3:* num único arquivo .json.
    Tudo ou nada — não faz merge, só substitui tudo na importação
    (com confirmação explícita, igual o aviso na tela já dizia).
@@ -67,7 +67,7 @@ document.addEventListener("DOMContentLoaded", () => {
         arquivoBackupPendente = json.dados;
         abrirModal("modal-confirmar-importar-backup");
       } catch (erro) {
-        alert("Não foi possível ler esse arquivo. Verifique se é um backup válido do Agenda V3.");
+        alert("Não foi possível ler esse arquivo. Verifique se é um backup válido do Swipo.");
       }
     };
     leitor.readAsText(arquivo);
