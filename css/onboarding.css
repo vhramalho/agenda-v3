@@ -70,6 +70,21 @@
   animation: onboarding-brilho 0.6s ease 0.5s forwards;
 }
 
+.onboarding-marca {
+  max-width: 220px;
+  width: 70%;
+  margin: var(--space-4) auto var(--space-5);
+  opacity: 0;
+  transform: translateY(10px) scale(0.9);
+  animation: onboarding-entra-suave 0.35s ease-out 0.1s forwards;
+}
+
+.onboarding-marca img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
 #ilustracao-final {
   animation: onboarding-entra-suave 0.35s ease-out 0.1s forwards, onboarding-pulso-sucesso 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.45s;
 }
@@ -316,6 +331,7 @@
   .onboarding-step,
   .onboarding-ilustracao,
   .onboarding-ilustracao::after,
+  .onboarding-marca,
   .intro-cascata > *,
   .mockup__linha,
   .cadastro-card__lista .chip,
