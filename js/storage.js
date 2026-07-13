@@ -182,8 +182,7 @@ function salvarVendas(lista) {
 
 /* Ajuda contextual — uma entrada por tela (ver js/ajuda.js e js/ajuda-dados.js).
    introVista: se a introdução daquela tela já foi mostrada. dicasVistas: chaves
-   de tooltip já exibidas (nunca repetem). checklist: mapa { chave: true } dos
-   itens já concluídos. */
+   de tooltip/dica avulsa já exibidas (nunca repetem). */
 function obterAjuda() {
   const bruto = lerChave(CHAVES.ajuda, {});
   const completo = {};
@@ -192,7 +191,6 @@ function obterAjuda() {
     completo[tela] = {
       introVista: !!estadoTela.introVista,
       dicasVistas: estadoTela.dicasVistas || [],
-      checklist: estadoTela.checklist || {},
     };
   });
   return completo;

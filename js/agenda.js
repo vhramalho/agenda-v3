@@ -216,6 +216,7 @@ function montarSlotAgendado(item) {
   const el = document.createElement("a");
   el.href = "#";
   el.className = "agenda-slot";
+  el.dataset.id = a.id;
   el.innerHTML = `
     <span class="agenda-slot__hora">${item.hora}</span>
     <span class="agenda-slot__icone agenda-slot__icone--agendado"></span>
@@ -886,6 +887,7 @@ function finalizarCriacaoOuEdicaoAgendamento(clienteId, nome) {
   const observacao = qs("#js-novo-agendamento-observacao").value.trim();
   const duracaoMinutos = duracaoSelecionada("js-novo-agendamento-duracao");
   const lista = obterAgendamentos();
+  let novoId = null;
   if (agendamentoEditandoId) {
     const ag = lista.find((a) => a.id === agendamentoEditandoId);
     if (ag) {
@@ -896,12 +898,12 @@ function finalizarCriacaoOuEdicaoAgendamento(clienteId, nome) {
       ag.duracaoMinutos = duracaoMinutos;
     }
   } else {
+    novoId = gerarId("agd");
     lista.push({
-      id: gerarId("agd"), data: dataSelecionada, hora: horaModalAtual,
+      id: novoId, data: dataSelecionada, hora: horaModalAtual,
       clienteId: clienteId || null, nomeCliente: nome,
       servicosIds, observacao, status: "agendado", duracaoMinutos,
     });
-    concluirItem("agenda", "novoAgendamento");
   }
   salvarAgendamentos(lista);
   agendamentoEditandoId = null;
@@ -909,6 +911,13 @@ function finalizarCriacaoOuEdicaoAgendamento(clienteId, nome) {
   fecharModal("modal-nome-duplicado");
   renderizarAgendaLista();
   mostrarSucesso();
+
+  // Dica avulsa "marcar como realizado": só depois que a pessoa já criou
+  // um 2º agendamento de verdade (bloqueio não conta) — nesse ponto ela já
+  // pegou o jeito de agendar, é a hora certa de mostrar o próximo passo.
+  if (novoId && lista.filter((a) => a.status !== "bloqueado").length === 2) {
+    mostrarDicaSpotlight("agenda", "realizar", qs(`[data-id="${novoId}"]`));
+  }
 }
 
 /* ---------- Finalizar atendimento ---------- */
@@ -1023,13 +1032,7 @@ document.addEventListener("DOMContentLoaded", () => {
     selecionarData(hojeIso());
   });
 
-  abrirIntroducao("agenda");
-  setTimeout(() => {
-    if (qs("#modal-ajuda").classList.contains("is-hidden")) {
-      mostrarDica("agenda", "calendario", qs("#js-btn-calendario"));
-    }
-  }, 3000);
-  qs("#js-btn-calendario").addEventListener("click", () => concluirItem("agenda", "calendario"));
+  iniciarTour("agenda");
 
   adicionarGestoSwipe(qs("#js-week-carousel"),
     () => selecionarData(somarDias(dataSelecionada, 7)),
@@ -1508,7 +1511,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if (diasSelecionados.length === 0) return;
     const mensagem = qs("#js-whatsapp-previa").value.trim();
     window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(mensagem)}`, "_blank");
-    concluirItem("agenda", "compartilhar");
     fecharModal("modal-compartilhar-whatsapp");
   });
 });

@@ -1,34 +1,30 @@
 /* ============================================================
    AGENDA V3 — Conteúdo do sistema de ajuda contextual
-   Uma entrada por tela. Só "agenda" tem conteúdo real nesta etapa;
-   as demais ficam com a forma pronta e vazia, prontas para receber
-   texto em rodadas futuras (ver js/ajuda.js).
+   Uma entrada por tela. Cada tela pode ter um "tour" (sequência de
+   passos mostrados na 1ª visita, um só de cada vez — ver js/ajuda.js)
+   e/ou "dicas" avulsas (spotlight único, disparado por uma ação real
+   do usuário, não pela primeira visita). Nada de texto longo: cada
+   passo é uma legenda curta, o resto é gesto/spotlight visual.
+   Só "agenda" tem conteúdo real nesta etapa; as outras telas ficam
+   com a forma vazia pronta.
    ============================================================ */
 
 const AJUDA_DADOS = {
   agenda: {
-    introducao: {
-      titulo: "Bem-vindo à Agenda!",
-      corpo: "Aqui você vê seus horários dia a dia. Toque num horário livre para agendar, deslize para o lado pra trocar de dia, e use o ícone de calendário no topo pra pular direto pra outra data.",
-    },
-    secoes: [
-      { titulo: "Criar um agendamento", corpo: "Toque num horário livre da lista e escolha \"Agendar cliente\". Você pode digitar o nome de um cliente já cadastrado ou de alguém novo." },
-      { titulo: "Marcar como realizado", corpo: "Toque num horário agendado e escolha \"Realizar atendimento\" para registrar o pagamento e concluir." },
-      { titulo: "Bloquear um horário", corpo: "Toque num horário livre e escolha \"Bloquear\" para reservar aquele espaço sem vincular a um cliente (ex.: almoço, compromisso pessoal)." },
-      { titulo: "Compartilhar horários", corpo: "Use o ícone de WhatsApp no topo para enviar aos seus clientes os horários livres dos dias que você escolher." },
-    ],
-    checklist: [
-      { chave: "novoAgendamento", texto: "Criar seu primeiro agendamento" },
-      { chave: "calendario", texto: "Abrir o calendário para trocar de mês" },
-      { chave: "compartilhar", texto: "Compartilhar horários pelo WhatsApp" },
+    tour: [
+      { tipo: "centro", titulo: "👋 Bem-vindo(a)!", legenda: "Vamos te mostrar o essencial da sua agenda." },
+      { tipo: "spot", alvo: () => document.querySelector(".agenda-slot--livre"), legenda: "Toque num horário livre pra agendar ou bloquear." },
+      { tipo: "gesto", alvo: () => document.querySelector("#js-agenda-lista"), legenda: "Arraste pra trocar de dia." },
+      { tipo: "gesto", alvo: () => document.querySelector("#js-week-carousel-wrap"), legenda: "Arraste pra trocar de semana." },
+      { tipo: "spot", alvo: () => document.querySelector("#js-btn-compartilhar-whatsapp"), legenda: "Compartilhe seus horários livres pelo WhatsApp." },
     ],
     dicas: {
-      calendario: "Toque aqui para pular direto para outro mês.",
+      realizar: { legenda: "Toque aqui pra marcar como realizado." },
     },
   },
-  vendas: { introducao: null, secoes: [], checklist: [], dicas: {} },
-  relatorios: { introducao: null, secoes: [], checklist: [], dicas: {} },
-  pendentes: { introducao: null, secoes: [], checklist: [], dicas: {} },
-  clientes: { introducao: null, secoes: [], checklist: [], dicas: {} },
-  mais: { introducao: null, secoes: [], checklist: [], dicas: {} },
+  vendas: { tour: [], dicas: {} },
+  relatorios: { tour: [], dicas: {} },
+  pendentes: { tour: [], dicas: {} },
+  clientes: { tour: [], dicas: {} },
+  mais: { tour: [], dicas: {} },
 };
