@@ -23,7 +23,10 @@ const CHAVES = {
   listasDiarias: "agendaV3:listasDiarias",
   produtos: "agendaV3:produtos",
   vendas: "agendaV3:vendas",
+  ajuda: "agendaV3:ajuda",
 };
+
+const AJUDA_TELAS = ["agenda", "vendas", "relatorios", "pendentes", "clientes", "mais"];
 
 function gerarId(prefixo) {
   return `${prefixo}_${Date.now().toString(36)}${Math.random().toString(36).slice(2, 7)}`;
@@ -175,6 +178,27 @@ function obterVendas() {
 }
 function salvarVendas(lista) {
   salvarChave(CHAVES.vendas, lista);
+}
+
+/* Ajuda contextual — uma entrada por tela (ver js/ajuda.js e js/ajuda-dados.js).
+   introVista: se a introdução daquela tela já foi mostrada. dicasVistas: chaves
+   de tooltip já exibidas (nunca repetem). checklist: mapa { chave: true } dos
+   itens já concluídos. */
+function obterAjuda() {
+  const bruto = lerChave(CHAVES.ajuda, {});
+  const completo = {};
+  AJUDA_TELAS.forEach((tela) => {
+    const estadoTela = bruto[tela] || {};
+    completo[tela] = {
+      introVista: !!estadoTela.introVista,
+      dicasVistas: estadoTela.dicasVistas || [],
+      checklist: estadoTela.checklist || {},
+    };
+  });
+  return completo;
+}
+function salvarAjuda(estado) {
+  salvarChave(CHAVES.ajuda, estado);
 }
 
 /* ============================================================

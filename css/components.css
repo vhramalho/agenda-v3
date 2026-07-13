@@ -925,6 +925,28 @@
   100% { opacity: 0; transform: translateX(-50%) translateY(0); }
 }
 
+/* Tooltip de ajuda contextual (mesma família visual do toast) */
+.ajuda-tooltip {
+  position: fixed;
+  z-index: 210;
+  max-width: 240px;
+  background: var(--primary);
+  color: #fff;
+  padding: 10px 14px;
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  box-shadow: var(--shadow-card);
+  animation: ajuda-tooltip 5000ms ease forwards;
+}
+
+@keyframes ajuda-tooltip {
+  0% { opacity: 0; transform: translateY(-6px); }
+  8% { opacity: 1; transform: translateY(0); }
+  90% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(0); }
+}
+
 /* Grade de calendário */
 .cal-grid {
   display: grid;

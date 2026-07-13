@@ -901,6 +901,7 @@ function finalizarCriacaoOuEdicaoAgendamento(clienteId, nome) {
       clienteId: clienteId || null, nomeCliente: nome,
       servicosIds, observacao, status: "agendado", duracaoMinutos,
     });
+    concluirItem("agenda", "novoAgendamento");
   }
   salvarAgendamentos(lista);
   agendamentoEditandoId = null;
@@ -1021,6 +1022,14 @@ document.addEventListener("DOMContentLoaded", () => {
   qs("#js-btn-hoje").addEventListener("click", () => {
     selecionarData(hojeIso());
   });
+
+  abrirIntroducao("agenda");
+  setTimeout(() => {
+    if (qs("#modal-ajuda").classList.contains("is-hidden")) {
+      mostrarDica("agenda", "calendario", qs("#js-btn-calendario"));
+    }
+  }, 3000);
+  qs("#js-btn-calendario").addEventListener("click", () => concluirItem("agenda", "calendario"));
 
   adicionarGestoSwipe(qs("#js-week-carousel"),
     () => selecionarData(somarDias(dataSelecionada, 7)),
@@ -1499,6 +1508,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (diasSelecionados.length === 0) return;
     const mensagem = qs("#js-whatsapp-previa").value.trim();
     window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(mensagem)}`, "_blank");
+    concluirItem("agenda", "compartilhar");
     fecharModal("modal-compartilhar-whatsapp");
   });
 });
