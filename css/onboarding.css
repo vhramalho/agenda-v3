@@ -296,8 +296,13 @@
 
 .cadastro-card__topo {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: var(--space-3);
+}
+
+.cadastro-card__topo .icon-circle,
+.cadastro-card__topo .btn {
+  flex-shrink: 0;
 }
 
 .cadastro-card__corpo {
