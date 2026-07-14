@@ -223,14 +223,17 @@ function montarSlotAgendado(item) {
     <div class="agenda-slot__body">
       <p class="agenda-slot__titulo"></p>
       <p class="agenda-slot__subtitulo"></p>
-      <p class="agenda-slot__observacao"></p>
+      <p class="agenda-slot__observacao" data-campo="observacao"></p>
+      <p class="agenda-slot__observacao" data-campo="duracao"></p>
     </div>
     <svg class="list-item__chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
   `;
   el.querySelector(".agenda-slot__titulo").textContent = a.nomeCliente;
   el.querySelector(".agenda-slot__subtitulo").textContent = nomesServicosPorIds(a.servicosIds) || "—";
-  const obsEl = el.querySelector(".agenda-slot__observacao");
+  const obsEl = el.querySelector('[data-campo="observacao"]');
   if (a.observacao) obsEl.textContent = a.observacao; else obsEl.remove();
+  const duracaoEl = el.querySelector('[data-campo="duracao"]');
+  if (a.duracaoMinutos) duracaoEl.textContent = `${a.duracaoMinutos}min`; else duracaoEl.remove();
   el.addEventListener("click", (e) => { e.preventDefault(); abrirHorarioAgendado(a); });
   return el;
 }
