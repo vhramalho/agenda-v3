@@ -80,11 +80,10 @@ function ajudaMostrarPontos(total, indice) {
 function ajudaCriarGesto(alvoEl) {
   const dedo = document.createElement("div");
   dedo.className = "tour-dedo";
-  dedo.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M9 12.5V5.5a1.4 1.4 0 0 1 2.8 0v6"/>
-    <path d="M11.8 11.3V4a1.4 1.4 0 0 1 2.8 0v7.3"/>
-    <path d="M14.6 11.3V6a1.4 1.4 0 0 1 2.8 0v7.7"/>
-    <path d="M9 12.5c0-1.1-.9-2-2-2s-2 .9-2 2c0 3.6 1.2 8.8 6.2 8.8H13c3.2 0 5.4-2.4 5.4-5.8v-2.2"/>
+  dedo.innerHTML = `<svg viewBox="0 0 24 24" fill="currentColor">
+    <ellipse cx="13" cy="16" rx="6" ry="5.5"/>
+    <rect x="9.5" y="3" width="4" height="12" rx="2" transform="rotate(-10 11.5 9)"/>
+    <rect x="5.8" y="11.5" width="3.2" height="7.5" rx="1.6" transform="rotate(45 7.4 15.25)"/>
   </svg>`;
   const setaEsq = document.createElement("div");
   setaEsq.className = "tour-seta tour-seta--esq";
