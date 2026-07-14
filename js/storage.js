@@ -26,7 +26,7 @@ const CHAVES = {
   ajuda: "agendaV3:ajuda",
 };
 
-const AJUDA_TELAS = ["agenda", "vendas", "relatorios", "pendentes", "clientes", "mais"];
+const AJUDA_TELAS = ["agenda", "vendas", "produtos", "relatorios", "pendentes", "clientes", "mais"];
 
 function gerarId(prefixo) {
   return `${prefixo}_${Date.now().toString(36)}${Math.random().toString(36).slice(2, 7)}`;

@@ -509,6 +509,7 @@ function montarRecebimentos(resumo, formasContainerId, pizzaContainerId) {
 document.addEventListener("DOMContentLoaded", () => {
   const rotulo = qs("#js-periodo-label");
   if (!rotulo) return;
+  iniciarTour("relatorios");
   const labelPrincipal = qs("#js-periodo-principal");
   const labelSecundario = qs("#js-periodo-secundario");
 

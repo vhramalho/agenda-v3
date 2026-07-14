@@ -224,6 +224,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // ---- Card A receber ----
   if (qs("#js-pendentes-valor")) {
+    iniciarTour("pendentes");
     qs("#js-pendentes-valor").textContent = formatarMoeda(totalPendente);
     qs("#js-pendentes-contagem").textContent = `${pendentes.length} cobrança${pendentes.length === 1 ? "" : "s"} pendente${pendentes.length === 1 ? "" : "s"}`;
   }
@@ -260,6 +261,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
     toggle.addEventListener("click", () => { expandido = !expandido; renderQuemDeve(); });
     renderQuemDeve();
+
+    // Dica avulsa "clique para receber": só numa visita DEPOIS que o tour de
+    // boas-vindas já foi visto (nunca na mesma visita que ele, pra não brigar
+    // pelo mesmo overlay) — normalmente já é assim, já que o pendente é criado
+    // lá na Agenda, numa visita anterior.
+    if (pendentes.length > 0 && obterAjuda().pendentes.introVista) {
+      mostrarDicaSpotlight("pendentes", "receber", qs("#js-quem-deve-lista .list-item"));
+    }
   }
 
   // ---- Aba Vendas: A receber + Quem deve (mesmo padrão da aba Atendimento) ----

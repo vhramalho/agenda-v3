@@ -195,10 +195,18 @@ function atualizarTituloHeader(abaVendas) {
   qs("#js-vendas-titulo").textContent = abaVendas ? "Vendas" : "Produtos";
 }
 
+/* Botão "?" também é o mesmo elemento pras duas abas — só troca qual tela
+   de ajuda ele reinicia, mesmo padrão do botão "+" acima. */
+function atualizarBotaoAjudaHeader(abaVendas) {
+  qs("#js-btn-ajuda-vendas").onclick = () => reiniciarTour(abaVendas ? "vendas" : "produtos");
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   renderizarProdutos();
   renderizarHistoricoVendas();
   atualizarBotaoAcaoHeader(true);
+  atualizarBotaoAjudaHeader(true);
+  iniciarTour("vendas");
 
   qs("#js-historico-vendas-toggle").addEventListener("click", () => {
     historicoVendasExpandido = !historicoVendasExpandido;
@@ -217,7 +225,9 @@ document.addEventListener("DOMContentLoaded", () => {
       qs("#js-conteudo-vendas-vendas").classList.toggle("is-hidden", !abaVendas);
       qs("#js-conteudo-vendas-produtos").classList.toggle("is-hidden", abaVendas);
       atualizarBotaoAcaoHeader(abaVendas);
+      atualizarBotaoAjudaHeader(abaVendas);
       atualizarTituloHeader(abaVendas);
+      if (!abaVendas) iniciarTour("produtos");
     });
   });
 

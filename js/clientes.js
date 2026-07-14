@@ -63,6 +63,7 @@ function renderizarClientes() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+  iniciarTour("clientes");
   renderizarClientes();
 
   qs("#js-btn-novo-cliente").addEventListener("click", () => {

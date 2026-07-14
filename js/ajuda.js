@@ -117,7 +117,9 @@ function ajudaTocarPasso(tela, indice) {
 
   if (passo.tipo === "centro") {
     legenda.classList.add("tour-legenda--centro");
-    legenda.innerHTML = `<span class="tour-legenda__titulo">${passo.titulo}</span>${passo.legenda}`;
+    legenda.innerHTML = passo.titulo
+      ? `<span class="tour-legenda__titulo">${passo.titulo}</span>${passo.legenda}`
+      : passo.legenda;
     document.body.appendChild(legenda);
   } else {
     const alvoEl = passo.alvo();
