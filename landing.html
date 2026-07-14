@@ -3,230 +3,480 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="manifest" href="manifest.json?v=20260713l" />
-  <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg?v=20260713l" />
-  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png?v=20260713l" />
-  <meta name="theme-color" content="#0B0B10" />
+  <link rel="manifest" href="manifest.json?v=20260714a" />
+  <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg?v=20260714a" />
+  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png?v=20260714a" />
+  <meta name="theme-color" content="#08080C" />
   <title>Swipo Agenda — Agenda, clientes e vendas num só app</title>
   <meta name="description" content="O Swipo Agenda organiza sua agenda, avisa quem sumiu e mostra quanto você vendeu no mês. Grátis para começar, direto no navegador." />
-  <link rel="stylesheet" href="css/tokens.css?v=20260713l" />
-  <link rel="stylesheet" href="css/base.css?v=20260713l" />
-  <link rel="stylesheet" href="css/landing.css?v=20260713l" />
+  <link rel="stylesheet" href="css/landing.css?v=20260714a" />
 </head>
 <body data-page="landing">
-  <div class="landing">
-    <div class="landing__container">
-      <nav class="landing-nav">
-        <a href="landing.html" class="landing-nav__brand">
-          <img class="tema-so-escuro" src="assets/logos/swipo-icon-dark.svg?v=20260713l" alt="" width="30" height="30" />
-          <img class="tema-so-claro" src="assets/logos/swipo-icon-light.svg?v=20260713l" alt="" width="30" height="30" />
-          Swipo Agenda
-        </a>
-        <a href="login.html" class="landing-nav__entrar">Entrar</a>
-      </nav>
+  <div class="glow"></div>
 
-      <header class="landing-hero">
-        <div>
-          <span class="landing-hero__eyebrow landing-anim landing-anim--1">Feito para quem vive de horário marcado</span>
-          <h1 class="landing-hero__title landing-anim landing-anim--2">Sua agenda, seus clientes e suas <em>vendas</em> — num só lugar</h1>
-          <p class="landing-hero__sub landing-anim landing-anim--2">O Swipo Agenda troca a papelada e as mensagens perdidas por uma agenda que se organiza sozinha: horários, clientes que sempre voltam (e os que sumiram) e quanto você vendeu no mês.</p>
-          <div class="landing-hero__actions landing-anim landing-anim--3">
-            <a href="onboarding.html" class="btn-landing btn-landing--primary">Começar agora — é grátis</a>
-            <a href="login.html" class="btn-landing btn-landing--ghost">Já uso o Swipo</a>
-          </div>
-          <p class="landing-hero__proof landing-anim landing-anim--3">Sem cartão de crédito. Funciona direto no navegador — não precisa baixar nada de loja de app.</p>
-        </div>
-        <div class="landing-hero__art landing-anim landing-anim--3">
-          <div class="mockup-agenda">
-            <div class="mockup-agenda__topo">
-              <div>
-                <p class="mockup-agenda__negocio">Primos Barbearia</p>
-                <p class="mockup-agenda__data">Quinta-feira, 16 de julho</p>
-              </div>
-              <span class="mockup-agenda__hoje">hoje</span>
-            </div>
-            <div class="mockup-linha">
-              <span class="mockup-linha__hora">09:00</span>
-              <div class="mockup-linha__corpo">
-                <p class="mockup-linha__servico">Corte + Barba</p>
-                <p class="mockup-linha__cliente">João Pedro</p>
-              </div>
-              <span class="mockup-pill mockup-pill--ok">confirmado</span>
-            </div>
-            <div class="mockup-linha">
-              <span class="mockup-linha__hora">10:30</span>
-              <div class="mockup-linha__corpo">
-                <p class="mockup-linha__servico">Escova</p>
-                <p class="mockup-linha__cliente">Marina Alves</p>
-              </div>
-              <span class="mockup-pill mockup-pill--pendente">pendente</span>
-            </div>
-            <div class="mockup-linha mockup-linha--bloqueio">
-              <span class="mockup-linha__hora">12:00</span>
-              <div class="mockup-linha__corpo">
-                <p class="mockup-linha__servico">Almoço — bloqueado</p>
-              </div>
-            </div>
-            <div class="mockup-linha">
-              <span class="mockup-linha__hora">14:15</span>
-              <div class="mockup-linha__corpo">
-                <p class="mockup-linha__servico">Manicure</p>
-                <p class="mockup-linha__cliente">Ana Souza</p>
-              </div>
-              <span class="mockup-pill mockup-pill--ok">confirmado</span>
-            </div>
-          </div>
-        </div>
-      </header>
-
-      <section class="landing-audience">
-        <p class="landing-audience__eyebrow">Pra quem é</p>
-        <div class="landing-audience__chips">
-          <span>Cabeleireiros e barbeiros</span>
-          <span>Esteticistas e manicures</span>
-          <span>Personal trainers</span>
-          <span>Qualquer negócio que vive de horário marcado</span>
-        </div>
-      </section>
-
-      <section class="landing-feature">
-        <div>
-          <p class="landing-feature__kicker">Agenda</p>
-          <h2 class="landing-feature__title">Sua semana organizada, num toque</h2>
-          <p class="landing-feature__body">Veja os horários livres e ocupados de relance, bloqueie um intervalo pro almoço e mande a agenda do dia pro cliente direto no WhatsApp.</p>
-        </div>
-        <div class="landing-feature__art">
-          <div class="mockup-agenda" style="max-width:300px;">
-            <div class="mockup-agenda__topo">
-              <p class="mockup-agenda__negocio">Hoje</p>
-              <span class="mockup-agenda__hoje">3 horários</span>
-            </div>
-            <div class="mockup-linha">
-              <span class="mockup-linha__hora">09:00</span>
-              <div class="mockup-linha__corpo"><p class="mockup-linha__servico">Corte</p></div>
-              <span class="mockup-pill mockup-pill--ok">ok</span>
-            </div>
-            <div class="mockup-linha">
-              <span class="mockup-linha__hora">11:00</span>
-              <div class="mockup-linha__corpo"><p class="mockup-linha__servico">Barba</p></div>
-              <span class="mockup-pill mockup-pill--ok">ok</span>
-            </div>
-            <div class="mockup-linha">
-              <span class="mockup-linha__hora">16:00</span>
-              <div class="mockup-linha__corpo"><p class="mockup-linha__servico">Sobrancelha</p></div>
-              <span class="mockup-pill mockup-pill--pendente">pendente</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="landing-feature">
-        <div>
-          <p class="landing-feature__kicker">Clientes</p>
-          <h2 class="landing-feature__title">Nunca mais esqueça quem tá sumido</h2>
-          <p class="landing-feature__body">O Swipo Agenda avisa sozinho quem fez aniversário essa semana e quem não aparece há um tempo — pra você mandar uma mensagem antes que o cliente vá pra concorrência.</p>
-        </div>
-        <div class="landing-feature__art">
-          <div class="mini-insight-stack">
-            <div class="mini-insight">
-              <div class="mini-insight__icone">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2l2.5 5.5L20 8l-4 4 1 6-5-3-5 3 1-6-4-4 5.5-.5L12 2z"/></svg>
-              </div>
-              <div class="mini-insight__texto">
-                <p class="mini-insight__titulo">Aniversariantes</p>
-                <p class="mini-insight__conta">3 essa semana</p>
-              </div>
-              <svg class="mini-insight__chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
-            </div>
-            <div class="mini-insight">
-              <div class="mini-insight__icone">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
-              </div>
-              <div class="mini-insight__texto">
-                <p class="mini-insight__titulo">Sem retornar</p>
-                <p class="mini-insight__conta">7 clientes sumidos</p>
-              </div>
-              <svg class="mini-insight__chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="landing-feature">
-        <div>
-          <p class="landing-feature__kicker">Vendas</p>
-          <h2 class="landing-feature__title">Saiba quanto entrou, sem abrir planilha</h2>
-          <p class="landing-feature__body">Registre serviços e produtos vendidos na hora e veja o relatório do mês pronto — o que mais vendeu, quem mais comprou, tudo automático.</p>
-        </div>
-        <div class="landing-feature__art">
-          <div class="mini-relatorio">
-            <div class="mini-relatorio__topo">
-              <span class="mini-relatorio__label">Vendas este mês</span>
-              <span class="mini-relatorio__valor">R$ 3.240</span>
-            </div>
-            <div class="mini-relatorio__barra-linha">
-              <span>Corte</span>
-              <div class="mini-relatorio__barra-trilho"><div class="mini-relatorio__barra-preenchida" style="width:82%"></div></div>
-            </div>
-            <div class="mini-relatorio__barra-linha">
-              <span>Coloração</span>
-              <div class="mini-relatorio__barra-trilho"><div class="mini-relatorio__barra-preenchida" style="width:54%"></div></div>
-            </div>
-            <div class="mini-relatorio__barra-linha">
-              <span>Produtos</span>
-              <div class="mini-relatorio__barra-trilho"><div class="mini-relatorio__barra-preenchida" style="width:31%"></div></div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="landing-steps">
-        <div class="landing-steps__head">
-          <h2>Pra começar é rápido assim</h2>
-          <p>Sem instalação, sem burocracia.</p>
-        </div>
-        <div class="landing-steps__grid">
-          <div class="landing-step">
-            <p class="landing-step__num">01</p>
-            <p class="landing-step__title">Toque em "Começar agora"</p>
-            <p class="landing-step__body">Abre direto no seu navegador, sem loja de app.</p>
-          </div>
-          <div class="landing-step">
-            <p class="landing-step__num">02</p>
-            <p class="landing-step__title">Configure em menos de 2 minutos</p>
-            <p class="landing-step__body">Nome do negócio, horários e serviços — só alguns toques.</p>
-          </div>
-          <div class="landing-step">
-            <p class="landing-step__num">03</p>
-            <p class="landing-step__title">Adicione à tela inicial</p>
-            <p class="landing-step__body">Fica com cara de app de verdade, sem ocupar espaço de loja.</p>
-          </div>
-        </div>
-      </section>
-
-      <section class="landing-cta-band">
-        <h2>Pronto pra organizar sua agenda?</h2>
-        <p>Comece agora, é grátis.</p>
-        <a href="onboarding.html" class="btn-landing btn-landing--primary">Começar agora</a>
-      </section>
-
-      <footer class="landing-footer">
-        <div class="landing-footer__brand">
-          <img class="tema-so-escuro" src="assets/logos/swipo-icon-dark.svg?v=20260713l" alt="" width="22" height="22" />
-          <img class="tema-so-claro" src="assets/logos/swipo-icon-light.svg?v=20260713l" alt="" width="22" height="22" />
-          swipo.com.br
-        </div>
-        <div class="landing-footer__links">
-          <a href="privacidade.html">Privacidade</a>
-          <a href="termos.html">Termos</a>
-          <a href="ajuda.html">Ajuda</a>
-        </div>
-      </footer>
+  <nav class="nav" id="nav">
+    <div class="wrap nav__row">
+      <a href="landing.html" class="nav__brand">
+        <img src="assets/logos/swipo-icon-dark.svg?v=20260714a" alt="" width="30" height="30" />
+        Swipo Agenda
+      </a>
+      <div class="nav__links">
+        <a href="login.html" class="nav__entrar">Entrar</a>
+        <a href="onboarding.html" class="btn btn--primary">Começar grátis</a>
+      </div>
     </div>
-  </div>
+  </nav>
 
-  <script src="js/utils.js?v=20260713l"></script>
-  <script src="js/storage.js?v=20260713l"></script>
-  <script src="js/tema.js?v=20260713l"></script>
+  <header class="hero wrap">
+    <span class="hero__badge fade-in fade-in--1">Feito para quem vive de horário marcado</span>
+    <h1 class="hero__title fade-in fade-in--2">Organize sua agenda. Cuide dos seus clientes. Acompanhe seu negócio.</h1>
+    <p class="hero__sub fade-in fade-in--3">O Swipo reúne agenda, clientes, vendas e relatórios em um aplicativo simples, rápido e feito para quem trabalha com atendimento.</p>
+    <div class="hero__actions fade-in fade-in--3">
+      <a href="onboarding.html" class="btn btn--primary btn--lg">Começar grátis</a>
+      <a href="#" class="btn btn--glass btn--lg">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+        Ver demonstração
+      </a>
+    </div>
+
+    <div class="phone fade-in fade-in--4" id="phone">
+      <div class="phone__island"></div>
+      <div class="phone__screen">
+        <div class="phone__placeholder">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+          <strong>VIDEO_PLACEHOLDER_HERO</strong>
+          <span>Loop: abrir app → agenda → criar<br>agendamento → cliente → realizado →<br>relatório → vendas → pendentes → agenda</span>
+          <code>autoplay · loop · sem áudio</code>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section class="audience wrap" id="audience">
+    <h2 class="audience__title">Feito para quem vive de horário marcado.</h2>
+    <div class="marquee">
+      <div class="marquee__track">
+        <span class="chip">Barbeiros</span>
+        <span class="chip">Manicures</span>
+        <span class="chip">Cabeleireiros</span>
+        <span class="chip">Esteticistas</span>
+        <span class="chip">Massoterapeutas</span>
+        <span class="chip">Tatuadores</span>
+        <span class="chip">Designers de sobrancelha</span>
+        <span class="chip">Personal</span>
+        <span class="chip">Veterinários</span>
+        <span class="chip" aria-hidden="true">Barbeiros</span>
+        <span class="chip" aria-hidden="true">Manicures</span>
+        <span class="chip" aria-hidden="true">Cabeleireiros</span>
+        <span class="chip" aria-hidden="true">Esteticistas</span>
+        <span class="chip" aria-hidden="true">Massoterapeutas</span>
+        <span class="chip" aria-hidden="true">Tatuadores</span>
+        <span class="chip" aria-hidden="true">Designers de sobrancelha</span>
+        <span class="chip" aria-hidden="true">Personal</span>
+        <span class="chip" aria-hidden="true">Veterinários</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="problema wrap">
+    <h2 class="problema__title" data-reveal>Ainda organiza tudo em vários lugares?</h2>
+
+    <div class="problema__scatter" data-reveal>
+      <div class="old-card">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 3v3M16 3v3"/></svg>
+        <span>Agenda de papel</span>
+      </div>
+      <div class="old-card">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.4 8.4 0 0 1-8.4 8.4c-1.4 0-2.7-.3-3.9-.9L3 21l2-5.7a8.3 8.3 0 0 1-.9-3.8A8.4 8.4 0 1 1 21 11.5z"/></svg>
+        <span>WhatsApp</span>
+      </div>
+      <div class="old-card">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M8 6h8M8 10h1M12 10h1M16 10h1M8 13h1M12 13h1M16 13h1M8 16h1M12 16h1M16 16h1"/></svg>
+        <span>Calculadora</span>
+      </div>
+      <div class="old-card">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 2h9l5 5v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z"/><path d="M9 12h6M9 16h6M9 8h2"/></svg>
+        <span>Bloco de notas</span>
+      </div>
+      <div class="old-card">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg>
+        <span>Planilha</span>
+      </div>
+    </div>
+
+    <div class="problema__converge" data-reveal>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+      <span style="font-size:12px">tudo converge pra um só lugar</span>
+    </div>
+
+    <div class="swipo-card" data-reveal>
+      <img src="assets/logos/swipo-icon-dark.svg?v=20260714a" alt="" width="32" height="32" />
+      <span>Swipo Agenda</span>
+    </div>
+  </section>
+
+  <section class="feature-row wrap">
+    <div data-reveal>
+      <p class="feature-row__kicker">AGENDA</p>
+      <h2 class="feature-row__title">Sua agenda sempre organizada.</h2>
+      <p class="feature-row__body">Crie horários, bloqueie períodos e encaixe clientes em segundos. Manda a agenda do dia pro cliente no WhatsApp com um toque.</p>
+    </div>
+    <div class="feature-row__media" data-reveal>
+      <div class="phone-mini">
+        <div class="phone-mini__island"></div>
+        <div class="phone-mini__screen">
+          <div class="phone-mini__placeholder">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+            <strong>VIDEO_PLACEHOLDER_AGENDA</strong>
+            <span>criar horário → bloquear período<br>→ encaixar cliente</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="feature-row feature-row--reverse wrap">
+    <div data-reveal>
+      <p class="feature-row__kicker">CLIENTES</p>
+      <h2 class="feature-row__title">Nunca mais esqueça quem sumiu.</h2>
+      <p class="feature-row__body">O Swipo acompanha aniversários, clientes sem retornar e todo o histórico.</p>
+    </div>
+    <div class="feature-row__media" data-reveal>
+      <div class="phone-mini">
+        <div class="phone-mini__island"></div>
+        <div class="phone-mini__screen">
+          <div class="phone-mini__placeholder">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+            <strong>VIDEO_PLACEHOLDER_CLIENTES</strong>
+            <span>aniversariantes → sem retornar<br>→ histórico do cliente</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="feature-row wrap">
+    <div data-reveal>
+      <p class="feature-row__kicker">PENDENTES</p>
+      <h2 class="feature-row__title">Controle quem ainda não pagou.</h2>
+      <p class="feature-row__body">Veja rapidamente quem ficou devendo e registre recebimentos em poucos toques.</p>
+    </div>
+    <div class="feature-row__media" data-reveal>
+      <div class="phone-mini">
+        <div class="phone-mini__island"></div>
+        <div class="phone-mini__screen">
+          <div class="phone-mini__placeholder">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+            <strong>VIDEO_PLACEHOLDER_PENDENTES</strong>
+            <span>lista de devedores → registrar<br>recebimento</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="feature-row feature-row--reverse wrap">
+    <div data-reveal>
+      <p class="feature-row__kicker">RELATÓRIOS</p>
+      <h2 class="feature-row__title">Entenda seu negócio em segundos.</h2>
+      <p class="feature-row__body">Veja faturamento, recebimentos, ticket médio e evolução do mês.</p>
+    </div>
+    <div class="feature-row__media" data-reveal>
+      <div class="phone-mini">
+        <div class="phone-mini__island"></div>
+        <div class="phone-mini__screen">
+          <div class="phone-mini__placeholder">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+            <strong>VIDEO_PLACEHOLDER_RELATORIOS</strong>
+            <span>faturamento → ticket médio<br>→ evolução do mês</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="feature-row wrap">
+    <div data-reveal>
+      <p class="feature-row__kicker">VENDAS</p>
+      <h2 class="feature-row__title">Venda produtos junto com seus atendimentos.</h2>
+      <p class="feature-row__body">Registre vendas rapidamente e acompanhe os itens mais vendidos.</p>
+    </div>
+    <div class="feature-row__media" data-reveal>
+      <div class="phone-mini">
+        <div class="phone-mini__island"></div>
+        <div class="phone-mini__screen">
+          <div class="phone-mini__placeholder">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+            <strong>VIDEO_PLACEHOLDER_VENDAS</strong>
+            <span>registrar venda → itens mais<br>vendidos</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="connected wrap">
+    <h2 class="connected__title" data-reveal>Tudo conversa entre si.</h2>
+    <div class="orbit" data-reveal>
+      <div class="orbit__glow"></div>
+      <svg class="orbit__lines" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <line x1="50" y1="12" x2="50" y2="50" stroke="rgba(157,78,255,0.28)" stroke-width="0.4" />
+        <line x1="86.15" y1="38.25" x2="50" y2="50" stroke="rgba(157,78,255,0.28)" stroke-width="0.4" />
+        <line x1="72.34" y1="80.75" x2="50" y2="50" stroke="rgba(157,78,255,0.28)" stroke-width="0.4" />
+        <line x1="27.66" y1="80.75" x2="50" y2="50" stroke="rgba(157,78,255,0.28)" stroke-width="0.4" />
+        <line x1="13.85" y1="38.25" x2="50" y2="50" stroke="rgba(157,78,255,0.28)" stroke-width="0.4" />
+      </svg>
+
+      <div class="orbit__node" style="top:12%; left:50%;">
+        <div class="orbit__node-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 3v3M16 3v3"/></svg></div>
+        <span>Agenda</span>
+      </div>
+      <div class="orbit__node" style="top:38.25%; left:86.15%;">
+        <div class="orbit__node-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg></div>
+        <span>Clientes</span>
+      </div>
+      <div class="orbit__node" style="top:80.75%; left:72.34%;">
+        <div class="orbit__node-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></div>
+        <span>Pendentes</span>
+      </div>
+      <div class="orbit__node" style="top:80.75%; left:27.66%;">
+        <div class="orbit__node-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 20V10M12 20V4M20 20v-7"/></svg></div>
+        <span>Relatórios</span>
+      </div>
+      <div class="orbit__node" style="top:38.25%; left:13.85%;">
+        <div class="orbit__node-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 8h12l-1 12H7L6 8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg></div>
+        <span>Vendas</span>
+      </div>
+
+      <div class="orbit__phone">
+        <div class="orbit__phone-screen">
+          <img src="assets/logos/swipo-icon-dark.svg?v=20260714a" alt="" />
+        </div>
+      </div>
+    </div>
+    <p class="connected__body" data-reveal>Sem retrabalho. Sem duplicar informações. Tudo o que acontece na agenda, no cliente ou na venda aparece nos relatórios na hora.</p>
+  </section>
+
+  <section class="howitworks wrap">
+    <h2 class="howitworks__title" data-reveal>Pra começar é assim</h2>
+    <div class="howitworks__rail" data-reveal>
+      <div class="step-item">
+        <div class="step-item__num">1</div>
+        <p class="step-item__title">Abra no navegador</p>
+        <div class="step-item__media"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg></div>
+      </div>
+      <div class="step-item">
+        <div class="step-item__num">2</div>
+        <p class="step-item__title">Configure em poucos minutos</p>
+        <div class="step-item__media"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg></div>
+      </div>
+      <div class="step-item">
+        <div class="step-item__num">3</div>
+        <p class="step-item__title">Adicione à tela inicial</p>
+        <div class="step-item__media"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg></div>
+      </div>
+      <div class="step-item">
+        <div class="step-item__num">4</div>
+        <p class="step-item__title">Comece a atender</p>
+        <div class="step-item__media"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="resources wrap">
+    <h2 class="resources__title" data-reveal>Tudo que seu negócio precisa</h2>
+    <div class="resources__grid" data-reveal>
+      <div class="resource-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 3v3M16 3v3"/></svg>
+        <span>Agenda</span>
+      </div>
+      <div class="resource-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>
+        <span>Clientes</span>
+      </div>
+      <div class="resource-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+        <span>Pendentes</span>
+      </div>
+      <div class="resource-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 20V10M12 20V4M20 20v-7"/></svg>
+        <span>Relatórios</span>
+      </div>
+      <div class="resource-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 8h12l-1 12H7L6 8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>
+        <span>Vendas</span>
+      </div>
+      <div class="resource-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 11.5a8.4 8.4 0 0 1-8.4 8.4c-1.4 0-2.7-.3-3.9-.9L3 21l2-5.7a8.3 8.3 0 0 1-.9-3.8A8.4 8.4 0 1 1 21 11.5z"/></svg>
+        <span>WhatsApp</span>
+      </div>
+      <div class="resource-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+        <span>Bloqueios</span>
+      </div>
+      <div class="resource-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2l2.5 5.5L20 8l-4 4 1 6-5-3-5 3 1-6-4-4 5.5-.5L12 2z"/></svg>
+        <span>Aniversários</span>
+      </div>
+      <div class="resource-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+        <span>Tema escuro</span>
+      </div>
+      <div class="resource-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M7 17a4 4 0 0 1 0-8 5 5 0 0 1 9.6-1.5A4.5 4.5 0 0 1 17 17H7z"/><path d="M12 12v5m0-5l2 2m-2-2l-2 2"/></svg>
+        <span>Backup</span>
+      </div>
+      <div class="resource-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="6" y="2" width="12" height="20" rx="2"/><path d="M11 18h2"/></svg>
+        <span>PWA</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Depoimentos: estrutura criada por pedido explícito, mas fica oculta
+       (display:none) até existirem usuários reais para depoimentos reais. -->
+  <section class="testimonials wrap">
+    <h2 class="resources__title">O que dizem quem já usa</h2>
+    <div class="resources__grid">
+      <div class="resource-item"><span>Depoimento 1 — aguardando usuários reais</span></div>
+      <div class="resource-item"><span>Depoimento 2 — aguardando usuários reais</span></div>
+      <div class="resource-item"><span>Depoimento 3 — aguardando usuários reais</span></div>
+    </div>
+  </section>
+
+  <section class="plan wrap">
+    <h2 class="plan__title" data-reveal>Um plano simples</h2>
+    <p class="plan__sub" data-reveal>Teste grátis, cancele quando quiser.</p>
+    <div class="plan-card" data-reveal>
+      <span class="plan-card__badge">SWIPO AGENDA PRO</span>
+      <p class="plan-card__price">R$ 12,90<span>/mês</span></p>
+      <p class="plan-card__note">7 dias grátis para testar</p>
+      <ul>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Agenda, clientes e vendas ilimitados</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Relatórios completos</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Envio de agenda pelo WhatsApp</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Backup automático</li>
+      </ul>
+      <a href="onboarding.html" class="btn btn--primary btn--lg" style="width:100%; justify-content:center;">Começar grátis</a>
+    </div>
+  </section>
+
+  <section class="faq">
+    <h2 class="faq__title" data-reveal>Perguntas frequentes</h2>
+    <div data-reveal>
+      <div class="faq-item">
+        <button class="faq-item__q" type="button">
+          Precisa instalar?
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+        </button>
+        <div class="faq-item__a"><p>Não precisa de loja de app. Você abre o Swipo Agenda no navegador e, se quiser, adiciona um atalho na tela inicial do celular — fica com cara de app instalado.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-item__q" type="button">
+          Funciona offline?
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+        </button>
+        <div class="faq-item__a"><p>Hoje é preciso estar conectado pra abrir o app. Os dados ficam salvos no seu aparelho depois de carregados.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-item__q" type="button">
+          Tem teste grátis?
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+        </button>
+        <div class="faq-item__a"><p>Sim, 7 dias grátis pra testar sem compromisso.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-item__q" type="button">
+          Posso cancelar?
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+        </button>
+        <div class="faq-item__a"><p>Quando quiser, sem multa e sem burocracia.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-final wrap">
+    <div class="cta-final__glow"></div>
+    <h2 class="cta-final__title" data-reveal>Sua agenda merece evoluir.</h2>
+    <p class="cta-final__sub" data-reveal>Organize seu negócio em minutos, sem custo pra começar.</p>
+    <a href="onboarding.html" class="btn btn--primary btn--lg" data-reveal style="position:relative;">Começar grátis</a>
+    <div class="phone-mini" data-reveal style="margin-top:56px; position:relative;">
+      <div class="phone-mini__island"></div>
+      <div class="phone-mini__screen">
+        <div class="phone-mini__placeholder">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+          <strong>VIDEO_PLACEHOLDER_FINAL</strong>
+          <span>encerramento — logo Swipo</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer wrap">
+    <div class="footer__top">
+      <div class="footer__brand">
+        <img src="assets/logos/swipo-icon-dark.svg?v=20260714a" alt="" width="26" height="26" />
+        Swipo Agenda
+      </div>
+      <div class="footer__social">
+        <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg></a>
+        <a href="#" aria-label="YouTube"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="5" width="20" height="14" rx="4"/><path d="M10 9l6 3-6 3V9z"/></svg></a>
+        <a href="#" aria-label="TikTok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 3v11.5a3.5 3.5 0 1 1-3-3.46"/><path d="M14 3c0 2.5 2 4.5 4.5 4.5"/></svg></a>
+      </div>
+    </div>
+    <div class="footer__links">
+      <a href="ajuda.html">Contato</a>
+      <a href="termos.html">Termos</a>
+      <a href="privacidade.html">Privacidade</a>
+      <a href="ajuda.html">Suporte</a>
+    </div>
+  </footer>
+
+  <script>
+  (function(){
+    var nav = document.getElementById('nav');
+    function onScroll(){
+      nav.classList.toggle('is-scrolled', window.scrollY > 8);
+    }
+    document.addEventListener('scroll', onScroll, { passive:true });
+    onScroll();
+
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!reduce) {
+      var phone = document.getElementById('phone');
+      var hero = document.querySelector('.hero');
+      hero.addEventListener('mousemove', function(e){
+        var r = hero.getBoundingClientRect();
+        var x = (e.clientX - r.left) / r.width - 0.5;
+        var y = (e.clientY - r.top) / r.height - 0.5;
+        phone.style.transform = 'rotate(' + (x*2.5) + 'deg)';
+      });
+      hero.addEventListener('mouseleave', function(){
+        phone.style.transform = '';
+      });
+    }
+
+    var revealEls = document.querySelectorAll('[data-reveal]');
+    if ('IntersectionObserver' in window && revealEls.length) {
+      var io = new IntersectionObserver(function(entries){
+        entries.forEach(function(entry){
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            io.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.2, rootMargin: '0px 0px -60px 0px' });
+      revealEls.forEach(function(el){ io.observe(el); });
+    } else {
+      revealEls.forEach(function(el){ el.classList.add('is-visible'); });
+    }
+
+    document.querySelectorAll('.faq-item__q').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        btn.closest('.faq-item').classList.toggle('is-open');
+      });
+    });
+  })();
+  </script>
 </body>
 </html>
