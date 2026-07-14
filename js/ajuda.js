@@ -3,11 +3,14 @@
    Motor genérico chamado por qualquer tela informando só o seu
    identificador — nenhuma tela tem lógica própria de ajuda.
 
-   Mecânica ("spotlight"): em vez de modal com texto, escurece a
-   tela toda ao redor do elemento real via um box-shadow gigante
-   nele mesmo (.tour-alvo) — sem precisar calcular nenhum recorte.
-   Uma legenda curta (nunca um parágrafo) aparece perto do elemento.
-   Toque em qualquer lugar avança; "Pular" encerra a qualquer hora.
+   Mecânica ("spotlight"): um fundo escuro (.tour-fundo) cobre a
+   tela inteira, real element (.tour-alvo) some por cima dele com
+   z-index maior — sempre nítido, mesmo dentro de listas com scroll
+   (nada de box-shadow tentando "vazar" pra fora de um container com
+   overflow, que fica cortado nas bordas dele). Uma legenda curta
+   (nunca um parágrafo) aparece perto do elemento. Toque em qualquer
+   lugar avança/encerra — sem botão "Pular" (o tour é curto o
+   bastante pra não precisar de uma saída explícita).
 
    iniciarTour(tela)   — roda só 1x, na primeira visita (auto).
    reiniciarTour(tela) — repete o tour sob demanda (botão "?").
@@ -22,7 +25,6 @@ let ajudaElementoAceso = null;
 let ajudaAoClicar = null;
 
 function ajudaCliqueGlobal(evento) {
-  if (evento.target.closest(".tour-pular")) return;
   evento.preventDefault();
   evento.stopPropagation();
   if (ajudaAoClicar) ajudaAoClicar();
@@ -42,8 +44,14 @@ function ajudaLimpar() {
   if (ajudaElementoAceso) ajudaElementoAceso.classList.remove("tour-alvo");
   ajudaElementoAceso = null;
   ajudaAoClicar = null;
-  qsa(".tour-legenda, .tour-pontos, .tour-pular, .tour-dedo, .tour-seta").forEach((el) => el.remove());
+  qsa(".tour-fundo, .tour-legenda, .tour-pontos, .tour-dedo, .tour-seta").forEach((el) => el.remove());
   document.removeEventListener("click", ajudaCliqueGlobal, true);
+}
+
+function ajudaMostrarFundo() {
+  const fundo = document.createElement("div");
+  fundo.className = "tour-fundo";
+  document.body.appendChild(fundo);
 }
 
 function ajudaPosicionarLegenda(legendaEl, alvoEl) {
@@ -67,18 +75,6 @@ function ajudaMostrarPontos(total, indice) {
     pontos.appendChild(p);
   }
   document.body.appendChild(pontos);
-}
-
-function ajudaMostrarPular(aoPular) {
-  const pular = document.createElement("button");
-  pular.className = "tour-pular";
-  pular.type = "button";
-  pular.textContent = "Pular";
-  pular.addEventListener("click", (evento) => {
-    evento.stopPropagation();
-    aoPular();
-  });
-  document.body.appendChild(pular);
 }
 
 function ajudaCriarGesto(alvoEl) {
@@ -109,6 +105,8 @@ function ajudaTocarPasso(tela, indice) {
   ajudaPassoAtual = indice;
   const passo = passos[indice];
 
+  ajudaMostrarFundo();
+
   const legenda = document.createElement("div");
   legenda.className = "tour-legenda";
 
@@ -128,7 +126,6 @@ function ajudaTocarPasso(tela, indice) {
   }
 
   ajudaMostrarPontos(passos.length, indice);
-  ajudaMostrarPular(() => ajudaEncerrarTour(tela));
   ajudaEscutarClique(() => ajudaTocarPasso(tela, indice + 1));
 }
 
@@ -162,6 +159,7 @@ function mostrarDicaSpotlight(tela, chave, elementoAncora) {
   if (estado[tela].dicasVistas.includes(chave)) return;
 
   ajudaLimpar();
+  ajudaMostrarFundo();
   elementoAncora.classList.add("tour-alvo");
   ajudaElementoAceso = elementoAncora;
 
@@ -171,7 +169,6 @@ function mostrarDicaSpotlight(tela, chave, elementoAncora) {
   document.body.appendChild(legenda);
   ajudaPosicionarLegenda(legenda, elementoAncora);
 
-  ajudaMostrarPular(ajudaLimpar);
   ajudaEscutarClique(ajudaLimpar);
 
   estado[tela].dicasVistas.push(chave);

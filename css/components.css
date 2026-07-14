@@ -927,14 +927,25 @@
 
 /* ============================================================
    Ajuda contextual — tour de spotlight (ver js/ajuda.js)
-   O "spotlight" é o próprio elemento real com um box-shadow gigante
-   (escurece tudo ao redor, sem precisar recortar nada); a legenda é
-   sempre curta, nunca um parágrafo.
+   .tour-fundo é um escurecido de tela inteira, separado do elemento
+   real — assim cobre tudo (inclusive o topo da tela) mesmo quando o
+   elemento em destaque mora dentro de uma lista com scroll (um
+   box-shadow tentando escurecer a partir do próprio elemento fica
+   cortado nas bordas de qualquer ancestral com overflow, por isso
+   não usamos mais essa técnica). O elemento real só precisa ficar
+   por cima desse fundo (z-index maior) pra continuar nítido.
    ============================================================ */
+.tour-fundo {
+  position: fixed;
+  inset: 0;
+  z-index: 490;
+  background: var(--overlay);
+}
+
 .tour-alvo {
   position: relative;
   z-index: 500;
-  box-shadow: 0 0 0 3px var(--primary-strong), 0 0 0 9999px var(--overlay);
+  box-shadow: 0 0 0 3px var(--primary-strong);
   border-radius: var(--radius-md);
 }
 
@@ -989,32 +1000,19 @@
   background: #fff;
 }
 
-.tour-pular {
-  position: fixed;
-  z-index: 520;
-  top: 18px;
-  right: 18px;
-  background: none;
-  border: none;
-  color: rgba(255, 255, 255, 0.75);
-  font-family: inherit;
-  font-size: var(--text-sm);
-  font-weight: 600;
-  cursor: pointer;
-  padding: 6px 8px;
-}
-
 /* Gesto de arrastar: um "dedo" desliza dentro da área acesa, com
-   setas indicando as duas direções possíveis. */
+   setas indicando as duas direções possíveis. Animação sempre ligada
+   (decisão deliberada: é o elemento central desse passo, sem ela a
+   dica perde o sentido — não respeita prefers-reduced-motion aqui). */
 .tour-dedo {
   position: absolute;
   z-index: 521;
   left: 50%;
   top: 50%;
-  width: 42px;
-  height: 42px;
+  width: 64px;
+  height: 64px;
   border-radius: var(--radius-full);
-  background: radial-gradient(circle, rgba(157, 78, 255, 0.4), rgba(157, 78, 255, 0) 70%);
+  background: radial-gradient(circle, rgba(157, 78, 255, 0.45), rgba(157, 78, 255, 0) 70%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1023,16 +1021,16 @@
 }
 
 .tour-dedo svg {
-  width: 26px;
-  height: 26px;
+  width: 40px;
+  height: 40px;
   filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.5));
 }
 
 @keyframes tour-dedo-desliza {
   0%, 100% { transform: translate(-50%, -50%) translateX(0); }
-  25% { transform: translate(-50%, -50%) translateX(-42px); }
+  25% { transform: translate(-50%, -50%) translateX(-48px); }
   50% { transform: translate(-50%, -50%) translateX(0); }
-  75% { transform: translate(-50%, -50%) translateX(42px); }
+  75% { transform: translate(-50%, -50%) translateX(48px); }
 }
 
 .tour-seta {
@@ -1046,10 +1044,6 @@
 .tour-seta svg { width: 20px; height: 20px; }
 .tour-seta--esq { left: 14px; }
 .tour-seta--dir { right: 14px; }
-
-@media (prefers-reduced-motion: reduce) {
-  .tour-dedo { animation: none; }
-}
 
 /* Grade de calendário */
 .cal-grid {
