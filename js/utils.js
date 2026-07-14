@@ -151,8 +151,9 @@ function configurarFiltroPeriodo(obterPeriodoAtual, aoAplicar) {
 
 function gerarGradeHorarios(horaInicio, horaFim, intervaloGrade) {
   const grade = [];
-  let [h, m] = horaInicio.split(":").map(Number);
-  const [hf, mf] = horaFim.split(":").map(Number);
+  let [h, m] = (horaInicio || "").split(":").map(Number);
+  const [hf, mf] = (horaFim || "").split(":").map(Number);
+  if (![h, m, hf, mf, intervaloGrade].every(Number.isFinite) || intervaloGrade <= 0) return grade;
   while (h < hf || (h === hf && m <= mf)) {
     grade.push(`${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`);
     m += intervaloGrade;

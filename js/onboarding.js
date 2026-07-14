@@ -59,8 +59,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const config = obterConfig();
     const horaInicio = qs("#js-ob-hora-inicio").value.trim();
     const horaFim = qs("#js-ob-hora-fim").value.trim();
-    if (horaInicio) config.horaInicio = horaInicio;
-    if (horaFim) config.horaFim = horaFim;
+    const horaValida = (v) => /^\d{2}:\d{2}$/.test(v);
+    if (horaValida(horaInicio)) config.horaInicio = horaInicio;
+    if (horaValida(horaFim)) config.horaFim = horaFim;
     config.intervaloGrade = parseInt(qs("#js-ob-grade").dataset.valor, 10);
     salvarConfig(config);
   }
