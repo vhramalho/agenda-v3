@@ -85,8 +85,8 @@ body[data-page="index"] #js-agenda-lista {
   gap: 2px;
   padding: 6px 0;
   border-radius: var(--radius-md);
-  background: var(--card);
-  border: 1px solid var(--border);
+  background: transparent;
+  border: none;
 }
 
 .week-day__label {
