@@ -3,9 +3,9 @@
    Atende pendentes.html, pendentes-devedores.html e
    pendentes-devedores-vendas.html — cada função só roda se os
    elementos daquela tela existirem no documento.
-   pendentes.html tem abas Atendimento/Vendas (mesmo padrão visual
-   da aba Atendimentos/Vendas do Relatório); a aba Vendas espelha a
-   estrutura da aba Atendimento (A receber + Quem deve + Devedores).
+   pendentes.html mostra Atendimento (bloco principal) e Vendas (bloco
+   secundário, mesma estrutura — A receber + Quem deve + Devedores —
+   só que com menos destaque visual), sempre visíveis, sem aba.
    "Quem deve" leva à Agenda na data exata do pendente (?data=...).
    ============================================================ */
 
@@ -311,18 +311,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     toggle.addEventListener("click", () => { expandido = !expandido; renderQuemDeveVendas(); });
     renderQuemDeveVendas();
-  }
-
-  // ---- Troca de aba Atendimento/Vendas (pendentes.html) ----
-  if (qs("#js-aba-pendentes")) {
-    qsa(".segmented__item", qs("#js-aba-pendentes")).forEach((item) => {
-      item.addEventListener("click", () => {
-        qsa(".segmented__item", qs("#js-aba-pendentes")).forEach((i) => i.classList.remove("is-active"));
-        item.classList.add("is-active");
-        qs("#js-conteudo-pendentes-atendimento").classList.toggle("is-hidden", item.dataset.aba !== "atendimento");
-        qs("#js-conteudo-pendentes-vendas").classList.toggle("is-hidden", item.dataset.aba !== "vendas");
-      });
-    });
   }
 
   // ---- Devedores — card resumo top 3 (pendentes.html) ----

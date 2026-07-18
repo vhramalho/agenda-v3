@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <link rel="manifest" href="manifest.json?v=20260717d" />
+  <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg?v=20260717d" />
+  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png?v=20260717d" />
+  <meta name="theme-color" content="#0B0B10" />
+  <title>Produtos — Swipo Agenda</title>
+  <link rel="stylesheet" href="css/tokens.css?v=20260717d" />
+  <link rel="stylesheet" href="css/base.css?v=20260717d" />
+  <link rel="stylesheet" href="css/layout.css?v=20260717d" />
+  <link rel="stylesheet" href="css/components.css?v=20260717d" />
+</head>
+<body data-page="mais">
+  <div class="app">
+    <main class="page">
+      <header class="app-header" style="padding:0;margin-bottom:var(--space-5);">
+        <button class="icon-btn" onclick="voltarOuInicio()" aria-label="Voltar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <h1 class="app-header__title">Produtos</h1>
+        <button class="icon-btn icon-btn--accent" aria-label="Novo produto" id="js-btn-novo-produto">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+        </button>
+      </header>
+
+      <div class="grid-3 section" id="js-produtos-insight">
+        <div class="insight-card">
+          <div class="insight-card__label">
+            <span>Em estoque</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 7l9-4 9 4-9 4-9-4z"/><path d="M3 7v10l9 4 9-4V7"/><path d="M12 11v10"/></svg>
+          </div>
+          <p class="insight-card__valor" id="js-produtos-insight-custo"></p>
+        </div>
+        <div class="insight-card">
+          <div class="insight-card__label">
+            <span>Venda potencial</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.59 13.41L12 22l-9-9V4a1 1 0 0 1 1-1h9l9 9a1 1 0 0 1 0 1.41z"/><circle cx="7.5" cy="7.5" r="1.5"/></svg>
+          </div>
+          <p class="insight-card__valor" id="js-produtos-insight-venda"></p>
+        </div>
+        <div class="insight-card">
+          <div class="insight-card__label">
+            <span>Lucro potencial</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="1.8"><path d="M23 6l-9.5 9.5-5-5L1 18"/><path d="M17 6h6v6"/></svg>
+          </div>
+          <p class="insight-card__valor" style="color:var(--success);" id="js-produtos-insight-lucro"></p>
+        </div>
+      </div>
+
+      <section class="section">
+        <h2 class="section__title">Todos os produtos</h2>
+        <div class="card" id="js-lista-produtos"></div>
+        <div class="empty-state is-hidden" id="js-produtos-vazio">
+          <p class="empty-state__title">Nenhum produto cadastrado</p>
+          <p class="text-muted">Toque no + acima pra criar o primeiro.</p>
+        </div>
+      </section>
+    </main>
+
+    <div id="js-bottom-nav-mount"></div>
+
+    <div class="modal-overlay is-hidden" id="modal-novo-produto">
+      <div class="modal-sheet">
+        <div class="modal-sheet__header"><p class="modal-sheet__title">Novo produto</p><button class="modal-close">✕</button></div>
+        <div class="field"><label class="field__label">Nome do produto</label><input class="input" id="js-novo-produto-nome" placeholder="Ex.: Óleo de barba"/></div>
+        <div class="field"><label class="field__label">Preço de venda</label><input class="input" id="js-novo-produto-preco-venda" placeholder="R$ 0,00"/></div>
+        <div class="field"><label class="field__label">Preço de custo (opcional)</label><input class="input" id="js-novo-produto-preco-custo" placeholder="R$ 0,00"/></div>
+        <div class="field"><label class="field__label">Estoque</label><input class="input" type="number" min="0" step="1" id="js-novo-produto-estoque" placeholder="0"/></div>
+        <div class="field">
+          <label class="field__label">Avisar se ficar parado</label>
+          <div class="chip-group" data-chips="single" id="js-novo-produto-parado">
+            <span class="chip" data-dias="15">15 dias</span>
+            <span class="chip" data-dias="30">30 dias</span>
+            <span class="chip" data-dias="60">60 dias</span>
+            <span class="chip" data-dias="90">90 dias</span>
+            <span class="chip chip--ativo" data-dias="">Não avisar</span>
+          </div>
+        </div>
+        <div class="btn-row"><button class="btn btn--secondary" data-fechar-modal>Cancelar</button><button class="btn btn--primary" id="js-novo-produto-salvar">Salvar</button></div>
+      </div>
+    </div>
+
+    <div class="modal-overlay is-hidden" id="modal-editar-produto">
+      <div class="modal-sheet">
+        <div class="modal-sheet__header"><p class="modal-sheet__title">Editar produto</p><button class="modal-close">✕</button></div>
+        <div class="field"><label class="field__label">Nome do produto</label><input class="input" id="js-editar-produto-nome"/></div>
+        <div class="field"><label class="field__label">Preço de venda</label><input class="input" id="js-editar-produto-preco-venda"/></div>
+        <div class="field"><label class="field__label">Preço de custo (opcional)</label><input class="input" id="js-editar-produto-preco-custo"/></div>
+        <div class="field"><label class="field__label">Estoque</label><input class="input" type="number" min="0" step="1" id="js-editar-produto-estoque"/></div>
+        <div class="field">
+          <label class="field__label">Avisar se ficar parado</label>
+          <div class="chip-group" data-chips="single" id="js-editar-produto-parado">
+            <span class="chip" data-dias="15">15 dias</span>
+            <span class="chip" data-dias="30">30 dias</span>
+            <span class="chip" data-dias="60">60 dias</span>
+            <span class="chip" data-dias="90">90 dias</span>
+            <span class="chip chip--ativo" data-dias="">Não avisar</span>
+          </div>
+        </div>
+        <div class="btn-row"><button class="btn btn--primary" id="js-editar-produto-salvar">Salvar</button><button class="btn btn--danger" data-trocar-modal="modal-confirmar-exclusao-produto">Excluir</button></div>
+      </div>
+    </div>
+
+    <div class="modal-overlay is-hidden" id="modal-confirmar-exclusao-produto">
+      <div class="modal-sheet" style="text-align:center;">
+        <div class="modal-sheet__header" style="text-align:left;"><p class="modal-sheet__title">Excluir produto?</p><button class="modal-close">✕</button></div>
+        <p class="text-secondary" style="margin-bottom:20px;">Tem certeza que deseja excluir este produto? Essa ação não pode ser desfeita.</p>
+        <div class="btn-row"><button class="btn btn--secondary" data-fechar-modal>Cancelar</button><button class="btn btn--danger-solid" id="js-confirmar-exclusao-produto">Confirmar</button></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/utils.js?v=20260717d"></script>
+  <script src="js/menu.js?v=20260717d"></script>
+  <script src="js/storage.js?v=20260717d"></script>
+  <script src="js/tema.js?v=20260717d"></script>
+  <script src="js/modal.js?v=20260717d"></script>
+  <script src="js/app.js?v=20260717d"></script>
+  <script src="js/chips.js?v=20260717d"></script>
+  <script src="js/produtos.js?v=20260717d"></script>
+</body>
+</html>

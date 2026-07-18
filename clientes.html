@@ -3,15 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <link rel="manifest" href="manifest.json?v=20260717c" />
-  <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg?v=20260717c" />
-  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png?v=20260717c" />
+  <link rel="manifest" href="manifest.json?v=20260717d" />
+  <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg?v=20260717d" />
+  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png?v=20260717d" />
   <meta name="theme-color" content="#0B0B10" />
   <title>Clientes — Swipo Agenda</title>
-  <link rel="stylesheet" href="css/tokens.css?v=20260717c" />
-  <link rel="stylesheet" href="css/base.css?v=20260717c" />
-  <link rel="stylesheet" href="css/layout.css?v=20260717c" />
-  <link rel="stylesheet" href="css/components.css?v=20260717c" />
+  <link rel="stylesheet" href="css/tokens.css?v=20260717d" />
+  <link rel="stylesheet" href="css/base.css?v=20260717d" />
+  <link rel="stylesheet" href="css/layout.css?v=20260717d" />
+  <link rel="stylesheet" href="css/components.css?v=20260717d" />
 </head>
 <body data-page="clientes">
   <div class="app">
@@ -28,7 +28,21 @@
         </div>
       </div>
 
-      <a href="ranking.html" class="card card--destaque section" style="display:block;text-decoration:none;color:inherit;">
+      <section class="section">
+        <div class="row row--between" style="margin-bottom:12px;">
+          <h2 class="section__title" style="margin-bottom:0;" id="js-clientes-titulo">Todos os clientes</h2>
+          <a href="clientes-todos.html" class="text-primary-accent" style="font-size:var(--text-sm);font-weight:600;">Ver todos</a>
+        </div>
+        <div class="card" id="js-lista-clientes"></div>
+        <div class="empty-state is-hidden" id="js-clientes-vazio">
+          <p class="empty-state__title">Nenhum cliente encontrado</p>
+          <p class="text-muted">Toque no + acima para cadastrar o primeiro.</p>
+        </div>
+      </section>
+
+      <h2 class="section__title" style="margin-bottom:var(--space-3);">Extras</h2>
+
+      <a href="ranking.html" class="card section" style="display:block;text-decoration:none;color:inherit;">
         <div class="row row--between" style="margin-bottom:12px;">
           <span style="font-weight:700;">Ranking</span>
         </div>
@@ -58,18 +72,6 @@
           </div>
         </a>
       </div>
-
-      <section class="section">
-        <div class="row row--between" style="margin-bottom:12px;">
-          <h2 class="section__title" style="margin-bottom:0;" id="js-clientes-titulo">Todos os clientes</h2>
-          <a href="clientes-todos.html" class="text-primary-accent" style="font-size:var(--text-sm);font-weight:600;">Ver todos</a>
-        </div>
-        <div class="card" id="js-lista-clientes"></div>
-        <div class="empty-state is-hidden" id="js-clientes-vazio">
-          <p class="empty-state__title">Nenhum cliente encontrado</p>
-          <p class="text-muted">Toque no + acima para cadastrar o primeiro.</p>
-        </div>
-      </section>
     </main>
 
     <div id="js-bottom-nav-mount"></div>
@@ -87,15 +89,15 @@
     </div>
   </div>
 
-  <script src="js/utils.js?v=20260717c"></script>
-  <script src="js/menu.js?v=20260717c"></script>
-  <script src="js/storage.js?v=20260717c"></script>
-  <script src="js/tema.js?v=20260717c"></script>
-  <script src="js/modal.js?v=20260717c"></script>
-  <script src="js/app.js?v=20260717c"></script>
-  <script src="js/ajuda-dados.js?v=20260717c"></script>
-  <script src="js/ajuda.js?v=20260717c"></script>
-  <script src="js/clientes-derivadas.js?v=20260717c"></script>
-  <script src="js/clientes.js?v=20260717c"></script>
+  <script src="js/utils.js?v=20260717d"></script>
+  <script src="js/menu.js?v=20260717d"></script>
+  <script src="js/storage.js?v=20260717d"></script>
+  <script src="js/tema.js?v=20260717d"></script>
+  <script src="js/modal.js?v=20260717d"></script>
+  <script src="js/app.js?v=20260717d"></script>
+  <script src="js/ajuda-dados.js?v=20260717d"></script>
+  <script src="js/ajuda.js?v=20260717d"></script>
+  <script src="js/clientes-derivadas.js?v=20260717d"></script>
+  <script src="js/clientes.js?v=20260717d"></script>
 </body>
 </html>

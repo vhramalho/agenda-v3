@@ -664,20 +664,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  const parametrosUrl = new URLSearchParams(window.location.search);
-  const abaInicial = parametrosUrl.get("aba") === "vendas" ? "vendas" : "atendimentos";
-  qsa(".segmented__item", qs("#js-aba-relatorio")).forEach((item) => {
-    item.classList.toggle("is-active", item.dataset.aba === abaInicial);
-    item.addEventListener("click", () => {
-      qsa(".segmented__item", qs("#js-aba-relatorio")).forEach((i) => i.classList.remove("is-active"));
-      item.classList.add("is-active");
-      qs("#js-conteudo-atendimentos").classList.toggle("is-hidden", item.dataset.aba !== "atendimentos");
-      qs("#js-conteudo-vendas").classList.toggle("is-hidden", item.dataset.aba !== "vendas");
-    });
-  });
-  qs("#js-conteudo-atendimentos").classList.toggle("is-hidden", abaInicial !== "atendimentos");
-  qs("#js-conteudo-vendas").classList.toggle("is-hidden", abaInicial !== "vendas");
-
   atualizarRelatorio();
 
   qs('[data-abrir-modal="modal-calendario"]').addEventListener("click", () => {
