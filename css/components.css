@@ -30,6 +30,17 @@
   border: none;
 }
 
+.icon-btn--whatsapp {
+  background: #25D366;
+  color: #fff;
+  border: none;
+}
+
+.icon-btn--whatsapp svg {
+  width: 22px;
+  height: 22px;
+}
+
 .icon-btn__dot {
   position: absolute;
   top: 2px;
