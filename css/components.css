@@ -651,6 +651,11 @@
   font-weight: 800;
 }
 
+.page-header-principal__acoes {
+  display: flex;
+  gap: var(--space-2);
+}
+
 /* ---------- Swatch de cor principal (Onboarding e Configurações) ---------- */
 .cor-swatch {
   width: 28px;
