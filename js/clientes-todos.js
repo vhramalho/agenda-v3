@@ -46,4 +46,36 @@ document.addEventListener("DOMContentLoaded", () => {
       renderizarClientesTodos(ordemAtual);
     });
   });
+
+  qs("#js-btn-novo-cliente").addEventListener("click", () => {
+    qs("#js-novo-cliente-nome").value = "";
+    qs("#js-novo-cliente-telefone").value = "";
+    qs("#js-novo-cliente-aniversario").value = "";
+    qs("#js-novo-cliente-observacao").value = "";
+    abrirModal("modal-novo-cliente");
+  });
+
+  qs("#js-novo-cliente-salvar").addEventListener("click", () => {
+    const nome = qs("#js-novo-cliente-nome").value.trim();
+    if (!nome) return;
+    const { dia, mes } = extrairAniversario(qs("#js-novo-cliente-aniversario").value);
+    const hoje = hojeIso();
+    const lista = obterClientes();
+    lista.push({
+      id: gerarId("cli"),
+      nome,
+      telefone: qs("#js-novo-cliente-telefone").value.trim(),
+      aniversarioDia: dia,
+      aniversarioMes: mes,
+      aniversarioAno: null,
+      observacao: qs("#js-novo-cliente-observacao").value.trim(),
+      criadoEm: hoje,
+      atualizadoEm: hoje,
+      ativo: true,
+    });
+    salvarClientes(lista);
+    fecharModal("modal-novo-cliente");
+    mostrarSucesso();
+    renderizarClientesTodos(ordemAtual);
+  });
 });

@@ -3,15 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <link rel="manifest" href="manifest.json?v=20260717a" />
-  <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg?v=20260717a" />
-  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png?v=20260717a" />
+  <link rel="manifest" href="manifest.json?v=20260717b" />
+  <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg?v=20260717b" />
+  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png?v=20260717b" />
   <meta name="theme-color" content="#0B0B10" />
   <title>Todos os clientes — Swipo Agenda</title>
-  <link rel="stylesheet" href="css/tokens.css?v=20260717a" />
-  <link rel="stylesheet" href="css/base.css?v=20260717a" />
-  <link rel="stylesheet" href="css/layout.css?v=20260717a" />
-  <link rel="stylesheet" href="css/components.css?v=20260717a" />
+  <link rel="stylesheet" href="css/tokens.css?v=20260717b" />
+  <link rel="stylesheet" href="css/base.css?v=20260717b" />
+  <link rel="stylesheet" href="css/layout.css?v=20260717b" />
+  <link rel="stylesheet" href="css/components.css?v=20260717b" />
 </head>
 <body data-page="clientes">
   <div class="app">
@@ -21,7 +21,9 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
         </button>
         <h1 class="app-header__title">Todos os clientes</h1>
-        <div class="icon-btn" style="visibility:hidden" aria-hidden="true"></div>
+        <button class="icon-btn icon-btn--accent" aria-label="Novo cliente" id="js-btn-novo-cliente">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+        </button>
       </header>
 
       <div class="input-icon section">
@@ -48,13 +50,25 @@
     </main>
 
     <div id="js-bottom-nav-mount"></div>
+
+    <div class="modal-overlay is-hidden" id="modal-novo-cliente">
+      <div class="modal-sheet">
+        <div class="modal-sheet__header"><p class="modal-sheet__title">Novo cliente</p><button class="modal-close">✕</button></div>
+        <div class="field"><label class="field__label">Nome</label><input class="input" placeholder="Digite o nome do cliente" id="js-novo-cliente-nome"/></div>
+        <div class="field"><label class="field__label">Telefone</label><input class="input" placeholder="(00) 00000-0000" id="js-novo-cliente-telefone"/></div>
+        <div class="field"><label class="field__label">Aniversário</label><input class="input" placeholder="DD/MM" id="js-novo-cliente-aniversario"/></div>
+        <div class="field"><label class="field__label">Observação</label><textarea class="textarea" placeholder="Alguma informação importante sobre o cliente..." id="js-novo-cliente-observacao"></textarea></div>
+        <div class="btn-row"><button class="btn btn--secondary" data-fechar-modal>Cancelar</button><button class="btn btn--primary" id="js-novo-cliente-salvar">Salvar</button></div>
+      </div>
+    </div>
   </div>
 
-  <script src="js/utils.js?v=20260717a"></script>
-  <script src="js/menu.js?v=20260717a"></script>
-  <script src="js/storage.js?v=20260717a"></script>
-  <script src="js/tema.js?v=20260717a"></script>
-  <script src="js/app.js?v=20260717a"></script>
-  <script src="js/clientes-todos.js?v=20260717a"></script>
+  <script src="js/utils.js?v=20260717b"></script>
+  <script src="js/menu.js?v=20260717b"></script>
+  <script src="js/storage.js?v=20260717b"></script>
+  <script src="js/tema.js?v=20260717b"></script>
+  <script src="js/modal.js?v=20260717b"></script>
+  <script src="js/app.js?v=20260717b"></script>
+  <script src="js/clientes-todos.js?v=20260717b"></script>
 </body>
 </html>
