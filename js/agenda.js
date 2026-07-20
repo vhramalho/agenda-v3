@@ -619,10 +619,42 @@ function duracaoSelecionada(containerId) {
 
 /* ---------- Horário livre / encaixe ---------- */
 
+/* Se o horário aberto só existe por causa do "+ Adicionar mais 1 hora"
+   (fora do horaInicio/horaFim configurado em Configurações), o modal ganha
+   a opção extra de excluir — desfaz 1h daquela direção da extensão, nunca
+   apaga dado nenhum, já que qualquer agendamento/bloqueio real continua
+   aparecendo mesmo se a grade encolher (ver horariosParaExibir em
+   classificarGradeDoDia, é sempre grade ∪ horários ocupados). */
+let direcaoExtensaoModalAtual = null;
+
+function direcaoExtensaoDoHorario(hora) {
+  const config = obterConfig();
+  const minutos = horaParaMinutos(hora);
+  if (config.horaInicio && minutos < horaParaMinutos(config.horaInicio)) return "antes";
+  if (config.horaFim && minutos > horaParaMinutos(config.horaFim)) return "depois";
+  return null;
+}
+
 function abrirHorarioLivre(hora) {
   horaModalAtual = hora;
   qs("#js-horario-livre-hora").textContent = hora;
+  direcaoExtensaoModalAtual = direcaoExtensaoDoHorario(hora);
+  qs("#js-btn-excluir-horario-extra").classList.toggle("is-hidden", !direcaoExtensaoModalAtual);
   abrirModal("modal-horario-livre");
+}
+
+function excluirHorarioExtra() {
+  if (!direcaoExtensaoModalAtual) return;
+  const extensoes = obterExtensoesGrade();
+  const atual = extensoes[dataSelecionada] || {};
+  const restante = Math.max(0, (atual[direcaoExtensaoModalAtual] || 0) - 60);
+  if (restante === 0) delete atual[direcaoExtensaoModalAtual];
+  else atual[direcaoExtensaoModalAtual] = restante;
+  if (Object.keys(atual).length === 0) delete extensoes[dataSelecionada];
+  else extensoes[dataSelecionada] = atual;
+  salvarExtensoesGrade(extensoes);
+  fecharModal("modal-horario-livre");
+  renderizarAgendaLista();
 }
 
 /* ---------- Horário agendado ---------- */
@@ -1073,6 +1105,8 @@ document.addEventListener("DOMContentLoaded", () => {
     qs("#js-bloquear-hora").textContent = horaModalAtual;
     qs("#js-bloquear-nome").value = "";
   });
+
+  qs("#js-btn-excluir-horario-extra").addEventListener("click", excluirHorarioExtra);
 
   qs("#js-btn-editar-agendamento").addEventListener("click", () => {
     fecharModal("modal-horario-agendado");
