@@ -1107,7 +1107,7 @@
   color: var(--text-on-primary);
 }
 
-/* ---------- Card de dica fixo (Aniversariantes, Sem retornar, Intervalos) ----------
+/* ---------- Card de dica fixo (Intervalos) ----------
    Fica preso acima do menu inferior em vez de rolar junto com a lista —
    mesmo truque de centralização de .bottom-nav (max-width + margin:auto). */
 .dica-fixa-wrap {
@@ -1119,4 +1119,14 @@
   margin: 0 auto;
   padding: 0 var(--space-4) var(--space-3);
   z-index: 90;
+}
+
+/* Variante "no final da página" (Aniversariantes, Sem retornar) — volta a
+   ser conteúdo normal, dentro do <main>, em vez de flutuar preso na tela
+   sobrepondo a lista ao rolar (feedback do usuário, 2026-07-20). */
+.dica-fixa-wrap--estatica {
+  position: static;
+  max-width: none;
+  margin: var(--space-3) 0 0;
+  padding: 0;
 }
