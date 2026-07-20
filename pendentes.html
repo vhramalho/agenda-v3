@@ -3,15 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <link rel="manifest" href="manifest.json?v=20260717g" />
-  <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg?v=20260717g" />
-  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png?v=20260717g" />
+  <link rel="manifest" href="manifest.json?v=20260717h" />
+  <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg?v=20260717h" />
+  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png?v=20260717h" />
   <meta name="theme-color" content="#0B0B10" />
   <title>Pendentes — Swipo Agenda</title>
-  <link rel="stylesheet" href="css/tokens.css?v=20260717g" />
-  <link rel="stylesheet" href="css/base.css?v=20260717g" />
-  <link rel="stylesheet" href="css/layout.css?v=20260717g" />
-  <link rel="stylesheet" href="css/components.css?v=20260717g" />
+  <link rel="stylesheet" href="css/tokens.css?v=20260717h" />
+  <link rel="stylesheet" href="css/base.css?v=20260717h" />
+  <link rel="stylesheet" href="css/layout.css?v=20260717h" />
+  <link rel="stylesheet" href="css/components.css?v=20260717h" />
 </head>
 <body data-page="pendentes">
   <div class="app">
@@ -23,68 +23,47 @@
         </button>
       </div>
 
-      <div id="js-conteudo-pendentes-atendimento">
-        <div class="card card--destaque section">
-          <p class="text-secondary">A receber</p>
-          <p style="font-weight:800;font-size:var(--text-xl);margin:4px 0;" id="js-pendentes-valor"></p>
-          <p class="text-primary-accent" style="font-weight:600;font-size:var(--text-sm);" id="js-pendentes-contagem"></p>
+      <div class="grid-2 section">
+        <div class="card card--destaque">
+          <p class="text-secondary" style="font-size:var(--text-xs);">A receber em atendimentos</p>
+          <p style="font-weight:800;font-size:var(--text-lg);margin:4px 0;" id="js-pendentes-valor"></p>
+          <p class="text-primary-accent" style="font-weight:600;font-size:var(--text-xs);" id="js-pendentes-contagem"></p>
         </div>
-
-        <section class="section">
-          <div class="row row--between" style="margin-bottom:8px;">
-            <h2 class="section__title" style="margin-bottom:0;" id="js-quem-deve-titulo">Quem deve</h2>
-            <button class="text-primary-accent is-hidden" id="js-quem-deve-toggle" style="font-size:var(--text-sm);font-weight:600;background:none;border:none;padding:0;cursor:pointer;font-family:inherit;">Ver todos</button>
-          </div>
-          <div class="card" id="js-quem-deve-lista"></div>
-          <div class="empty-state is-hidden" id="js-quem-deve-vazio"><p class="empty-state__title">Nenhuma cobrança pendente</p></div>
-        </section>
-
-        <a href="pendentes-devedores.html" class="card card--destaque section" style="display:block;text-decoration:none;color:inherit;">
-          <div class="row row--between" style="margin-bottom:12px;">
-            <span style="font-weight:700;">Devedores</span>
-          </div>
-          <div id="js-devedores-top3"></div>
-          <p class="text-primary-accent" style="text-align:center;font-weight:600;margin-top:12px;">Ver ranking completo</p>
-        </a>
+        <div class="card card--destaque">
+          <p class="text-secondary" style="font-size:var(--text-xs);">A receber em vendas</p>
+          <p style="font-weight:800;font-size:var(--text-lg);margin:4px 0;" id="js-pendentes-vendas-valor"></p>
+          <p class="text-primary-accent" style="font-weight:600;font-size:var(--text-xs);" id="js-pendentes-vendas-contagem"></p>
+        </div>
       </div>
 
-      <div id="js-conteudo-pendentes-vendas">
-        <h2 class="section__title" style="margin-bottom:var(--space-3);">Vendas</h2>
-        <div class="card section">
-          <p class="text-secondary">A receber em vendas</p>
-          <p style="font-weight:700;font-size:var(--text-md);margin:4px 0;" id="js-pendentes-vendas-valor"></p>
-          <p class="text-primary-accent" style="font-weight:600;font-size:var(--text-sm);" id="js-pendentes-vendas-contagem"></p>
+      <section class="section">
+        <div class="row row--between" style="margin-bottom:8px;">
+          <h2 class="section__title" style="margin-bottom:0;" id="js-quem-deve-titulo">Quem deve</h2>
+          <button class="text-primary-accent is-hidden" id="js-quem-deve-toggle" style="font-size:var(--text-sm);font-weight:600;background:none;border:none;padding:0;cursor:pointer;font-family:inherit;">Ver todos</button>
         </div>
+        <div class="card" id="js-quem-deve-lista"></div>
+        <div class="empty-state is-hidden" id="js-quem-deve-vazio"><p class="empty-state__title">Nenhuma cobrança pendente</p></div>
+      </section>
 
-        <section class="section">
-          <div class="row row--between" style="margin-bottom:8px;">
-            <h2 class="section__title" style="margin-bottom:0;" id="js-quem-deve-vendas-titulo">Quem deve</h2>
-            <button class="text-primary-accent is-hidden" id="js-quem-deve-vendas-toggle" style="font-size:var(--text-sm);font-weight:600;background:none;border:none;padding:0;cursor:pointer;font-family:inherit;">Ver todos</button>
-          </div>
-          <div class="card" id="js-quem-deve-vendas-lista"></div>
-          <div class="empty-state is-hidden" id="js-quem-deve-vendas-vazio"><p class="empty-state__title">Nenhuma venda pendente</p></div>
-        </section>
-
-        <a href="pendentes-devedores-vendas.html" class="card section" style="display:block;text-decoration:none;color:inherit;">
-          <div class="row row--between" style="margin-bottom:12px;">
-            <span style="font-weight:700;">Devedores</span>
-          </div>
-          <div id="js-devedores-vendas-top3"></div>
-          <p class="text-primary-accent" style="text-align:center;font-weight:600;margin-top:12px;">Ver ranking completo</p>
-        </a>
-      </div>
+      <a href="pendentes-devedores.html" class="card card--destaque section" style="display:block;text-decoration:none;color:inherit;">
+        <div class="row row--between" style="margin-bottom:12px;">
+          <span style="font-weight:700;">Clientes que mais ficam devendo</span>
+        </div>
+        <div id="js-devedores-top3"></div>
+        <p class="text-primary-accent" style="text-align:center;font-weight:600;margin-top:12px;">Ver ranking completo</p>
+      </a>
     </main>
 
     <div id="js-bottom-nav-mount"></div>
   </div>
 
-  <script src="js/utils.js?v=20260717g"></script>
-  <script src="js/menu.js?v=20260717g"></script>
-  <script src="js/storage.js?v=20260717g"></script>
-  <script src="js/tema.js?v=20260717g"></script>
-  <script src="js/app.js?v=20260717g"></script>
-  <script src="js/ajuda-dados.js?v=20260717g"></script>
-  <script src="js/ajuda.js?v=20260717g"></script>
-  <script src="js/pendentes.js?v=20260717g"></script>
+  <script src="js/utils.js?v=20260717h"></script>
+  <script src="js/menu.js?v=20260717h"></script>
+  <script src="js/storage.js?v=20260717h"></script>
+  <script src="js/tema.js?v=20260717h"></script>
+  <script src="js/app.js?v=20260717h"></script>
+  <script src="js/ajuda-dados.js?v=20260717h"></script>
+  <script src="js/ajuda.js?v=20260717h"></script>
+  <script src="js/pendentes.js?v=20260717h"></script>
 </body>
 </html>

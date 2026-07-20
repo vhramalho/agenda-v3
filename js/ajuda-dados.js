@@ -36,10 +36,11 @@ const AJUDA_DADOS = {
   },
   pendentes: {
     tour: [
-      { tipo: "centro", legenda: "Acompanhe quanto você ainda tem a receber." },
+      { tipo: "centro", legenda: "Aqui você acompanha quanto você tem a receber e quem te deve." },
+      { tipo: "spot", alvo: () => document.querySelector('a[href="pendentes-devedores.html"]'), legenda: "Aqui você vê os clientes que mais ficam devendo." },
     ],
     dicas: {
-      receber: { legenda: "Toque aqui pra receber." },
+      receber: { legenda: "Clique em alguma pendência para recebê-la." },
     },
   },
   vendas: {
