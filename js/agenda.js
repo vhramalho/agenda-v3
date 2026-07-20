@@ -321,14 +321,32 @@ function montarBotaoEstenderGrade(iso, direcao) {
   botao.style.cssText = `display:block;width:100%;text-align:center;background:none;border:none;font-weight:600;font-size:var(--text-sm);cursor:pointer;opacity:0.7;${direcao === "antes" ? "margin-bottom:8px;" : "margin-top:8px;"}`;
   botao.textContent = "+ Adicionar mais 1 hora";
   botao.addEventListener("click", () => {
+    const limiteAntigo = direcao === "antes" ? limitesGradeDoDia(iso).horaInicio : limitesGradeDoDia(iso).horaFim;
     const extensoes = obterExtensoesGrade();
     const atual = extensoes[iso] || {};
     atual[direcao] = (atual[direcao] || 0) + 60;
     extensoes[iso] = atual;
     salvarExtensoesGrade(extensoes);
     renderizarAgendaLista();
+    animarSlotsRecemAdicionados(direcao, limiteAntigo);
   });
   return botao;
+}
+
+/* Depois de "+ Adicionar mais 1 hora", os novos horários entram com um
+   fade + leve deslize em cascata, em vez de aparecerem secamente — só os
+   slots além do limite antigo da grade (os que a extensão de fato criou),
+   comparando por minutos pra não depender de string. */
+function animarSlotsRecemAdicionados(direcao, limiteAntigo) {
+  const limiteMin = horaParaMinutos(limiteAntigo);
+  const novos = qsa("#js-agenda-lista [data-hora]").filter((el) => {
+    const horaMin = horaParaMinutos(el.dataset.hora);
+    return direcao === "antes" ? horaMin < limiteMin : horaMin > limiteMin;
+  });
+  novos.forEach((el, i) => {
+    el.classList.add("agenda-slot--novo");
+    el.style.animationDelay = `${i * 45}ms`;
+  });
 }
 
 function renderizarAgendaLista() {
@@ -342,6 +360,7 @@ function renderizarAgendaLista() {
     else if (item.tipo === "agendado") el = montarSlotAgendado(item);
     else if (item.tipo === "realizado") el = montarSlotRealizado(item);
     else el = montarSlotBloqueado(item);
+    el.dataset.hora = item.hora;
     container.appendChild(el);
   });
   container.appendChild(montarBotaoEstenderGrade(dataSelecionada, "depois"));

@@ -293,6 +293,17 @@ body[data-page="index"] #js-agenda-lista {
   font-size: var(--text-sm);
 }
 
+/* Entrada dos horários criados por "+ Adicionar mais 1 hora" — cascata leve
+   em vez de aparecer sem transição nenhuma. */
+@keyframes agenda-slot-entrar {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.agenda-slot--novo {
+  animation: agenda-slot-entrar 0.32s ease-out backwards;
+}
+
 /* ---------- Agenda diário (Anotação/Tarefa/Lista por dia) ---------- */
 .agenda-diario {
   border-radius: var(--radius-md);
