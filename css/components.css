@@ -1028,7 +1028,6 @@
   width: 64px;
   height: 64px;
   border-radius: var(--radius-full);
-  background: radial-gradient(circle, rgba(157, 78, 255, 0.45), rgba(157, 78, 255, 0) 70%);
   display: flex;
   align-items: center;
   justify-content: center;
