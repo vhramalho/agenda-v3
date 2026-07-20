@@ -613,8 +613,8 @@ document.addEventListener("DOMContentLoaded", () => {
     // }
 
     qs("#js-vendas-contagem").textContent = resumoVendas.contagem;
-    const compVendasContagem = formatarComparacao(resumoVendas.contagem, resumoVendasAnterior.contagem, rotuloComparacao, "contagem", false);
-    qs("#js-vendas-contagem-comparacao").textContent = compVendasContagem.texto;
+    const compVendasContagem = formatarComparacao(resumoVendas.contagem, resumoVendasAnterior.contagem, rotuloComparacao, "contagem");
+    qs("#js-vendas-contagem-comparacao").innerHTML = compVendasContagem.texto;
     qs("#js-vendas-contagem-comparacao").className = `insight-card__comparacao ${compVendasContagem.classe}`;
 
     qs("#js-vendas-custo").textContent = formatarMoeda(resumoVendas.custo);
