@@ -31,8 +31,8 @@
 }
 
 .icon-btn--whatsapp {
-  background: #25D366;
-  color: #fff;
+  background: var(--card);
+  color: var(--text-primary);
   border: none;
 }
 

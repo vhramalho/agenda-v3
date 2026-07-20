@@ -68,7 +68,7 @@
 :root,
 :root[data-accent="roxo"] {
   --primary: #9D4EFF;
-  --primary-strong: #AF16F6;
+  --primary-strong: #7F16F6;
   --primary-soft: rgba(157, 78, 255, 0.18);
   --primary-destaque: rgba(157, 78, 255, 0.28);
 }
