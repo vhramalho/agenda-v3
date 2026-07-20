@@ -14,6 +14,12 @@ let bloqueioPontualEditandoId = null;
 let bloqueioFixoEditando = null;
 let vendaAnexadaId = null;
 
+/* Toque-e-segure num horário agendado/realizado pra arrastar até um livre/
+   encaixe (ver montarSlotAgendado/montarSlotRealizado). Enquanto true, o
+   gesto de trocar de dia em #js-agenda-lista (adicionarGestoSwipe) fica
+   suspenso, pra não competir pelo mesmo toque. */
+let arrastandoSlot = false;
+
 function dataParaIso(date) {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
 }
@@ -211,6 +217,118 @@ function montarSlotLivreOuEncaixe(item) {
   return el;
 }
 
+const LIMIAR_MOVIMENTO_ARRASTO_SLOT = 10;
+const ATRASO_ARMAR_ARRASTO_SLOT = 450;
+
+/* Toque-e-segure (~450ms parado) num horário agendado/realizado arma o
+   arrasto; soltar sobre um horário livre/encaixe move o atendimento pra lá
+   (só troca .hora — ver moverAgendamentoParaHora). Se o dedo andar mais de
+   10px antes de armar, cancela e deixa o gesto de trocar de dia
+   (adicionarGestoSwipe em #js-agenda-lista, suspenso via `arrastandoSlot`
+   enquanto armado) e o toque normal (abre o horário) funcionando como
+   sempre. */
+function ativarArrastoSlot(el, agendamento) {
+  let timer = null;
+  let inicioX = 0;
+  let inicioY = 0;
+  let armado = false;
+  let alvoAtual = null;
+
+  function limparAlvo() {
+    if (alvoAtual) alvoAtual.classList.remove("agenda-slot--alvo-soltar");
+    alvoAtual = null;
+  }
+
+  function encerrarArrasto(comTransicao) {
+    armado = false;
+    arrastandoSlot = false;
+    el.classList.remove("agenda-slot--arrastando");
+    if (comTransicao) el.style.transition = "transform 200ms ease";
+    el.style.transform = "";
+    limparAlvo();
+    setTimeout(() => {
+      el.style.transition = "";
+      el.style.position = "";
+      el.style.zIndex = "";
+    }, comTransicao ? 200 : 0);
+  }
+
+  el.addEventListener("touchstart", (e) => {
+    inicioX = e.touches[0].clientX;
+    inicioY = e.touches[0].clientY;
+    armado = false;
+    timer = setTimeout(() => {
+      armado = true;
+      arrastandoSlot = true;
+      el.classList.add("agenda-slot--armado");
+      setTimeout(() => el.classList.remove("agenda-slot--armado"), 200);
+    }, ATRASO_ARMAR_ARRASTO_SLOT);
+  }, { passive: true });
+
+  el.addEventListener("touchmove", (e) => {
+    const x = e.touches[0].clientX;
+    const y = e.touches[0].clientY;
+    const dx = x - inicioX;
+    const dy = y - inicioY;
+
+    if (!armado) {
+      if (Math.abs(dx) > LIMIAR_MOVIMENTO_ARRASTO_SLOT || Math.abs(dy) > LIMIAR_MOVIMENTO_ARRASTO_SLOT) clearTimeout(timer);
+      return;
+    }
+
+    if (e.cancelable) e.preventDefault();
+    el.classList.add("agenda-slot--arrastando");
+    el.style.position = "relative";
+    el.style.zIndex = "40";
+    el.style.transform = `translate(${dx}px, ${dy}px)`;
+
+    limparAlvo();
+    el.style.pointerEvents = "none";
+    const embaixo = document.elementFromPoint(x, y);
+    el.style.pointerEvents = "";
+    const candidato = embaixo ? embaixo.closest(".agenda-slot--livre, .agenda-slot--encaixe") : null;
+    if (candidato) {
+      candidato.classList.add("agenda-slot--alvo-soltar");
+      alvoAtual = candidato;
+    }
+  }, { passive: false });
+
+  el.addEventListener("touchend", (e) => {
+    clearTimeout(timer);
+    if (!armado) return;
+    if (e.cancelable) e.preventDefault();
+    if (alvoAtual) {
+      const novaHora = alvoAtual.dataset.hora;
+      encerrarArrasto(false);
+      moverAgendamentoParaHora(agendamento, novaHora);
+    } else {
+      encerrarArrasto(true);
+    }
+  });
+
+  el.addEventListener("touchcancel", () => {
+    clearTimeout(timer);
+    encerrarArrasto(true);
+  });
+}
+
+/* Move um atendimento (agendado ou realizado) pra outro horário do mesmo
+   dia via arrastar-e-soltar — só troca .hora, mais nada (status, cliente,
+   serviços, duração continuam iguais). Quem vira "encaixe" a partir da
+   nova posição já é recalculado sozinho por classificarGradeDoDia() no
+   próximo render — não precisa de lógica extra pra isso. */
+function moverAgendamentoParaHora(agendamento, novaHora) {
+  if (!novaHora || novaHora === agendamento.hora) return;
+  const lista = obterAgendamentos();
+  const alvo = lista.find((a) => a.id === agendamento.id);
+  if (!alvo) return;
+  alvo.hora = novaHora;
+  salvarAgendamentos(lista);
+  renderizarAgendaLista();
+  const elMovido = qs(`#js-agenda-lista [data-hora="${novaHora}"]`);
+  if (elMovido) elMovido.classList.add("agenda-slot--novo");
+}
+
 function montarSlotAgendado(item) {
   const a = item.agendamento;
   const el = document.createElement("a");
@@ -235,6 +353,7 @@ function montarSlotAgendado(item) {
   const duracaoEl = el.querySelector('[data-campo="duracao"]');
   if (a.duracaoMinutos) duracaoEl.textContent = `${a.duracaoMinutos}min`; else duracaoEl.remove();
   el.addEventListener("click", (e) => { e.preventDefault(); abrirHorarioAgendado(a); });
+  ativarArrastoSlot(el, a);
   return el;
 }
 
@@ -294,6 +413,7 @@ function montarSlotRealizado(item) {
   }
 
   el.addEventListener("click", (e) => { e.preventDefault(); abrirHorarioRealizado(a); });
+  ativarArrastoSlot(el, a);
   return el;
 }
 
@@ -476,7 +596,7 @@ function aplicarProgressoSemana(deltaX, comprometido) {
   preview.style.opacity = String(Math.min(Math.abs(deltaX) / 100, 1));
 }
 
-function adicionarGestoSwipe(elemento, aoArrastarEsquerda, aoArrastarDireita, aoProgresso, distanciaFlick = 24, duracaoComprometido = 130) {
+function adicionarGestoSwipe(elemento, aoArrastarEsquerda, aoArrastarDireita, aoProgresso, distanciaFlick = 24, duracaoComprometido = 130, deveIgnorar = null) {
   let inicioX = 0;
   let inicioY = 0;
   let deltaX = 0;
@@ -485,6 +605,7 @@ function adicionarGestoSwipe(elemento, aoArrastarEsquerda, aoArrastarDireita, ao
   let horizontal = false;
 
   elemento.addEventListener("touchstart", (e) => {
+    if (deveIgnorar && deveIgnorar()) return;
     inicioX = e.touches[0].clientX;
     inicioY = e.touches[0].clientY;
     deltaX = 0;
@@ -496,6 +617,7 @@ function adicionarGestoSwipe(elemento, aoArrastarEsquerda, aoArrastarDireita, ao
 
   elemento.addEventListener("touchmove", (e) => {
     if (!arrastando) return;
+    if (deveIgnorar && deveIgnorar()) { arrastando = false; return; }
     const x = e.touches[0].clientX;
     const y = e.touches[0].clientY;
     deltaX = x - inicioX;
@@ -1064,7 +1186,7 @@ document.addEventListener("DOMContentLoaded", () => {
   adicionarGestoSwipe(qs("#js-agenda-lista"),
     () => selecionarData(somarDias(dataSelecionada, 1)),
     () => selecionarData(somarDias(dataSelecionada, -1)),
-    aplicarProgressoCarrossel);
+    aplicarProgressoCarrossel, 24, 130, () => arrastandoSlot);
 
   qs('#modal-horario-livre [data-trocar-modal="modal-novo-agendamento"]').addEventListener("click", prepararNovoAgendamento);
   qs('#modal-horario-livre [data-trocar-modal="modal-bloquear-horario"]').addEventListener("click", () => {
