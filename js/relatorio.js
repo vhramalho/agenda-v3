@@ -102,6 +102,7 @@ function porFormaValorVendas(vendas) {
 }
 
 function calcularResumoVendas(vendas) {
+  const formas = obterFormasPagamento();
   const faturamento = vendas.reduce((soma, v) => soma + (v.valorTotal || 0), 0);
   const totalRecebido = vendas
     .filter((v) => v.status === "paga")
@@ -109,7 +110,16 @@ function calcularResumoVendas(vendas) {
   const pendente = vendas.filter((v) => v.status === "pendente").reduce((soma, v) => soma + (v.valorTotal || 0), 0);
   const contagem = vendas.length;
   const { custo, lucro } = calcularCustoLucroVendas(vendas);
-  return { faturamento, totalRecebido, pendente, contagem, custo, lucro, porFormaValor: porFormaValorVendas(vendas) };
+
+  let taxas = 0;
+  vendas.filter((v) => v.status === "paga").forEach((v) => {
+    (v.pagamentos || []).forEach((p) => {
+      const forma = formas.find((f) => f.id === p.formaPagamentoId);
+      if (forma && forma.taxaPercentual) taxas += (p.valor * forma.taxaPercentual) / 100;
+    });
+  });
+
+  return { faturamento, totalRecebido, pendente, contagem, custo, lucro, taxas, porFormaValor: porFormaValorVendas(vendas) };
 }
 
 /* Mais realizados/vendidos — mesma lógica que existia em ranking-servicos.js/
@@ -609,6 +619,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     qs("#js-vendas-custo").textContent = formatarMoeda(resumoVendas.custo);
     qs("#js-vendas-lucro").textContent = formatarMoeda(resumoVendas.lucro);
+    qs("#js-vendas-taxas").textContent = formatarMoeda(resumoVendas.taxas);
 
     montarRecebimentos(resumoVendas, "js-vendas-formas", "js-vendas-pizza");
 

@@ -638,6 +638,13 @@
   opacity: 0.7;
 }
 
+/* ---------- Divisória discreta (separa blocos sem precisar de rótulo) ---------- */
+.divisoria {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: var(--space-2) 0 var(--space-5);
+}
+
 /* ---------- Cabeçalho de tela principal (título grande + ação) ---------- */
 .page-header-principal {
   display: flex;
