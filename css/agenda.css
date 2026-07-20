@@ -304,28 +304,6 @@ body[data-page="index"] #js-agenda-lista {
   animation: agenda-slot-entrar 0.32s ease-out backwards;
 }
 
-/* Arrastar um horário agendado/realizado pra outro (ver ativarArrastoSlot
-   em js/agenda.js) — pulso curto quando arma, elevação enquanto arrasta,
-   destaque no horário livre/encaixe embaixo do dedo. */
-@keyframes agenda-slot-armar {
-  0%, 100% { box-shadow: none; }
-  50% { box-shadow: 0 0 0 2px var(--primary); }
-}
-
-.agenda-slot--armado {
-  animation: agenda-slot-armar 0.2s ease-out;
-}
-
-.agenda-slot--arrastando {
-  box-shadow: var(--shadow-card);
-  opacity: 0.92;
-}
-
-.agenda-slot--alvo-soltar {
-  border-color: var(--primary);
-  background: var(--primary-soft);
-}
-
 /* ---------- Agenda diário (Anotação/Tarefa/Lista por dia) ---------- */
 .agenda-diario {
   border-radius: var(--radius-md);
