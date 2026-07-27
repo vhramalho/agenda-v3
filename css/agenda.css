@@ -4,6 +4,19 @@
    ============================================================ */
 
 /* ---------- Topo fixo: só "+ Adicionar mais 1 hora" + horários rolam ---------- */
+/* body travado (position:fixed) — sem isso, ao focar um input dentro de
+   um modal (ex.: busca de cliente no "Novo agendamento"), o iOS empurra
+   o documento inteiro pra cima pra abrir espaço pro teclado e, ao fechar
+   o teclado, às vezes não devolve o scroll — o topo (mês/ícones) ficava
+   cortado até o usuário arrastar a tela de volta manualmente. Travando o
+   body não sobra nenhum scroll de documento pro iOS mexer. */
+body[data-page="index"] {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  overflow: hidden;
+}
+
 body[data-page="index"] .app {
   height: 100vh;
   height: 100dvh;
