@@ -349,11 +349,10 @@ function animarSlotsRecemAdicionados(direcao, limiteAntigo) {
   });
 }
 
-function renderizarAgendaLista() {
-  const container = qs("#js-agenda-lista");
+function montarListaDoDia(container, iso) {
   container.innerHTML = "";
-  container.appendChild(montarBotaoEstenderGrade(dataSelecionada, "antes"));
-  const itens = classificarGradeDoDia(dataSelecionada);
+  container.appendChild(montarBotaoEstenderGrade(iso, "antes"));
+  const itens = classificarGradeDoDia(iso);
   itens.forEach((item) => {
     let el;
     if (item.tipo === "livre" || item.tipo === "encaixe") el = montarSlotLivreOuEncaixe(item);
@@ -363,12 +362,16 @@ function renderizarAgendaLista() {
     el.dataset.hora = item.hora;
     container.appendChild(el);
   });
-  container.appendChild(montarBotaoEstenderGrade(dataSelecionada, "depois"));
+  container.appendChild(montarBotaoEstenderGrade(iso, "depois"));
 
   const espacadorFinal = document.createElement("div");
   espacadorFinal.setAttribute("aria-hidden", "true");
   espacadorFinal.style.cssText = "height:120px;flex-shrink:0;";
   container.appendChild(espacadorFinal);
+}
+
+function renderizarAgendaLista() {
+  montarListaDoDia(qs("#js-agenda-lista"), dataSelecionada);
 }
 
 function renderizarCabecalho() {
@@ -467,6 +470,37 @@ function aplicarProgressoSemana(deltaX, comprometido) {
     const isoVizinho = somarDias(dataSelecionada, indoParaEsquerda ? 7 : -7);
     preview.innerHTML = "";
     montarDiasSemana(isoVizinho).forEach((el) => preview.appendChild(el));
+    preview.classList.remove("is-hidden");
+    preview.dataset.lado = indoParaEsquerda ? "esquerda" : "direita";
+    preview.style.transition = "none";
+  }
+  const offset = preview.dataset.lado === "esquerda" ? largura : -largura;
+  preview.style.transform = `translateX(${offset + deltaX}px)`;
+  preview.style.opacity = String(Math.min(Math.abs(deltaX) / 100, 1));
+}
+
+function aplicarProgressoDia(deltaX, comprometido) {
+  const wrap = qs("#js-agenda-lista-wrap");
+  const preview = qs("#js-agenda-lista-preview");
+  if (comprometido) {
+    preview.style.transition = "transform 200ms ease, opacity 200ms ease";
+    preview.style.transform = "translateX(0)";
+    preview.style.opacity = "1";
+    return;
+  }
+  if (!deltaX) {
+    preview.classList.add("is-hidden");
+    preview.innerHTML = "";
+    preview.style.transition = "none";
+    preview.style.transform = "";
+    preview.style.opacity = "";
+    return;
+  }
+  const largura = wrap.offsetWidth;
+  if (preview.classList.contains("is-hidden")) {
+    const indoParaEsquerda = deltaX < 0;
+    const isoVizinho = somarDias(dataSelecionada, indoParaEsquerda ? 1 : -1);
+    montarListaDoDia(preview, isoVizinho);
     preview.classList.remove("is-hidden");
     preview.dataset.lado = indoParaEsquerda ? "esquerda" : "direita";
     preview.style.transition = "none";
@@ -1096,7 +1130,10 @@ document.addEventListener("DOMContentLoaded", () => {
   adicionarGestoSwipe(qs("#js-agenda-lista"),
     () => selecionarData(somarDias(dataSelecionada, 1)),
     () => selecionarData(somarDias(dataSelecionada, -1)),
-    aplicarProgressoCarrossel);
+    (deltaX, comprometido) => {
+      aplicarProgressoCarrossel(deltaX, comprometido);
+      aplicarProgressoDia(deltaX, comprometido);
+    });
 
   qs('#modal-horario-livre [data-trocar-modal="modal-novo-agendamento"]').addEventListener("click", prepararNovoAgendamento);
   qs('#modal-horario-livre [data-trocar-modal="modal-bloquear-horario"]').addEventListener("click", () => {

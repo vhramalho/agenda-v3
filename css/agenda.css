@@ -18,9 +18,16 @@ body[data-page="index"] .page {
   overflow: hidden;
 }
 
-body[data-page="index"] #js-agenda-lista {
+body[data-page="index"] #js-agenda-lista-wrap {
+  position: relative;
   flex: 1;
   min-height: 0;
+  overflow: hidden;
+}
+
+body[data-page="index"] #js-agenda-lista,
+body[data-page="index"] #js-agenda-lista-preview {
+  height: 100%;
   overflow-y: auto;
   overscroll-behavior-y: contain;
   padding-bottom: calc(var(--bottom-nav-height) + var(--safe-bottom) + var(--space-8));
@@ -145,6 +152,18 @@ body[data-page="index"] #js-agenda-lista {
   flex-direction: column;
   gap: var(--space-2);
   touch-action: pan-y;
+}
+
+.agenda-lista--preview {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  pointer-events: none;
+}
+
+.agenda-lista--preview.is-hidden {
+  display: none;
 }
 
 .agenda-slot {
