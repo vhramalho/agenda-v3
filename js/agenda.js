@@ -432,17 +432,17 @@ function aplicarProgressoCarrossel(deltaX, comprometido) {
   if (!deltaX && !comprometido) {
     qsa(".week-day", carrossel).forEach((el) => {
       el.classList.remove("week-day--preview");
-      el.style.opacity = "";
+      el.style.removeProperty("--realce");
     });
     return;
   }
   const progresso = comprometido ? 1 : Math.min(Math.abs(deltaX) / 100, 1);
   const vizinho = deltaX < 0 ? ativo.nextElementSibling : ativo.previousElementSibling;
-  ativo.style.opacity = String(1 - progresso);
+  ativo.style.setProperty("--realce", String(1 - progresso));
   qsa(".week-day", carrossel).forEach((el) => { if (el !== ativo && el !== vizinho) el.classList.remove("week-day--preview"); });
   if (vizinho) {
     vizinho.classList.add("week-day--preview");
-    vizinho.style.opacity = String(progresso);
+    vizinho.style.setProperty("--realce", String(progresso));
   }
 }
 

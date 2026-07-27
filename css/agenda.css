@@ -113,6 +113,10 @@ body[data-page="index"] #js-agenda-lista-preview {
   touch-action: pan-y;
 }
 
+/* --realce (0-1) controla o quanto o chip "parece" o dia ativo — só a
+   cor (fundo + texto) é cruzada via color-mix, o card em si nunca some.
+   Em repouso vem da classe (is-active/--preview); durante o arraste,
+   aplicarProgressoCarrossel sobrescreve com o valor ao vivo do gesto. */
 .week-day {
   flex: 1;
   display: flex;
@@ -121,42 +125,29 @@ body[data-page="index"] #js-agenda-lista-preview {
   gap: 2px;
   padding: 6px 0;
   border-radius: var(--radius-md);
-  background: transparent;
   border: none;
+  --realce: 0;
+  background: color-mix(in srgb, var(--primary) calc(var(--realce) * 100%), transparent);
 }
 
 .week-day__label {
   font-size: var(--text-xs);
-  color: var(--text-muted);
   font-weight: 600;
+  color: color-mix(in srgb, var(--text-on-primary) calc(var(--realce) * 100%), var(--text-muted));
 }
 
 .week-day__numero {
   font-weight: 700;
+  color: color-mix(in srgb, var(--text-on-primary) calc(var(--realce) * 100%), var(--text-primary));
 }
 
-.week-day.is-active {
-  background: var(--primary);
-  border-color: var(--primary);
-}
-
-.week-day.is-active .week-day__label,
-.week-day.is-active .week-day__numero {
-  color: var(--text-on-primary);
+.week-day.is-active,
+.week-day--preview {
+  --realce: 1;
 }
 
 .week-day.is-outro-mes {
   opacity: 0.45;
-}
-
-.week-day--preview {
-  background: var(--primary);
-  border-color: var(--primary);
-}
-
-.week-day--preview .week-day__label,
-.week-day--preview .week-day__numero {
-  color: var(--text-on-primary);
 }
 
 /* ---------- Lista de horários ---------- */
