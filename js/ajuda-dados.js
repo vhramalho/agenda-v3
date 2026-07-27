@@ -16,7 +16,7 @@ const AJUDA_DADOS = {
   agenda: {
     tour: [
       { tipo: "centro", titulo: "👋 Bem-vindo(a)!", legenda: "Vamos te mostrar o essencial da sua agenda." },
-      { tipo: "gesto", alvo: () => document.querySelector("#js-agenda-lista"), legenda: "Arraste pra trocar de dia." },
+      { tipo: "gesto", alvo: () => document.querySelector("#js-agenda-lista-wrap"), legenda: "Arraste pra trocar de dia." },
       { tipo: "gesto", alvo: () => document.querySelector("#js-week-carousel-wrap"), legenda: "Arraste pra trocar de semana." },
       { tipo: "spot", alvo: () => document.querySelector("#js-agenda-mes-btn"), legenda: "Ou toque aqui pra ir direto numa data no calendário." },
       { tipo: "spot", alvo: () => document.querySelector('a[aria-label="Vender"]'), legenda: "Vendeu algo fora de um atendimento? Registre aqui." },

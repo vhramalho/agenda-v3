@@ -480,6 +480,9 @@ function aplicarProgressoSemana(deltaX, comprometido) {
 }
 
 function aplicarProgressoDia(deltaX, comprometido) {
+  const GAP_ENTRE_DIAS = 8; // mesmo valor de --space-2 — sem esse respiro, o dia que
+  // sai e o que entra ficam colados borda-a-borda e, como as linhas de horário se
+  // alinham, parecem um único card largo demais em vez de dois dias diferentes.
   const wrap = qs("#js-agenda-lista-wrap");
   const preview = qs("#js-agenda-lista-preview");
   if (comprometido) {
@@ -496,7 +499,7 @@ function aplicarProgressoDia(deltaX, comprometido) {
     preview.style.opacity = "";
     return;
   }
-  const largura = wrap.offsetWidth;
+  const largura = wrap.offsetWidth + GAP_ENTRE_DIAS;
   if (preview.classList.contains("is-hidden")) {
     const indoParaEsquerda = deltaX < 0;
     const isoVizinho = somarDias(dataSelecionada, indoParaEsquerda ? 1 : -1);
