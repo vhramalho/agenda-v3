@@ -483,7 +483,7 @@ function aplicarProgressoDia(deltaX, comprometido) {
   const wrap = qs("#js-agenda-lista-wrap");
   const preview = qs("#js-agenda-lista-preview");
   if (comprometido) {
-    preview.style.transition = "transform 200ms ease, opacity 200ms ease";
+    preview.style.transition = "transform 220ms ease, opacity 220ms ease";
     preview.style.transform = "translateX(0)";
     preview.style.opacity = "1";
     return;
@@ -1133,7 +1133,8 @@ document.addEventListener("DOMContentLoaded", () => {
     (deltaX, comprometido) => {
       aplicarProgressoCarrossel(deltaX, comprometido);
       aplicarProgressoDia(deltaX, comprometido);
-    });
+    },
+    500, 220);
 
   qs('#modal-horario-livre [data-trocar-modal="modal-novo-agendamento"]').addEventListener("click", prepararNovoAgendamento);
   qs('#modal-horario-livre [data-trocar-modal="modal-bloquear-horario"]').addEventListener("click", () => {
