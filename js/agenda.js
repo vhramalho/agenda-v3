@@ -405,6 +405,11 @@ function selecionarData(iso) {
   renderizarCabecalho();
   renderizarSemana();
   renderizarAgendaLista();
+  // Zera a rolagem ao trocar de dia (só aqui, não em renderizarAgendaLista
+  // sozinha) — sem isso, o navegador preserva o scrollTop do dia anterior
+  // e, no swipe, o dia "pula" pra essa posição ao soltar o dedo, depois de
+  // o preview durante o arraste já ter mostrado o topo.
+  qs("#js-agenda-lista").scrollTop = 0;
   qs("#js-btn-hoje").classList.toggle("is-invisivel", dataSelecionada === hojeIso());
   if (typeof window.renderizarAgendaDiario === "function") window.renderizarAgendaDiario(iso);
   if (typeof window.irParaMesCalendarioAgenda === "function") {
