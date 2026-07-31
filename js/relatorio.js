@@ -237,30 +237,49 @@ function montarListaRanking(lista, containerId, vazioId, botaoId, montarLinha, c
   }
 }
 
-/* Gráfico de barras (quantidade × produto) — substitui a lista de "Mais
-   vendidos" (2026-07-12). Top 5 por padrão, "Ver todos" expande igual ao
-   padrão de montarListaRanking, mesmo estadoExpandidoRanking.vendidos.
-   Escala das barras é sempre contra o maior item da lista inteira (não só
-   dos visíveis), pra não redimensionar ao expandir/recolher. */
-function montarLinhaBarraProduto(item, maiorQuantidade) {
+/* Gráfico de barras divergentes (unidades × faturamento) — substitui o
+   gráfico de uma barra só (2026-07-30): antes a barra representava só
+   quantidade e o faturamento ficava em texto pequeno do lado, então dava
+   pra achar que "vende mais" e "fatura mais" eram a mesma coisa quando não
+   são (um produto barato de alto volume podia parecer mais importante que
+   um produto caro de baixo volume). Agora as duas métricas viram barra,
+   uma de cada lado de um eixo central. Top 5 por padrão, "Ver todos"
+   expande igual ao padrão de montarListaRanking, mesmo
+   estadoExpandidoRanking.vendidos. Cada lado escala contra o maior daquela
+   métrica na lista inteira (não só dos visíveis), pra não redimensionar ao
+   expandir/recolher — igual o gráfico de uma barra já fazia com quantidade.
+   Posição não usa destaque ouro/prata/bronze — sem hierarquia especial
+   pro 1º item, só a ordem já diz qual é o mais vendido. */
+function montarLinhaBarraProduto(item, maiorQuantidade, maiorValor, posicao) {
   const linha = document.createElement("div");
-  linha.className = "grafico-barras__linha";
+  linha.className = "grafico-divergente__linha";
   linha.innerHTML = `
-    <div class="row row--between" style="margin-bottom:4px;">
-      <p class="grafico-barras__rotulo"></p>
-      <span>
-        <span class="grafico-barras__valor"></span>
-        <span class="grafico-barras__valor-secundario"></span>
-      </span>
+    <div class="grafico-divergente__topo">
+      <span class="ranking-posicao"></span>
+      <p class="grafico-divergente__nome"></p>
     </div>
-    <div class="grafico-barras__trilha">
-      <div class="grafico-barras__preenchimento"></div>
+    <div class="grafico-divergente__par">
+      <div class="grafico-divergente__lado grafico-divergente__lado--unidades">
+        <span class="grafico-divergente__valor"></span>
+        <div class="grafico-divergente__trilha">
+          <div class="grafico-divergente__preenchimento grafico-divergente__preenchimento--unidades"></div>
+        </div>
+      </div>
+      <div class="grafico-divergente__eixo"></div>
+      <div class="grafico-divergente__lado grafico-divergente__lado--faturamento">
+        <div class="grafico-divergente__trilha">
+          <div class="grafico-divergente__preenchimento grafico-divergente__preenchimento--faturamento"></div>
+        </div>
+        <span class="grafico-divergente__valor"></span>
+      </div>
     </div>
   `;
-  linha.querySelector(".grafico-barras__rotulo").textContent = item.produto.nome;
-  linha.querySelector(".grafico-barras__valor").textContent = item.quantidade;
-  linha.querySelector(".grafico-barras__valor-secundario").textContent = ` · ${formatarMoeda(item.valor)}`;
-  linha.querySelector(".grafico-barras__preenchimento").style.width = `${maiorQuantidade > 0 ? (item.quantidade / maiorQuantidade) * 100 : 0}%`;
+  linha.querySelector(".ranking-posicao").textContent = posicao;
+  linha.querySelector(".grafico-divergente__nome").textContent = item.produto.nome;
+  linha.querySelector(".grafico-divergente__lado--unidades .grafico-divergente__valor").textContent = `${item.quantidade} un`;
+  linha.querySelector(".grafico-divergente__lado--faturamento .grafico-divergente__valor").textContent = formatarMoeda(item.valor);
+  linha.querySelector(".grafico-divergente__preenchimento--unidades").style.width = `${maiorQuantidade > 0 ? (item.quantidade / maiorQuantidade) * 100 : 0}%`;
+  linha.querySelector(".grafico-divergente__preenchimento--faturamento").style.width = `${maiorValor > 0 ? (item.valor / maiorValor) * 100 : 0}%`;
   return linha;
 }
 
@@ -283,7 +302,8 @@ function montarGraficoBarrasProdutos(lista, containerId, vazioId, botaoId, chave
   const expandido = estadoExpandidoRanking[chaveEstado];
   const visiveis = expandido ? lista : lista.slice(0, 5);
   const maiorQuantidade = lista[0].quantidade;
-  visiveis.forEach((item) => container.appendChild(montarLinhaBarraProduto(item, maiorQuantidade)));
+  const maiorValor = Math.max(...lista.map((item) => item.valor));
+  visiveis.forEach((item, i) => container.appendChild(montarLinhaBarraProduto(item, maiorQuantidade, maiorValor, i + 1)));
 
   if (lista.length > 5) {
     botao.classList.remove("is-hidden");
