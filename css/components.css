@@ -145,11 +145,13 @@
   border: 1px solid var(--border);
 }
 
-/* Altura padronizada com a do chip (padding vertical menor que o
-   .card padrão) — usada junto de .card--contorno nesses mesmos
-   botões, pra ficarem do mesmo tamanho dos chips/input ao lado. */
+/* Altura E raio padronizados com os do chip (o .card padrão usa
+   --radius-lg/padding maior) — usada junto de .card--contorno nesses
+   mesmos botões, pra ficarem do mesmo tamanho/formato dos chips e do
+   input ao lado. */
 .card--compacto {
   padding: 8px var(--space-4);
+  border-radius: var(--radius-md);
 }
 
 .card--transparente .list-item__title {
