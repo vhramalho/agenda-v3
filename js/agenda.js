@@ -26,13 +26,6 @@ function diaDaSemanaAbrev(iso) {
   return DIAS_SEMANA_ABREV[isoParaDate(iso).getDay()];
 }
 
-function formatarDataLonga(iso) {
-  const d = isoParaDate(iso);
-  const dias = ["dom", "seg", "ter", "qua", "qui", "sex", "sáb"];
-  const meses = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"];
-  return `${dias[d.getDay()]}, ${String(d.getDate()).padStart(2, "0")} ${meses[d.getMonth()]}`;
-}
-
 /* Formato específico da mensagem de Compartilhar horários no WhatsApp
    (ver "Novo modelo de mensagem" §12 no MASTER_CONTEXT.md) — dia da
    semana por extenso + DD/MM, ex.: "Terça-feira 14/07". */
@@ -948,7 +941,7 @@ function abrirObservacao(idCampo, idToggle, idResumo, idResumoTexto, idModalPai)
 function prepararNovoAgendamento() {
   agendamentoEditandoId = null;
   qs("#js-novo-agendamento-titulo").textContent = "Novo agendamento";
-  qs("#js-novo-agendamento-data-hora").textContent = `${formatarDataLonga(dataSelecionada)} — ${horaModalAtual}`;
+  qs("#js-novo-agendamento-data-hora").textContent = horaModalAtual;
   prepararClientePicker("js-novo-agendamento", null, "");
   montarServicosChips("js-novo-agendamento-servicos", []);
   montarDuracaoChips("js-novo-agendamento-duracao", null);
@@ -965,7 +958,7 @@ function prepararEdicaoAgendamento(agendamento) {
   agendamentoEditandoId = agendamento.id;
   horaModalAtual = agendamento.hora;
   qs("#js-novo-agendamento-titulo").textContent = "Editar agendamento";
-  qs("#js-novo-agendamento-data-hora").textContent = `${formatarDataLonga(agendamento.data)} — ${agendamento.hora}`;
+  qs("#js-novo-agendamento-data-hora").textContent = agendamento.hora;
   prepararClientePicker("js-novo-agendamento", agendamento.clienteId || null, agendamento.nomeCliente);
   montarServicosChips("js-novo-agendamento-servicos", agendamento.servicosIds || []);
   montarDuracaoChips("js-novo-agendamento-duracao", agendamento.duracaoMinutos || null);

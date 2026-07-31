@@ -138,6 +138,13 @@
   background: transparent;
 }
 
+/* Variante com borda (igual chip) — usada só em ações que merecem mais
+   destaque que "+ Completar cadastro" (ex.: "+ Adicionar observação",
+   "+ Vendeu algo?"), sem virar um card sólido. */
+.card--contorno {
+  border: 1px solid var(--border);
+}
+
 .card--transparente .list-item__title {
   font-weight: 400;
   font-size: var(--text-sm);
