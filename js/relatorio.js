@@ -150,8 +150,7 @@ function calcularMaisVendidos(vendas) {
   });
   return produtosAtivos
     .map((produto) => ({ produto, quantidade: contagem[produto.id] || 0, valor: valorPorProduto[produto.id] || 0 }))
-    .filter((item) => item.quantidade > 0)
-    .sort((a, b) => b.quantidade - a.quantidade);
+    .filter((item) => item.quantidade > 0);
 }
 
 function montarLinhaRankingServico(item, posicao, indice) {
@@ -209,6 +208,12 @@ function calcularParados() {
    fora do closure do DOMContentLoaded pra sobreviver a atualizarRelatorio(). */
 const estadoExpandidoRanking = { realizados: false, vendidos: false };
 
+/* Métrica usada pra ordenar "Vendas por produto" (segmented acima do
+   gráfico de barras divergentes) — "valor" (faturamento) por padrão.
+   Também fora do closure do DOMContentLoaded, mesmo motivo do estado
+   de expandido acima. */
+let ordenarProdutosPor = "valor";
+
 function montarListaRanking(lista, containerId, vazioId, botaoId, montarLinha, chaveEstado) {
   const container = qs(`#${containerId}`);
   const vazio = qs(`#${vazioId}`);
@@ -248,16 +253,15 @@ function montarListaRanking(lista, containerId, vazioId, botaoId, montarLinha, c
    estadoExpandidoRanking.vendidos. Cada lado escala contra o maior daquela
    métrica na lista inteira (não só dos visíveis), pra não redimensionar ao
    expandir/recolher — igual o gráfico de uma barra já fazia com quantidade.
-   Posição não usa destaque ouro/prata/bronze — sem hierarquia especial
-   pro 1º item, só a ordem já diz qual é o mais vendido. */
-function montarLinhaBarraProduto(item, maiorQuantidade, maiorValor, posicao) {
+   Sem número de posição (1º, 2º...) — a ordem da lista já responde à
+   pergunta ("mais vendido" ou "maior faturamento", ver segmented acima do
+   gráfico em montarGraficoBarrasProdutos/ordenarProdutosPor), não precisa
+   de mais uma marcação repetindo a mesma informação. */
+function montarLinhaBarraProduto(item, maiorQuantidade, maiorValor) {
   const linha = document.createElement("div");
   linha.className = "grafico-divergente__linha";
   linha.innerHTML = `
-    <div class="grafico-divergente__topo">
-      <span class="ranking-posicao"></span>
-      <p class="grafico-divergente__nome"></p>
-    </div>
+    <p class="grafico-divergente__nome"></p>
     <div class="grafico-divergente__par">
       <div class="grafico-divergente__lado grafico-divergente__lado--unidades">
         <span class="grafico-divergente__valor"></span>
@@ -274,7 +278,6 @@ function montarLinhaBarraProduto(item, maiorQuantidade, maiorValor, posicao) {
       </div>
     </div>
   `;
-  linha.querySelector(".ranking-posicao").textContent = posicao;
   linha.querySelector(".grafico-divergente__nome").textContent = item.produto.nome;
   linha.querySelector(".grafico-divergente__lado--unidades .grafico-divergente__valor").textContent = `${item.quantidade} un`;
   linha.querySelector(".grafico-divergente__lado--faturamento .grafico-divergente__valor").textContent = formatarMoeda(item.valor);
@@ -301,9 +304,9 @@ function montarGraficoBarrasProdutos(lista, containerId, vazioId, botaoId, chave
 
   const expandido = estadoExpandidoRanking[chaveEstado];
   const visiveis = expandido ? lista : lista.slice(0, 5);
-  const maiorQuantidade = lista[0].quantidade;
+  const maiorQuantidade = Math.max(...lista.map((item) => item.quantidade));
   const maiorValor = Math.max(...lista.map((item) => item.valor));
-  visiveis.forEach((item, i) => container.appendChild(montarLinhaBarraProduto(item, maiorQuantidade, maiorValor, i + 1)));
+  visiveis.forEach((item) => container.appendChild(montarLinhaBarraProduto(item, maiorQuantidade, maiorValor)));
 
   if (lista.length > 5) {
     botao.classList.remove("is-hidden");
@@ -643,7 +646,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     montarRecebimentos(resumoVendas, "js-vendas-formas", "js-vendas-pizza");
 
-    const maisVendidos = calcularMaisVendidos(vendasPeriodo);
+    const maisVendidos = calcularMaisVendidos(vendasPeriodo).sort((a, b) => b[ordenarProdutosPor] - a[ordenarProdutosPor]);
     montarGraficoBarrasProdutos(maisVendidos, "js-vendas-mais-vendidos", "js-vendas-mais-vendidos-vazio", "js-vendas-mais-vendidos-ver-todos", "vendidos");
 
     const parados = calcularParados();
@@ -667,6 +670,14 @@ document.addEventListener("DOMContentLoaded", () => {
   qs("#js-vendas-mais-vendidos-ver-todos").addEventListener("click", () => {
     estadoExpandidoRanking.vendidos = !estadoExpandidoRanking.vendidos;
     atualizarRelatorio();
+  });
+  qsa(".segmented__item", qs("#js-vendas-produto-ordenar")).forEach((item) => {
+    item.addEventListener("click", () => {
+      qsa(".segmented__item", qs("#js-vendas-produto-ordenar")).forEach((i) => i.classList.remove("is-active"));
+      item.classList.add("is-active");
+      ordenarProdutosPor = item.dataset.ordenar;
+      atualizarRelatorio();
+    });
   });
 
   function avancarPeriodo(direcao) {

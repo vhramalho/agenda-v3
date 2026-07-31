@@ -516,17 +516,11 @@
 /* ---------- Gráfico de barras divergentes (ex.: Vendas por produto) ----------
    Duas métricas por linha (unidades × faturamento), uma barra de cada lado
    de um eixo central — em vez de uma barra só (que só media quantidade,
-   com o faturamento escondido em texto). Sem destaque ouro/prata/bronze na
-   posição: a ordem já diz qual é o mais vendido, não precisa repetir. */
+   com o faturamento escondido em texto). Sem número de posição (1º, 2º...):
+   a ordem já responde "mais vendido" ou "maior faturamento" (segmented
+   acima do gráfico), não precisa de mais uma marcação repetindo isso. */
 .grafico-divergente__linha + .grafico-divergente__linha {
   margin-top: var(--space-4);
-}
-
-.grafico-divergente__topo {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  margin-bottom: 6px;
 }
 
 .grafico-divergente__nome {
@@ -536,6 +530,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   min-width: 0;
+  margin-bottom: 6px;
 }
 
 .grafico-divergente__par {
