@@ -456,6 +456,17 @@
   display: none;
 }
 
+/* Segmented aninhado dentro de um .card comum (não .card--destaque) usaria
+   o mesmo var(--card) do próprio card — ficaria sem contraste nenhum, só a
+   pílula ativa apareceria, sem o "trilho" atrás dela (ex.: filtro dentro do
+   card "Vendas"). Nesse caso o fundo vira var(--bg) (cor da página), que
+   sempre contrasta com --card nos dois temas. Dentro de .card--destaque
+   (fundo em degradê) o var(--card) padrão já contrasta normalmente, não
+   precisa dessa exceção (ex.: segmentado Unidades/Faturamento). */
+.card:not(.card--destaque) .segmented {
+  background: var(--bg);
+}
+
 .segmented__item {
   flex: 1;
   min-width: 50px;
