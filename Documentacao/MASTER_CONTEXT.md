@@ -581,6 +581,7 @@ Testado via headless: os 38 modais foram re-printados e comparados visualmente c
 - Editar um atendimento realizado é uma peça grande presa a `js/agenda.js`/`index.html` (cliente picker, chips de serviço, observação, venda anexada) — diferente de Vendas, onde o modal já era portável. Em vez de extrair/duplicar essa lógica (cogitado, descartado), o link da linha leva pra Agenda com `?data=X&abrirAtendimento=Y`, e um bootstrap novo no início do `DOMContentLoaded` de `js/agenda.js` lê esse parâmetro e abre o modal de editar sozinho, reaproveitando `prepararEditarRealizado()` que já existia — zero duplicação. `history.replaceState` limpa a URL depois.
 - Pendentes: só as linhas de **atendimento** em "Quem deve" ganharam esse link (`js/pendentes.js`, `pendenciasUnificadas()` ganhou `id` no mapeamento) — linhas de **venda** continuam levando só pro dia, sem mecanismo equivalente (não pedido).
 - Testado via headless (7 asserções, 0 falhas).
+- **Ajuste no mesmo dia (app `1.60.0` → `1.60.1`):** venda avulsa pendente não tem "de onde puxar da Agenda" — editar venda já era um módulo portável (`js/vendas.js`), então a linha de venda em "Quem deve" abre `#modal-nova-venda` **direto ali em Pendentes**, sem navegar (`abrirEdicaoVendaPendente()`, modal duplicado em `pendentes.html`). Linha de atendimento continua indo pra Agenda. `js/pendentes.js` reestruturado: os 3 blocos de render (cards/Quem deve/Devedores top3) viraram `atualizarPendentesResumo()`, reutilizável após editar/excluir a venda.
 
 ## 23. Próxima etapa
 
