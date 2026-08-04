@@ -64,18 +64,41 @@ function vendasNoPeriodo(inicio, fim) {
   });
 }
 
+/* item.precoUnitario é sempre o preço CADASTRADO do produto (não editável
+   por item na hora da venda) — quando o valor pago difere do subtotal do
+   carrinho (ex.: desconto combinado na hora), essa diferença precisa
+   refletir em qualquer número do Relatório de Vendas que fale de "valor
+   real" (faturamento por produto, lucro). "Custo"/"lucro potencial" — o
+   preço de tabela puro, sem olhar pra vendas — mora só em produtos.html
+   (`js/produtos.js`, baseado em estoque×preço cadastrado), não aqui.
+   Sem um preço real por item salvo, a diferença é distribuída
+   proporcionalmente entre os itens da mesma venda (fatorReal = valorTotal
+   ÷ subtotal) — pra uma venda de 1 item só, isso já é o valor exato pago;
+   pra vendas com vários itens, é uma aproximação proporcional, não um
+   valor exato por item. */
+function fatorRealVenda(venda) {
+  return venda.subtotal > 0 ? (venda.valorTotal || 0) / venda.subtotal : 1;
+}
+
 /* Custo/lucro só consideram itens de produtos com precoCusto informado
-   (campo opcional) — sem isso não há como saber o custo daquele item. */
+   (campo opcional) — sem isso não há como saber o custo daquele item.
+   Custo não muda com desconto (é o que você pagou pra ter o produto em
+   estoque, não o que cobrou do cliente) — só a quantidade real já entra
+   aí. Lucro = receita REAL (valor realmente pago, não o de tabela) menos
+   esse custo. */
 function calcularCustoLucroVendas(vendas) {
   const produtos = obterProdutos();
   let custo = 0;
   let lucro = 0;
   vendas.forEach((v) => {
+    const fatorReal = fatorRealVenda(v);
     (v.itens || []).forEach((item) => {
       const produto = produtos.find((p) => p.id === item.produtoId);
       if (produto && produto.precoCusto != null) {
-        custo += produto.precoCusto * item.quantidade;
-        lucro += (item.precoUnitario - produto.precoCusto) * item.quantidade;
+        const custoItem = produto.precoCusto * item.quantidade;
+        const receitaRealItem = item.precoUnitario * fatorReal * item.quantidade;
+        custo += custoItem;
+        lucro += receitaRealItem - custoItem;
       }
     });
   });
@@ -116,21 +139,12 @@ function calcularResumoVendas(vendas) {
   return { faturamento, totalRecebido, pendente, contagem, custo, lucro, taxas, porFormaValor: porFormaValorVendas(vendas) };
 }
 
-/* item.precoUnitario é sempre o preço CADASTRADO do produto (não editável
-   por item na hora da venda) — quando o valor pago difere do subtotal do
-   carrinho (ex.: desconto combinado na hora), essa diferença precisa
-   refletir aqui, senão "faturamento por produto" mostra o preço de tabela
-   em vez do que realmente entrou. Sem um preço real por item salvo, a
-   diferença é distribuída proporcionalmente entre os itens da mesma venda
-   (fatorReal = valorTotal ÷ subtotal) — pra uma venda de 1 item só, isso
-   já é o valor exato pago; pra vendas com vários itens, é uma aproximação
-   proporcional, não um valor exato por item. */
 function calcularMaisVendidos(vendas) {
   const produtosAtivos = obterProdutos().filter((p) => p.ativo);
   const contagem = {};
   const valorPorProduto = {};
   vendas.forEach((v) => {
-    const fatorReal = v.subtotal > 0 ? (v.valorTotal || 0) / v.subtotal : 1;
+    const fatorReal = fatorRealVenda(v);
     (v.itens || []).forEach((item) => {
       contagem[item.produtoId] = (contagem[item.produtoId] || 0) + item.quantidade;
       valorPorProduto[item.produtoId] = (valorPorProduto[item.produtoId] || 0) + item.quantidade * item.precoUnitario * fatorReal;
