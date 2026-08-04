@@ -116,14 +116,24 @@ function calcularResumoVendas(vendas) {
   return { faturamento, totalRecebido, pendente, contagem, custo, lucro, taxas, porFormaValor: porFormaValorVendas(vendas) };
 }
 
+/* item.precoUnitario é sempre o preço CADASTRADO do produto (não editável
+   por item na hora da venda) — quando o valor pago difere do subtotal do
+   carrinho (ex.: desconto combinado na hora), essa diferença precisa
+   refletir aqui, senão "faturamento por produto" mostra o preço de tabela
+   em vez do que realmente entrou. Sem um preço real por item salvo, a
+   diferença é distribuída proporcionalmente entre os itens da mesma venda
+   (fatorReal = valorTotal ÷ subtotal) — pra uma venda de 1 item só, isso
+   já é o valor exato pago; pra vendas com vários itens, é uma aproximação
+   proporcional, não um valor exato por item. */
 function calcularMaisVendidos(vendas) {
   const produtosAtivos = obterProdutos().filter((p) => p.ativo);
   const contagem = {};
   const valorPorProduto = {};
   vendas.forEach((v) => {
+    const fatorReal = v.subtotal > 0 ? (v.valorTotal || 0) / v.subtotal : 1;
     (v.itens || []).forEach((item) => {
       contagem[item.produtoId] = (contagem[item.produtoId] || 0) + item.quantidade;
-      valorPorProduto[item.produtoId] = (valorPorProduto[item.produtoId] || 0) + item.quantidade * item.precoUnitario;
+      valorPorProduto[item.produtoId] = (valorPorProduto[item.produtoId] || 0) + item.quantidade * item.precoUnitario * fatorReal;
     });
   });
   return produtosAtivos
