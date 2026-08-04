@@ -3,15 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <link rel="manifest" href="manifest.json?v=20260804d" />
-  <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg?v=20260804d" />
-  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png?v=20260804d" />
+  <link rel="manifest" href="manifest.json?v=20260804e" />
+  <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg?v=20260804e" />
+  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png?v=20260804e" />
   <meta name="theme-color" content="#0B0B10" />
   <title>Vendas — Swipo Agenda</title>
-  <link rel="stylesheet" href="css/tokens.css?v=20260804d" />
-  <link rel="stylesheet" href="css/base.css?v=20260804d" />
-  <link rel="stylesheet" href="css/layout.css?v=20260804d" />
-  <link rel="stylesheet" href="css/components.css?v=20260804d" />
+  <link rel="stylesheet" href="css/tokens.css?v=20260804e" />
+  <link rel="stylesheet" href="css/base.css?v=20260804e" />
+  <link rel="stylesheet" href="css/layout.css?v=20260804e" />
+  <link rel="stylesheet" href="css/components.css?v=20260804e" />
 </head>
 <body data-page="vendas">
   <div class="app">
@@ -138,21 +138,20 @@
         <div class="empty-state is-hidden" id="js-vendas-parados-vazio"><p class="empty-state__title">Nenhum produto com vendas baixas</p></div>
       </div>
 
-      <div class="segmented section" id="js-filtro-vendas">
-        <span class="segmented__item is-active" data-filtro="todas">Todas</span>
-        <span class="segmented__item" data-filtro="avulsas">Avulsas</span>
-        <span class="segmented__item" data-filtro="atendimento">De atendimento</span>
-      </div>
-
-      <section class="section">
-        <h2 class="section__title">Vendas recentes</h2>
-        <div class="card" id="js-lista-historico-vendas"></div>
+      <div class="card section">
+        <p class="text-secondary" style="margin-bottom:12px;">Vendas</p>
+        <div class="segmented" id="js-filtro-vendas" style="margin-bottom:12px;">
+          <span class="segmented__item is-active" data-filtro="todas">Todas</span>
+          <span class="segmented__item" data-filtro="avulsas">Avulsas</span>
+          <span class="segmented__item" data-filtro="atendimento">De atendimento</span>
+        </div>
+        <div id="js-lista-historico-vendas"></div>
         <div class="empty-state is-hidden" id="js-historico-vendas-vazio">
           <p class="empty-state__title">Nenhuma venda registrada</p>
           <p class="text-muted">Nenhuma venda no período/filtro selecionado.</p>
         </div>
         <button class="text-primary-accent is-hidden" id="js-historico-vendas-toggle" style="border:none;background:none;padding:0;margin-top:10px;font-weight:700;font-size:var(--text-xs);width:100%;text-align:center;">Ver todas</button>
-      </section>
+      </div>
     </main>
 
     <div id="js-bottom-nav-mount"></div>
@@ -244,18 +243,18 @@
     </div>
   </div>
 
-  <script src="js/utils.js?v=20260804d"></script>
-  <script src="js/menu.js?v=20260804d"></script>
-  <script src="js/storage.js?v=20260804d"></script>
-  <script src="js/tema.js?v=20260804d"></script>
-  <script src="js/app.js?v=20260804d"></script>
-  <script src="js/chips.js?v=20260804d"></script>
-  <script src="js/modal.js?v=20260804d"></script>
-  <script src="js/ajuda-dados.js?v=20260804d"></script>
-  <script src="js/ajuda.js?v=20260804d"></script>
-  <script src="js/calendario.js?v=20260804d"></script>
-  <script src="js/acoes-simuladas.js?v=20260804d"></script>
-  <script src="js/vendas.js?v=20260804d"></script>
-  <script src="js/vendas-pagina.js?v=20260804d"></script>
+  <script src="js/utils.js?v=20260804e"></script>
+  <script src="js/menu.js?v=20260804e"></script>
+  <script src="js/storage.js?v=20260804e"></script>
+  <script src="js/tema.js?v=20260804e"></script>
+  <script src="js/app.js?v=20260804e"></script>
+  <script src="js/chips.js?v=20260804e"></script>
+  <script src="js/modal.js?v=20260804e"></script>
+  <script src="js/ajuda-dados.js?v=20260804e"></script>
+  <script src="js/ajuda.js?v=20260804e"></script>
+  <script src="js/calendario.js?v=20260804e"></script>
+  <script src="js/acoes-simuladas.js?v=20260804e"></script>
+  <script src="js/vendas.js?v=20260804e"></script>
+  <script src="js/vendas-pagina.js?v=20260804e"></script>
 </body>
 </html>
