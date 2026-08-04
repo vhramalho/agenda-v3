@@ -39,6 +39,7 @@ function listaVendasPendentes() {
 function pendenciasUnificadas() {
   const atendimentos = listaPendentes().map((a) => ({
     tipo: "atendimento",
+    id: a.id,
     data: a.data,
     nomeCliente: a.nomeCliente,
     valor: a.valorPendente || a.valorTotal || 0,
@@ -54,7 +55,10 @@ function pendenciasUnificadas() {
 
 function montarLinhaPendenteUnificada(item, indice) {
   const linha = document.createElement("a");
-  linha.href = `index.html?data=${item.data}`;
+  // Atendimento: vai direto pro dia certo já com o modal de editar aberto
+  // (ver bootstrap em js/agenda.js). Venda: continua só levando pro dia,
+  // não tem esse mecanismo ainda.
+  linha.href = item.tipo === "atendimento" ? `index.html?data=${item.data}&abrirAtendimento=${item.id}` : `index.html?data=${item.data}`;
   linha.className = "list-item";
   linha.style.textDecoration = "none";
   linha.style.color = "inherit";

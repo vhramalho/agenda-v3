@@ -1129,6 +1129,25 @@ document.addEventListener("DOMContentLoaded", () => {
   const dataDaUrl = new URLSearchParams(window.location.search).get("data");
   selecionarData(dataDaUrl || dataSelecionada);
 
+  /* Editar um atendimento a partir de outra página (lista de Atendimentos
+     em relatorio.html, "Quem deve" em pendentes.html) — o link já vem com
+     ?data=X&abrirAtendimento=Y, então em vez de duplicar toda a lógica de
+     edição (cliente/serviços/observação/venda anexada) nessas páginas, a
+     Agenda mesmo abre o modal de editar realizado direto ao carregar,
+     reaproveitando prepararEditarRealizado() que já existe pro botão
+     "Editar realizado". Limpa o parâmetro da URL depois de abrir, senão
+     um F5 reabriria o modal sem o usuário ter clicado em nada. */
+  const idAtendimentoParaAbrir = new URLSearchParams(window.location.search).get("abrirAtendimento");
+  if (idAtendimentoParaAbrir) {
+    const agendamentoParaAbrir = obterAgendamentos().find((a) => a.id === idAtendimentoParaAbrir);
+    if (agendamentoParaAbrir) {
+      agendamentoModalAtual = agendamentoParaAbrir;
+      prepararEditarRealizado(agendamentoParaAbrir);
+      abrirModal("modal-editar-realizado");
+      window.history.replaceState(null, "", `index.html?data=${agendamentoParaAbrir.data}`);
+    }
+  }
+
   qs("#js-btn-hoje").addEventListener("click", () => {
     selecionarData(hojeIso());
   });

@@ -150,6 +150,74 @@ function valorFaturamentoAtendimentos(inicio, fim) {
 
 const IDS_GRAFICO_ATENDIMENTOS = { linha: "js-relatorio-grafico-linha", area: "js-relatorio-grafico-area", pontos: "js-relatorio-grafico-pontos", dias: "js-relatorio-grafico-dias", eixoMax: "js-relatorio-eixo-max", eixoMeio: "js-relatorio-eixo-meio" };
 
+function nomesServicosAtendimento(ids) {
+  const servicos = obterServicos();
+  return (ids || []).map((id) => (servicos.find((s) => s.id === id) || {}).nome).filter(Boolean).join(", ");
+}
+
+/* Lista de atendimentos realizados no período — cada linha é um link real
+   pra Agenda (não um modal nesta página): index.html?data=X&abrirAtendimento=Y
+   navega pro dia certo e já abre o modal de editar realizado direto lá,
+   reaproveitando prepararEditarRealizado()/js/agenda.js sem precisar
+   duplicar toda aquela lógica (cliente/serviços/observação/venda anexada)
+   nesta página — ver js/agenda.js pro bootstrap que lê esse parâmetro. */
+const LIMITE_ATENDIMENTOS_REALIZADOS = 10;
+let atendimentosRealizadosExpandido = false;
+
+function montarLinhaAtendimento(agendamento, indice) {
+  const linha = document.createElement("a");
+  linha.href = `index.html?data=${agendamento.data}&abrirAtendimento=${agendamento.id}`;
+  linha.className = "list-item";
+  linha.style.textDecoration = "none";
+  linha.style.color = "inherit";
+  const pago = agendamento.status === "realizado_pago";
+  linha.innerHTML = `
+    <div class="list-item__avatar ${classeAvatarPorIndice(indice)}"></div>
+    <div class="list-item__body">
+      <p class="list-item__title"></p>
+      <p class="list-item__subtitle"></p>
+    </div>
+    <div class="list-item__trailing">
+      <p style="font-weight:700;"></p>
+      <span class="badge ${pago ? "badge--sucesso" : "badge--alerta"}">${pago ? "Pago" : "Pendente"}</span>
+    </div>
+    <svg class="list-item__chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
+  `;
+  linha.querySelector(".list-item__avatar").textContent = iniciaisCliente(agendamento.nomeCliente);
+  linha.querySelector(".list-item__title").textContent = agendamento.nomeCliente;
+  const servicos = nomesServicosAtendimento(agendamento.servicosIds);
+  linha.querySelector(".list-item__subtitle").textContent = `${servicos || "—"} · ${formatarDataCurta(agendamento.data)}`;
+  linha.querySelector(".list-item__trailing p").textContent = formatarMoeda(agendamento.valorTotal || 0);
+  return linha;
+}
+
+function renderizarAtendimentosRealizados(agendamentos) {
+  const lista = agendamentos.slice().sort((a, b) => `${b.data}${b.hora}`.localeCompare(`${a.data}${a.hora}`));
+  const container = qs("#js-lista-atendimentos-realizados");
+  const vazio = qs("#js-atendimentos-realizados-vazio");
+  const toggle = qs("#js-atendimentos-realizados-toggle");
+  container.innerHTML = "";
+
+  if (lista.length === 0) {
+    container.classList.add("is-hidden");
+    vazio.classList.remove("is-hidden");
+    toggle.classList.add("is-hidden");
+    return;
+  }
+
+  container.classList.remove("is-hidden");
+  vazio.classList.add("is-hidden");
+  const visiveis = atendimentosRealizadosExpandido ? lista : lista.slice(0, LIMITE_ATENDIMENTOS_REALIZADOS);
+  visiveis.forEach((ag, i) => container.appendChild(montarLinhaAtendimento(ag, i)));
+
+  if (lista.length > LIMITE_ATENDIMENTOS_REALIZADOS) {
+    toggle.classList.remove("is-hidden");
+    toggle.textContent = atendimentosRealizadosExpandido ? "Ver menos" : "Ver todas";
+  } else {
+    toggle.classList.add("is-hidden");
+  }
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   const rotulo = qs("#js-periodo-label");
   if (!rotulo) return;
@@ -217,6 +285,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const maisRealizados = calcularMaisRealizados(agendamentosNoPeriodo(inicio, fim));
     montarRankingServicos(maisRealizados, "js-relatorio-mais-realizados", "js-relatorio-mais-realizados-resto", "js-relatorio-mais-realizados-vazio", "js-relatorio-mais-realizados-ver-todos", "realizados");
 
+    renderizarAtendimentosRealizados(agendamentosNoPeriodo(inicio, fim));
+
     const svgGrafico = qs("#js-relatorio-grafico-svg");
     if (tipoPeriodo === "dia") {
       svgGrafico.classList.add("is-hidden");
@@ -231,12 +301,18 @@ document.addEventListener("DOMContentLoaded", () => {
     atualizarRelatorio();
   });
 
+  qs("#js-atendimentos-realizados-toggle").addEventListener("click", () => {
+    atendimentosRealizadosExpandido = !atendimentosRealizadosExpandido;
+    atualizarRelatorio();
+  });
+
   function avancarPeriodo(direcao) {
     if (tipoPeriodo === "dia") refData.setDate(refData.getDate() + direcao);
     else if (tipoPeriodo === "semana") refData.setDate(refData.getDate() + direcao * 7);
     else if (tipoPeriodo === "mes") refData.setMonth(refData.getMonth() + direcao);
     else refData.setFullYear(refData.getFullYear() + direcao);
     estadoExpandidoRanking.realizados = false;
+    atendimentosRealizadosExpandido = false;
     atualizarRelatorio();
   }
 
@@ -251,6 +327,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const chave = item.textContent.trim().toLowerCase();
       tipoPeriodo = mapaAba[chave] || tipoPeriodo;
       estadoExpandidoRanking.realizados = false;
+      atendimentosRealizadosExpandido = false;
       atualizarRelatorio();
     });
   });
@@ -264,6 +341,7 @@ document.addEventListener("DOMContentLoaded", () => {
     window.aoSelecionarDiaCalendarioAgenda = (ano, mes, dia) => {
       refData = new Date(ano, mes, dia);
       estadoExpandidoRanking.realizados = false;
+      atendimentosRealizadosExpandido = false;
       atualizarRelatorio();
     };
   });
