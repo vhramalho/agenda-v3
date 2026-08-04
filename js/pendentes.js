@@ -46,6 +46,7 @@ function pendenciasUnificadas() {
   }));
   const vendas = listaVendasPendentes().map((v) => ({
     tipo: "venda",
+    id: v.id,
     data: v.criadaEm.slice(0, 10),
     nomeCliente: v.nomeCliente || "Avulso",
     valor: v.valorPendente || v.valorTotal || 0,
@@ -53,12 +54,44 @@ function pendenciasUnificadas() {
   return [...atendimentos, ...vendas].sort((a, b) => (a.data < b.data ? -1 : a.data > b.data ? 1 : 0));
 }
 
+/* Abre o modal de editar venda direto aqui em Pendentes — diferente de
+   atendimento (que precisa da Agenda pra editar, ver bootstrap em
+   js/agenda.js), editar venda já é um módulo portável (js/vendas.js,
+   #modal-nova-venda duplicado nesta página), então não faz sentido navegar
+   pra lugar nenhum: não existe "puxar da Agenda" pra uma venda avulsa. */
+function abrirEdicaoVendaPendente(vendaId) {
+  const venda = obterVendas().find((v) => v.id === vendaId);
+  if (!venda) return;
+  prepararEditarVenda(
+    venda,
+    () => {
+      fecharModal("modal-nova-venda");
+      atualizarPendentesResumo();
+    },
+    null,
+    () => {
+      removerVendaAnexada(venda.id);
+      fecharModal("modal-nova-venda");
+      atualizarPendentesResumo();
+    }
+  );
+  abrirModal("modal-nova-venda");
+}
+
 function montarLinhaPendenteUnificada(item, indice) {
+  const ehVenda = item.tipo === "venda";
   const linha = document.createElement("a");
-  // Atendimento: vai direto pro dia certo já com o modal de editar aberto
-  // (ver bootstrap em js/agenda.js). Venda: continua só levando pro dia,
-  // não tem esse mecanismo ainda.
-  linha.href = item.tipo === "atendimento" ? `index.html?data=${item.data}&abrirAtendimento=${item.id}` : `index.html?data=${item.data}`;
+  if (ehVenda) {
+    linha.href = "#";
+    linha.addEventListener("click", (evento) => {
+      evento.preventDefault();
+      abrirEdicaoVendaPendente(item.id);
+    });
+  } else {
+    // Atendimento: vai direto pro dia certo já com o modal de editar aberto
+    // (ver bootstrap em js/agenda.js).
+    linha.href = `index.html?data=${item.data}&abrirAtendimento=${item.id}`;
+  }
   linha.className = "list-item";
   linha.style.textDecoration = "none";
   linha.style.color = "inherit";
@@ -231,73 +264,90 @@ function renderizarOcorrenciasDevedor(item) {
   });
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+/* Estado de "Ver todos" do Quem deve — fora do closure do DOMContentLoaded
+   pra sobreviver a atualizarPendentesResumo() (chamada de novo depois de
+   editar/excluir uma venda pendente pelo modal, ver abrirEdicaoVendaPendente). */
+let quemDeveExpandido = false;
+
+function atualizarCardsPendentes() {
+  if (!qs("#js-pendentes-valor")) return;
   const pendentes = listaPendentes();
   const totalPendente = pendentes.reduce((soma, a) => soma + (a.valorPendente || a.valorTotal || 0), 0);
   const vendasPendentes = listaVendasPendentes();
   const totalVendasPendentes = vendasPendentes.reduce((soma, v) => soma + (v.valorPendente || v.valorTotal || 0), 0);
+  qs("#js-pendentes-valor").textContent = formatarMoeda(totalPendente);
+  qs("#js-pendentes-contagem").textContent = `${pendentes.length} cobrança${pendentes.length === 1 ? "" : "s"} pendente${pendentes.length === 1 ? "" : "s"}`;
+  qs("#js-pendentes-vendas-valor").textContent = formatarMoeda(totalVendasPendentes);
+  qs("#js-pendentes-vendas-contagem").textContent = `${vendasPendentes.length} venda${vendasPendentes.length === 1 ? "" : "s"} pendente${vendasPendentes.length === 1 ? "" : "s"}`;
+}
 
-  // ---- Cards A receber (atendimentos + vendas, lado a lado) ----
-  if (qs("#js-pendentes-valor")) {
-    iniciarTour("pendentes");
-    qs("#js-pendentes-valor").textContent = formatarMoeda(totalPendente);
-    qs("#js-pendentes-contagem").textContent = `${pendentes.length} cobrança${pendentes.length === 1 ? "" : "s"} pendente${pendentes.length === 1 ? "" : "s"}`;
-    qs("#js-pendentes-vendas-valor").textContent = formatarMoeda(totalVendasPendentes);
-    qs("#js-pendentes-vendas-contagem").textContent = `${vendasPendentes.length} venda${vendasPendentes.length === 1 ? "" : "s"} pendente${vendasPendentes.length === 1 ? "" : "s"}`;
+function atualizarQuemDeve() {
+  if (!qs("#js-quem-deve-lista")) return;
+  const unificada = pendenciasUnificadas();
+  const titulo = qs("#js-quem-deve-titulo");
+  const toggle = qs("#js-quem-deve-toggle");
+  const container = qs("#js-quem-deve-lista");
+  const vazio = qs("#js-quem-deve-vazio");
+
+  container.innerHTML = "";
+  if (unificada.length === 0) {
+    container.classList.add("is-hidden");
+    vazio.classList.remove("is-hidden");
+    titulo.textContent = "Quem deve";
+    toggle.classList.add("is-hidden");
+  } else {
+    container.classList.remove("is-hidden");
+    vazio.classList.add("is-hidden");
+    (quemDeveExpandido ? unificada : unificada.slice(0, 2)).forEach((item, i) => container.appendChild(montarLinhaPendenteUnificada(item, i)));
+    if (unificada.length > 2) {
+      titulo.textContent = `Quem deve (${unificada.length})`;
+      toggle.textContent = quemDeveExpandido ? "Ver menos" : "Ver todos";
+      toggle.classList.remove("is-hidden");
+    } else {
+      titulo.textContent = "Quem deve";
+      toggle.classList.add("is-hidden");
+    }
   }
+}
+
+function atualizarDevedoresTop3() {
+  if (!qs("#js-devedores-top3")) return;
+  const top3 = rankingDevedoresCombinado({ tipo: "ano", ano: new Date().getFullYear() }).slice(0, 3);
+  const container = qs("#js-devedores-top3");
+  container.innerHTML = "";
+  if (top3.length === 0) {
+    container.innerHTML = `<p class="text-secondary" style="text-align:center;">Nenhum cliente com pendência no momento.</p>`;
+  } else {
+    top3.forEach((item, i) => container.appendChild(montarLinhaDevedorCompleta(item, i, i + 1)));
+  }
+}
+
+/* Chamada uma vez no load, e de novo depois de editar/excluir uma venda
+   pendente pelo modal (abrirEdicaoVendaPendente) — os três blocos podem
+   mudar juntos (total a receber, a própria lista, e o ranking de devedores). */
+function atualizarPendentesResumo() {
+  atualizarCardsPendentes();
+  atualizarQuemDeve();
+  atualizarDevedoresTop3();
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  if (qs("#js-pendentes-valor")) iniciarTour("pendentes");
+  atualizarPendentesResumo();
 
   // ---- Quem deve — lista única, atendimento e venda misturados (expansível, limite 5) ----
   if (qs("#js-quem-deve-lista")) {
-    const unificada = pendenciasUnificadas();
-    const titulo = qs("#js-quem-deve-titulo");
-    const toggle = qs("#js-quem-deve-toggle");
-    const container = qs("#js-quem-deve-lista");
-    const vazio = qs("#js-quem-deve-vazio");
-    let expandido = false;
-
-    function renderQuemDeve() {
-      container.innerHTML = "";
-      if (unificada.length === 0) {
-        container.classList.add("is-hidden");
-        vazio.classList.remove("is-hidden");
-        titulo.textContent = "Quem deve";
-        toggle.classList.add("is-hidden");
-      } else {
-        container.classList.remove("is-hidden");
-        vazio.classList.add("is-hidden");
-        (expandido ? unificada : unificada.slice(0, 2)).forEach((item, i) => container.appendChild(montarLinhaPendenteUnificada(item, i)));
-        if (unificada.length > 2) {
-          titulo.textContent = `Quem deve (${unificada.length})`;
-          toggle.textContent = expandido ? "Ver menos" : "Ver todos";
-          toggle.classList.remove("is-hidden");
-        } else {
-          titulo.textContent = "Quem deve";
-          toggle.classList.add("is-hidden");
-        }
-      }
-    }
-
-    toggle.addEventListener("click", () => { expandido = !expandido; renderQuemDeve(); });
-    renderQuemDeve();
+    qs("#js-quem-deve-toggle").addEventListener("click", () => {
+      quemDeveExpandido = !quemDeveExpandido;
+      atualizarQuemDeve();
+    });
 
     // Dica avulsa "clique para receber": só numa visita DEPOIS que o tour de
     // boas-vindas já foi visto (nunca na mesma visita que ele, pra não brigar
     // pelo mesmo overlay) — normalmente já é assim, já que o pendente é criado
     // lá na Agenda, numa visita anterior.
-    if (unificada.length > 0 && obterAjuda().pendentes.introVista) {
+    if (pendenciasUnificadas().length > 0 && obterAjuda().pendentes.introVista) {
       mostrarDicaSpotlight("pendentes", "receber", qs("#js-quem-deve-lista .list-item"));
-    }
-  }
-
-  // ---- Devedores — card resumo top 3 combinado (pendentes.html) ----
-  if (qs("#js-devedores-top3")) {
-    const top3 = rankingDevedoresCombinado({ tipo: "ano", ano: new Date().getFullYear() }).slice(0, 3);
-    const container = qs("#js-devedores-top3");
-    container.innerHTML = "";
-    if (top3.length === 0) {
-      container.innerHTML = `<p class="text-secondary" style="text-align:center;">Nenhum cliente com pendência no momento.</p>`;
-    } else {
-      top3.forEach((item, i) => container.appendChild(montarLinhaDevedorCompleta(item, i, i + 1)));
     }
   }
 
