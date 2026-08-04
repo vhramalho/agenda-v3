@@ -19,7 +19,7 @@ const AJUDA_DADOS = {
       { tipo: "gesto", alvo: () => document.querySelector("#js-agenda-lista-wrap"), legenda: "Arraste pra trocar de dia." },
       { tipo: "gesto", alvo: () => document.querySelector("#js-week-carousel-wrap"), legenda: "Arraste pra trocar de semana." },
       { tipo: "spot", alvo: () => document.querySelector("#js-agenda-mes-btn"), legenda: "Ou toque aqui pra ir direto numa data no calendário." },
-      { tipo: "spot", alvo: () => document.querySelector('a[aria-label="Vender"]'), legenda: "Vendeu algo fora de um atendimento? Registre aqui." },
+      { tipo: "spot", alvo: () => document.querySelector('[aria-label="Vender"]'), legenda: "Vendeu algo fora de um atendimento? Registre aqui." },
       { tipo: "spot", alvo: () => document.querySelector("#js-btn-compartilhar-whatsapp"), legenda: "Compartilhe seus horários livres pelo WhatsApp." },
     ],
     dicas: {
@@ -45,7 +45,9 @@ const AJUDA_DADOS = {
   },
   vendas: {
     tour: [
-      { tipo: "spot", alvo: () => document.querySelector("#js-btn-vendas-acao"), legenda: "Acompanhe suas vendas aqui e faça uma nova venda aqui." },
+      { tipo: "centro", legenda: "Aqui você acompanha o que vendeu — pra registrar uma venda avulsa, use o botão \"Vender\" lá na Agenda." },
+      { tipo: "spot", alvo: () => document.querySelector("#js-periodo-tabs"), legenda: "Escolha qual período deseja ver." },
+      { tipo: "spot", alvo: () => document.querySelector("#js-vendas-btn-calendario"), legenda: "Ou selecione uma data direto no calendário." },
     ],
     dicas: {},
   },

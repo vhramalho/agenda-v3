@@ -1042,6 +1042,18 @@ function prepararFinalizarAtendimento(agendamento) {
   qs("#js-finalizar-valor-pendente").value = "";
 }
 
+/* Botão "Vender" do topo da Agenda — abre o modal de venda avulsa direto
+   ali, sem navegar pra vendas.html (2026-08-04, reforça Agenda = ação /
+   Vendas = consulta). #modal-nova-venda já existe duplicado nesta página
+   (usado pelo hook "Vendeu algo?" acima) — mesmo motor, callback aqui só
+   fecha o modal, não há lista de histórico pra atualizar na Agenda. */
+function abrirVendaAvulsaDaAgenda() {
+  prepararNovaVenda({ clienteId: null, nomeCliente: null, agendamentoId: null }, () => {
+    fecharModal("modal-nova-venda");
+  });
+  abrirModal("modal-nova-venda");
+}
+
 function textoResumoVenda(venda) {
   const statusTexto = venda.status === "paga" ? "Pago" : "Pendente";
   return `${venda.itens.length} ite${venda.itens.length === 1 ? "m" : "ns"} — ${formatarMoeda(venda.valorTotal)} — ${statusTexto}`;

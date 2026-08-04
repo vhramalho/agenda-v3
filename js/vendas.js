@@ -297,16 +297,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const dataBtn = qs("#js-venda-data-btn");
   if (dataBtn) {
+    // Reivindica o hook global no clique, não uma vez só no load — em
+    // vendas.html esse mesmo #modal-calendario também é aberto pelo botão
+    // de calendário do cabeçalho (pular período, js/vendas-pagina.js), que
+    // faz a mesma coisa no próprio clique. Quem foi clicado por último
+    // manda no callback.
     dataBtn.addEventListener("click", () => {
       const [ano, mes, dia] = vendaDataSelecionada.split("-").map(Number);
       if (typeof window.irParaMesCalendarioAgenda === "function") {
         window.irParaMesCalendarioAgenda(ano, mes - 1, dia);
       }
+      window.aoSelecionarDiaCalendarioAgenda = (ano, mes, dia) => {
+        vendaDataSelecionada = `${ano}-${String(mes + 1).padStart(2, "0")}-${String(dia).padStart(2, "0")}`;
+        atualizarTextoDataVenda();
+      };
     });
-    window.aoSelecionarDiaCalendarioAgenda = (ano, mes, dia) => {
-      vendaDataSelecionada = `${ano}-${String(mes + 1).padStart(2, "0")}-${String(dia).padStart(2, "0")}`;
-      atualizarTextoDataVenda();
-    };
   }
 
   const tipoClienteContainer = qs("#js-venda-cliente-tipo");

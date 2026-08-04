@@ -472,3 +472,229 @@ function lerPagamentosDeLinhas(linhasContainerId) {
     return { formaPagamentoId: forma ? forma.id : null, valor };
   });
 }
+
+/* ---------- Período (Dia/Semana/Mês/Ano) — Relatório (Atendimentos) e Vendas ----------
+   Movido de js/relatorio.js (2026-08-04) porque a página Vendas passou a ter
+   seu próprio seletor de período, independente do de Atendimentos — as duas
+   páginas (js/relatorio.js e js/vendas-pagina.js) precisam destes mesmos
+   helpers de data/formatação/gráfico. */
+
+const MESES_NOME_RELATORIO = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+const MESES_ABREV_RELATORIO = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"];
+const DIAS_ABREV_RELATORIO = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
+const DIAS_SEMANA_RELATORIO = ["domingo", "segunda-feira", "terça-feira", "quarta-feira", "quinta-feira", "sexta-feira", "sábado"];
+const CORES_FORMA = { pix: "#3B82F6", dinheiro: "#22C55E", credito: "#EC4899", debito: "#EAB308", outras: "#94A3B8", pendentes: "var(--danger)" };
+const ROTULO_TIPO_FORMA = { pix: "Pix", dinheiro: "Dinheiro", credito: "Crédito", debito: "Débito", outras: "Outras", pendentes: "Pendentes" };
+const ORDEM_TIPOS_FORMA = ["pix", "dinheiro", "credito", "debito", "outras", "pendentes"];
+
+function dataLocalParaIso(date) {
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+}
+
+function inicioDaSemanaRelatorio(data) {
+  const d = new Date(data);
+  d.setDate(d.getDate() - d.getDay());
+  return d;
+}
+
+function limitesPeriodo(tipo, refData) {
+  if (tipo === "dia") {
+    return { inicio: new Date(refData), fim: new Date(refData) };
+  }
+  if (tipo === "semana") {
+    const inicio = inicioDaSemanaRelatorio(refData);
+    const fim = new Date(inicio);
+    fim.setDate(fim.getDate() + 6);
+    return { inicio, fim };
+  }
+  if (tipo === "mes") {
+    const inicio = new Date(refData.getFullYear(), refData.getMonth(), 1);
+    const fim = new Date(refData.getFullYear(), refData.getMonth() + 1, 0);
+    return { inicio, fim };
+  }
+  const inicio = new Date(refData.getFullYear(), 0, 1);
+  const fim = new Date(refData.getFullYear(), 11, 31);
+  return { inicio, fim };
+}
+
+function periodoAnteriorRef(tipo, refData) {
+  const anterior = new Date(refData);
+  if (tipo === "dia") anterior.setDate(anterior.getDate() - 1);
+  else if (tipo === "semana") anterior.setDate(anterior.getDate() - 7);
+  else if (tipo === "mes") anterior.setMonth(anterior.getMonth() - 1);
+  else anterior.setFullYear(anterior.getFullYear() - 1);
+  return anterior;
+}
+
+/* incluirRotulo=true só no card de Faturamento e Atendimentos/Vendas (destaques
+   com espaço de sobra); os insight-cards menores (Ticket médio, Taxas)
+   mostram só a seta + valor, sem "vs X anterior". Quando incluirRotulo=true,
+   o "vs X anterior" vem num <span> à parte (texto é HTML, não texto puro)
+   pra poder ficar em cor secundária, diferente da seta+valor que fica
+   verde/vermelho. */
+function formatarComparacao(atual, anterior, rotuloPeriodo, tipo = "valor", incluirRotulo = true) {
+  const diff = atual - anterior;
+  const sufixo = incluirRotulo ? ` <span class="text-secondary">vs ${rotuloPeriodo} anterior</span>` : "";
+  if (diff === 0) return { texto: incluirRotulo ? `sem variação${sufixo}` : "sem variação", classe: "text-secondary" };
+
+  const seta = diff > 0 ? "▲" : "▼";
+  const classe = diff > 0 ? "text-success" : "text-danger";
+
+  if (tipo === "contagem") {
+    return { texto: `${seta}${Math.abs(diff)}${sufixo}`, classe };
+  }
+
+  // tipo "valor" (dinheiro)
+  return { texto: `${seta}${formatarMoeda(Math.abs(diff))}${sufixo}`, classe };
+}
+
+function formatarEixoY(v) {
+  if (v >= 1000) {
+    const milhares = v / 1000;
+    return `R$${milhares % 1 === 0 ? milhares : milhares.toFixed(1)}k`;
+  }
+  return `R$${Math.round(v)}`;
+}
+
+/* obterValorPeriodo(inicio, fim) => number — abstrai a fonte dos pontos
+   (faturamento de atendimentos ou de vendas) pra essa função e o
+   desenho do gráfico (montarGraficoFaturamento, abaixo) servirem tanto
+   Atendimentos quanto Vendas sem duplicar a lógica de dia/mês/ano. */
+function calcularPontosGrafico(tipoPeriodo, refData, obterValorPeriodo) {
+  if (tipoPeriodo === "mes") {
+    const ultimoDia = new Date(refData.getFullYear(), refData.getMonth() + 1, 0).getDate();
+    const pontos = [];
+    const rotulos = [];
+    for (let dia = 1; dia <= ultimoDia; dia++) {
+      const data = new Date(refData.getFullYear(), refData.getMonth(), dia);
+      const valor = obterValorPeriodo(data, data);
+      const frac = (dia - 1) / (ultimoDia - 1 || 1);
+      pontos.push({ frac, valor, marcado: true });
+      if (dia === 1 || dia % 5 === 0) rotulos.push({ frac, texto: String(dia) });
+    }
+    return { pontos, rotulos };
+  }
+
+  if (tipoPeriodo === "ano") {
+    const pontos = [];
+    const rotulos = [];
+    for (let mes = 0; mes < 12; mes++) {
+      const inicio = new Date(refData.getFullYear(), mes, 1);
+      const fim = new Date(refData.getFullYear(), mes + 1, 0);
+      const valor = obterValorPeriodo(inicio, fim);
+      const frac = mes / 11;
+      pontos.push({ frac, valor, marcado: true });
+      rotulos.push({ frac, texto: MESES_ABREV_RELATORIO[mes][0].toUpperCase() + MESES_ABREV_RELATORIO[mes].slice(1) });
+    }
+    return { pontos, rotulos };
+  }
+
+  // semana (padrão)
+  const inicio = inicioDaSemanaRelatorio(refData);
+  const pontos = [];
+  const rotulos = [];
+  for (let i = 0; i < 7; i++) {
+    const dia = new Date(inicio);
+    dia.setDate(dia.getDate() + i);
+    const valor = obterValorPeriodo(dia, dia);
+    const frac = i / 6;
+    pontos.push({ frac, valor, marcado: true });
+    rotulos.push({ frac, texto: DIAS_ABREV_RELATORIO[i] });
+  }
+  return { pontos, rotulos };
+}
+
+/* ids = { linha, area, pontos, dias, eixoMax, eixoMeio } — os ids dos
+   elementos do SVG a preencher (o gráfico existe em duas páginas, com ids
+   "js-relatorio-*" no Atendimentos e "js-vendas-*" no Vendas). */
+function montarGraficoFaturamento(tipoPeriodo, refData, obterValorPeriodo, ids) {
+  const { pontos, rotulos } = calcularPontosGrafico(tipoPeriodo, refData, obterValorPeriodo);
+  const maximo = Math.max(...pontos.map((p) => p.valor), 1);
+  const plotTop = 10;
+  const plotBottom = 126;
+  const plotLeft = 42;
+  const plotRight = 288;
+  const paraXY = (p) => [plotLeft + p.frac * (plotRight - plotLeft), plotBottom - (p.valor / maximo) * (plotBottom - plotTop)];
+
+  const pontosTexto = pontos.map((p) => paraXY(p).join(",")).join(" ");
+  qs(`#${ids.linha}`).setAttribute("points", pontosTexto);
+  qs(`#${ids.area}`).setAttribute("points", `${pontosTexto} ${plotRight},${plotBottom} ${plotLeft},${plotBottom}`);
+
+  const grupoPontos = qs(`#${ids.pontos}`);
+  grupoPontos.innerHTML = "";
+  pontos.filter((p) => p.marcado).forEach((p) => {
+    const [x, y] = paraXY(p);
+    const circulo = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+    circulo.setAttribute("cx", x);
+    circulo.setAttribute("cy", y);
+    circulo.setAttribute("r", "3.5");
+    circulo.setAttribute("fill", "var(--primary)");
+    grupoPontos.appendChild(circulo);
+  });
+
+  const grupoDias = qs(`#${ids.dias}`);
+  grupoDias.innerHTML = "";
+  rotulos.forEach((r) => {
+    const texto = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    texto.setAttribute("x", plotLeft + r.frac * (plotRight - plotLeft));
+    texto.setAttribute("y", "143");
+    texto.textContent = r.texto;
+    grupoDias.appendChild(texto);
+  });
+
+  qs(`#${ids.eixoMax}`).textContent = formatarEixoY(maximo);
+  qs(`#${ids.eixoMeio}`).textContent = formatarEixoY(maximo / 2);
+}
+
+function montarRecebimentos(resumo, formasContainerId, pizzaContainerId) {
+  const todasFormas = obterFormasPagamento();
+  const tiposComFormaAtiva = new Set(todasFormas.filter((f) => f.ativo).map((f) => f.tipo));
+  const container = qs(`#${formasContainerId || "js-relatorio-formas"}`);
+  const pizza = qs(`#${pizzaContainerId || "js-relatorio-pizza"}`);
+  container.innerHTML = "";
+  pizza.innerHTML = "";
+
+  const valorPorTipo = {};
+  todasFormas.forEach((forma) => {
+    const valor = resumo.porFormaValor[forma.id] || 0;
+    if (valor > 0) valorPorTipo[forma.tipo] = (valorPorTipo[forma.tipo] || 0) + valor;
+  });
+  if (resumo.pendente > 0) valorPorTipo.pendentes = resumo.pendente;
+
+  const tipos = ORDEM_TIPOS_FORMA.filter((tipo) => tiposComFormaAtiva.has(tipo) || valorPorTipo[tipo] > 0);
+
+  const totalComPendente = resumo.totalRecebido + (resumo.pendente || 0);
+  const circunferencia = 2 * Math.PI * 45;
+  let acumulado = 0;
+
+  tipos.forEach((tipo) => {
+    const valor = valorPorTipo[tipo] || 0;
+    const percentual = totalComPendente > 0 ? (valor / totalComPendente) * 100 : 0;
+    const cor = CORES_FORMA[tipo] || "var(--text-muted)";
+
+    const linha = document.createElement("div");
+    linha.className = "row row--between";
+    linha.innerHTML = `
+      <span class="row" style="gap:8px;"><span style="width:8px;height:8px;border-radius:50%;background:${cor};display:inline-block;"></span><span class="js-nome-forma"></span></span>
+      <span class="js-valor-forma" style="color:var(--text-secondary);"></span>
+    `;
+    linha.querySelector(".js-nome-forma").textContent = ROTULO_TIPO_FORMA[tipo] || tipo;
+    linha.querySelector(".js-valor-forma").textContent = formatarMoeda(valor);
+    container.appendChild(linha);
+
+    if (valor > 0) {
+      const fatia = (percentual / 100) * circunferencia;
+      const circulo = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+      circulo.setAttribute("cx", "60");
+      circulo.setAttribute("cy", "60");
+      circulo.setAttribute("r", "45");
+      circulo.setAttribute("fill", "none");
+      circulo.setAttribute("stroke", cor);
+      circulo.setAttribute("stroke-width", "18");
+      circulo.setAttribute("stroke-dasharray", `${fatia} ${circunferencia - fatia}`);
+      circulo.setAttribute("stroke-dashoffset", `${-acumulado}`);
+      pizza.appendChild(circulo);
+      acumulado += fatia;
+    }
+  });
+}
