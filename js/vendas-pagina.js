@@ -205,9 +205,7 @@ function montarLinhaBarraProduto(item, maiorQuantidade, maiorValor, metricaAtiva
   linha.querySelector(".grafico-divergente__legenda").textContent = ehFaturamento
     ? `${textoValor} • ${textoQuantidade}`
     : `${textoQuantidade} • ${textoValor}`;
-  const preenchimento = linha.querySelector(".grafico-divergente__preenchimento");
-  preenchimento.classList.add(ehFaturamento ? "grafico-divergente__preenchimento--faturamento" : "grafico-divergente__preenchimento--unidades");
-  preenchimento.style.width = `${maior > 0 ? (atual / maior) * 100 : 0}%`;
+  linha.querySelector(".grafico-divergente__preenchimento").style.width = `${maior > 0 ? (atual / maior) * 100 : 0}%`;
   return linha;
 }
 

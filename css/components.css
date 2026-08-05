@@ -603,13 +603,6 @@
 .grafico-divergente__preenchimento {
   height: 100%;
   border-radius: var(--radius-full);
-}
-
-.grafico-divergente__preenchimento--unidades {
-  background: var(--text-muted);
-}
-
-.grafico-divergente__preenchimento--faturamento {
   background: var(--primary);
 }
 
