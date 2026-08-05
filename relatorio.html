@@ -3,15 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <link rel="manifest" href="manifest.json?v=20260805h" />
-  <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg?v=20260805h" />
-  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png?v=20260805h" />
+  <link rel="manifest" href="manifest.json?v=20260805i" />
+  <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg?v=20260805i" />
+  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png?v=20260805i" />
   <meta name="theme-color" content="#0B0B10" />
   <title>Atendimentos — Swipo Agenda</title>
-  <link rel="stylesheet" href="css/tokens.css?v=20260805h" />
-  <link rel="stylesheet" href="css/base.css?v=20260805h" />
-  <link rel="stylesheet" href="css/layout.css?v=20260805h" />
-  <link rel="stylesheet" href="css/components.css?v=20260805h" />
+  <link rel="stylesheet" href="css/tokens.css?v=20260805i" />
+  <link rel="stylesheet" href="css/base.css?v=20260805i" />
+  <link rel="stylesheet" href="css/layout.css?v=20260805i" />
+  <link rel="stylesheet" href="css/components.css?v=20260805i" />
 </head>
 <body data-page="relatorio">
   <div class="app">
@@ -78,30 +78,33 @@
           </svg>
         </div>
 
-        <div class="grid-3 section">
-          <div class="insight-card">
-            <div class="insight-card__label">
-              <span>Atendimentos</span>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="8" r="3"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/></svg>
+        <section class="section">
+          <h2 class="section__title">Insights</h2>
+          <div class="grid-3">
+            <div class="insight-card">
+              <div class="insight-card__label">
+                <span>Atendimentos</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="8" r="3"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/></svg>
+              </div>
+              <p class="insight-card__valor" id="js-relatorio-atendimentos"></p>
+              <p class="insight-card__comparacao" id="js-relatorio-atendimentos-comparacao"></p>
             </div>
-            <p class="insight-card__valor" id="js-relatorio-atendimentos"></p>
-            <p class="insight-card__comparacao" id="js-relatorio-atendimentos-comparacao"></p>
-          </div>
-          <div class="insight-card">
-            <div class="insight-card__label">
-              <span>Ticket médio</span>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M9 9.5c0-1.5 1.5-2 3-2s3 .8 3 2-1.5 2-3 2-3 .5-3 2 1.5 2 3 2 3-.5 3-2"/></svg>
+            <div class="insight-card">
+              <div class="insight-card__label">
+                <span>Ticket médio</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M9 9.5c0-1.5 1.5-2 3-2s3 .8 3 2-1.5 2-3 2-3 .5-3 2 1.5 2 3 2 3-.5 3-2"/></svg>
+              </div>
+              <p class="insight-card__valor" id="js-relatorio-ticket"></p>
             </div>
-            <p class="insight-card__valor" id="js-relatorio-ticket"></p>
-          </div>
-          <div class="insight-card">
-            <div class="insight-card__label">
-              <span>Taxas cartão</span>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+            <div class="insight-card">
+              <div class="insight-card__label">
+                <span>Taxas cartão</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+              </div>
+              <p class="insight-card__valor" id="js-relatorio-taxas"></p>
             </div>
-            <p class="insight-card__valor" id="js-relatorio-taxas"></p>
           </div>
-        </div>
+        </section>
 
         <section class="section">
           <h2 class="section__title">Recebimentos</h2>
@@ -155,16 +158,16 @@
     </div>
   </div>
 
-  <script src="js/utils.js?v=20260805h"></script>
-  <script src="js/menu.js?v=20260805h"></script>
-  <script src="js/storage.js?v=20260805h"></script>
-  <script src="js/tema.js?v=20260805h"></script>
-  <script src="js/app.js?v=20260805h"></script>
-  <script src="js/chips.js?v=20260805h"></script>
-  <script src="js/modal.js?v=20260805h"></script>
-  <script src="js/ajuda-dados.js?v=20260805h"></script>
-  <script src="js/ajuda.js?v=20260805h"></script>
-  <script src="js/calendario.js?v=20260805h"></script>
-  <script src="js/relatorio.js?v=20260805h"></script>
+  <script src="js/utils.js?v=20260805i"></script>
+  <script src="js/menu.js?v=20260805i"></script>
+  <script src="js/storage.js?v=20260805i"></script>
+  <script src="js/tema.js?v=20260805i"></script>
+  <script src="js/app.js?v=20260805i"></script>
+  <script src="js/chips.js?v=20260805i"></script>
+  <script src="js/modal.js?v=20260805i"></script>
+  <script src="js/ajuda-dados.js?v=20260805i"></script>
+  <script src="js/ajuda.js?v=20260805i"></script>
+  <script src="js/calendario.js?v=20260805i"></script>
+  <script src="js/relatorio.js?v=20260805i"></script>
 </body>
 </html>
