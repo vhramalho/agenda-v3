@@ -570,22 +570,18 @@
 .podio__degrau--bronze { height: 32px; background: #B45309; color: #1a1200; }
 
 /* ---------- Gráfico de barras (ex.: Vendas por produto) ----------
-   Uma barra só por produto, sempre na métrica ativa no segmentado
-   Unidades/Faturamento acima do gráfico — a métrica não selecionada
-   aparece como texto na legenda abaixo, não ocupa espaço como barra.
-   Antes (30/07) eram duas barras por linha a partir de um eixo central;
-   trocado em 2026-08-05 porque a barra já sempre bate com o número em
-   destaque agora (não tem mais como confundir "barra maior" com "vale
-   mais", que era o motivo de ter duas). Sem número de posição (1º, 2º...):
-   a ordem já responde "mais vendido" ou "maior faturamento" (segmented
-   acima do gráfico), não precisa de mais uma marcação repetindo isso.
+   Uma barra só por produto, sempre proporcional ao faturamento (2026-08-05:
+   removido o seletor Unidades/Faturamento que existia antes — a barra fica
+   travada em faturamento, unidades vira só texto de apoio na legenda).
+   Sem número de posição (1º, 2º...): a ordem já responde "mais vendido"
+   sozinha, não precisa de mais uma marcação repetindo isso.
 
    Gaps internos (nome→barra→legenda) mais apertados que o espaço entre
    produtos — é o que faz cada linha ler como um bloco só, com blocos
-   claramente separados uns dos outros (refinamento 2026-08-05). Width e
-   cor/peso da legenda têm transition — só anima de fato quando a MESMA
-   linha é reaproveitada entre renderizações (ver montarGraficoBarrasProdutos
-   em js/vendas-pagina.js), nunca num elemento recém-criado. */
+   claramente separados uns dos outros (refinamento 2026-08-05). Width tem
+   transition — só anima de fato quando a MESMA linha é reaproveitada entre
+   renderizações (ver montarGraficoBarrasProdutos em js/vendas-pagina.js),
+   nunca num elemento recém-criado. */
 .grafico-divergente__linha + .grafico-divergente__linha {
   margin-top: var(--space-4);
 }
@@ -623,24 +619,18 @@
   font-variant-numeric: tabular-nums;
 }
 
-.grafico-divergente__legenda-valor,
-.grafico-divergente__legenda-quantidade {
-  order: 1;
-  font-weight: 500;
-  color: var(--text-secondary);
-  transition: color 220ms ease-in-out;
+.grafico-divergente__legenda-valor {
+  font-weight: 700;
+  color: var(--text-primary);
 }
 
 .grafico-divergente__legenda-separador {
-  order: 0;
   color: var(--text-muted);
 }
 
-.grafico-divergente__legenda-valor.grafico-divergente__legenda--ativa,
-.grafico-divergente__legenda-quantidade.grafico-divergente__legenda--ativa {
-  order: -1;
-  font-weight: 700;
-  color: var(--text-primary);
+.grafico-divergente__legenda-quantidade {
+  font-weight: 500;
+  color: var(--text-secondary);
 }
 
 /* ---------- Linha de cabeçalho de tabela simples ---------- */

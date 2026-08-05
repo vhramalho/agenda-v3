@@ -53,7 +53,6 @@ let filtroVendasAtual = "todas";
 let refData = new Date();
 let tipoPeriodo = "dia";
 const estadoExpandidoRanking = { vendidos: false };
-let ordenarProdutosPor = "valor";
 
 function vendasNoPeriodo(inicio, fim) {
   const inicioIso = dataLocalParaIso(inicio);
@@ -173,25 +172,20 @@ function calcularParados() {
     .filter((item) => item.diasSemVenda === null || item.diasSemVenda >= item.produto.diasParaAvisarParado);
 }
 
-/* Gráfico de barras (unidades OU faturamento) — top 5 por padrão, "Ver
-   todos" expande a lista inteira. Uma barra só por produto, sempre na
-   métrica ativa no segmentado Unidades/Faturamento acima do gráfico
-   (metricaAtiva: "quantidade" ou "valor", mesmos valores de
-   ordenarProdutosPor); a métrica não selecionada aparece como texto ao
-   lado, não como uma 2ª barra (antes eram duas barras a partir de um
-   eixo central — trocado em 2026-08-05: como a barra agora sempre bate
-   com o número em destaque, não tem mais como confundir "barra maior"
-   com "vale mais", que era o problema que as duas barras resolviam).
-   Escala contra o maior daquela métrica na lista inteira (não só dos
-   visíveis), pra não redimensionar ao expandir/recolher — o item líder
-   sempre em 100%. Sem número de posição — a ordem da lista já responde
-   a pergunta.
+/* Gráfico de barras por faturamento — top 5 por padrão, "Ver todos"
+   expande a lista inteira. Uma barra só por produto, sempre proporcional
+   ao faturamento (antes tinha um seletor Unidades/Faturamento; removido
+   em 2026-08-05 a pedido do usuário — a barra fica travada em
+   faturamento, unidades vira só texto de apoio na legenda). Escala
+   contra o maior faturamento da lista inteira (não só dos visíveis), pra
+   não redimensionar ao expandir/recolher — o item líder sempre em 100%.
+   Sem número de posição — a ordem da lista já responde a pergunta.
 
    Linhas são reaproveitadas por produto.id entre renderizações (não
-   recriadas do zero) — é o que permite width/cor animarem via CSS
-   (transition) ao trocar de período/métrica/expandir: um elemento novo
-   não tem "estado anterior" pra transicionar a partir dele, só um
-   elemento reaproveitado tem. */
+   recriadas do zero) — é o que permite a largura animar via CSS
+   (transition) ao trocar de período/expandir: um elemento novo não tem
+   "estado anterior" pra transicionar a partir dele, só um elemento
+   reaproveitado tem. */
 
 function montarLinhaBarraProduto(item) {
   const linha = document.createElement("div");
@@ -214,16 +208,11 @@ function montarLinhaBarraProduto(item) {
   return linha;
 }
 
-function atualizarLinhaBarraProduto(linha, item, maiorQuantidade, maiorValor, metricaAtiva) {
-  const ehFaturamento = metricaAtiva === "valor";
-  const maior = ehFaturamento ? maiorValor : maiorQuantidade;
-  const atual = ehFaturamento ? item.valor : item.quantidade;
-  linha.querySelector(".grafico-divergente__preenchimento").style.width = `${maior > 0 ? (atual / maior) * 100 : 0}%`;
-  linha.querySelector(".grafico-divergente__legenda-valor").classList.toggle("grafico-divergente__legenda--ativa", ehFaturamento);
-  linha.querySelector(".grafico-divergente__legenda-quantidade").classList.toggle("grafico-divergente__legenda--ativa", !ehFaturamento);
+function atualizarLinhaBarraProduto(linha, item, maiorValor) {
+  linha.querySelector(".grafico-divergente__preenchimento").style.width = `${maiorValor > 0 ? (item.valor / maiorValor) * 100 : 0}%`;
 }
 
-function montarGraficoBarrasProdutos(lista, containerId, vazioId, botaoId, chaveEstado, metricaAtiva) {
+function montarGraficoBarrasProdutos(lista, containerId, vazioId, botaoId, chaveEstado) {
   const container = qs(`#${containerId}`);
   const vazio = qs(`#${vazioId}`);
   const botao = qs(`#${botaoId}`);
@@ -241,7 +230,6 @@ function montarGraficoBarrasProdutos(lista, containerId, vazioId, botaoId, chave
 
   const expandido = estadoExpandidoRanking[chaveEstado];
   const visiveis = expandido ? lista : lista.slice(0, 5);
-  const maiorQuantidade = Math.max(...lista.map((item) => item.quantidade));
   const maiorValor = Math.max(...lista.map((item) => item.valor));
 
   const linhasAtuais = {};
@@ -250,7 +238,7 @@ function montarGraficoBarrasProdutos(lista, containerId, vazioId, botaoId, chave
   visiveis.forEach((item) => {
     const linha = linhasAtuais[item.produto.id] || montarLinhaBarraProduto(item);
     delete linhasAtuais[item.produto.id];
-    atualizarLinhaBarraProduto(linha, item, maiorQuantidade, maiorValor, metricaAtiva);
+    atualizarLinhaBarraProduto(linha, item, maiorValor);
     container.appendChild(linha);
   });
 
@@ -399,14 +387,17 @@ document.addEventListener("DOMContentLoaded", () => {
     qs("#js-vendas-contagem-comparacao").innerHTML = compVendasContagem.texto;
     qs("#js-vendas-contagem-comparacao").className = `insight-card__comparacao ${compVendasContagem.classe}`;
 
+    const ticketMedioVendas = resumoVendas.contagem > 0 ? resumoVendas.faturamento / resumoVendas.contagem : 0;
+    qs("#js-vendas-ticket").textContent = formatarMoeda(ticketMedioVendas);
+
     qs("#js-vendas-custo").textContent = formatarMoeda(resumoVendas.custo);
     qs("#js-vendas-lucro").textContent = formatarMoeda(resumoVendas.lucro);
     qs("#js-vendas-taxas").textContent = formatarMoeda(resumoVendas.taxas);
 
     montarRecebimentos(resumoVendas, "js-vendas-formas", "js-vendas-pizza");
 
-    const maisVendidos = calcularMaisVendidos(vendasPeriodo).sort((a, b) => b[ordenarProdutosPor] - a[ordenarProdutosPor]);
-    montarGraficoBarrasProdutos(maisVendidos, "js-vendas-mais-vendidos", "js-vendas-mais-vendidos-vazio", "js-vendas-mais-vendidos-ver-todos", "vendidos", ordenarProdutosPor);
+    const maisVendidos = calcularMaisVendidos(vendasPeriodo).sort((a, b) => b.valor - a.valor);
+    montarGraficoBarrasProdutos(maisVendidos, "js-vendas-mais-vendidos", "js-vendas-mais-vendidos-vazio", "js-vendas-mais-vendidos-ver-todos", "vendidos");
 
     const parados = calcularParados();
     const containerParados = qs("#js-vendas-parados");
@@ -428,14 +419,6 @@ document.addEventListener("DOMContentLoaded", () => {
   qs("#js-vendas-mais-vendidos-ver-todos").addEventListener("click", () => {
     estadoExpandidoRanking.vendidos = !estadoExpandidoRanking.vendidos;
     atualizarVendas();
-  });
-  qsa(".segmented__item", qs("#js-vendas-produto-ordenar")).forEach((item) => {
-    item.addEventListener("click", () => {
-      qsa(".segmented__item", qs("#js-vendas-produto-ordenar")).forEach((i) => i.classList.remove("is-active"));
-      item.classList.add("is-active");
-      ordenarProdutosPor = item.dataset.ordenar;
-      atualizarVendas();
-    });
   });
 
   qs("#js-historico-vendas-toggle").addEventListener("click", () => {
