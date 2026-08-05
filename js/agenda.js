@@ -569,8 +569,6 @@ function adicionarGestoSwipe(elemento, aoArrastarEsquerda, aoArrastarDireita, ao
    ============================================================ */
 
 let agendamentoEditandoId = null;
-let pendenteAgendamentoNome = null;
-let pendenteClienteExistenteId = null;
 
 function montarServicosChips(containerId, selecionadosIds) {
   const container = qs(`#${containerId}`);
@@ -869,14 +867,6 @@ function ligarEventosClientePicker(prefixo, origemModalId) {
       mostrarClienteCardPicker(prefixo, cliente);
     });
   });
-}
-
-function proximoNomeDisponivel(nomeBase) {
-  const clientes = obterClientes();
-  if (!clientes.some((c) => c.nome === nomeBase)) return nomeBase;
-  let n = 2;
-  while (clientes.some((c) => c.nome === `${nomeBase} ${n}`)) n++;
-  return `${nomeBase} ${n}`;
 }
 
 /* ---------- Observação (modal compartilhado #modal-observacao) ----------
@@ -1446,38 +1436,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const existente = obterClientes().find((c) => c.ativo && c.nome.toLowerCase() === nome.toLowerCase());
     if (existente) {
-      pendenteAgendamentoNome = nome;
-      pendenteClienteExistenteId = existente.id;
-      qs("#js-nome-duplicado-nome").textContent = nome;
-      fecharModal("modal-novo-agendamento");
-      abrirModal("modal-nome-duplicado");
+      abrirNomeDuplicado(nome, existente.id, "modal-novo-agendamento", finalizarCriacaoOuEdicaoAgendamento);
       return;
     }
 
-    const hoje = hojeIso();
-    const clientes = obterClientes();
-    const novoCliente = {
-      id: gerarId("cli"), nome, telefone: "",
-      aniversarioDia: null, aniversarioMes: null, aniversarioAno: null,
-      observacao: "", criadoEm: hoje, atualizadoEm: hoje, ativo: true,
-    };
-    clientes.push(novoCliente);
-    salvarClientes(clientes);
+    const novoCliente = criarClienteRapido(nome);
     finalizarCriacaoOuEdicaoAgendamento(novoCliente.id, nome);
-  });
-
-  qs("#js-nome-duplicado-usar-existente").addEventListener("click", () => {
-    finalizarCriacaoOuEdicaoAgendamento(pendenteClienteExistenteId, pendenteAgendamentoNome);
-  });
-
-  qs("#js-nome-duplicado-criar-novo").addEventListener("click", () => {
-    const nomeFinal = proximoNomeDisponivel(pendenteAgendamentoNome);
-    const hoje = hojeIso();
-    const clientes = obterClientes();
-    const novoCliente = { id: gerarId("cli"), nome: nomeFinal, telefone: "", aniversarioDia: null, aniversarioMes: null, aniversarioAno: null, observacao: "", criadoEm: hoje, atualizadoEm: hoje, ativo: true };
-    clientes.push(novoCliente);
-    salvarClientes(clientes);
-    finalizarCriacaoOuEdicaoAgendamento(novoCliente.id, nomeFinal);
   });
 
   qs("#js-finalizar-confirmar").addEventListener("click", () => {

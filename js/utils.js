@@ -698,3 +698,65 @@ function montarRecebimentos(resumo, formasContainerId, pizzaContainerId) {
     }
   });
 }
+
+/* ---------- Resolver cliente por nome digitado (Agendamento e Venda avulsa) ----------
+   Mecanismo compartilhado pelas duas telas que deixam digitar um nome sem
+   necessariamente escolher um resultado de busca: se o nome bate exatamente
+   com um cliente ativo já cadastrado, pergunta se é a mesma pessoa ou um
+   cadastro novo (modal #modal-nome-duplicado, duplicado como markup em
+   index.html/vendas.html/pendentes.html); senão cria um cliente novo na
+   hora. Nunca descarta silenciosamente um nome digitado. */
+function criarClienteRapido(nome) {
+  const hoje = hojeIso();
+  const clientes = obterClientes();
+  const novoCliente = {
+    id: gerarId("cli"), nome, telefone: "",
+    aniversarioDia: null, aniversarioMes: null, aniversarioAno: null,
+    observacao: "", criadoEm: hoje, atualizadoEm: hoje, ativo: true,
+  };
+  clientes.push(novoCliente);
+  salvarClientes(clientes);
+  return novoCliente;
+}
+
+function proximoNomeDisponivel(nomeBase) {
+  const clientes = obterClientes();
+  if (!clientes.some((c) => c.nome === nomeBase)) return nomeBase;
+  let n = 2;
+  while (clientes.some((c) => c.nome === `${nomeBase} ${n}`)) n++;
+  return `${nomeBase} ${n}`;
+}
+
+let nomeDuplicadoResolver = null;
+let nomeDuplicadoNomeBase = null;
+let nomeDuplicadoClienteExistenteId = null;
+
+/* aoResolver(clienteId, nome) roda depois que a pessoa escolhe "usar
+   existente" ou "criar novo" — fecha modal-nome-duplicado sozinho antes de
+   chamar, quem chamou só precisa terminar o fluxo (salvar o agendamento/
+   venda) dentro do callback. */
+function abrirNomeDuplicado(nome, clienteExistenteId, origemModalId, aoResolver) {
+  nomeDuplicadoNomeBase = nome;
+  nomeDuplicadoClienteExistenteId = clienteExistenteId;
+  nomeDuplicadoResolver = aoResolver;
+  qs("#js-nome-duplicado-nome").textContent = nome;
+  if (origemModalId) fecharModal(origemModalId);
+  abrirModal("modal-nome-duplicado");
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  const btnUsarExistente = qs("#js-nome-duplicado-usar-existente");
+  const btnCriarNovo = qs("#js-nome-duplicado-criar-novo");
+  if (!btnUsarExistente || !btnCriarNovo) return;
+
+  btnUsarExistente.addEventListener("click", () => {
+    fecharModal("modal-nome-duplicado");
+    if (nomeDuplicadoResolver) nomeDuplicadoResolver(nomeDuplicadoClienteExistenteId, nomeDuplicadoNomeBase);
+  });
+
+  btnCriarNovo.addEventListener("click", () => {
+    fecharModal("modal-nome-duplicado");
+    const novoCliente = criarClienteRapido(proximoNomeDisponivel(nomeDuplicadoNomeBase));
+    if (nomeDuplicadoResolver) nomeDuplicadoResolver(novoCliente.id, novoCliente.nome);
+  });
+});

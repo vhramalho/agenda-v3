@@ -360,24 +360,15 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  qs("#js-venda-confirmar").addEventListener("click", () => {
+  /* Termina a venda já com o cliente resolvido (Avulso, cliente clicado na
+     busca, ou cliente recém-criado/recuperado a partir do nome digitado —
+     ver resolverClienteDaVenda logo abaixo). */
+  function confirmarVendaComCliente(clienteId, nomeCliente) {
     const itens = itensCarrinhoVenda();
     if (itens.length === 0) return;
     const subtotal = subtotalCarrinhoVenda(itens);
 
     const vindoDeAtendimento = !!vendaContexto.agendamentoId;
-    let clienteId = null;
-    let nomeCliente = "Avulso";
-    if (vindoDeAtendimento) {
-      clienteId = vendaContexto.clienteId;
-      nomeCliente = vendaContexto.nomeCliente;
-    } else if (vendaClienteSelecionadoId) {
-      const cliente = obterClientes().find((c) => c.id === vendaClienteSelecionadoId);
-      if (cliente) {
-        clienteId = cliente.id;
-        nomeCliente = cliente.nome;
-      }
-    }
 
     const pagoAtivo = qs("[data-pago].chip--ativo", qs("#modal-nova-venda"));
     if (!pagoAtivo) {
@@ -449,6 +440,40 @@ document.addEventListener("DOMContentLoaded", () => {
     mostrarSucesso();
     vendaAoCancelar = null;
     if (vendaAoConcluir) vendaAoConcluir(venda);
+  }
+
+  /* Resolve quem é o cliente da venda avulsa antes de confirmar: clicou
+     numa sugestão da busca -> usa direto; digitou um nome sem clicar em
+     nada -> mesma regra do Agendamento (nunca descarta o nome digitado):
+     bate com um cliente ativo existente -> pergunta (modal-nome-duplicado);
+     senão cria o cliente na hora. */
+  qs("#js-venda-confirmar").addEventListener("click", () => {
+    const vindoDeAtendimento = !!vendaContexto.agendamentoId;
+    if (vindoDeAtendimento) {
+      confirmarVendaComCliente(vendaContexto.clienteId, vendaContexto.nomeCliente);
+      return;
+    }
+
+    if (vendaClienteSelecionadoId) {
+      const cliente = obterClientes().find((c) => c.id === vendaClienteSelecionadoId);
+      confirmarVendaComCliente(cliente ? cliente.id : null, cliente ? cliente.nome : "Avulso");
+      return;
+    }
+
+    const nomeDigitado = qs("#js-venda-cliente-busca").value.trim();
+    if (!nomeDigitado) {
+      confirmarVendaComCliente(null, "Avulso");
+      return;
+    }
+
+    const existente = obterClientes().find((c) => c.ativo && c.nome.toLowerCase() === nomeDigitado.toLowerCase());
+    if (existente) {
+      abrirNomeDuplicado(nomeDigitado, existente.id, "modal-nova-venda", confirmarVendaComCliente);
+      return;
+    }
+
+    const novoCliente = criarClienteRapido(nomeDigitado);
+    confirmarVendaComCliente(novoCliente.id, novoCliente.nome);
   });
 
   qs("#js-venda-excluir").addEventListener("click", () => {
