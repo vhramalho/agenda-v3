@@ -646,49 +646,6 @@ function montarGraficoFaturamento(tipoPeriodo, refData, obterValorPeriodo, ids) 
   qs(`#${ids.eixoMeio}`).textContent = formatarEixoY(maximo / 2);
 }
 
-/* Mesma ideia de montarGraficoFaturamento (linha), só em colunas — usado
-   por Vendas pra diferenciar visualmente de Atendimentos (2026-08-05,
-   pedido explícito do usuário: "linha pra atendimento, colunas pra
-   vendas"). ids = { colunas, dias, eixoMax, eixoMeio }. */
-function montarGraficoColunas(tipoPeriodo, refData, obterValorPeriodo, ids) {
-  const { pontos, rotulos } = calcularPontosGrafico(tipoPeriodo, refData, obterValorPeriodo);
-  const maximo = Math.max(...pontos.map((p) => p.valor), 1);
-  const plotTop = 10;
-  const plotBottom = 126;
-  const plotLeft = 42;
-  const plotRight = 288;
-  const larguraTotal = plotRight - plotLeft;
-  const larguraBarra = Math.min(18, (larguraTotal / pontos.length) * 0.6);
-
-  const grupoColunas = qs(`#${ids.colunas}`);
-  grupoColunas.innerHTML = "";
-  pontos.forEach((p) => {
-    const x = plotLeft + p.frac * larguraTotal;
-    const altura = Math.max((p.valor / maximo) * (plotBottom - plotTop), p.valor > 0 ? 2 : 0);
-    const retangulo = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-    retangulo.setAttribute("x", x - larguraBarra / 2);
-    retangulo.setAttribute("y", plotBottom - altura);
-    retangulo.setAttribute("width", larguraBarra);
-    retangulo.setAttribute("height", altura);
-    retangulo.setAttribute("rx", 2);
-    retangulo.setAttribute("fill", "var(--primary)");
-    grupoColunas.appendChild(retangulo);
-  });
-
-  const grupoDias = qs(`#${ids.dias}`);
-  grupoDias.innerHTML = "";
-  rotulos.forEach((r) => {
-    const texto = document.createElementNS("http://www.w3.org/2000/svg", "text");
-    texto.setAttribute("x", plotLeft + r.frac * larguraTotal);
-    texto.setAttribute("y", "143");
-    texto.textContent = r.texto;
-    grupoDias.appendChild(texto);
-  });
-
-  qs(`#${ids.eixoMax}`).textContent = formatarEixoY(maximo);
-  qs(`#${ids.eixoMeio}`).textContent = formatarEixoY(maximo / 2);
-}
-
 function montarRecebimentos(resumo, formasContainerId, pizzaContainerId) {
   const todasFormas = obterFormasPagamento();
   const tiposComFormaAtiva = new Set(todasFormas.filter((f) => f.ativo).map((f) => f.tipo));

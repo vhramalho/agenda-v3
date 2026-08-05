@@ -63,12 +63,6 @@ function vendasNoPeriodo(inicio, fim) {
   });
 }
 
-function valorFaturamentoVendas(inicio, fim) {
-  return vendasNoPeriodo(inicio, fim).reduce((s, v) => s + (v.valorTotal || 0), 0);
-}
-
-const IDS_GRAFICO_VENDAS = { colunas: "js-vendas-grafico-colunas", dias: "js-vendas-grafico-dias", eixoMax: "js-vendas-eixo-max", eixoMeio: "js-vendas-eixo-meio" };
-
 /* item.precoUnitario é sempre o preço CADASTRADO do produto (não editável
    por item na hora da venda) — quando o valor pago difere do subtotal do
    carrinho (ex.: desconto combinado na hora), essa diferença precisa
@@ -160,17 +154,93 @@ function calcularMaisVendidos(vendas) {
     .filter((item) => item.quantidade > 0);
 }
 
-/* "Mais vendidos" vira pódio (2026-08-05, mesmo componente de "Serviços
-   mais realizados" em Atendimentos) via montarRankingPodio (js/utils.js)
-   — destaca UNIDADES vendidas (não faturamento), pra ficar consistente
-   com "mais realizados" (que também conta ocorrências, não dinheiro).
-   Antes disso era um gráfico de barras próprio (com e sem seletor
-   Unidades/Faturamento); removido inteiro, ver histórico do commit.
+/* Gráfico de barras por faturamento — dentro do card principal, top 5
+   por padrão, "Ver todos" expande a lista inteira. Uma barra só por
+   produto, sempre proporcional ao faturamento (sem seletor Unidades/
+   Faturamento — removido 2026-08-05 a pedido do usuário, a barra fica
+   travada em faturamento, unidades vira só texto de apoio na legenda).
+   Testado um pódio (top3 + resto) no lugar disso no mesmo dia, mas
+   voltou atrás — o usuário queria mesmo esse formato de barra, dentro
+   do card. Escala contra o maior faturamento da lista inteira (não só
+   dos visíveis), pra não redimensionar ao expandir/recolher — o item
+   líder sempre em 100%. Sem número de posição — a ordem da lista já
+   responde a pergunta.
 
-   "Produtos menos vendidos" (Parados) também removido nesta rodada, a
-   pedido do usuário — calcularParados()/montarLinhaParado() saíram junto.
-   O campo diasParaAvisarParado continua existindo no cadastro de produto
-   (js/produtos.js) mas não é mais lido em lugar nenhum. */
+   Linhas são reaproveitadas por produto.id entre renderizações (não
+   recriadas do zero) — é o que permite a largura animar via CSS
+   (transition) ao trocar de período/expandir: um elemento novo não tem
+   "estado anterior" pra transicionar a partir dele, só um elemento
+   reaproveitado tem.
+
+   "Produtos menos vendidos" (Parados) foi removido nesta mesma rodada,
+   a pedido do usuário — calcularParados()/montarLinhaParado() saíram
+   junto. O campo diasParaAvisarParado continua existindo no cadastro de
+   produto (js/produtos.js) mas não é mais lido em lugar nenhum. */
+
+function montarLinhaBarraProduto(item) {
+  const linha = document.createElement("div");
+  linha.className = "grafico-divergente__linha";
+  linha.dataset.produtoId = item.produto.id;
+  linha.innerHTML = `
+    <p class="grafico-divergente__nome"></p>
+    <div class="grafico-divergente__trilha">
+      <div class="grafico-divergente__preenchimento"></div>
+    </div>
+    <p class="grafico-divergente__legenda">
+      <span class="grafico-divergente__legenda-valor"></span>
+      <span class="grafico-divergente__legenda-separador">•</span>
+      <span class="grafico-divergente__legenda-quantidade"></span>
+    </p>
+  `;
+  linha.querySelector(".grafico-divergente__nome").textContent = item.produto.nome;
+  linha.querySelector(".grafico-divergente__legenda-valor").textContent = formatarMoeda(item.valor);
+  linha.querySelector(".grafico-divergente__legenda-quantidade").textContent = `${item.quantidade} un`;
+  return linha;
+}
+
+function atualizarLinhaBarraProduto(linha, item, maiorValor) {
+  linha.querySelector(".grafico-divergente__preenchimento").style.width = `${maiorValor > 0 ? (item.valor / maiorValor) * 100 : 0}%`;
+}
+
+function montarGraficoBarrasProdutos(lista, containerId, vazioId, botaoId, chaveEstado) {
+  const container = qs(`#${containerId}`);
+  const vazio = qs(`#${vazioId}`);
+  const botao = qs(`#${botaoId}`);
+
+  if (lista.length === 0) {
+    container.innerHTML = "";
+    container.classList.add("is-hidden");
+    vazio.classList.remove("is-hidden");
+    botao.classList.add("is-hidden");
+    return;
+  }
+
+  container.classList.remove("is-hidden");
+  vazio.classList.add("is-hidden");
+
+  const expandido = estadoExpandidoRanking[chaveEstado];
+  const visiveis = expandido ? lista : lista.slice(0, 5);
+  const maiorValor = Math.max(...lista.map((item) => item.valor));
+
+  const linhasAtuais = {};
+  qsa(".grafico-divergente__linha", container).forEach((linha) => { linhasAtuais[linha.dataset.produtoId] = linha; });
+
+  visiveis.forEach((item) => {
+    const linha = linhasAtuais[item.produto.id] || montarLinhaBarraProduto(item);
+    delete linhasAtuais[item.produto.id];
+    atualizarLinhaBarraProduto(linha, item, maiorValor);
+    container.appendChild(linha);
+  });
+
+  Object.values(linhasAtuais).forEach((linha) => linha.remove());
+
+  if (lista.length > 5) {
+    botao.classList.remove("is-hidden");
+    botao.textContent = expandido ? "Ver menos" : "Ver todos";
+  } else {
+    botao.classList.add("is-hidden");
+  }
+}
 
 /* Lista de vendas — combina o período da página (Dia/Semana/Mês/Ano,
    igual aos cards acima, ver [[project-agenda-v3-feature-vendas]]) com
@@ -303,18 +373,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     montarRecebimentos(resumoVendas, "js-vendas-formas", "js-vendas-pizza");
 
-    const maisVendidos = calcularMaisVendidos(vendasPeriodo)
-      .sort((a, b) => b.quantidade - a.quantidade)
-      .map((item) => ({ nome: item.produto.nome, valor: item.quantidade }));
-    montarRankingPodio(maisVendidos, "js-vendas-mais-vendidos", "js-vendas-mais-vendidos-resto", "js-vendas-mais-vendidos-vazio", "js-vendas-mais-vendidos-ver-todos", estadoExpandidoRanking.vendidos);
-
-    const svgGrafico = qs("#js-vendas-grafico-svg");
-    if (tipoPeriodo === "dia") {
-      svgGrafico.classList.add("is-hidden");
-    } else {
-      svgGrafico.classList.remove("is-hidden");
-      montarGraficoColunas(tipoPeriodo, refData, valorFaturamentoVendas, IDS_GRAFICO_VENDAS);
-    }
+    const maisVendidos = calcularMaisVendidos(vendasPeriodo).sort((a, b) => b.valor - a.valor);
+    montarGraficoBarrasProdutos(maisVendidos, "js-vendas-mais-vendidos", "js-vendas-mais-vendidos-vazio", "js-vendas-mais-vendidos-ver-todos", "vendidos");
 
     // Lista de vendas recentes respeita o mesmo período dos cards acima.
     renderizarHistoricoVendas();
