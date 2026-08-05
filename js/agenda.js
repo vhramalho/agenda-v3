@@ -418,11 +418,6 @@ function selecionarData(iso) {
   }
 }
 
-window.aoSelecionarDiaCalendarioAgenda = (ano, mes, dia) => {
-  const iso = `${ano}-${String(mes + 1).padStart(2, "0")}-${String(dia).padStart(2, "0")}`;
-  selecionarData(iso);
-};
-
 function aplicarProgressoCarrossel(deltaX, comprometido) {
   const carrossel = qs("#js-week-carousel");
   const ativo = qs(".week-day.is-active", carrossel);
@@ -1150,6 +1145,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
   qs("#js-btn-hoje").addEventListener("click", () => {
     selecionarData(hojeIso());
+  });
+
+  // Botão de calendário do topo (pular mês/dia na Agenda) — reivindica o
+  // hook global no clique, não fixo no load: desde que a venda avulsa
+  // ganhou campo de "Data da venda" (mesmo #modal-calendario), os dois
+  // disputam window.aoSelecionarDiaCalendarioAgenda na mesma página. Quem
+  // clicou por último manda (mesmo padrão já usado em js/vendas.js).
+  qs("#js-agenda-mes-btn").addEventListener("click", () => {
+    if (typeof window.irParaMesCalendarioAgenda === "function") {
+      const d = isoParaDate(dataSelecionada);
+      window.irParaMesCalendarioAgenda(d.getFullYear(), d.getMonth(), d.getDate());
+    }
+    window.aoSelecionarDiaCalendarioAgenda = (ano, mes, dia) => {
+      const iso = `${ano}-${String(mes + 1).padStart(2, "0")}-${String(dia).padStart(2, "0")}`;
+      selecionarData(iso);
+    };
   });
 
   iniciarTour("agenda");
