@@ -161,7 +161,7 @@ function nomesServicosAtendimento(ids) {
    reaproveitando prepararEditarRealizado()/js/agenda.js sem precisar
    duplicar toda aquela lógica (cliente/serviços/observação/venda anexada)
    nesta página — ver js/agenda.js pro bootstrap que lê esse parâmetro. */
-const LIMITE_ATENDIMENTOS_REALIZADOS = 10;
+const LIMITE_ATENDIMENTOS_REALIZADOS = 5;
 let atendimentosRealizadosExpandido = false;
 
 function montarLinhaAtendimento(agendamento, indice) {

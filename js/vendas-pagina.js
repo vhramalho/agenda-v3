@@ -42,7 +42,7 @@ function montarLinhaVenda(venda, produtos, indice) {
   return linha;
 }
 
-const LIMITE_HISTORICO_VENDAS = 10;
+const LIMITE_HISTORICO_VENDAS = 5;
 let historicoVendasExpandido = false;
 let filtroVendasAtual = "todas";
 
