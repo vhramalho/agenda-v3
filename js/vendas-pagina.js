@@ -173,43 +173,45 @@ function calcularParados() {
     .filter((item) => item.diasSemVenda === null || item.diasSemVenda >= item.produto.diasParaAvisarParado);
 }
 
-/* Gráfico de barras divergentes (unidades × faturamento) — top 5 por
-   padrão, "Ver todos" expande a lista inteira. Cada lado escala contra
-   o maior daquela métrica na lista inteira (não só dos visíveis), pra
-   não redimensionar ao expandir/recolher. Sem número de posição — a
-   ordem da lista já responde à pergunta ("mais vendido" ou "maior
-   faturamento", ver segmented acima do gráfico em
-   montarGraficoBarrasProdutos/ordenarProdutosPor). */
-function montarLinhaBarraProduto(item, maiorQuantidade, maiorValor) {
+/* Gráfico de barras (unidades OU faturamento) — top 5 por padrão, "Ver
+   todos" expande a lista inteira. Uma barra só por produto, sempre na
+   métrica ativa no segmentado Unidades/Faturamento acima do gráfico
+   (metricaAtiva: "quantidade" ou "valor", mesmos valores de
+   ordenarProdutosPor); a métrica não selecionada aparece como texto ao
+   lado, não como uma 2ª barra (antes eram duas barras a partir de um
+   eixo central — trocado em 2026-08-05: como a barra agora sempre bate
+   com o número em destaque, não tem mais como confundir "barra maior"
+   com "vale mais", que era o problema que as duas barras resolviam).
+   Escala contra o maior daquela métrica na lista inteira (não só dos
+   visíveis), pra não redimensionar ao expandir/recolher. Sem número de
+   posição — a ordem da lista já responde a pergunta. */
+function montarLinhaBarraProduto(item, maiorQuantidade, maiorValor, metricaAtiva) {
   const linha = document.createElement("div");
   linha.className = "grafico-divergente__linha";
   linha.innerHTML = `
     <p class="grafico-divergente__nome"></p>
-    <div class="grafico-divergente__par">
-      <div class="grafico-divergente__lado grafico-divergente__lado--unidades">
-        <span class="grafico-divergente__valor"></span>
-        <div class="grafico-divergente__trilha">
-          <div class="grafico-divergente__preenchimento grafico-divergente__preenchimento--unidades"></div>
-        </div>
-      </div>
-      <div class="grafico-divergente__eixo"></div>
-      <div class="grafico-divergente__lado grafico-divergente__lado--faturamento">
-        <div class="grafico-divergente__trilha">
-          <div class="grafico-divergente__preenchimento grafico-divergente__preenchimento--faturamento"></div>
-        </div>
-        <span class="grafico-divergente__valor"></span>
-      </div>
+    <div class="grafico-divergente__trilha">
+      <div class="grafico-divergente__preenchimento"></div>
     </div>
+    <p class="grafico-divergente__legenda"></p>
   `;
+  const ehFaturamento = metricaAtiva === "valor";
+  const maior = ehFaturamento ? maiorValor : maiorQuantidade;
+  const atual = ehFaturamento ? item.valor : item.quantidade;
+  const textoValor = formatarMoeda(item.valor);
+  const textoQuantidade = `${item.quantidade} un`;
+
   linha.querySelector(".grafico-divergente__nome").textContent = item.produto.nome;
-  linha.querySelector(".grafico-divergente__lado--unidades .grafico-divergente__valor").textContent = `${item.quantidade} un`;
-  linha.querySelector(".grafico-divergente__lado--faturamento .grafico-divergente__valor").textContent = formatarMoeda(item.valor);
-  linha.querySelector(".grafico-divergente__preenchimento--unidades").style.width = `${maiorQuantidade > 0 ? (item.quantidade / maiorQuantidade) * 100 : 0}%`;
-  linha.querySelector(".grafico-divergente__preenchimento--faturamento").style.width = `${maiorValor > 0 ? (item.valor / maiorValor) * 100 : 0}%`;
+  linha.querySelector(".grafico-divergente__legenda").textContent = ehFaturamento
+    ? `${textoValor} • ${textoQuantidade}`
+    : `${textoQuantidade} • ${textoValor}`;
+  const preenchimento = linha.querySelector(".grafico-divergente__preenchimento");
+  preenchimento.classList.add(ehFaturamento ? "grafico-divergente__preenchimento--faturamento" : "grafico-divergente__preenchimento--unidades");
+  preenchimento.style.width = `${maior > 0 ? (atual / maior) * 100 : 0}%`;
   return linha;
 }
 
-function montarGraficoBarrasProdutos(lista, containerId, vazioId, botaoId, chaveEstado) {
+function montarGraficoBarrasProdutos(lista, containerId, vazioId, botaoId, chaveEstado, metricaAtiva) {
   const container = qs(`#${containerId}`);
   const vazio = qs(`#${vazioId}`);
   const botao = qs(`#${botaoId}`);
@@ -229,7 +231,7 @@ function montarGraficoBarrasProdutos(lista, containerId, vazioId, botaoId, chave
   const visiveis = expandido ? lista : lista.slice(0, 5);
   const maiorQuantidade = Math.max(...lista.map((item) => item.quantidade));
   const maiorValor = Math.max(...lista.map((item) => item.valor));
-  visiveis.forEach((item) => container.appendChild(montarLinhaBarraProduto(item, maiorQuantidade, maiorValor)));
+  visiveis.forEach((item) => container.appendChild(montarLinhaBarraProduto(item, maiorQuantidade, maiorValor, metricaAtiva)));
 
   if (lista.length > 5) {
     botao.classList.remove("is-hidden");
@@ -381,7 +383,7 @@ document.addEventListener("DOMContentLoaded", () => {
     montarRecebimentos(resumoVendas, "js-vendas-formas", "js-vendas-pizza");
 
     const maisVendidos = calcularMaisVendidos(vendasPeriodo).sort((a, b) => b[ordenarProdutosPor] - a[ordenarProdutosPor]);
-    montarGraficoBarrasProdutos(maisVendidos, "js-vendas-mais-vendidos", "js-vendas-mais-vendidos-vazio", "js-vendas-mais-vendidos-ver-todos", "vendidos");
+    montarGraficoBarrasProdutos(maisVendidos, "js-vendas-mais-vendidos", "js-vendas-mais-vendidos-vazio", "js-vendas-mais-vendidos-ver-todos", "vendidos", ordenarProdutosPor);
 
     const parados = calcularParados();
     const containerParados = qs("#js-vendas-parados");

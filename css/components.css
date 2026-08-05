@@ -569,10 +569,14 @@
 .podio__degrau--prata { height: 40px; background: #94A3B8; color: #0f172a; }
 .podio__degrau--bronze { height: 32px; background: #B45309; color: #1a1200; }
 
-/* ---------- Gráfico de barras divergentes (ex.: Vendas por produto) ----------
-   Duas métricas por linha (unidades × faturamento), uma barra de cada lado
-   de um eixo central — em vez de uma barra só (que só media quantidade,
-   com o faturamento escondido em texto). Sem número de posição (1º, 2º...):
+/* ---------- Gráfico de barras (ex.: Vendas por produto) ----------
+   Uma barra só por produto, sempre na métrica ativa no segmentado
+   Unidades/Faturamento acima do gráfico — a métrica não selecionada
+   aparece como texto na legenda abaixo, não ocupa espaço como barra.
+   Antes (30/07) eram duas barras por linha a partir de um eixo central;
+   trocado em 2026-08-05 porque a barra já sempre bate com o número em
+   destaque agora (não tem mais como confundir "barra maior" com "vale
+   mais", que era o motivo de ter duas). Sem número de posição (1º, 2º...):
    a ordem já responde "mais vendido" ou "maior faturamento" (segmented
    acima do gráfico), não precisa de mais uma marcação repetindo isso. */
 .grafico-divergente__linha + .grafico-divergente__linha {
@@ -585,73 +589,20 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  min-width: 0;
   margin-bottom: 6px;
 }
 
-.grafico-divergente__par {
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  align-items: center;
-  gap: var(--space-2);
-}
-
-.grafico-divergente__lado {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  min-width: 0;
-}
-
-.grafico-divergente__eixo {
-  width: 1px;
-  align-self: stretch;
-  background: var(--border-strong);
-}
-
-.grafico-divergente__valor {
-  font-size: var(--text-xs);
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-
-.grafico-divergente__lado--unidades .grafico-divergente__valor {
-  color: var(--text-secondary);
-}
-
-.grafico-divergente__lado--faturamento .grafico-divergente__valor {
-  color: var(--primary);
-}
-
 .grafico-divergente__trilha {
-  flex: 1;
-  min-width: 0;
+  width: 100%;
   height: 8px;
+  border-radius: var(--radius-full);
   background: var(--card-elevated);
-  display: flex;
-}
-
-.grafico-divergente__lado--unidades .grafico-divergente__trilha {
-  border-radius: var(--radius-full) 0 0 var(--radius-full);
-  justify-content: flex-end;
-}
-
-.grafico-divergente__lado--faturamento .grafico-divergente__trilha {
-  border-radius: 0 var(--radius-full) var(--radius-full) 0;
+  overflow: hidden;
 }
 
 .grafico-divergente__preenchimento {
   height: 100%;
-}
-
-.grafico-divergente__lado--unidades .grafico-divergente__preenchimento {
-  border-radius: var(--radius-full) 0 0 var(--radius-full);
-}
-
-.grafico-divergente__lado--faturamento .grafico-divergente__preenchimento {
-  border-radius: 0 var(--radius-full) var(--radius-full) 0;
+  border-radius: var(--radius-full);
 }
 
 .grafico-divergente__preenchimento--unidades {
@@ -660,6 +611,14 @@
 
 .grafico-divergente__preenchimento--faturamento {
   background: var(--primary);
+}
+
+.grafico-divergente__legenda {
+  margin-top: 6px;
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
 }
 
 /* ---------- Linha de cabeçalho de tabela simples ---------- */
