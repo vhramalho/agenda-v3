@@ -699,6 +699,89 @@ function montarRecebimentos(resumo, formasContainerId, pizzaContainerId) {
   });
 }
 
+/* ---------- Pódio de ranking (top 3 + "Ver todos" expande o resto) ----------
+   Compartilhado entre "Serviços mais realizados" (Atendimentos) e "Mais
+   vendidos" (Vendas, 2026-08-05) — cada item da lista precisa só de
+   { nome, valor } (quem chama normaliza a forma antes de passar, ex.
+   { nome: produto.nome, valor: quantidade }). 2º/1º/3º da esquerda pra
+   direita, degrau mais alto pro 1º, número sempre visível em cada coluna
+   (não só a altura/posição, já que a diferença entre 1º e 3º pode ser
+   grande — o pódio é só um reforço visual de posição, não deveria
+   sugerir "quase empate"). "Ver todos" expande uma lista normal com o 4º
+   em diante, embaixo do pódio — não repete o top 3. `expandido` é
+   controlado por quem chama (cada página guarda seu próprio estado). */
+function montarPodioColuna(item, posicao) {
+  const coluna = document.createElement("div");
+  coluna.className = `podio__coluna podio__coluna--${posicao}`;
+  coluna.innerHTML = `
+    <div class="list-item__avatar podio__avatar ${classeAvatarPorIndice(posicao - 1)}"></div>
+    <p class="podio__nome"></p>
+    <p class="podio__valor"></p>
+    <div class="podio__degrau ${classePosicaoRanking(posicao).replace("ranking-posicao", "podio__degrau")}">${posicao}</div>
+  `;
+  coluna.querySelector(".podio__avatar").textContent = iniciaisCliente(item.nome);
+  coluna.querySelector(".podio__nome").textContent = item.nome;
+  coluna.querySelector(".podio__valor").textContent = item.valor;
+  return coluna;
+}
+
+function montarLinhaRestoRanking(item, posicao) {
+  const linha = document.createElement("div");
+  linha.className = "list-item";
+  linha.innerHTML = `
+    <span class="ranking-posicao"></span>
+    <div class="list-item__avatar"></div>
+    <div class="list-item__body"><p class="list-item__title"></p></div>
+    <span class="text-primary-accent" style="font-weight:700;"></span>
+  `;
+  linha.querySelector(".ranking-posicao").textContent = posicao;
+  linha.querySelector(".list-item__avatar").textContent = iniciaisCliente(item.nome);
+  linha.querySelector(".list-item__title").textContent = item.nome;
+  linha.querySelector(".text-primary-accent").textContent = item.valor;
+  return linha;
+}
+
+function montarRankingPodio(lista, containerId, restoId, vazioId, botaoId, expandido) {
+  const container = qs(`#${containerId}`);
+  const resto = qs(`#${restoId}`);
+  const vazio = qs(`#${vazioId}`);
+  const botao = qs(`#${botaoId}`);
+  container.innerHTML = "";
+  resto.innerHTML = "";
+
+  if (lista.length === 0) {
+    container.classList.add("is-hidden");
+    resto.classList.add("is-hidden");
+    vazio.classList.remove("is-hidden");
+    botao.classList.add("is-hidden");
+    return;
+  }
+
+  container.classList.remove("is-hidden");
+  vazio.classList.add("is-hidden");
+
+  const podio = document.createElement("div");
+  podio.className = "podio";
+  const top3 = lista.slice(0, 3).map((item, i) => ({ item, posicao: i + 1 }));
+  [top3[1], top3[0], top3[2]].filter(Boolean).forEach(({ item, posicao }) => podio.appendChild(montarPodioColuna(item, posicao)));
+  container.appendChild(podio);
+
+  const restantes = lista.slice(3);
+  if (expandido && restantes.length > 0) {
+    restantes.forEach((item, i) => resto.appendChild(montarLinhaRestoRanking(item, i + 4)));
+    resto.classList.remove("is-hidden");
+  } else {
+    resto.classList.add("is-hidden");
+  }
+
+  if (lista.length > 3) {
+    botao.classList.remove("is-hidden");
+    botao.textContent = expandido ? "Ver menos" : "Ver todos";
+  } else {
+    botao.classList.add("is-hidden");
+  }
+}
+
 /* ---------- Resolver cliente por nome digitado (Agendamento e Venda avulsa) ----------
    Mecanismo compartilhado pelas duas telas que deixam digitar um nome sem
    necessariamente escolher um resultado de busca: se o nome bate exatamente

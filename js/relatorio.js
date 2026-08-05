@@ -39,87 +39,11 @@ function calcularMaisRealizados(agendamentos) {
     .sort((a, b) => b.quantidade - a.quantidade);
 }
 
-/* Serviços mais realizados: top 3 vira pódio (2026-07-30, substitui a
-   lista simples) — 2º/1º/3º da esquerda pra direita, degrau mais alto
-   pro 1º, número de atendimentos sempre visível em cada coluna (não só
-   a altura/posição, já que a diferença entre 1º e 3º pode ser grande).
-   "Ver todos" expande uma lista normal com o 4º em diante, embaixo do
-   pódio — não repete o top 3. Estado de expandido fora do closure do
-   DOMContentLoaded pra sobreviver a atualizarRelatorio(). */
+/* Serviços mais realizados: pódio (2026-07-30) via montarRankingPodio,
+   compartilhado com "Mais vendidos" de Vendas (js/utils.js, 2026-08-05).
+   Estado de expandido fora do closure do DOMContentLoaded pra sobreviver
+   a atualizarRelatorio(). */
 const estadoExpandidoRanking = { realizados: false };
-
-function montarPodioColuna(item, posicao) {
-  const coluna = document.createElement("div");
-  coluna.className = `podio__coluna podio__coluna--${posicao}`;
-  coluna.innerHTML = `
-    <div class="list-item__avatar podio__avatar ${classeAvatarPorIndice(posicao - 1)}"></div>
-    <p class="podio__nome"></p>
-    <p class="podio__valor"></p>
-    <div class="podio__degrau ${classePosicaoRanking(posicao).replace("ranking-posicao", "podio__degrau")}">${posicao}</div>
-  `;
-  coluna.querySelector(".podio__avatar").textContent = iniciaisCliente(item.servico.nome);
-  coluna.querySelector(".podio__nome").textContent = item.servico.nome;
-  coluna.querySelector(".podio__valor").textContent = item.quantidade;
-  return coluna;
-}
-
-function montarLinhaRestoServico(item, posicao) {
-  const linha = document.createElement("div");
-  linha.className = "list-item";
-  linha.innerHTML = `
-    <span class="ranking-posicao"></span>
-    <div class="list-item__avatar"></div>
-    <div class="list-item__body"><p class="list-item__title"></p></div>
-    <span class="text-primary-accent" style="font-weight:700;"></span>
-  `;
-  linha.querySelector(".ranking-posicao").textContent = posicao;
-  linha.querySelector(".list-item__avatar").textContent = iniciaisCliente(item.servico.nome);
-  linha.querySelector(".list-item__title").textContent = item.servico.nome;
-  linha.querySelector(".text-primary-accent").textContent = item.quantidade;
-  return linha;
-}
-
-function montarRankingServicos(lista, containerId, restoId, vazioId, botaoId, chaveEstado) {
-  const container = qs(`#${containerId}`);
-  const resto = qs(`#${restoId}`);
-  const vazio = qs(`#${vazioId}`);
-  const botao = qs(`#${botaoId}`);
-  container.innerHTML = "";
-  resto.innerHTML = "";
-
-  if (lista.length === 0) {
-    container.classList.add("is-hidden");
-    resto.classList.add("is-hidden");
-    vazio.classList.remove("is-hidden");
-    botao.classList.add("is-hidden");
-    return;
-  }
-
-  container.classList.remove("is-hidden");
-  vazio.classList.add("is-hidden");
-
-  const podio = document.createElement("div");
-  podio.className = "podio";
-  const top3 = lista.slice(0, 3).map((item, i) => ({ item, posicao: i + 1 }));
-  [top3[1], top3[0], top3[2]].filter(Boolean).forEach(({ item, posicao }) => podio.appendChild(montarPodioColuna(item, posicao)));
-  container.appendChild(podio);
-
-  const expandido = estadoExpandidoRanking[chaveEstado];
-  const restantes = lista.slice(3);
-  if (expandido && restantes.length > 0) {
-    restantes.forEach((item, i) => resto.appendChild(montarLinhaRestoServico(item, i + 4)));
-    resto.classList.remove("is-hidden");
-  } else {
-    resto.classList.add("is-hidden");
-  }
-
-  if (lista.length > 3) {
-    botao.classList.remove("is-hidden");
-    botao.textContent = expandido ? "Ver menos" : "Ver todos";
-  } else {
-    botao.classList.add("is-hidden");
-  }
-}
 
 function calcularResumo(agendamentos) {
   const formas = obterFormasPagamento();
@@ -280,8 +204,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     montarRecebimentos(resumo, "js-relatorio-formas", "js-relatorio-pizza");
 
-    const maisRealizados = calcularMaisRealizados(agendamentosNoPeriodo(inicio, fim));
-    montarRankingServicos(maisRealizados, "js-relatorio-mais-realizados", "js-relatorio-mais-realizados-resto", "js-relatorio-mais-realizados-vazio", "js-relatorio-mais-realizados-ver-todos", "realizados");
+    const maisRealizados = calcularMaisRealizados(agendamentosNoPeriodo(inicio, fim))
+      .map((item) => ({ nome: item.servico.nome, valor: item.quantidade }));
+    montarRankingPodio(maisRealizados, "js-relatorio-mais-realizados", "js-relatorio-mais-realizados-resto", "js-relatorio-mais-realizados-vazio", "js-relatorio-mais-realizados-ver-todos", estadoExpandidoRanking.realizados);
 
     renderizarAtendimentosRealizados(agendamentosNoPeriodo(inicio, fim));
 

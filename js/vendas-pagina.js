@@ -1,10 +1,10 @@
 /* ============================================================
-   AGENDA V3 — Tela Vendas (vendas.html): análise (período, gráfico de
-   mais vendidos, insights, recebimentos, parados — migrados de
-   js/relatorio.js em 2026-08-04, período próprio e independente do de
-   Atendimentos) + venda avulsa/histórico, reaproveitando
-   prepararNovaVenda/prepararEditarVenda de js/vendas.js. CRUD de
-   produto mora em js/produtos.js (produtos.html).
+   AGENDA V3 — Tela Vendas (vendas.html): análise (período, mais
+   vendidos, insights, recebimentos — migrados de js/relatorio.js em
+   2026-08-04, período próprio e independente do de Atendimentos) +
+   venda avulsa/histórico, reaproveitando prepararNovaVenda/
+   prepararEditarVenda de js/vendas.js. CRUD de produto mora em
+   js/produtos.js (produtos.html).
    ============================================================ */
 
 function montarLinhaVenda(venda, produtos, indice) {
@@ -154,116 +154,17 @@ function calcularMaisVendidos(vendas) {
     .filter((item) => item.quantidade > 0);
 }
 
-/* Parados: produtos ativos, com estoque e com diasParaAvisarParado
-   configurado (ver js/produtos.js), sem venda há pelo menos esse número
-   de dias — checado contra hoje, não contra o período da página. */
-function calcularParados() {
-  const hoje = hojeIso();
-  const vendas = obterVendas();
-  return obterProdutos()
-    .filter((p) => p.ativo && p.estoque > 0 && p.diasParaAvisarParado)
-    .map((produto) => {
-      const vendasProduto = vendas.filter((v) => (v.itens || []).some((i) => i.produtoId === produto.id));
-      if (vendasProduto.length === 0) return { produto, diasSemVenda: null };
-      const ultimaVenda = vendasProduto.reduce((max, v) => (v.criadaEm > max ? v.criadaEm : max), vendasProduto[0].criadaEm);
-      const diasSemVenda = Math.floor((new Date(hoje) - new Date(ultimaVenda.slice(0, 10))) / 86400000);
-      return { produto, diasSemVenda };
-    })
-    .filter((item) => item.diasSemVenda === null || item.diasSemVenda >= item.produto.diasParaAvisarParado);
-}
+/* "Mais vendidos" vira pódio (2026-08-05, mesmo componente de "Serviços
+   mais realizados" em Atendimentos) via montarRankingPodio (js/utils.js)
+   — destaca UNIDADES vendidas (não faturamento), pra ficar consistente
+   com "mais realizados" (que também conta ocorrências, não dinheiro).
+   Antes disso era um gráfico de barras próprio (com e sem seletor
+   Unidades/Faturamento); removido inteiro, ver histórico do commit.
 
-/* Gráfico de barras por faturamento — top 5 por padrão, "Ver todos"
-   expande a lista inteira. Uma barra só por produto, sempre proporcional
-   ao faturamento (antes tinha um seletor Unidades/Faturamento; removido
-   em 2026-08-05 a pedido do usuário — a barra fica travada em
-   faturamento, unidades vira só texto de apoio na legenda). Escala
-   contra o maior faturamento da lista inteira (não só dos visíveis), pra
-   não redimensionar ao expandir/recolher — o item líder sempre em 100%.
-   Sem número de posição — a ordem da lista já responde a pergunta.
-
-   Linhas são reaproveitadas por produto.id entre renderizações (não
-   recriadas do zero) — é o que permite a largura animar via CSS
-   (transition) ao trocar de período/expandir: um elemento novo não tem
-   "estado anterior" pra transicionar a partir dele, só um elemento
-   reaproveitado tem. */
-
-function montarLinhaBarraProduto(item) {
-  const linha = document.createElement("div");
-  linha.className = "grafico-divergente__linha";
-  linha.dataset.produtoId = item.produto.id;
-  linha.innerHTML = `
-    <p class="grafico-divergente__nome"></p>
-    <div class="grafico-divergente__trilha">
-      <div class="grafico-divergente__preenchimento"></div>
-    </div>
-    <p class="grafico-divergente__legenda">
-      <span class="grafico-divergente__legenda-valor"></span>
-      <span class="grafico-divergente__legenda-separador">•</span>
-      <span class="grafico-divergente__legenda-quantidade"></span>
-    </p>
-  `;
-  linha.querySelector(".grafico-divergente__nome").textContent = item.produto.nome;
-  linha.querySelector(".grafico-divergente__legenda-valor").textContent = formatarMoeda(item.valor);
-  linha.querySelector(".grafico-divergente__legenda-quantidade").textContent = `${item.quantidade} un`;
-  return linha;
-}
-
-function atualizarLinhaBarraProduto(linha, item, maiorValor) {
-  linha.querySelector(".grafico-divergente__preenchimento").style.width = `${maiorValor > 0 ? (item.valor / maiorValor) * 100 : 0}%`;
-}
-
-function montarGraficoBarrasProdutos(lista, containerId, vazioId, botaoId, chaveEstado) {
-  const container = qs(`#${containerId}`);
-  const vazio = qs(`#${vazioId}`);
-  const botao = qs(`#${botaoId}`);
-
-  if (lista.length === 0) {
-    container.innerHTML = "";
-    container.classList.add("is-hidden");
-    vazio.classList.remove("is-hidden");
-    botao.classList.add("is-hidden");
-    return;
-  }
-
-  container.classList.remove("is-hidden");
-  vazio.classList.add("is-hidden");
-
-  const expandido = estadoExpandidoRanking[chaveEstado];
-  const visiveis = expandido ? lista : lista.slice(0, 5);
-  const maiorValor = Math.max(...lista.map((item) => item.valor));
-
-  const linhasAtuais = {};
-  qsa(".grafico-divergente__linha", container).forEach((linha) => { linhasAtuais[linha.dataset.produtoId] = linha; });
-
-  visiveis.forEach((item) => {
-    const linha = linhasAtuais[item.produto.id] || montarLinhaBarraProduto(item);
-    delete linhasAtuais[item.produto.id];
-    atualizarLinhaBarraProduto(linha, item, maiorValor);
-    container.appendChild(linha);
-  });
-
-  Object.values(linhasAtuais).forEach((linha) => linha.remove());
-
-  if (lista.length > 5) {
-    botao.classList.remove("is-hidden");
-    botao.textContent = expandido ? "Ver menos" : "Ver todos";
-  } else {
-    botao.classList.add("is-hidden");
-  }
-}
-
-function montarLinhaParado(item) {
-  const linha = document.createElement("div");
-  linha.className = "list-item";
-  linha.innerHTML = `
-    <div class="list-item__avatar"></div>
-    <div class="list-item__body"><p class="list-item__title"></p><p class="list-item__subtitle"></p></div>
-  `;
-  linha.querySelector(".list-item__avatar").textContent = iniciaisCliente(item.produto.nome);
-  linha.querySelector(".list-item__title").textContent = item.produto.nome;
-  linha.querySelector(".list-item__subtitle").textContent = item.diasSemVenda == null ? "Nunca vendido" : `${item.diasSemVenda} dias sem vender`;
-  return linha;
-}
+   "Produtos menos vendidos" (Parados) também removido nesta rodada, a
+   pedido do usuário — calcularParados()/montarLinhaParado() saíram junto.
+   O campo diasParaAvisarParado continua existindo no cadastro de produto
+   (js/produtos.js) mas não é mais lido em lugar nenhum. */
 
 /* Lista de vendas — combina o período da página (Dia/Semana/Mês/Ano,
    igual aos cards acima, ver [[project-agenda-v3-feature-vendas]]) com
@@ -396,21 +297,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     montarRecebimentos(resumoVendas, "js-vendas-formas", "js-vendas-pizza");
 
-    const maisVendidos = calcularMaisVendidos(vendasPeriodo).sort((a, b) => b.valor - a.valor);
-    montarGraficoBarrasProdutos(maisVendidos, "js-vendas-mais-vendidos", "js-vendas-mais-vendidos-vazio", "js-vendas-mais-vendidos-ver-todos", "vendidos");
-
-    const parados = calcularParados();
-    const containerParados = qs("#js-vendas-parados");
-    const vazioParados = qs("#js-vendas-parados-vazio");
-    containerParados.innerHTML = "";
-    if (parados.length === 0) {
-      containerParados.classList.add("is-hidden");
-      vazioParados.classList.remove("is-hidden");
-    } else {
-      containerParados.classList.remove("is-hidden");
-      vazioParados.classList.add("is-hidden");
-      parados.forEach((item) => containerParados.appendChild(montarLinhaParado(item)));
-    }
+    const maisVendidos = calcularMaisVendidos(vendasPeriodo)
+      .sort((a, b) => b.quantidade - a.quantidade)
+      .map((item) => ({ nome: item.produto.nome, valor: item.quantidade }));
+    montarRankingPodio(maisVendidos, "js-vendas-mais-vendidos", "js-vendas-mais-vendidos-resto", "js-vendas-mais-vendidos-vazio", "js-vendas-mais-vendidos-ver-todos", estadoExpandidoRanking.vendidos);
 
     // Lista de vendas recentes respeita o mesmo período dos cards acima.
     renderizarHistoricoVendas();
