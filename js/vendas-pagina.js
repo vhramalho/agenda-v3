@@ -367,7 +367,7 @@ document.addEventListener("DOMContentLoaded", () => {
     qs("#js-vendas-faturamento").textContent = formatarMoeda(resumoVendas.faturamento);
     const compVendas = formatarComparacao(resumoVendas.faturamento, resumoVendasAnterior.faturamento, rotuloComparacao, "valor");
     qs("#js-vendas-faturamento-comparacao").innerHTML = compVendas.texto;
-    qs("#js-vendas-faturamento-comparacao").className = `texto-variacao ${compVendas.classe}`;
+    qs("#js-vendas-faturamento-comparacao").className = `insight-card__comparacao ${compVendas.classe}`;
 
     qs("#js-vendas-contagem").textContent = resumoVendas.contagem;
     const compVendasContagem = formatarComparacao(resumoVendas.contagem, resumoVendasAnterior.contagem, rotuloComparacao, "contagem");

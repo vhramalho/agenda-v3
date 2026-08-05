@@ -268,14 +268,12 @@ document.addEventListener("DOMContentLoaded", () => {
     qs("#js-relatorio-faturamento").textContent = formatarMoeda(resumo.faturamento);
     const compFaturamento = formatarComparacao(resumo.faturamento, resumoAnterior.faturamento, rotuloComparacao, "valor");
     qs("#js-relatorio-faturamento-comparacao").innerHTML = compFaturamento.texto;
-    qs("#js-relatorio-faturamento-comparacao").className = `texto-variacao ${compFaturamento.classe}`;
-    qs("#js-relatorio-faturamento-comparacao").style.fontWeight = "600";
-    qs("#js-relatorio-faturamento-comparacao").style.fontSize = "calc(var(--text-2xs) + 2px)";
+    qs("#js-relatorio-faturamento-comparacao").className = `insight-card__comparacao ${compFaturamento.classe}`;
 
     qs("#js-relatorio-atendimentos").textContent = resumo.atendimentos;
     const compAtendimentos = formatarComparacao(resumo.atendimentos, resumoAnterior.atendimentos, rotuloComparacao, "contagem");
     qs("#js-relatorio-atendimentos-comparacao").innerHTML = compAtendimentos.texto;
-    qs("#js-relatorio-atendimentos-comparacao").className = `insight-card__comparacao texto-variacao ${compAtendimentos.classe}`;
+    qs("#js-relatorio-atendimentos-comparacao").className = `insight-card__comparacao ${compAtendimentos.classe}`;
 
     qs("#js-relatorio-ticket").textContent = formatarMoeda(ticketMedio);
     qs("#js-relatorio-taxas").textContent = formatarMoeda(resumo.taxas);

@@ -160,24 +160,6 @@
   color: var(--text-secondary);
 }
 
-.card-metrica {
-  background: var(--card);
-  border: none;
-  border-radius: var(--radius-lg);
-  padding: var(--space-4);
-}
-
-.card-metrica__label {
-  font-size: var(--text-sm);
-  color: var(--text-secondary);
-  margin-bottom: var(--space-2);
-}
-
-.card-metrica__valor {
-  font-size: var(--text-lg);
-  font-weight: 800;
-}
-
 /* ---------- Chip ---------- */
 .chip {
   display: inline-flex;
@@ -770,21 +752,16 @@
   font-size: var(--text-md);
 }
 
+/* Texto de comparação "vs período anterior" — usado tanto nos insight-cards
+   pequenos quanto no valor grande dos cards de destaque (Faturamento/A
+   receber). Já se diferencia por cor (verde/vermelho, aplicada via
+   .text-success/.text-danger no elemento) e por ser menor que o texto ao
+   lado — não precisa de opacidade em cima disso. Antes existiam duas
+   classes (esta + .texto-variacao) fazendo a mesma coisa, com tamanhos
+   ligeiramente diferentes por página; unificado aqui. */
 .insight-card__comparacao {
-  font-size: var(--text-2xs);
-  font-weight: 600;
-  opacity: 0.7;
-}
-
-[data-page="relatorio"] .insight-card__comparacao {
   font-size: calc(var(--text-2xs) + 2px);
-}
-
-/* Texto de variação do card de Faturamento (maior, junto do valor
-   principal) — não usa .insight-card__comparacao, mas é o mesmo tipo
-   de informação secundária, então recebe a mesma leve translucidez. */
-.texto-variacao {
-  opacity: 0.7;
+  font-weight: 600;
 }
 
 /* ---------- Divisória discreta (separa blocos sem precisar de rótulo) ---------- */
@@ -805,11 +782,6 @@
 .page-header-principal__titulo {
   font-size: var(--text-md);
   font-weight: 800;
-}
-
-.page-header-principal__acoes {
-  display: flex;
-  gap: var(--space-2);
 }
 
 /* ---------- Swatch de cor principal (Onboarding e Configurações) ---------- */
@@ -907,18 +879,40 @@
 }
 
 /* ---------- Header de página ---------- */
+/* Grid de 3 colunas (voltar | título | ações), não flex — com flex a
+   centralização do título só funcionava se os dois lados tivessem a mesma
+   largura (ex.: 2 ícones de ação vs. 1 botão voltar ficava visivelmente fora
+   do centro). Com grid, as colunas 1 e 3 são sempre iguais (1fr cada),
+   então o título fica sempre no centro geométrico da linha, não importa
+   quantos ícones existam de cada lado — inclusive quando um dos lados não
+   tem nada (a coluna continua reservando o espaço). */
 .app-header {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
   gap: var(--space-3);
   padding: var(--space-4);
 }
 
+/* Botão de voltar (1º filho) fica na coluna 1, alinhado à esquerda por
+   padrão (largura própria do .icon-btn, não esticado pelo grid). O que
+   estiver por último — ação(ões) ou link — vai pra coluna 3, alinhado à
+   direita; a exceção :not() evita aplicar isso ao próprio título nas
+   páginas sem nenhuma ação (aí o título é o último filho). */
+.app-header > *:last-child:not(.app-header__title) {
+  justify-self: end;
+}
+
 .app-header__title {
-  flex: 1;
+  grid-column: 2;
   text-align: center;
   font-weight: 700;
   font-size: var(--text-md);
+}
+
+.app-header__acoes {
+  display: flex;
+  gap: var(--space-2);
 }
 
 /* ---------- Menu inferior ---------- */

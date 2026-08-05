@@ -3,25 +3,25 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <link rel="manifest" href="manifest.json?v=20260804i" />
-  <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg?v=20260804i" />
-  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png?v=20260804i" />
+  <link rel="manifest" href="manifest.json?v=20260805a" />
+  <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg?v=20260805a" />
+  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png?v=20260805a" />
   <meta name="theme-color" content="#0B0B10" />
   <title>Vendas — Swipo Agenda</title>
-  <link rel="stylesheet" href="css/tokens.css?v=20260804i" />
-  <link rel="stylesheet" href="css/base.css?v=20260804i" />
-  <link rel="stylesheet" href="css/layout.css?v=20260804i" />
-  <link rel="stylesheet" href="css/components.css?v=20260804i" />
+  <link rel="stylesheet" href="css/tokens.css?v=20260805a" />
+  <link rel="stylesheet" href="css/base.css?v=20260805a" />
+  <link rel="stylesheet" href="css/layout.css?v=20260805a" />
+  <link rel="stylesheet" href="css/components.css?v=20260805a" />
 </head>
 <body data-page="vendas">
   <div class="app">
     <main class="page">
-      <div class="app-header" style="padding:0;margin-bottom:var(--space-5);">
+      <header class="app-header" style="padding:0;margin-bottom:var(--space-5);">
         <button class="icon-btn" onclick="voltarParaAgenda()" aria-label="Voltar">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
         </button>
         <h1 class="app-header__title">Vendas</h1>
-        <div class="page-header-principal__acoes">
+        <div class="app-header__acoes">
           <button class="icon-btn" aria-label="Ajuda" onclick="reiniciarTour('vendas')">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><text x="12" y="12.7" text-anchor="middle" dominant-baseline="middle" fill="currentColor" stroke="none" font-family="Arial, sans-serif" font-size="12.5" font-weight="700">?</text></svg>
           </button>
@@ -29,7 +29,7 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/></svg>
           </button>
         </div>
-      </div>
+      </header>
 
       <div class="segmented section" id="js-periodo-tabs" style="margin-bottom:var(--space-3);">
         <span class="segmented__item is-active">Dia</span>
@@ -54,8 +54,8 @@
       <div class="card card--destaque section">
         <p class="text-secondary">Faturamento em vendas</p>
         <div class="row row--between" style="align-items:baseline;margin-bottom:8px;">
-          <p style="font-weight:700;font-size:var(--text-md);" id="js-vendas-faturamento"></p>
-          <p style="font-weight:600;font-size:calc(var(--text-2xs) + 2px);" id="js-vendas-faturamento-comparacao"></p>
+          <p style="font-weight:800;font-size:var(--text-xl);" id="js-vendas-faturamento"></p>
+          <p id="js-vendas-faturamento-comparacao"></p>
         </div>
         <!-- Gráfico de faturamento desativado (2026-07-12) — apenas comentado,
              ver js/vendas-pagina.js (bloco correspondente também comentado).
@@ -87,7 +87,7 @@
 
         <div id="js-vendas-mais-vendidos"></div>
         <div class="empty-state is-hidden" id="js-vendas-mais-vendidos-vazio"><p class="empty-state__title">Nenhuma venda no período</p></div>
-        <button class="text-primary-accent is-hidden" id="js-vendas-mais-vendidos-ver-todos" style="border:none;background:none;padding:0;margin-top:10px;font-weight:700;font-size:var(--text-xs);width:100%;text-align:center;">Ver todos</button>
+        <button class="text-primary-accent link-ver-todos is-hidden" id="js-vendas-mais-vendidos-ver-todos" style="margin-top:10px;width:100%;text-align:center;">Ver todos</button>
       </div>
 
       <div class="grid-2 section">
@@ -122,36 +122,40 @@
         </div>
       </div>
 
-      <div class="card section">
-        <p class="text-secondary" style="margin-bottom:12px;">Recebimentos em vendas</p>
-        <div class="row" style="align-items:center;gap:24px;">
-          <div class="stack" style="flex:1;gap:10px;" id="js-vendas-formas"></div>
-          <svg width="100" height="100" viewBox="0 0 120 120" style="flex-shrink:0;">
-            <g transform="rotate(-90 60 60)" id="js-vendas-pizza"></g>
-          </svg>
+      <section class="section">
+        <h2 class="section__title">Recebimentos em vendas</h2>
+        <div class="card">
+          <div class="row" style="align-items:center;gap:24px;">
+            <div class="stack" style="flex:1;gap:10px;" id="js-vendas-formas"></div>
+            <svg width="100" height="100" viewBox="0 0 120 120" style="flex-shrink:0;">
+              <g transform="rotate(-90 60 60)" id="js-vendas-pizza"></g>
+            </svg>
+          </div>
         </div>
-      </div>
+      </section>
 
-      <div class="card section">
-        <p class="text-secondary" style="margin-bottom:12px;">Vendas</p>
+      <section class="section">
+        <div class="row row--between" style="margin-bottom:8px;">
+          <h2 class="section__title" style="margin-bottom:0;">Vendas</h2>
+          <button class="text-primary-accent link-ver-todos is-hidden" id="js-historico-vendas-toggle">Ver todas</button>
+        </div>
         <div class="segmented" id="js-filtro-vendas" style="margin-bottom:12px;">
           <span class="segmented__item is-active" data-filtro="todas">Todas</span>
           <span class="segmented__item" data-filtro="avulsas">Avulsas</span>
           <span class="segmented__item" data-filtro="atendimento">De atendimento</span>
         </div>
-        <div id="js-lista-historico-vendas"></div>
+        <div class="card" id="js-lista-historico-vendas"></div>
         <div class="empty-state is-hidden" id="js-historico-vendas-vazio">
           <p class="empty-state__title">Nenhuma venda registrada</p>
           <p class="text-muted">Nenhuma venda no período/filtro selecionado.</p>
         </div>
-        <button class="text-primary-accent is-hidden" id="js-historico-vendas-toggle" style="border:none;background:none;padding:0;margin-top:10px;font-weight:700;font-size:var(--text-xs);width:100%;text-align:center;">Ver todas</button>
-      </div>
+      </section>
 
-      <div class="card section">
-        <p class="text-secondary" style="margin-bottom:12px;">Produtos menos vendidos</p>
-        <div id="js-vendas-parados"></div>
+      <section class="section">
+        <h2 class="section__title">Produtos menos vendidos</h2>
+        <div class="card" id="js-vendas-parados"></div>
         <div class="empty-state is-hidden" id="js-vendas-parados-vazio"><p class="empty-state__title">Nenhum produto com vendas baixas</p></div>
-      </div>
+      </section>
     </main>
 
     <div id="js-bottom-nav-mount"></div>
@@ -243,18 +247,18 @@
     </div>
   </div>
 
-  <script src="js/utils.js?v=20260804i"></script>
-  <script src="js/menu.js?v=20260804i"></script>
-  <script src="js/storage.js?v=20260804i"></script>
-  <script src="js/tema.js?v=20260804i"></script>
-  <script src="js/app.js?v=20260804i"></script>
-  <script src="js/chips.js?v=20260804i"></script>
-  <script src="js/modal.js?v=20260804i"></script>
-  <script src="js/ajuda-dados.js?v=20260804i"></script>
-  <script src="js/ajuda.js?v=20260804i"></script>
-  <script src="js/calendario.js?v=20260804i"></script>
-  <script src="js/acoes-simuladas.js?v=20260804i"></script>
-  <script src="js/vendas.js?v=20260804i"></script>
-  <script src="js/vendas-pagina.js?v=20260804i"></script>
+  <script src="js/utils.js?v=20260805a"></script>
+  <script src="js/menu.js?v=20260805a"></script>
+  <script src="js/storage.js?v=20260805a"></script>
+  <script src="js/tema.js?v=20260805a"></script>
+  <script src="js/app.js?v=20260805a"></script>
+  <script src="js/chips.js?v=20260805a"></script>
+  <script src="js/modal.js?v=20260805a"></script>
+  <script src="js/ajuda-dados.js?v=20260805a"></script>
+  <script src="js/ajuda.js?v=20260805a"></script>
+  <script src="js/calendario.js?v=20260805a"></script>
+  <script src="js/acoes-simuladas.js?v=20260805a"></script>
+  <script src="js/vendas.js?v=20260805a"></script>
+  <script src="js/vendas-pagina.js?v=20260805a"></script>
 </body>
 </html>

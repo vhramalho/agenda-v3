@@ -102,3 +102,17 @@ img {
 .text-primary-accent {
   color: var(--primary);
 }
+
+/* "Ver todos"/"Ver todas" — usar sempre junto de .text-primary-accent (cor).
+   Funciona tanto em <button> (reseta a aparência padrão de botão) quanto em
+   <a> (a redefinição de fundo/borda/padding não tem efeito, inofensiva). */
+.link-ver-todos {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font-family: inherit;
+  text-decoration: none;
+}
