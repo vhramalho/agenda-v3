@@ -183,39 +183,55 @@ function calcularParados() {
    com o número em destaque, não tem mais como confundir "barra maior"
    com "vale mais", que era o problema que as duas barras resolviam).
    Escala contra o maior daquela métrica na lista inteira (não só dos
-   visíveis), pra não redimensionar ao expandir/recolher. Sem número de
-   posição — a ordem da lista já responde a pergunta. */
-function montarLinhaBarraProduto(item, maiorQuantidade, maiorValor, metricaAtiva) {
+   visíveis), pra não redimensionar ao expandir/recolher, até
+   LARGURA_MAXIMA_BARRA (não 100%, pra sobrar um respiro no final mesmo
+   pro item líder). Sem número de posição — a ordem da lista já responde
+   a pergunta.
+
+   Linhas são reaproveitadas por produto.id entre renderizações (não
+   recriadas do zero) — é o que permite width/cor animarem via CSS
+   (transition) ao trocar de período/métrica/expandir: um elemento novo
+   não tem "estado anterior" pra transicionar a partir dele, só um
+   elemento reaproveitado tem. */
+const LARGURA_MAXIMA_BARRA = 95;
+
+function montarLinhaBarraProduto(item) {
   const linha = document.createElement("div");
   linha.className = "grafico-divergente__linha";
+  linha.dataset.produtoId = item.produto.id;
   linha.innerHTML = `
     <p class="grafico-divergente__nome"></p>
     <div class="grafico-divergente__trilha">
       <div class="grafico-divergente__preenchimento"></div>
     </div>
-    <p class="grafico-divergente__legenda"></p>
+    <p class="grafico-divergente__legenda">
+      <span class="grafico-divergente__legenda-valor"></span>
+      <span class="grafico-divergente__legenda-separador">•</span>
+      <span class="grafico-divergente__legenda-quantidade"></span>
+    </p>
   `;
+  linha.querySelector(".grafico-divergente__nome").textContent = item.produto.nome;
+  linha.querySelector(".grafico-divergente__legenda-valor").textContent = formatarMoeda(item.valor);
+  linha.querySelector(".grafico-divergente__legenda-quantidade").textContent = `${item.quantidade} un`;
+  return linha;
+}
+
+function atualizarLinhaBarraProduto(linha, item, maiorQuantidade, maiorValor, metricaAtiva) {
   const ehFaturamento = metricaAtiva === "valor";
   const maior = ehFaturamento ? maiorValor : maiorQuantidade;
   const atual = ehFaturamento ? item.valor : item.quantidade;
-  const textoValor = formatarMoeda(item.valor);
-  const textoQuantidade = `${item.quantidade} un`;
-
-  linha.querySelector(".grafico-divergente__nome").textContent = item.produto.nome;
-  linha.querySelector(".grafico-divergente__legenda").textContent = ehFaturamento
-    ? `${textoValor} • ${textoQuantidade}`
-    : `${textoQuantidade} • ${textoValor}`;
-  linha.querySelector(".grafico-divergente__preenchimento").style.width = `${maior > 0 ? (atual / maior) * 100 : 0}%`;
-  return linha;
+  linha.querySelector(".grafico-divergente__preenchimento").style.width = `${maior > 0 ? (atual / maior) * LARGURA_MAXIMA_BARRA : 0}%`;
+  linha.querySelector(".grafico-divergente__legenda-valor").classList.toggle("grafico-divergente__legenda--ativa", ehFaturamento);
+  linha.querySelector(".grafico-divergente__legenda-quantidade").classList.toggle("grafico-divergente__legenda--ativa", !ehFaturamento);
 }
 
 function montarGraficoBarrasProdutos(lista, containerId, vazioId, botaoId, chaveEstado, metricaAtiva) {
   const container = qs(`#${containerId}`);
   const vazio = qs(`#${vazioId}`);
   const botao = qs(`#${botaoId}`);
-  container.innerHTML = "";
 
   if (lista.length === 0) {
+    container.innerHTML = "";
     container.classList.add("is-hidden");
     vazio.classList.remove("is-hidden");
     botao.classList.add("is-hidden");
@@ -229,7 +245,18 @@ function montarGraficoBarrasProdutos(lista, containerId, vazioId, botaoId, chave
   const visiveis = expandido ? lista : lista.slice(0, 5);
   const maiorQuantidade = Math.max(...lista.map((item) => item.quantidade));
   const maiorValor = Math.max(...lista.map((item) => item.valor));
-  visiveis.forEach((item) => container.appendChild(montarLinhaBarraProduto(item, maiorQuantidade, maiorValor, metricaAtiva)));
+
+  const linhasAtuais = {};
+  qsa(".grafico-divergente__linha", container).forEach((linha) => { linhasAtuais[linha.dataset.produtoId] = linha; });
+
+  visiveis.forEach((item) => {
+    const linha = linhasAtuais[item.produto.id] || montarLinhaBarraProduto(item);
+    delete linhasAtuais[item.produto.id];
+    atualizarLinhaBarraProduto(linha, item, maiorQuantidade, maiorValor, metricaAtiva);
+    container.appendChild(linha);
+  });
+
+  Object.values(linhasAtuais).forEach((linha) => linha.remove());
 
   if (lista.length > 5) {
     botao.classList.remove("is-hidden");
