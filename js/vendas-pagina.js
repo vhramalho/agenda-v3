@@ -63,6 +63,12 @@ function vendasNoPeriodo(inicio, fim) {
   });
 }
 
+function valorFaturamentoVendas(inicio, fim) {
+  return vendasNoPeriodo(inicio, fim).reduce((s, v) => s + (v.valorTotal || 0), 0);
+}
+
+const IDS_GRAFICO_VENDAS = { colunas: "js-vendas-grafico-colunas", dias: "js-vendas-grafico-dias", eixoMax: "js-vendas-eixo-max", eixoMeio: "js-vendas-eixo-meio" };
+
 /* item.precoUnitario é sempre o preço CADASTRADO do produto (não editável
    por item na hora da venda) — quando o valor pago difere do subtotal do
    carrinho (ex.: desconto combinado na hora), essa diferença precisa
@@ -301,6 +307,14 @@ document.addEventListener("DOMContentLoaded", () => {
       .sort((a, b) => b.quantidade - a.quantidade)
       .map((item) => ({ nome: item.produto.nome, valor: item.quantidade }));
     montarRankingPodio(maisVendidos, "js-vendas-mais-vendidos", "js-vendas-mais-vendidos-resto", "js-vendas-mais-vendidos-vazio", "js-vendas-mais-vendidos-ver-todos", estadoExpandidoRanking.vendidos);
+
+    const svgGrafico = qs("#js-vendas-grafico-svg");
+    if (tipoPeriodo === "dia") {
+      svgGrafico.classList.add("is-hidden");
+    } else {
+      svgGrafico.classList.remove("is-hidden");
+      montarGraficoColunas(tipoPeriodo, refData, valorFaturamentoVendas, IDS_GRAFICO_VENDAS);
+    }
 
     // Lista de vendas recentes respeita o mesmo período dos cards acima.
     renderizarHistoricoVendas();
