@@ -183,9 +183,8 @@ function calcularParados() {
    com o número em destaque, não tem mais como confundir "barra maior"
    com "vale mais", que era o problema que as duas barras resolviam).
    Escala contra o maior daquela métrica na lista inteira (não só dos
-   visíveis), pra não redimensionar ao expandir/recolher, até
-   LARGURA_MAXIMA_BARRA (não 100%, pra sobrar um respiro no final mesmo
-   pro item líder). Sem número de posição — a ordem da lista já responde
+   visíveis), pra não redimensionar ao expandir/recolher — o item líder
+   sempre em 100%. Sem número de posição — a ordem da lista já responde
    a pergunta.
 
    Linhas são reaproveitadas por produto.id entre renderizações (não
@@ -193,7 +192,6 @@ function calcularParados() {
    (transition) ao trocar de período/métrica/expandir: um elemento novo
    não tem "estado anterior" pra transicionar a partir dele, só um
    elemento reaproveitado tem. */
-const LARGURA_MAXIMA_BARRA = 95;
 
 function montarLinhaBarraProduto(item) {
   const linha = document.createElement("div");
@@ -220,7 +218,7 @@ function atualizarLinhaBarraProduto(linha, item, maiorQuantidade, maiorValor, me
   const ehFaturamento = metricaAtiva === "valor";
   const maior = ehFaturamento ? maiorValor : maiorQuantidade;
   const atual = ehFaturamento ? item.valor : item.quantidade;
-  linha.querySelector(".grafico-divergente__preenchimento").style.width = `${maior > 0 ? (atual / maior) * LARGURA_MAXIMA_BARRA : 0}%`;
+  linha.querySelector(".grafico-divergente__preenchimento").style.width = `${maior > 0 ? (atual / maior) * 100 : 0}%`;
   linha.querySelector(".grafico-divergente__legenda-valor").classList.toggle("grafico-divergente__legenda--ativa", ehFaturamento);
   linha.querySelector(".grafico-divergente__legenda-quantidade").classList.toggle("grafico-divergente__legenda--ativa", !ehFaturamento);
 }
