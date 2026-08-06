@@ -502,6 +502,19 @@
   flex-shrink: 0;
 }
 
+/* Posição sem círculo/badge — usada só no "resto" da lista que acompanha
+   um pódio (4º lugar em diante em montarLinhaRestoRanking, js/utils.js):
+   o pódio já resolveu o destaque visual do top 3, aqui é só um número de
+   apoio, não precisa do mesmo peso de badge colorido. */
+.ranking-posicao--texto {
+  min-width: 22px;
+  font-weight: 700;
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  text-align: center;
+  flex-shrink: 0;
+}
+
 .ranking-posicao--ouro { background: #F59E0B; color: #1a1200; }
 .ranking-posicao--prata { background: #94A3B8; color: #0f172a; }
 .ranking-posicao--bronze { background: #B45309; color: #1a1200; }

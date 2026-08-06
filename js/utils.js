@@ -719,12 +719,12 @@ function montarLinhaRestoRanking(item, posicao) {
   const linha = document.createElement("div");
   linha.className = "list-item";
   linha.innerHTML = `
-    <span class="ranking-posicao"></span>
+    <span class="ranking-posicao--texto"></span>
     <div class="list-item__avatar"></div>
     <div class="list-item__body"><p class="list-item__title"></p></div>
     <span class="text-primary-accent" style="font-weight:700;"></span>
   `;
-  linha.querySelector(".ranking-posicao").textContent = `${posicao}º`;
+  linha.querySelector(".ranking-posicao--texto").textContent = `${posicao}º`;
   linha.querySelector(".list-item__avatar").textContent = iniciaisCliente(item.nome);
   linha.querySelector(".list-item__title").textContent = item.nome;
   linha.querySelector(".text-primary-accent").textContent = item.valor;
