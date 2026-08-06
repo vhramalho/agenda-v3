@@ -256,6 +256,7 @@ function vendasFiltradas() {
 
 function renderizarHistoricoVendas() {
   const vendas = vendasFiltradas();
+  qs("#js-historico-vendas-titulo").textContent = `Vendas (${vendas.length})`;
   const produtos = obterProdutos();
   const container = qs("#js-lista-historico-vendas");
   const vazio = qs("#js-historico-vendas-vazio");

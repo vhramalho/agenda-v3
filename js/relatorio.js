@@ -72,7 +72,7 @@ function valorFaturamentoAtendimentos(inicio, fim) {
   return agendamentosNoPeriodo(inicio, fim).reduce((s, a) => s + (a.valorTotal || 0), 0);
 }
 
-const IDS_GRAFICO_ATENDIMENTOS = { linha: "js-relatorio-grafico-linha", area: "js-relatorio-grafico-area", pontos: "js-relatorio-grafico-pontos", dias: "js-relatorio-grafico-dias", eixoMax: "js-relatorio-eixo-max", eixoMeio: "js-relatorio-eixo-meio" };
+const IDS_GRAFICO_ATENDIMENTOS = { linha: "js-relatorio-grafico-linha", area: "js-relatorio-grafico-area", dias: "js-relatorio-grafico-dias", eixoMax: "js-relatorio-eixo-max", eixoMeio: "js-relatorio-eixo-meio" };
 
 function nomesServicosAtendimento(ids) {
   const servicos = obterServicos();
@@ -117,6 +117,7 @@ function montarLinhaAtendimento(agendamento, indice) {
 
 function renderizarAtendimentosRealizados(agendamentos) {
   const lista = agendamentos.slice().sort((a, b) => `${b.data}${b.hora}`.localeCompare(`${a.data}${a.hora}`));
+  qs("#js-atendimentos-realizados-titulo").textContent = `Atendimentos (${lista.length})`;
   const container = qs("#js-lista-atendimentos-realizados");
   const vazio = qs("#js-atendimentos-realizados-vazio");
   const toggle = qs("#js-atendimentos-realizados-toggle");

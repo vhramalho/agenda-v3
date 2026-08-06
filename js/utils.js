@@ -604,9 +604,11 @@ function calcularPontosGrafico(tipoPeriodo, refData, obterValorPeriodo) {
   return { pontos, rotulos };
 }
 
-/* ids = { linha, area, pontos, dias, eixoMax, eixoMeio } — os ids dos
-   elementos do SVG a preencher (o gráfico existe em duas páginas, com ids
-   "js-relatorio-*" no Atendimentos e "js-vendas-*" no Vendas). */
+/* ids = { linha, area, dias, eixoMax, eixoMeio } — os ids dos elementos
+   do SVG a preencher (o gráfico existe em duas páginas, com ids
+   "js-relatorio-*" no Atendimentos e "js-vendas-*" no Vendas). Sem
+   marcador de ponto em cada dia (removido 2026-08-05, pedido do
+   usuário) — só a linha. */
 function montarGraficoFaturamento(tipoPeriodo, refData, obterValorPeriodo, ids) {
   const { pontos, rotulos } = calcularPontosGrafico(tipoPeriodo, refData, obterValorPeriodo);
   const maximo = Math.max(...pontos.map((p) => p.valor), 1);
@@ -619,18 +621,6 @@ function montarGraficoFaturamento(tipoPeriodo, refData, obterValorPeriodo, ids) 
   const pontosTexto = pontos.map((p) => paraXY(p).join(",")).join(" ");
   qs(`#${ids.linha}`).setAttribute("points", pontosTexto);
   qs(`#${ids.area}`).setAttribute("points", `${pontosTexto} ${plotRight},${plotBottom} ${plotLeft},${plotBottom}`);
-
-  const grupoPontos = qs(`#${ids.pontos}`);
-  grupoPontos.innerHTML = "";
-  pontos.filter((p) => p.marcado).forEach((p) => {
-    const [x, y] = paraXY(p);
-    const circulo = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-    circulo.setAttribute("cx", x);
-    circulo.setAttribute("cy", y);
-    circulo.setAttribute("r", "3.5");
-    circulo.setAttribute("fill", "var(--primary)");
-    grupoPontos.appendChild(circulo);
-  });
 
   const grupoDias = qs(`#${ids.dias}`);
   grupoDias.innerHTML = "";
@@ -717,7 +707,7 @@ function montarPodioColuna(item, posicao) {
     <div class="list-item__avatar podio__avatar ${classeAvatarPorIndice(posicao - 1)}"></div>
     <p class="podio__nome"></p>
     <p class="podio__valor"></p>
-    <div class="podio__degrau ${classePosicaoRanking(posicao).replace("ranking-posicao", "podio__degrau")}">${posicao}</div>
+    <div class="podio__degrau ${classePosicaoRanking(posicao).replace("ranking-posicao", "podio__degrau")}">${posicao}º</div>
   `;
   coluna.querySelector(".podio__avatar").textContent = iniciaisCliente(item.nome);
   coluna.querySelector(".podio__nome").textContent = item.nome;
@@ -734,7 +724,7 @@ function montarLinhaRestoRanking(item, posicao) {
     <div class="list-item__body"><p class="list-item__title"></p></div>
     <span class="text-primary-accent" style="font-weight:700;"></span>
   `;
-  linha.querySelector(".ranking-posicao").textContent = posicao;
+  linha.querySelector(".ranking-posicao").textContent = `${posicao}º`;
   linha.querySelector(".list-item__avatar").textContent = iniciaisCliente(item.nome);
   linha.querySelector(".list-item__title").textContent = item.nome;
   linha.querySelector(".text-primary-accent").textContent = item.valor;

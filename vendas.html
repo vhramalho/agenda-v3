@@ -3,15 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <link rel="manifest" href="manifest.json?v=20260805o" />
-  <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg?v=20260805o" />
-  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png?v=20260805o" />
+  <link rel="manifest" href="manifest.json?v=20260805p" />
+  <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg?v=20260805p" />
+  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png?v=20260805p" />
   <meta name="theme-color" content="#0B0B10" />
   <title>Vendas — Swipo Agenda</title>
-  <link rel="stylesheet" href="css/tokens.css?v=20260805o" />
-  <link rel="stylesheet" href="css/base.css?v=20260805o" />
-  <link rel="stylesheet" href="css/layout.css?v=20260805o" />
-  <link rel="stylesheet" href="css/components.css?v=20260805o" />
+  <link rel="stylesheet" href="css/tokens.css?v=20260805p" />
+  <link rel="stylesheet" href="css/base.css?v=20260805p" />
+  <link rel="stylesheet" href="css/layout.css?v=20260805p" />
+  <link rel="stylesheet" href="css/components.css?v=20260805p" />
 </head>
 <body data-page="vendas">
   <div class="app">
@@ -44,7 +44,7 @@
         </button>
         <span id="js-periodo-label" style="flex:1;text-align:center;">
           <span id="js-periodo-principal" style="display:block;font-weight:700;font-size:var(--text-xs);"></span>
-          <span id="js-periodo-secundario" style="display:block;font-size:calc(var(--text-2xs) + 2px);color:var(--text-secondary);margin-top:1px;"></span>
+          <span id="js-periodo-secundario" style="display:block;font-size:calc(var(--text-2xs) + 3px);color:var(--text-secondary);margin-top:1px;"></span>
         </span>
         <button class="icon-btn" id="js-periodo-proximo" aria-label="Próximo período">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
@@ -94,7 +94,7 @@
               <span>Lucro</span>
               <svg viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="1.8"><path d="M23 6l-9.5 9.5-5-5L1 18"/><path d="M17 6h6v6"/></svg>
             </div>
-            <p class="insight-card__valor" style="color:var(--success);" id="js-vendas-lucro"></p>
+            <p class="insight-card__valor" id="js-vendas-lucro"></p>
           </div>
           <div class="insight-card">
             <div class="insight-card__label">
@@ -132,7 +132,7 @@
 
       <section class="section">
         <div class="row row--between" style="margin-bottom:8px;">
-          <h2 class="section__title" style="margin-bottom:0;">Vendas</h2>
+          <h2 class="section__title" style="margin-bottom:0;" id="js-historico-vendas-titulo">Vendas</h2>
           <button class="text-primary-accent link-ver-todos is-hidden" id="js-historico-vendas-toggle">Ver todas</button>
         </div>
         <div class="segmented" id="js-filtro-vendas" style="margin-bottom:12px;">
@@ -250,18 +250,18 @@
     </div>
   </div>
 
-  <script src="js/utils.js?v=20260805o"></script>
-  <script src="js/menu.js?v=20260805o"></script>
-  <script src="js/storage.js?v=20260805o"></script>
-  <script src="js/tema.js?v=20260805o"></script>
-  <script src="js/app.js?v=20260805o"></script>
-  <script src="js/chips.js?v=20260805o"></script>
-  <script src="js/modal.js?v=20260805o"></script>
-  <script src="js/ajuda-dados.js?v=20260805o"></script>
-  <script src="js/ajuda.js?v=20260805o"></script>
-  <script src="js/calendario.js?v=20260805o"></script>
-  <script src="js/acoes-simuladas.js?v=20260805o"></script>
-  <script src="js/vendas.js?v=20260805o"></script>
-  <script src="js/vendas-pagina.js?v=20260805o"></script>
+  <script src="js/utils.js?v=20260805p"></script>
+  <script src="js/menu.js?v=20260805p"></script>
+  <script src="js/storage.js?v=20260805p"></script>
+  <script src="js/tema.js?v=20260805p"></script>
+  <script src="js/app.js?v=20260805p"></script>
+  <script src="js/chips.js?v=20260805p"></script>
+  <script src="js/modal.js?v=20260805p"></script>
+  <script src="js/ajuda-dados.js?v=20260805p"></script>
+  <script src="js/ajuda.js?v=20260805p"></script>
+  <script src="js/calendario.js?v=20260805p"></script>
+  <script src="js/acoes-simuladas.js?v=20260805p"></script>
+  <script src="js/vendas.js?v=20260805p"></script>
+  <script src="js/vendas-pagina.js?v=20260805p"></script>
 </body>
 </html>
