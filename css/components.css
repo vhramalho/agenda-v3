@@ -1093,6 +1093,12 @@
   inset: 0;
   z-index: 490;
   background: var(--overlay);
+  animation: tour-fundo-entra 180ms ease-out;
+}
+
+@keyframes tour-fundo-entra {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 .tour-alvo {
@@ -1116,6 +1122,15 @@
   line-height: 1.4;
   box-shadow: var(--shadow-card);
   text-align: center;
+  animation: tour-entra 220ms ease-out;
+}
+
+/* Passos "spot"/"gesto" são posicionados via top/left inline (JS,
+   ajudaPosicionarLegenda) — sem transform de base, então a animação pode
+   mexer em transform livremente. */
+@keyframes tour-entra {
+  from { opacity: 0; transform: translateY(8px) scale(0.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 .tour-legenda--centro {
@@ -1123,6 +1138,30 @@
   top: 50%;
   transform: translate(-50%, -50%);
   max-width: 240px;
+  animation: tour-entra-centro 220ms ease-out;
+}
+
+/* Passo "centro" já usa transform pra se centralizar — precisa repetir
+   translate(-50%,-50%) em toda a keyframe, senão a animação sobrescreve
+   a centralização e o card pula pro canto superior esquerdo. */
+@keyframes tour-entra-centro {
+  from { opacity: 0; transform: translate(-50%, -50%) translateY(8px) scale(0.96); }
+  to { opacity: 1; transform: translate(-50%, -50%) translateY(0) scale(1); }
+}
+
+/* Dica avulsa marcada como celebrar:true (js/ajuda-dados.js) — troca a
+   entrada padrão por um leve "bounce" (mesma easing de .sucesso-circulo),
+   reservado pra dicas que marcam um marco real, não toda dica. Nunca
+   usada em .tour-legenda--centro (dica avulsa sempre ancora num
+   elemento real), então não precisa da mesma correção de transform. */
+.tour-legenda--celebra {
+  animation: tour-legenda-celebra 320ms cubic-bezier(.34, 1.56, .64, 1);
+}
+
+@keyframes tour-legenda-celebra {
+  0% { opacity: 0; transform: scale(0.85); }
+  60% { opacity: 1; transform: scale(1.03); }
+  100% { opacity: 1; transform: scale(1); }
 }
 
 .tour-legenda__titulo {

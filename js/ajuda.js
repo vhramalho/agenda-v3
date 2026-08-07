@@ -16,7 +16,11 @@
    reiniciarTour(tela) — repete o tour sob demanda (botão "?").
    mostrarDicaSpotlight(tela, chave, elementoAncora) — dica avulsa
    independente do tour, disparada por uma ação real (ex.: criar o
-   2º agendamento), mesma mecânica, some sozinha 1x por chave.
+   2º agendamento), mesma mecânica, some sozinha 1x por chave. Se a
+   dica tiver `celebrar: true` (js/ajuda-dados.js), a legenda entra
+   com um leve "bounce" (tour-legenda--celebra) em vez da entrada
+   padrão — reservado pra dicas que marcam um marco real, não um
+   aviso de uso comum.
    ============================================================ */
 
 let ajudaTelaAtual = null;
@@ -171,7 +175,7 @@ function mostrarDicaSpotlight(tela, chave, elementoAncora) {
   ajudaElementoAceso = elementoAncora;
 
   const legenda = document.createElement("div");
-  legenda.className = "tour-legenda";
+  legenda.className = "tour-legenda" + (dica.celebrar ? " tour-legenda--celebra" : "");
   legenda.textContent = dica.legenda;
   document.body.appendChild(legenda);
   ajudaPosicionarLegenda(legenda, elementoAncora);
