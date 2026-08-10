@@ -235,13 +235,14 @@ function seedWhatsapp() {
   };
 }
 
+/* "Outras" saiu do padrão de fábrica (correção do onboarding, 2026-08-10)
+   — só existe se o usuário criar manualmente. */
 function seedFormasPagamento() {
   return [
     { id: gerarId("pgto"), nome: "Pix", tipo: "pix", taxaPercentual: null, ativo: true },
     { id: gerarId("pgto"), nome: "Dinheiro", tipo: "dinheiro", taxaPercentual: null, ativo: true },
     { id: gerarId("pgto"), nome: "Crédito", tipo: "credito", taxaPercentual: null, ativo: true },
     { id: gerarId("pgto"), nome: "Débito", tipo: "debito", taxaPercentual: null, ativo: true },
-    { id: gerarId("pgto"), nome: "Outras", tipo: "outras", taxaPercentual: null, ativo: true },
   ];
 }
 

@@ -26,13 +26,44 @@
   color: var(--text-muted);
 }
 
+/* ---------- Sem rolagem de página: topo (voltar/pular) e rodapé (botão +
+   pontinhos) sempre visíveis; só o conteúdo do meio rola, e só quando não
+   couber mesmo (ex.: Passo "Quer cadastrar agora?", com 4 cards) — mesmo
+   padrão já usado no cabeçalho fixo + lista rolável da Agenda
+   (body[data-page="index"] .app, css/agenda.css). */
+body[data-page="onboarding"] .app {
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+body[data-page="onboarding"] .page--secundaria {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+  padding-bottom: var(--space-5);
+}
+
+.onboarding-conteudo {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  padding-bottom: var(--space-3);
+}
+
 /* ---------- Passos: só o ativo é visível, com slide+fade na troca ---------- */
 .onboarding-step {
   display: none;
 }
 
 .onboarding-step.is-active {
-  display: block;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
   transition: transform 0.22s ease-out, opacity 0.2s ease-out;
 }
 
@@ -136,14 +167,6 @@
   font-size: var(--text-xs);
   color: var(--text-muted);
   margin-top: 6px;
-}
-
-.onboarding-passo-label {
-  text-align: center;
-  color: var(--primary);
-  font-weight: 700;
-  font-size: var(--text-sm);
-  margin-bottom: var(--space-2);
 }
 
 .onboarding-dots {

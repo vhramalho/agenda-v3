@@ -9,8 +9,6 @@
    em index.html/vendas.html) num fluxo de "cadastrar e continuar".
    ============================================================ */
 
-const OB_GRADE_OPCOES = [10, 15, 20, 30, 60];
-
 document.addEventListener("DOMContentLoaded", () => {
   const passos = qsa(".onboarding-step");
   const pontos = qsa(".onboarding-dot");
@@ -21,10 +19,20 @@ document.addEventListener("DOMContentLoaded", () => {
     if (navigator.vibrate) navigator.vibrate(10);
   }
 
+  /* Horário início/fim viraram <select> (abrem o seletor giratório nativo
+     no iOS) — populados aqui com a mesma grade de 30 em 30min usada em
+     Intervalos/Agenda, em vez de duplicar a lista (auditoria pré-backend,
+     correção do onboarding, 2026-08-10). */
+  function popularSelectsHorario() {
+    const opcoes = gerarGradeHorarios("00:00", "23:30", 30);
+    const html = opcoes.map((h) => `<option value="${h}">${h}</option>`).join("");
+    qs("#js-ob-hora-inicio").innerHTML = html;
+    qs("#js-ob-hora-fim").innerHTML = html;
+  }
+
   function carregarValoresIniciais() {
     const config = obterConfig();
     const whatsapp = obterWhatsapp();
-    qs("#js-ob-estabelecimento").value = config.nomeEstabelecimento || "";
     qs("#js-ob-profissional").value = config.nomeProfissional || "";
     qs("#js-ob-whatsapp").value = whatsapp.numero || "";
     qs("#js-ob-endereco").value = config.endereco || "";
@@ -38,15 +46,20 @@ document.addEventListener("DOMContentLoaded", () => {
     qsa(".cor-swatch[data-cor]").forEach((c) => c.classList.toggle("is-selecionada", c.dataset.cor === cor));
   }
 
+  /* Visualização da grade virou chips reais (era um botão único que ciclava
+     valor a cada toque) — mesmo padrão de seleção única já usado no resto
+     do app (js/chips.js). */
   function definirValorGrade(valor) {
-    const botao = qs("#js-ob-grade");
-    botao.dataset.valor = valor;
-    botao.querySelector("span").textContent = `${valor} minutos`;
+    qsa("#js-ob-grade .chip").forEach((c) => c.classList.toggle("chip--ativo", parseInt(c.dataset.valor, 10) === valor));
+  }
+
+  function obterValorGrade() {
+    const ativo = qs("#js-ob-grade .chip--ativo");
+    return ativo ? parseInt(ativo.dataset.valor, 10) : 30;
   }
 
   function salvarPasso1() {
     const config = obterConfig();
-    config.nomeEstabelecimento = qs("#js-ob-estabelecimento").value.trim();
     config.nomeProfissional = qs("#js-ob-profissional").value.trim();
     config.endereco = qs("#js-ob-endereco").value.trim();
     salvarConfig(config);
@@ -57,12 +70,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function salvarPasso3() {
     const config = obterConfig();
-    const horaInicio = qs("#js-ob-hora-inicio").value.trim();
-    const horaFim = qs("#js-ob-hora-fim").value.trim();
+    const horaInicio = qs("#js-ob-hora-inicio").value;
+    const horaFim = qs("#js-ob-hora-fim").value;
     const horaValida = (v) => /^\d{2}:\d{2}$/.test(v);
     if (horaValida(horaInicio)) config.horaInicio = horaInicio;
     if (horaValida(horaFim)) config.horaFim = horaFim;
-    config.intervaloGrade = parseInt(qs("#js-ob-grade").dataset.valor, 10);
+    config.intervaloGrade = obterValorGrade();
     salvarConfig(config);
   }
 
@@ -86,9 +99,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /* ---------- Mini-mockup: prévia ao vivo da agenda (passos Aparência/Agenda) ---------- */
   function atualizarMockup() {
-    const inicio = qs("#js-ob-hora-inicio").value.trim() || "08:00";
-    const fim = qs("#js-ob-hora-fim").value.trim() || "20:30";
-    const grade = parseInt(qs("#js-ob-grade").dataset.valor, 10) || 30;
+    const inicio = qs("#js-ob-hora-inicio").value || "08:00";
+    const fim = qs("#js-ob-hora-fim").value || "20:30";
+    const grade = obterValorGrade();
     const horarios = gerarGradeHorarios(inicio, fim, grade);
     const container = qs("#mockup-grade");
     container.innerHTML = "";
@@ -104,11 +117,10 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   ["js-ob-hora-inicio", "js-ob-hora-fim"].forEach((id) => {
-    qs(`#${id}`).addEventListener("input", atualizarMockup);
+    qs(`#${id}`).addEventListener("change", atualizarMockup);
   });
-  qs("#js-ob-grade").addEventListener("click", () => {
-    const atualIndice = OB_GRADE_OPCOES.indexOf(parseInt(qs("#js-ob-grade").dataset.valor, 10));
-    definirValorGrade(OB_GRADE_OPCOES[(atualIndice + 1) % OB_GRADE_OPCOES.length]);
+  qs("#js-ob-grade").addEventListener("click", (evento) => {
+    if (!evento.target.closest(".chip")) return;
     atualizarMockup();
     vibrar();
   });
@@ -230,36 +242,14 @@ document.addEventListener("DOMContentLoaded", () => {
     qs("#js-ob-lista-produtos").appendChild(chipCadastro(nome));
   });
 
-  // Formas de pagamento (mesma lógica de js/pagamentos.js, adaptada)
-  qs("#js-ob-btn-forma").addEventListener("click", () => {
-    qs("#js-ob-forma-nome").value = "";
-    qs("#js-ob-forma-taxa").value = "";
-    qsa("#js-ob-forma-tipo .chip").forEach((c) => c.classList.toggle("chip--ativo", c.dataset.tipo === "credito"));
-    abrirModal("modal-ob-nova-forma");
-  });
-  qs("#js-ob-forma-salvar").addEventListener("click", () => {
-    const nome = qs("#js-ob-forma-nome").value.trim();
-    if (!nome) return;
-    const tipoAtivo = qs("#js-ob-forma-tipo .chip--ativo");
-    const lista = obterFormasPagamento();
-    lista.push({
-      id: gerarId("pgto"), nome, tipo: tipoAtivo ? tipoAtivo.dataset.tipo : "outras",
-      taxaPercentual: extrairValor(qs("#js-ob-forma-taxa").value), ativo: true,
-    });
-    salvarFormasPagamento(lista);
-    fecharModal("modal-ob-nova-forma");
-    mostrarSucesso();
-    qs("#js-ob-lista-formas").appendChild(chipCadastro(nome));
-  });
-
   // Bloqueios fixos (mesma lógica de js/intervalos.js, adaptada — grade calculada
   // com os horários/grade que o usuário acabou de escolher no passo 3)
   qs("#js-ob-btn-intervalo").addEventListener("click", () => {
     qs("#js-ob-intervalo-nome").value = "";
     qsa("#js-ob-intervalo-dias .chip").forEach((c) => c.classList.remove("chip--ativo"));
-    const inicio = qs("#js-ob-hora-inicio").value.trim() || "08:00";
-    const fim = qs("#js-ob-hora-fim").value.trim() || "20:30";
-    const grade = parseInt(qs("#js-ob-grade").dataset.valor, 10) || 30;
+    const inicio = qs("#js-ob-hora-inicio").value || "08:00";
+    const fim = qs("#js-ob-hora-fim").value || "20:30";
+    const grade = obterValorGrade();
     const container = qs("#js-ob-intervalo-horarios");
     container.innerHTML = "";
     gerarGradeHorarios(inicio, fim, grade).forEach((hora) => {
@@ -285,6 +275,7 @@ document.addEventListener("DOMContentLoaded", () => {
     qs("#js-ob-lista-intervalos").appendChild(chipCadastro(nome));
   });
 
+  popularSelectsHorario();
   carregarValoresIniciais();
   atualizarMockup();
 });
