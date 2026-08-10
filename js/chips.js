@@ -47,9 +47,15 @@ function distribuirChipGroup(container) {
    comprido, ex. "Cartão de crédito"), diminui a fonte até caber em vez de
    deixar a coluna crescer ou o texto cortar — só roda quando o modal já
    está visível de verdade (chamado por abrirModal, js/modal.js), senão
-   scrollWidth/clientWidth vêm zerados. */
+   scrollWidth/clientWidth vêm zerados.
+   Grupos com `data-chip-sem-encolher` (ex.: nomes de serviço, que podem
+   ser bem longos) ficam de fora desse encolhimento por decisão do usuário
+   — preferem manter o tamanho da fonte e cortar com "..." (já é o
+   comportamento padrão do chip via CSS) a ficar ilegível em 8px
+   (auditoria pré-backend P1, 2026-08-10). */
 function ajustarTextoChips(raiz) {
   qsa(".chip-group .chip", raiz).forEach((chip) => {
+    if (chip.closest("[data-chip-sem-encolher]")) return;
     chip.style.fontSize = "";
     if (chip.scrollWidth <= chip.clientWidth) return;
     let tamanho = parseFloat(getComputedStyle(chip).fontSize);

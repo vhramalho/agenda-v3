@@ -173,7 +173,7 @@ function renderizarListaVendaProdutos() {
       <p style="font-weight:600;font-size:var(--text-sm);"></p>
       <p class="text-secondary" style="font-size:var(--text-xs);"></p>
     `;
-    card.querySelector(".list-item__avatar").textContent = iniciaisCliente(produto.nome);
+    card.querySelector(".list-item__avatar").textContent = iniciaisItem(produto.nome);
     card.querySelectorAll("p")[0].textContent = produto.nome;
     card.querySelectorAll("p")[1].textContent = formatarMoeda(produto.precoVenda);
     card.addEventListener("click", () => {
@@ -294,6 +294,59 @@ document.addEventListener("DOMContentLoaded", () => {
   qs("#modal-nova-venda").addEventListener("click", (e) => {
     if (e.target.id === "modal-nova-venda") dispararCancelamentoVenda();
   });
+
+  /* "+ Novo produto" — atalho de cadastro rápido pra não precisar sair da
+     venda em andamento (Mais > Produtos e voltar); só nome/preço/estoque,
+     os campos opcionais (custo, aviso de parado) ficam pro cadastro
+     completo depois (auditoria pré-backend P3, 2026-08-10). Formulário
+     inline dentro do próprio modal (não um 2º modal por cima) pra não
+     precisar duplicar mais um overlay nos 3 documentos que já duplicam
+     #modal-nova-venda (vendas.html/index.html/pendentes.html). */
+  const produtoRapidoToggle = qs("#js-venda-produto-rapido-toggle");
+  const produtoRapidoForm = qs("#js-venda-produto-rapido-form");
+  if (produtoRapidoToggle && produtoRapidoForm) {
+    aplicarMascaraMoeda(qs("#js-venda-produto-rapido-preco"));
+
+    const fecharFormularioProdutoRapido = () => {
+      produtoRapidoForm.classList.add("is-hidden");
+      qs("#js-venda-produto-rapido-nome").value = "";
+      qs("#js-venda-produto-rapido-preco").value = "";
+      qs("#js-venda-produto-rapido-estoque").value = "";
+    };
+
+    produtoRapidoToggle.addEventListener("click", () => {
+      produtoRapidoForm.classList.toggle("is-hidden");
+      if (!produtoRapidoForm.classList.contains("is-hidden")) qs("#js-venda-produto-rapido-nome").focus();
+    });
+    qs("#js-venda-produto-rapido-cancelar").addEventListener("click", fecharFormularioProdutoRapido);
+
+    qs("#js-venda-produto-rapido-salvar").addEventListener("click", () => {
+      const nome = qs("#js-venda-produto-rapido-nome").value.trim();
+      const precoVenda = extrairValor(qs("#js-venda-produto-rapido-preco").value);
+      const estoque = parseInt(qs("#js-venda-produto-rapido-estoque").value, 10);
+      if (!nome || precoVenda == null || isNaN(estoque)) {
+        mostrarAviso("Preencha nome, preço e estoque");
+        return;
+      }
+      const hoje = hojeIso();
+      const lista = obterProdutos();
+      lista.push({
+        id: gerarId("prod"),
+        nome,
+        precoVenda,
+        precoCusto: null,
+        estoque,
+        diasParaAvisarParado: null,
+        ativo: true,
+        criadoEm: hoje,
+        atualizadoEm: hoje,
+      });
+      salvarProdutos(lista);
+      fecharFormularioProdutoRapido();
+      renderizarListaVendaProdutos();
+      mostrarSucesso();
+    });
+  }
 
   const dataBtn = qs("#js-venda-data-btn");
   if (dataBtn) {

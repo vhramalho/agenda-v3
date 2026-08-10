@@ -329,6 +329,22 @@ function iniciaisCliente(nome) {
   return (primeira + ultima).toUpperCase();
 }
 
+const INICIAIS_ITEM_STOPWORDS = new Set(["de", "da", "do", "das", "dos", "e", "com", "em", "para", "pra", "no", "na", "um", "uma", "a", "o", "sem"]);
+
+/* Nomes de serviço/produto costumam repetir as primeiras palavras
+   ("Maquiagem para festa" / "Maquiagem para ensaio fotográfico") —
+   iniciaisCliente (1ª+última letra) faz as duas virarem "MF". Aqui,
+   em vez de só 1ª+última palavra, pega até 3 palavras "de conteúdo"
+   (ignorando conectivos curtos tipo "para"/"de"/"com"), o que separa
+   naturalmente nomes com mais palavras distintas dos mais curtos
+   (auditoria pré-backend P3, 2026-08-10). */
+function iniciaisItem(nome) {
+  const palavras = nome.trim().split(/\s+/).filter((p) => p.length > 1 && !INICIAIS_ITEM_STOPWORDS.has(p.toLowerCase()));
+  if (palavras.length === 0) return iniciaisCliente(nome);
+  if (palavras.length === 1) return palavras[0].slice(0, 2).toUpperCase();
+  return palavras.slice(0, 3).map((p) => p[0]).join("").toUpperCase();
+}
+
 const MESES_NOME_UTILS = ["janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"];
 
 function formatarDesdeCadastro(isoDate) {
@@ -636,6 +652,11 @@ function montarGraficoFaturamento(tipoPeriodo, refData, obterValorPeriodo, ids) 
   qs(`#${ids.eixoMeio}`).textContent = formatarEixoY(maximo / 2);
 }
 
+/* Pendente NÃO entra na pizza/lista de formas — o donut representa só
+   dinheiro que já entrou de fato (100% = resumo.totalRecebido). "A
+   receber" aparece como uma linha à parte, separada por divisória,
+   pra nunca ser somada visualmente junto do que já foi recebido
+   (decisão do usuário, auditoria pré-backend P1, 2026-08-10). */
 function montarRecebimentos(resumo, formasContainerId, pizzaContainerId) {
   const todasFormas = obterFormasPagamento();
   const tiposComFormaAtiva = new Set(todasFormas.filter((f) => f.ativo).map((f) => f.tipo));
@@ -649,17 +670,21 @@ function montarRecebimentos(resumo, formasContainerId, pizzaContainerId) {
     const valor = resumo.porFormaValor[forma.id] || 0;
     if (valor > 0) valorPorTipo[forma.tipo] = (valorPorTipo[forma.tipo] || 0) + valor;
   });
-  if (resumo.pendente > 0) valorPorTipo.pendentes = resumo.pendente;
 
-  const tipos = ORDEM_TIPOS_FORMA.filter((tipo) => tiposComFormaAtiva.has(tipo) || valorPorTipo[tipo] > 0);
+  const tipos = ORDEM_TIPOS_FORMA.filter((tipo) => tipo !== "pendentes" && (tiposComFormaAtiva.has(tipo) || valorPorTipo[tipo] > 0));
 
-  const totalComPendente = resumo.totalRecebido + (resumo.pendente || 0);
+  if (tipos.length === 0 && !(resumo.pendente > 0)) {
+    container.innerHTML = `<p class="text-secondary" style="margin:0;">Nenhuma forma de pagamento cadastrada.</p>`;
+    return;
+  }
+
+  const totalRecebido = resumo.totalRecebido || 0;
   const circunferencia = 2 * Math.PI * 45;
   let acumulado = 0;
 
   tipos.forEach((tipo) => {
     const valor = valorPorTipo[tipo] || 0;
-    const percentual = totalComPendente > 0 ? (valor / totalComPendente) * 100 : 0;
+    const percentual = totalRecebido > 0 ? (valor / totalRecebido) * 100 : 0;
     const cor = CORES_FORMA[tipo] || "var(--text-muted)";
 
     const linha = document.createElement("div");
@@ -687,6 +712,18 @@ function montarRecebimentos(resumo, formasContainerId, pizzaContainerId) {
       acumulado += fatia;
     }
   });
+
+  if (resumo.pendente > 0) {
+    const nota = document.createElement("div");
+    nota.className = "row row--between";
+    nota.style.cssText = "margin-top:8px;padding-top:8px;border-top:1px dashed var(--border);";
+    nota.innerHTML = `
+      <span class="row" style="gap:8px;"><span style="width:8px;height:8px;border-radius:50%;border:1.5px dashed var(--danger);display:inline-block;"></span><span style="color:var(--text-secondary);">A receber (ainda não recebido)</span></span>
+      <span style="color:var(--danger);font-weight:600;"></span>
+    `;
+    nota.lastElementChild.textContent = formatarMoeda(resumo.pendente);
+    container.appendChild(nota);
+  }
 }
 
 /* ---------- Pódio de ranking (top 3 + "Ver todos" expande o resto) ----------

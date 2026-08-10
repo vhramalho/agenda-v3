@@ -3,16 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <link rel="manifest" href="manifest.json?v=20260807a" />
-  <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg?v=20260807a" />
-  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png?v=20260807a" />
+  <link rel="manifest" href="manifest.json?v=20260810a" />
+  <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg?v=20260810a" />
+  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png?v=20260810a" />
   <meta name="theme-color" content="#0B0B10" />
   <title>Agenda — Swipo Agenda</title>
-  <link rel="stylesheet" href="css/tokens.css?v=20260807a" />
-  <link rel="stylesheet" href="css/base.css?v=20260807a" />
-  <link rel="stylesheet" href="css/layout.css?v=20260807a" />
-  <link rel="stylesheet" href="css/components.css?v=20260807a" />
-  <link rel="stylesheet" href="css/agenda.css?v=20260807a" />
+  <link rel="stylesheet" href="css/tokens.css?v=20260810a" />
+  <link rel="stylesheet" href="css/base.css?v=20260810a" />
+  <link rel="stylesheet" href="css/layout.css?v=20260810a" />
+  <link rel="stylesheet" href="css/components.css?v=20260810a" />
+  <link rel="stylesheet" href="css/agenda.css?v=20260810a" />
 </head>
 <body data-page="index">
   <div class="app">
@@ -224,7 +224,7 @@
         </div>
         <div class="field">
           <label class="field__label">Serviços</label>
-          <div class="chip-group" data-chips="multi" id="js-novo-agendamento-servicos"></div>
+          <div class="chip-group" data-chips="multi" data-chip-colunas="4" data-chip-sem-encolher id="js-novo-agendamento-servicos"></div>
         </div>
         <div class="field">
           <label class="field__label">Duração</label>
@@ -293,7 +293,7 @@
 
         <div class="field">
           <label class="field__label">Serviços</label>
-          <div class="chip-group" data-chips="multi" id="js-finalizar-servicos"></div>
+          <div class="chip-group" data-chips="multi" data-chip-colunas="4" data-chip-sem-encolher id="js-finalizar-servicos"></div>
         </div>
 
         <div class="field">
@@ -408,7 +408,7 @@
 
         <div class="field">
           <label class="field__label">Serviços</label>
-          <div class="chip-group" id="js-editar-realizado-servicos"></div>
+          <div class="chip-group" data-chip-colunas="4" data-chip-sem-encolher id="js-editar-realizado-servicos"></div>
         </div>
 
         <div class="field">
@@ -545,6 +545,18 @@
         <div class="field">
           <label class="field__label">Produtos</label>
           <div id="js-venda-lista-produtos" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;max-height:240px;overflow-y:auto;padding:2px;"></div>
+          <button type="button" class="text-primary-accent" id="js-venda-produto-rapido-toggle" style="font-weight:600;font-size:var(--text-sm);background:none;border:none;text-align:left;padding:0;margin-top:10px;cursor:pointer;">+ Novo produto</button>
+          <div class="stack is-hidden" id="js-venda-produto-rapido-form" style="gap:8px;margin-top:10px;">
+            <input class="input" id="js-venda-produto-rapido-nome" placeholder="Nome do produto" />
+            <div class="row" style="gap:8px;">
+              <input class="input" inputmode="decimal" id="js-venda-produto-rapido-preco" placeholder="Preço de venda" style="flex:1;" />
+              <input class="input" type="number" inputmode="numeric" min="0" id="js-venda-produto-rapido-estoque" placeholder="Estoque" style="flex:1;" />
+            </div>
+            <div class="btn-row">
+              <button type="button" class="btn btn--secondary" id="js-venda-produto-rapido-cancelar">Cancelar</button>
+              <button type="button" class="btn btn--primary" id="js-venda-produto-rapido-salvar">Salvar produto</button>
+            </div>
+          </div>
         </div>
 
         <div class="field is-hidden" id="js-venda-carrinho-wrap">
@@ -610,23 +622,23 @@
     </div>
   </div>
 
-  <script src="js/utils.js?v=20260807a"></script>
-  <script src="js/menu.js?v=20260807a"></script>
-  <script src="js/storage.js?v=20260807a"></script>
-  <script src="js/tema.js?v=20260807a"></script>
-  <script src="js/app.js?v=20260807a"></script>
-  <script src="js/chips.js?v=20260807a"></script>
-  <script src="js/modal.js?v=20260807a"></script>
-  <script src="js/ajuda-dados.js?v=20260807a"></script>
-  <script src="js/ajuda.js?v=20260807a"></script>
-  <script src="js/calendario.js?v=20260807a"></script>
-  <script src="js/acoes-simuladas.js?v=20260807a"></script>
-  <script src="js/vendas.js?v=20260807a"></script>
-  <script src="js/agenda.js?v=20260807a"></script>
+  <script src="js/utils.js?v=20260810a"></script>
+  <script src="js/menu.js?v=20260810a"></script>
+  <script src="js/storage.js?v=20260810a"></script>
+  <script src="js/tema.js?v=20260810a"></script>
+  <script src="js/app.js?v=20260810a"></script>
+  <script src="js/chips.js?v=20260810a"></script>
+  <script src="js/modal.js?v=20260810a"></script>
+  <script src="js/ajuda-dados.js?v=20260810a"></script>
+  <script src="js/ajuda.js?v=20260810a"></script>
+  <script src="js/calendario.js?v=20260810a"></script>
+  <script src="js/acoes-simuladas.js?v=20260810a"></script>
+  <script src="js/vendas.js?v=20260810a"></script>
+  <script src="js/agenda.js?v=20260810a"></script>
   <!-- Funcionalidade de lembrete desativada (2026-07-12) -- js/agenda.js já
        guarda a chamada com "typeof window.renderizarAgendaDiario === 'function'",
        então não carregar este arquivo não quebra nada.
-  <script src="js/agenda-diario.js?v=20260807a"></script>
+  <script src="js/agenda-diario.js?v=20260810a"></script>
   -->
 </body>
 </html>

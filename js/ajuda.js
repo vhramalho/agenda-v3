@@ -61,12 +61,20 @@ function ajudaMostrarFundo() {
 function ajudaPosicionarLegenda(legendaEl, alvoEl) {
   const rect = alvoEl.getBoundingClientRect();
   const largura = legendaEl.offsetWidth;
+  const altura = legendaEl.offsetHeight;
   let esquerda = rect.left + rect.width / 2 - largura / 2;
   esquerda = Math.max(12, Math.min(esquerda, window.innerWidth - largura - 12));
+  // Antes comparava com um limiar fixo de 120px em vez da altura real da
+  // legenda — uma legenda mais alta que 120px (texto de 2+ linhas) passava
+  // no teste "espaço abaixo > 120" mesmo sem caber de verdade, sobrepondo
+  // o próprio item que estava explicando (auditoria pré-backend P2,
+  // 2026-08-10, visto em Pendentes/Clientes).
   const espacoAbaixo = window.innerHeight - rect.bottom;
-  legendaEl.style.top = espacoAbaixo > 120 || rect.top < 120
+  const cabeAbaixo = espacoAbaixo >= altura + 12;
+  const cabeAcima = rect.top >= altura + 12;
+  legendaEl.style.top = cabeAbaixo || !cabeAcima
     ? `${rect.bottom + 12}px`
-    : `${rect.top - legendaEl.offsetHeight - 12}px`;
+    : `${rect.top - altura - 12}px`;
   legendaEl.style.left = `${esquerda}px`;
 }
 
