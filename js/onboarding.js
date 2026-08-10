@@ -125,6 +125,17 @@ document.addEventListener("DOMContentLoaded", () => {
     vibrar();
   });
 
+  /* Move o mockup (elemento único, reaproveitado pelos passos 2 e 3) pra
+     dentro do conteúdo do passo que está ficando ativo, logo depois do
+     subtítulo — evita ele "flutuar" fixo no topo da página, acima de
+     Voltar/Pular, que é como ficava antes (Victor, 2026-08-10). Nos
+     outros passos ele fica escondido (is-hidden) onde quer que esteja,
+     não precisa reposicionar. */
+  function moveMockupParaPassoAtivo(passoEl) {
+    const subtitulo = passoEl.querySelector(".onboarding-subtitulo");
+    if (subtitulo) subtitulo.insertAdjacentElement("afterend", mockupWrap);
+  }
+
   /* ---------- Navegação entre passos (slide) ---------- */
   function mostrarPasso(indice, direcao) {
     const atualEl = passos[atual];
@@ -142,7 +153,10 @@ document.addEventListener("DOMContentLoaded", () => {
       pontos.forEach((p, i) => p.classList.toggle("is-active", i === indice));
       atual = indice;
       mockupWrap.classList.toggle("is-hidden", indice !== 2 && indice !== 3);
-      if (indice === 2 || indice === 3) atualizarMockup();
+      if (indice === 2 || indice === 3) {
+        moveMockupParaPassoAtivo(novoEl);
+        atualizarMockup();
+      }
       if (indice === 5) {
         completarComPadroes();
         salvarOnboarding({ concluido: true });

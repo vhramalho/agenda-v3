@@ -224,19 +224,47 @@ body[data-page="onboarding"] .page--secundaria {
 
 /* ---------- Mini-mockup: prévia ao vivo (Aparência/Agenda) ---------- */
 .mockup-wrap {
-  margin-bottom: var(--space-6);
+  margin: var(--space-2) 0 var(--space-4);
   display: flex;
   justify-content: center;
 }
 
+/* Moldura de verdade — bezel escuro sempre, independente do tema claro/
+   escuro escolhido (é um "aparelho", não muda de cor junto com o app lá
+   dentro), com um botão lateral decorativo pra reforçar a leitura de
+   "celular" (Victor, 2026-08-10 — antes era só um cartão arredondado,
+   não lia como celular). */
 .mockup {
-  width: 220px;
-  background: var(--bg-secondary);
-  border: 1px solid var(--border-strong);
-  border-radius: var(--radius-xl);
-  padding: 18px 12px 12px;
+  width: 154px;
+  aspect-ratio: 9 / 17.5;
+  background: linear-gradient(155deg, #2A2A32, #17171C);
+  border-radius: 30px;
+  padding: 8px;
   position: relative;
-  box-shadow: var(--shadow-card);
+  box-shadow: var(--shadow-card), 0 0 0 1px rgba(255, 255, 255, 0.06) inset;
+  display: flex;
+}
+
+.mockup__botao-lateral {
+  position: absolute;
+  right: -2px;
+  top: 72px;
+  width: 3px;
+  height: 34px;
+  border-radius: 2px 0 0 2px;
+  background: #17171C;
+}
+
+.mockup__tela {
+  flex: 1;
+  min-height: 0;
+  background: var(--bg-secondary);
+  border-radius: 22px;
+  padding: 16px 10px 10px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 .mockup__notch {
