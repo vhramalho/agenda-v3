@@ -748,8 +748,16 @@
 
 .insight-card__valor {
   font-weight: 800;
-  font-size: clamp(14px, 4.2vw, var(--text-md));
-  overflow-wrap: break-word;
+  font-size: var(--text-md);
+}
+
+/* Só em Produtos (Em estoque/Venda potencial/Lucro potencial) o valor pode
+   passar de 4 dígitos com frequência — fonte menor evita a quebra de linha
+   "R$ 1.263,0 / 00" (auditoria pré-backend, ajuste 2026-08-10). Outras telas
+   com insight-card (Vendas, Relatório, Clientes) têm valores mais curtos e
+   ficam com o tamanho padrão. */
+#js-produtos-insight .insight-card__valor {
+  font-size: var(--text-sm);
 }
 
 /* Texto de comparação "vs período anterior" — usado tanto nos insight-cards

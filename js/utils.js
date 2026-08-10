@@ -718,7 +718,7 @@ function montarRecebimentos(resumo, formasContainerId, pizzaContainerId) {
     nota.className = "row row--between";
     nota.style.cssText = "margin-top:8px;padding-top:8px;border-top:1px dashed var(--border);";
     nota.innerHTML = `
-      <span class="row" style="gap:8px;"><span style="width:8px;height:8px;border-radius:50%;border:1.5px dashed var(--danger);display:inline-block;"></span><span style="color:var(--text-secondary);">A receber (ainda não recebido)</span></span>
+      <span style="color:var(--text-secondary);">Pendente</span>
       <span style="color:var(--danger);font-weight:600;"></span>
     `;
     nota.lastElementChild.textContent = formatarMoeda(resumo.pendente);
