@@ -1,7 +1,7 @@
 /* ============================================================
    AGENDA V3 — Navegação do Onboarding
-   Troca entre as 6 telas internas (boas-vindas + 5 passos), com
-   transição em slide entre elas. Tema e cor aplicam de verdade e
+   Troca entre as 6 telas internas (boas-vindas + 5 passos), instantânea
+   (sem slide por ora). Tema e cor aplicam de verdade e
    ao vivo (via js/tema.js) num mini-mockup da agenda, visível nos
    passos Aparência/Agenda. O passo "Cadastros" reaproveita os
    modais reais de Serviços/Produtos/Formas de pagamento/
@@ -134,44 +134,36 @@ document.addEventListener("DOMContentLoaded", () => {
     if (subtitulo) subtitulo.insertAdjacentElement("afterend", mockupWrap);
   }
 
-  /* ---------- Navegação entre passos (slide) ---------- */
-  function mostrarPasso(indice, direcao) {
-    const atualEl = passos[atual];
-    const novoEl = passos[indice];
-    const saiClasse = direcao === "tras" ? "saindo-dir" : "saindo-esq";
-    const entraClasse = direcao === "tras" ? "entrando-esq" : "entrando-dir";
-
-    atualEl.classList.add(saiClasse);
-    setTimeout(() => {
-      atualEl.classList.remove("is-active", saiClasse);
-      novoEl.classList.add(entraClasse);
-      novoEl.classList.add("is-active");
-      void novoEl.offsetWidth;
-      novoEl.classList.remove(entraClasse);
-      pontos.forEach((p, i) => p.classList.toggle("is-active", i === indice));
-      atual = indice;
-      mockupWrap.classList.toggle("is-hidden", indice !== 2 && indice !== 3);
-      if (indice === 2 || indice === 3) {
-        moveMockupParaPassoAtivo(novoEl);
-        atualizarMockup();
-      }
-      /* Marca concluído já ao chegar no Passo 4 (Cadastros), não só no
-         Passo 5 final -- por essa altura perfil/tema/horários já foram
-         salvos (o essencial que o gate de onboarding.concluido protege em
-         js/app.js), e o card "Mensagens WhatsApp" desse passo precisa
-         poder navegar pra whatsapp.html sem cair no redirecionamento de
-         volta pro onboarding do zero (Victor, 2026-08-17). */
-      if (indice === 4 || indice === 5) {
-        completarComPadroes();
-        salvarOnboarding({ concluido: true });
-      }
-    }, 200);
+  /* ---------- Navegação entre passos ---------- */
+  /* Troca instantânea, sem slide (removido por ora — causava estranheza,
+     ver [[feedback-agenda-v3-animacao-forwards-bug]]; revisitar mais pra
+     frente se fizer sentido). */
+  function mostrarPasso(indice) {
+    passos[atual].classList.remove("is-active");
+    passos[indice].classList.add("is-active");
+    pontos.forEach((p, i) => p.classList.toggle("is-active", i === indice));
+    atual = indice;
+    mockupWrap.classList.toggle("is-hidden", indice !== 2 && indice !== 3);
+    if (indice === 2 || indice === 3) {
+      moveMockupParaPassoAtivo(passos[indice]);
+      atualizarMockup();
+    }
+    /* Marca concluído já ao chegar no Passo 4 (Cadastros), não só no
+       Passo 5 final -- por essa altura perfil/tema/horários já foram
+       salvos (o essencial que o gate de onboarding.concluido protege em
+       js/app.js), e o card "Mensagens WhatsApp" desse passo precisa
+       poder navegar pra whatsapp.html sem cair no redirecionamento de
+       volta pro onboarding do zero (Victor, 2026-08-17). */
+    if (indice === 4 || indice === 5) {
+      completarComPadroes();
+      salvarOnboarding({ concluido: true });
+    }
   }
 
   qsa("[data-ir-para]").forEach((botao) => {
     botao.addEventListener("click", () => {
       const destino = Number(botao.dataset.irPara);
-      mostrarPasso(destino, "frente");
+      mostrarPasso(destino);
     });
   });
 
@@ -180,13 +172,13 @@ document.addEventListener("DOMContentLoaded", () => {
       vibrar();
       if (atual === 1) salvarPasso1();
       if (atual === 3) salvarPasso3();
-      if (atual < passos.length - 1) mostrarPasso(atual + 1, "frente");
+      if (atual < passos.length - 1) mostrarPasso(atual + 1);
     });
   });
 
   qsa("[data-anterior]").forEach((botao) => {
     botao.addEventListener("click", () => {
-      if (atual > 0) mostrarPasso(atual - 1, "tras");
+      if (atual > 0) mostrarPasso(atual - 1);
     });
   });
 
@@ -209,37 +201,22 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   /* ---------- Cadastro rápido (passo 4) — reaproveita os modais reais ---------- */
-  function chipCadastro(texto) {
-    const chip = document.createElement("span");
-    chip.className = "chip";
-    chip.textContent = texto;
-    return chip;
-  }
-
-  /* Contador "N cadastrado(s)" abaixo do botão — some quando zero, o
-     próprio card vazio já comunica isso (Victor, 2026-08-17). */
+  /* Nada de chip por item cadastrado (crescia "bagunçado" conforme a
+     pessoa ia cadastrando) — só texto de status abaixo do subtítulo do
+     card (Victor, 2026-08-17). */
   function atualizarContador(idContador, quantidade) {
     const el = qs(`#${idContador}`);
     if (!el) return;
-    el.textContent = quantidade === 0 ? "" : quantidade === 1 ? "1 cadastrado" : `${quantidade} cadastrados`;
+    el.textContent = quantidade === 0 ? "Nenhum cadastrado ainda" : quantidade === 1 ? "1 cadastrado" : `${quantidade} cadastrados`;
   }
 
   /* Reabrindo o onboarding (ex.: fechou e voltou sem terminar), os
-     cadastros já salvos não apareciam — só viravam chip no momento em que
-     eram criados nesta mesma sessão de página. Preenche do zero a partir
-     do localStorage (Victor, 2026-08-17). */
+     cadastros já salvos não refletiam no contador. Preenche do zero a
+     partir do localStorage (Victor, 2026-08-17). */
   function popularCadastrosExistentes() {
-    const servicos = obterServicos().filter((s) => s.ativo);
-    servicos.forEach((s) => qs("#js-ob-lista-servicos").appendChild(chipCadastro(s.nome)));
-    atualizarContador("js-ob-contador-servicos", servicos.length);
-
-    const produtos = obterProdutos().filter((p) => p.ativo);
-    produtos.forEach((p) => qs("#js-ob-lista-produtos").appendChild(chipCadastro(p.nome)));
-    atualizarContador("js-ob-contador-produtos", produtos.length);
-
-    const intervalos = obterBloqueiosFixos().filter((i) => i.ativo);
-    intervalos.forEach((i) => qs("#js-ob-lista-intervalos").appendChild(chipCadastro(i.nome)));
-    atualizarContador("js-ob-contador-intervalos", intervalos.length);
+    atualizarContador("js-ob-contador-servicos", obterServicos().filter((s) => s.ativo).length);
+    atualizarContador("js-ob-contador-produtos", obterProdutos().filter((p) => p.ativo).length);
+    atualizarContador("js-ob-contador-intervalos", obterBloqueiosFixos().filter((i) => i.ativo).length);
   }
 
   // Serviços (mesma lógica de js/servicos.js, adaptada)
@@ -257,8 +234,7 @@ document.addEventListener("DOMContentLoaded", () => {
     salvarServicos(lista);
     fecharModal("modal-ob-novo-servico");
     mostrarSucesso();
-    qs("#js-ob-lista-servicos").appendChild(chipCadastro(nome));
-    atualizarContador("js-ob-contador-servicos", qs("#js-ob-lista-servicos").children.length);
+    atualizarContador("js-ob-contador-servicos", lista.filter((s) => s.ativo).length);
   });
 
   // Produtos (mesma lógica de js/produtos.js, adaptada)
@@ -284,8 +260,7 @@ document.addEventListener("DOMContentLoaded", () => {
     salvarProdutos(lista);
     fecharModal("modal-ob-novo-produto");
     mostrarSucesso();
-    qs("#js-ob-lista-produtos").appendChild(chipCadastro(nome));
-    atualizarContador("js-ob-contador-produtos", qs("#js-ob-lista-produtos").children.length);
+    atualizarContador("js-ob-contador-produtos", lista.filter((p) => p.ativo).length);
   });
 
   // Bloqueios fixos (mesma lógica de js/intervalos.js, adaptada — grade calculada
@@ -318,8 +293,7 @@ document.addEventListener("DOMContentLoaded", () => {
     salvarBloqueiosFixos(lista);
     fecharModal("modal-ob-novo-intervalo");
     mostrarSucesso();
-    qs("#js-ob-lista-intervalos").appendChild(chipCadastro(nome));
-    atualizarContador("js-ob-contador-intervalos", qs("#js-ob-lista-intervalos").children.length);
+    atualizarContador("js-ob-contador-intervalos", lista.filter((i) => i.ativo).length);
   });
 
   /* ---------- Formas de pagamento: só edita as 4 padrão, sem cadastrar
@@ -393,14 +367,6 @@ document.addEventListener("DOMContentLoaded", () => {
      (Victor, 2026-08-17). Sem transição, só posiciona direto. ---------- */
   const passoUrl = parseInt(new URLSearchParams(location.search).get("passo"), 10);
   if (!isNaN(passoUrl) && passoUrl > 0 && passoUrl < passos.length) {
-    passos[atual].classList.remove("is-active");
-    atual = passoUrl;
-    passos[atual].classList.add("is-active");
-    pontos.forEach((p, i) => p.classList.toggle("is-active", i === atual));
-    mockupWrap.classList.toggle("is-hidden", atual !== 2 && atual !== 3);
-    if (atual === 2 || atual === 3) {
-      moveMockupParaPassoAtivo(passos[atual]);
-      atualizarMockup();
-    }
+    mostrarPasso(passoUrl);
   }
 });

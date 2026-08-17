@@ -10,7 +10,7 @@
   align-items: center;
   justify-content: space-between;
   min-height: 32px;
-  margin-bottom: clamp(8px, 2dvh, var(--space-4));
+  margin-bottom: clamp(8px, 1.2dvh, var(--space-4));
 }
 
 .onboarding-voltar,
@@ -72,7 +72,12 @@ body[data-page="onboarding"] .page--secundaria {
   justify-content: center;
 }
 
-/* ---------- Passos: só o ativo é visível, com slide+fade na troca ---------- */
+/* ---------- Passos: só o ativo é visível ---------- */
+/* Slide/fade entre passos removido (Victor, 2026-08-17) -- causava
+   estranheza (relacionado ao mesmo tipo de falha de animação real-device
+   já visto nos chips, ver [[feedback-agenda-v3-animacao-forwards-bug]]).
+   Troca de passo agora é instantânea; revisitar animação mais pra frente
+   se fizer sentido. */
 .onboarding-step {
   display: none;
 }
@@ -82,14 +87,14 @@ body[data-page="onboarding"] .page--secundaria {
   flex-direction: column;
   flex: 1 1 auto;
   min-height: 0;
-  transition: transform 0.22s ease-out, opacity 0.2s ease-out;
 }
 
-.onboarding-step.saindo-esq { transform: translateX(-24px); opacity: 0; }
-.onboarding-step.saindo-dir { transform: translateX(24px); opacity: 0; }
-.onboarding-step.entrando-esq { transform: translateX(-24px); opacity: 0; transition: none; }
-.onboarding-step.entrando-dir { transform: translateX(24px); opacity: 0; transition: none; }
-
+/* Animações de entrada (ícone, logo, título, linhas do mini-mockup, chips)
+   removidas por ora (Victor, 2026-08-17) -- causavam estranheza, mesma
+   família do bug de animação real-device já documentado em
+   [[feedback-agenda-v3-animacao-forwards-bug]]. Keyframes continuam
+   definidos, só não são mais aplicados -- reintroduzir é só voltar a
+   referenciar `animation:` nas regras abaixo, se/quando revisitar. */
 .onboarding-ilustracao {
   width: 96px;
   height: 96px;
@@ -102,7 +107,6 @@ body[data-page="onboarding"] .page--secundaria {
   color: var(--primary);
   position: relative;
   overflow: hidden;
-  animation: onboarding-entra-suave 0.35s ease-out 0.1s backwards;
 }
 
 .onboarding-ilustracao::after {
@@ -114,23 +118,17 @@ body[data-page="onboarding"] .page--secundaria {
   top: -50%;
   background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.35), transparent);
   transform: translateX(-140%) rotate(12deg);
-  animation: onboarding-brilho 0.6s ease 0.5s forwards;
 }
 
 .onboarding-marca {
   max-width: 220px;
   width: 70%;
   margin: var(--space-4) auto var(--space-5);
-  animation: onboarding-entra-suave 0.35s ease-out 0.1s backwards;
 }
 
 .onboarding-marca img {
   width: 100%;
   height: auto;
-}
-
-#ilustracao-final {
-  animation: onboarding-entra-suave 0.35s ease-out 0.1s backwards, onboarding-pulso-sucesso 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.45s backwards;
 }
 
 @keyframes onboarding-entra-suave {
@@ -148,14 +146,6 @@ body[data-page="onboarding"] .page--secundaria {
   100% { box-shadow: 0 0 0 18px transparent; }
 }
 
-.intro-cascata > * {
-  animation: onboarding-entra-cima 0.3s ease-out backwards;
-}
-.intro-cascata > *:nth-child(1) { animation-delay: 0.55s; }
-.intro-cascata > *:nth-child(2) { animation-delay: 0.61s; }
-.intro-cascata > *:nth-child(3) { animation-delay: 0.67s; }
-.intro-cascata > *:nth-child(4) { animation-delay: 0.73s; }
-
 @keyframes onboarding-entra-cima {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
@@ -172,7 +162,7 @@ body[data-page="onboarding"] .page--secundaria {
 .onboarding-subtitulo {
   text-align: center;
   color: var(--text-secondary);
-  margin-bottom: clamp(10px, 3dvh, var(--space-6));
+  margin-bottom: clamp(8px, 1.5dvh, var(--space-6));
 }
 
 .onboarding-legenda {
@@ -335,7 +325,6 @@ body[data-page="onboarding"] .page--secundaria {
   display: flex;
   align-items: center;
   gap: 8px;
-  animation: onboarding-entra-cima 0.2s ease-out backwards;
 }
 
 .mockup__hora {
@@ -366,20 +355,23 @@ body[data-page="onboarding"] .page--secundaria {
 }
 
 /* ---------- Cadastro rápido (passo 4) ---------- */
-/* Passo com mais cartões (4) da lista toda — padding e espaçamento em
-   clamp(dvh) pra caber sem rolar em telas baixas (Victor, 2026-08-17). */
+/* Passo com mais cartões (5) da lista toda — padding e espaçamento em
+   clamp(dvh) pra caber sem rolar em telas baixas (Victor, 2026-08-17).
+   Coeficientes puxados pra baixo de novo depois que o texto de status
+   (sempre visível agora, mesmo em "Nenhum cadastrado ainda") virou mais
+   uma linha fixa em 3 dos 5 cards. */
 .onboarding-conteudo .cadastro-card {
-  padding: clamp(8px, 1.3dvh, var(--space-4));
+  padding: clamp(6px, 0.9dvh, var(--space-4));
 }
 
 .cadastro-card + .cadastro-card {
-  margin-top: clamp(4px, 1.2dvh, var(--space-3));
+  margin-top: clamp(3px, 0.7dvh, var(--space-3));
 }
 
 .cadastro-card__topo {
   display: flex;
   align-items: flex-start;
-  gap: clamp(8px, 2dvh, var(--space-3));
+  gap: clamp(8px, 1.3dvh, var(--space-3));
 }
 
 .cadastro-card__topo .icon-circle,
@@ -387,28 +379,17 @@ body[data-page="onboarding"] .page--secundaria {
   flex-shrink: 0;
 }
 
-/* Botão "+ Cadastrar"/"Editar" + contador de itens já salvos, empilhados
-   e alinhados à direita (Victor, 2026-08-17). */
-.cadastro-card__acao {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 4px;
-  flex-shrink: 0;
-}
-
+/* Texto de status ("N cadastrado(s)" / "Nenhum cadastrado ainda"),
+   abaixo do subtítulo do card (Victor, 2026-08-17). */
 .cadastro-card__contador {
   font-size: var(--text-xs);
   color: var(--text-muted);
-}
-
-.cadastro-card__contador:empty {
-  display: none;
+  margin-top: 1px;
 }
 
 .onboarding-conteudo .cadastro-card__topo .icon-circle {
-  width: clamp(24px, 4dvh, 34px);
-  height: clamp(24px, 4dvh, 34px);
+  width: clamp(22px, 3.2dvh, 34px);
+  height: clamp(22px, 3.2dvh, 34px);
 }
 
 .onboarding-conteudo .cadastro-card__topo .icon-circle svg {
@@ -439,10 +420,6 @@ body[data-page="onboarding"] .page--secundaria {
    mas nenhum chip aparecia, opacity preso em 0 pra sempre — o padrão
    antigo dependia 100% da animação terminar pra chegar em opacity:1),
    o chip aparece igual, só sem o efeito de entrada (Victor, 2026-08-17). */
-.cadastro-card__lista .chip {
-  animation: onboarding-chip-entra 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
 @keyframes onboarding-chip-entra {
   from { opacity: 0; transform: scale(0.85); }
   to { opacity: 1; transform: scale(1); }
