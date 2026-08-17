@@ -55,6 +55,15 @@ body[data-page="onboarding"] .page--secundaria {
   padding-bottom: var(--space-3);
 }
 
+/* Passo 1 (Perfil): dica sai de dentro do conteúdo e fica colada no botão,
+   mesmo padrão do subtítulo da Tela 1 — reduz o vazio entre os campos e o
+   rodapé (Victor, 2026-08-17). O componente (css/components.css) só tem
+   margem em cima por padrão; aqui precisa de espaço embaixo também, pra
+   não ficar grudado no botão. */
+.onboarding-step .dica-fixa-wrap--estatica {
+  margin-bottom: clamp(10px, 2.5dvh, var(--space-5));
+}
+
 /* Passo 0 (Boas-vindas): logo+título centralizados no espaço disponível,
    com o subtítulo separado logo acima do botão (Victor, 2026-08-17). */
 .onboarding-conteudo--central {
