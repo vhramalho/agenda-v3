@@ -383,12 +383,13 @@ body[data-page="onboarding"] .page--secundaria {
   margin-top: 1px;
 }
 
-/* "+ Cadastrar" e "Editar" ficam com a mesma largura entre os 5 cards
-   (101px = largura natural de "+ Cadastrar", o mais longo dos dois),
-   em vez de cada botão encolher pro tamanho do próprio texto
-   (Victor, 2026-08-17). */
+/* "+ Cadastrar" (<button>) e "Editar" (<a>) ficam com a mesma largura E
+   altura entre os 5 cards (101x33px = tamanho natural de "+ Cadastrar")
+   -- sem o height explícito, a tag <a> rendeirizava ~2.5px mais alta que
+   <button> mesmo com o mesmo padding (Victor, 2026-08-17). */
 .onboarding-conteudo .list-item__trailing .btn {
   min-width: 101px;
+  height: 33px;
   text-align: center;
 }
 
