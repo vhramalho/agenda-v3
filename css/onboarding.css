@@ -355,51 +355,31 @@ body[data-page="onboarding"] .page--secundaria {
 }
 
 /* ---------- Cadastro rápido (passo 4) ---------- */
-/* Passo com mais cartões (5) da lista toda — padding e espaçamento em
-   clamp(dvh) pra caber sem rolar em telas baixas (Victor, 2026-08-17).
-   Coeficientes puxados pra baixo de novo depois que o texto de status
-   (sempre visível agora, mesmo em "Nenhum cadastrado ainda") virou mais
-   uma linha fixa em 3 dos 5 cards. */
-.onboarding-conteudo .cadastro-card {
-  padding: clamp(6px, 0.9dvh, var(--space-4));
+/* Passo com mais cartões (5) — usa o padrão de .card + .list-item já
+   usado no resto do app (mesmo tamanho de fonte/ícone de qualquer outra
+   tela), em vez de uma tipografia customizada do onboarding — o custom
+   anterior ficava desproporcional/bagunçado comparado com o app real
+   (Victor, 2026-08-17). Só o espaçamento vertical entre cards e o
+   padding interno são comprimidos em telas baixas; nada de tamanho de
+   fonte/ícone muda. */
+.onboarding-conteudo .card {
+  padding: clamp(8px, 1.2dvh, var(--space-3)) var(--space-4);
 }
 
-.cadastro-card + .cadastro-card {
-  margin-top: clamp(3px, 0.7dvh, var(--space-3));
+.onboarding-conteudo .card + .card {
+  margin-top: clamp(4px, 0.6dvh, var(--space-3));
 }
 
-.cadastro-card__topo {
-  display: flex;
-  align-items: flex-start;
-  gap: clamp(8px, 1.3dvh, var(--space-3));
+/* .list-item normalmente vive dentro de um .card com vários irmãos (a
+   própria margem/padding do item cria o ritmo entre eles) -- aqui cada
+   .card só tem UM .list-item, então o padding do item seria redundante
+   em cima do padding que o .card já dá; zerado (Victor, 2026-08-17). */
+.onboarding-conteudo .list-item {
+  padding: 0;
 }
 
-.cadastro-card__topo .icon-circle,
-.cadastro-card__topo .btn {
-  flex-shrink: 0;
-}
-
-/* Texto de status ("N cadastrado(s)" / "Nenhum cadastrado ainda"),
-   abaixo do subtítulo do card (Victor, 2026-08-17). */
-.cadastro-card__contador {
-  font-size: var(--text-xs);
-  color: var(--text-muted);
+.onboarding-conteudo .list-item__terciario {
   margin-top: 1px;
-}
-
-.onboarding-conteudo .cadastro-card__topo .icon-circle {
-  width: clamp(22px, 3.2dvh, 34px);
-  height: clamp(22px, 3.2dvh, 34px);
-}
-
-.onboarding-conteudo .cadastro-card__topo .icon-circle svg {
-  width: clamp(13px, 2.1dvh, 17px);
-  height: clamp(13px, 2.1dvh, 17px);
-}
-
-.cadastro-card__corpo {
-  flex: 1;
-  min-width: 0;
 }
 
 @media (prefers-reduced-motion: reduce) {
