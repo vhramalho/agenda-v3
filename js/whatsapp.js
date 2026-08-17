@@ -100,6 +100,16 @@ function renderizarWhatsapp() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+  /* Chegando aqui a partir do card "Mensagens WhatsApp" do onboarding
+     (?voltarOnboarding=N) — "Voltar" leva de volta pro mesmo passo do
+     onboarding em vez de sair do fluxo pro histórico normal
+     (Victor, 2026-08-17). */
+  const voltarOnboarding = new URLSearchParams(location.search).get("voltarOnboarding");
+  if (voltarOnboarding !== null) {
+    const botaoVoltar = qs('.icon-btn[aria-label="Voltar"]');
+    if (botaoVoltar) botaoVoltar.onclick = () => { location.href = `onboarding.html?passo=${voltarOnboarding}`; };
+  }
+
   renderizarWhatsapp();
 
   qs("[data-abrir-modal='modal-editar-numero']").addEventListener("click", () => {

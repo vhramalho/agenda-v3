@@ -52,7 +52,7 @@ body[data-page="onboarding"] .page--secundaria {
   flex: 1 1 auto;
   min-height: 0;
   overflow-y: auto;
-  padding-bottom: var(--space-3);
+  padding-bottom: clamp(4px, 1dvh, var(--space-3));
 }
 
 /* Passo 1 (Perfil): dica sai de dentro do conteúdo e fica colada no botão,
@@ -377,17 +377,17 @@ body[data-page="onboarding"] .page--secundaria {
 /* Passo com mais cartões (4) da lista toda — padding e espaçamento em
    clamp(dvh) pra caber sem rolar em telas baixas (Victor, 2026-08-17). */
 .onboarding-conteudo .cadastro-card {
-  padding: clamp(10px, 2.2dvh, var(--space-4));
+  padding: clamp(8px, 1.3dvh, var(--space-4));
 }
 
 .cadastro-card + .cadastro-card {
-  margin-top: clamp(6px, 1.5dvh, var(--space-3));
+  margin-top: clamp(4px, 1.2dvh, var(--space-3));
 }
 
 .cadastro-card__topo {
   display: flex;
   align-items: flex-start;
-  gap: var(--space-3);
+  gap: clamp(8px, 2dvh, var(--space-3));
 }
 
 .cadastro-card__topo .icon-circle,
@@ -395,14 +395,33 @@ body[data-page="onboarding"] .page--secundaria {
   flex-shrink: 0;
 }
 
+/* Botão "+ Cadastrar"/"Editar" + contador de itens já salvos, empilhados
+   e alinhados à direita (Victor, 2026-08-17). */
+.cadastro-card__acao {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.cadastro-card__contador {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
+.cadastro-card__contador:empty {
+  display: none;
+}
+
 .onboarding-conteudo .cadastro-card__topo .icon-circle {
-  width: 34px;
-  height: 34px;
+  width: clamp(24px, 4dvh, 34px);
+  height: clamp(24px, 4dvh, 34px);
 }
 
 .onboarding-conteudo .cadastro-card__topo .icon-circle svg {
-  width: 17px;
-  height: 17px;
+  width: clamp(13px, 2.1dvh, 17px);
+  height: clamp(13px, 2.1dvh, 17px);
 }
 
 .cadastro-card__corpo {
@@ -414,7 +433,7 @@ body[data-page="onboarding"] .page--secundaria {
   display: flex;
   gap: 6px;
   flex-wrap: wrap;
-  margin-top: var(--space-3);
+  margin-top: clamp(6px, 1.5dvh, var(--space-3));
 }
 
 .cadastro-card__lista:empty {

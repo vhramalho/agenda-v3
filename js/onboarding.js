@@ -155,7 +155,13 @@ document.addEventListener("DOMContentLoaded", () => {
         moveMockupParaPassoAtivo(novoEl);
         atualizarMockup();
       }
-      if (indice === 5) {
+      /* Marca concluído já ao chegar no Passo 4 (Cadastros), não só no
+         Passo 5 final -- por essa altura perfil/tema/horários já foram
+         salvos (o essencial que o gate de onboarding.concluido protege em
+         js/app.js), e o card "Mensagens WhatsApp" desse passo precisa
+         poder navegar pra whatsapp.html sem cair no redirecionamento de
+         volta pro onboarding do zero (Victor, 2026-08-17). */
+      if (indice === 4 || indice === 5) {
         completarComPadroes();
         salvarOnboarding({ concluido: true });
       }
@@ -210,6 +216,32 @@ document.addEventListener("DOMContentLoaded", () => {
     return chip;
   }
 
+  /* Contador "N cadastrado(s)" abaixo do botão — some quando zero, o
+     próprio card vazio já comunica isso (Victor, 2026-08-17). */
+  function atualizarContador(idContador, quantidade) {
+    const el = qs(`#${idContador}`);
+    if (!el) return;
+    el.textContent = quantidade === 0 ? "" : quantidade === 1 ? "1 cadastrado" : `${quantidade} cadastrados`;
+  }
+
+  /* Reabrindo o onboarding (ex.: fechou e voltou sem terminar), os
+     cadastros já salvos não apareciam — só viravam chip no momento em que
+     eram criados nesta mesma sessão de página. Preenche do zero a partir
+     do localStorage (Victor, 2026-08-17). */
+  function popularCadastrosExistentes() {
+    const servicos = obterServicos().filter((s) => s.ativo);
+    servicos.forEach((s) => qs("#js-ob-lista-servicos").appendChild(chipCadastro(s.nome)));
+    atualizarContador("js-ob-contador-servicos", servicos.length);
+
+    const produtos = obterProdutos().filter((p) => p.ativo);
+    produtos.forEach((p) => qs("#js-ob-lista-produtos").appendChild(chipCadastro(p.nome)));
+    atualizarContador("js-ob-contador-produtos", produtos.length);
+
+    const intervalos = obterBloqueiosFixos().filter((i) => i.ativo);
+    intervalos.forEach((i) => qs("#js-ob-lista-intervalos").appendChild(chipCadastro(i.nome)));
+    atualizarContador("js-ob-contador-intervalos", intervalos.length);
+  }
+
   // Serviços (mesma lógica de js/servicos.js, adaptada)
   qs("#js-ob-btn-servico").addEventListener("click", () => {
     qs("#js-ob-servico-nome").value = "";
@@ -226,6 +258,7 @@ document.addEventListener("DOMContentLoaded", () => {
     fecharModal("modal-ob-novo-servico");
     mostrarSucesso();
     qs("#js-ob-lista-servicos").appendChild(chipCadastro(nome));
+    atualizarContador("js-ob-contador-servicos", qs("#js-ob-lista-servicos").children.length);
   });
 
   // Produtos (mesma lógica de js/produtos.js, adaptada)
@@ -252,6 +285,7 @@ document.addEventListener("DOMContentLoaded", () => {
     fecharModal("modal-ob-novo-produto");
     mostrarSucesso();
     qs("#js-ob-lista-produtos").appendChild(chipCadastro(nome));
+    atualizarContador("js-ob-contador-produtos", qs("#js-ob-lista-produtos").children.length);
   });
 
   // Bloqueios fixos (mesma lógica de js/intervalos.js, adaptada — grade calculada
@@ -285,9 +319,88 @@ document.addEventListener("DOMContentLoaded", () => {
     fecharModal("modal-ob-novo-intervalo");
     mostrarSucesso();
     qs("#js-ob-lista-intervalos").appendChild(chipCadastro(nome));
+    atualizarContador("js-ob-contador-intervalos", qs("#js-ob-lista-intervalos").children.length);
+  });
+
+  /* ---------- Formas de pagamento: só edita as 4 padrão, sem cadastrar
+     nem excluir aqui (mesma lógica de js/pagamentos.js, adaptada) ---------- */
+  let formaEditandoIdOb = null;
+
+  function textoChipForma(forma) {
+    return forma.taxaPercentual ? `${forma.nome} (${String(forma.taxaPercentual).replace(".", ",")}%)` : forma.nome;
+  }
+
+  function montarChipForma(forma) {
+    const chip = document.createElement("span");
+    chip.className = "chip";
+    chip.dataset.formaId = forma.id;
+    chip.textContent = textoChipForma(forma);
+    chip.addEventListener("click", () => abrirEdicaoFormaOb(forma.id));
+    return chip;
+  }
+
+  /* Renderiza só na carga da página (lista vazia -> 4 chips). Depois de
+     editar, atualiza só o chip da forma editada (ver salvar abaixo) em vez
+     de destruir e recriar os 4 -- limpar+reconstruir com innerHTML=""
+     deixava os chips com opacity computado 1 mas invisíveis na tela
+     (a entrada CSS deles depende de animation, que não se comporta bem
+     quando a lista inteira é substituída de uma vez; atualizar só o texto
+     do chip existente evita o problema de raiz). */
+  function renderizarFormasOb() {
+    const container = qs("#js-ob-lista-formas");
+    container.innerHTML = "";
+    obterFormasPagamento().filter((f) => f.ativo).forEach((f) => container.appendChild(montarChipForma(f)));
+  }
+
+  function abrirEdicaoFormaOb(id) {
+    const forma = obterFormasPagamento().find((f) => f.id === id);
+    if (!forma) return;
+    formaEditandoIdOb = id;
+    qs("#js-ob-forma-nome").value = forma.nome;
+    qs("#js-ob-forma-taxa").value = forma.taxaPercentual != null ? String(forma.taxaPercentual).replace(".", ",") : "";
+    qsa("#js-ob-forma-tipo .chip").forEach((c) => c.classList.toggle("chip--ativo", c.dataset.tipo === forma.tipo));
+    abrirModal("modal-ob-editar-forma");
+  }
+
+  qs("#js-ob-forma-salvar").addEventListener("click", () => {
+    const nome = qs("#js-ob-forma-nome").value.trim();
+    if (!nome || !formaEditandoIdOb) return;
+    const lista = obterFormasPagamento();
+    const forma = lista.find((f) => f.id === formaEditandoIdOb);
+    if (!forma) return;
+    forma.nome = nome;
+    const tipoAtivo = qs("#js-ob-forma-tipo .chip--ativo");
+    if (tipoAtivo) forma.tipo = tipoAtivo.dataset.tipo;
+    const taxaTexto = qs("#js-ob-forma-taxa").value.replace(",", ".").replace("%", "").trim();
+    const taxaNumero = parseFloat(taxaTexto);
+    forma.taxaPercentual = isNaN(taxaNumero) ? null : taxaNumero;
+    salvarFormasPagamento(lista);
+    fecharModal("modal-ob-editar-forma");
+    mostrarSucesso();
+    const chip = qs(`#js-ob-lista-formas .chip[data-forma-id="${forma.id}"]`);
+    if (chip) chip.textContent = textoChipForma(forma);
   });
 
   popularSelectsHorario();
   carregarValoresIniciais();
   atualizarMockup();
+  garantirFormasPagamentoPadrao();
+  renderizarFormasOb();
+  popularCadastrosExistentes();
+
+  /* ---------- Retomar num passo específico (?passo=N) — usado ao voltar
+     de whatsapp.html?voltarOnboarding=N sem perder o lugar no fluxo
+     (Victor, 2026-08-17). Sem transição, só posiciona direto. ---------- */
+  const passoUrl = parseInt(new URLSearchParams(location.search).get("passo"), 10);
+  if (!isNaN(passoUrl) && passoUrl > 0 && passoUrl < passos.length) {
+    passos[atual].classList.remove("is-active");
+    atual = passoUrl;
+    passos[atual].classList.add("is-active");
+    pontos.forEach((p, i) => p.classList.toggle("is-active", i === atual));
+    mockupWrap.classList.toggle("is-hidden", atual !== 2 && atual !== 3);
+    if (atual === 2 || atual === 3) {
+      moveMockupParaPassoAtivo(passos[atual]);
+      atualizarMockup();
+    }
+  }
 });

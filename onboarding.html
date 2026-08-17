@@ -3,16 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <link rel="manifest" href="manifest.json?v=20260817i" />
-  <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg?v=20260817i" />
-  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png?v=20260817i" />
+  <link rel="manifest" href="manifest.json?v=20260817j" />
+  <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg?v=20260817j" />
+  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png?v=20260817j" />
   <meta name="theme-color" content="#0B0B10" />
   <title>Configuração inicial — Swipo Agenda</title>
-  <link rel="stylesheet" href="css/tokens.css?v=20260817i" />
-  <link rel="stylesheet" href="css/base.css?v=20260817i" />
-  <link rel="stylesheet" href="css/layout.css?v=20260817i" />
-  <link rel="stylesheet" href="css/components.css?v=20260817i" />
-  <link rel="stylesheet" href="css/onboarding.css?v=20260817i" />
+  <link rel="stylesheet" href="css/tokens.css?v=20260817j" />
+  <link rel="stylesheet" href="css/base.css?v=20260817j" />
+  <link rel="stylesheet" href="css/layout.css?v=20260817j" />
+  <link rel="stylesheet" href="css/components.css?v=20260817j" />
+  <link rel="stylesheet" href="css/onboarding.css?v=20260817j" />
 </head>
 <body data-page="onboarding">
   <div class="app">
@@ -46,8 +46,8 @@
 
         <div class="onboarding-conteudo onboarding-conteudo--central">
           <div class="onboarding-marca">
-            <img class="tema-so-escuro" src="assets/logos/swipo-lockup-dark.png?v=20260817i" alt="Swipo Agenda" />
-            <img class="tema-so-claro" src="assets/logos/swipo-lockup-light.png?v=20260817i" alt="Swipo Agenda" />
+            <img class="tema-so-escuro" src="assets/logos/swipo-lockup-dark.png?v=20260817j" alt="Swipo Agenda" />
+            <img class="tema-so-claro" src="assets/logos/swipo-lockup-light.png?v=20260817j" alt="Swipo Agenda" />
           </div>
 
           <div class="intro-cascata">
@@ -168,13 +168,16 @@
         </div>
         <div class="onboarding-conteudo">
           <p class="onboarding-titulo">Quer cadastrar agora?</p>
-          <p class="onboarding-subtitulo">Adicione o que quiser agora — o resto fica disponível quando quiser, em "Mais".</p>
+          <p class="onboarding-subtitulo">Adicione o que quiser — o resto fica em "Mais".</p>
 
           <div class="card cadastro-card">
             <div class="cadastro-card__topo">
               <div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="6" cy="6" r="2.5"/><circle cx="6" cy="18" r="2.5"/><path d="M8 7.5L20 18M8 16.5L20 6"/></svg></div>
-              <div class="cadastro-card__corpo"><p style="font-weight:700;">Serviços</p><p class="text-secondary" style="font-size:var(--text-sm);">Corte, barba, e outros</p></div>
-              <button class="btn btn--ghost btn--sm" id="js-ob-btn-servico">+ Cadastrar</button>
+              <div class="cadastro-card__corpo"><p style="font-weight:700;">Serviços</p><p class="text-secondary" style="font-size:var(--text-sm);">Que você oferece</p></div>
+              <div class="cadastro-card__acao">
+                <button class="btn btn--ghost btn--sm" id="js-ob-btn-servico">+ Cadastrar</button>
+                <p class="cadastro-card__contador" id="js-ob-contador-servicos"></p>
+              </div>
             </div>
             <div class="cadastro-card__lista" id="js-ob-lista-servicos"></div>
           </div>
@@ -182,8 +185,11 @@
           <div class="card cadastro-card">
             <div class="cadastro-card__topo">
               <div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 8l-8-5-8 5v8l8 5 8-5V8z"/><path d="M4 8l8 5 8-5M12 13v8"/></svg></div>
-              <div class="cadastro-card__corpo"><p style="font-weight:700;">Produtos</p><p class="text-secondary" style="font-size:var(--text-sm);">Venda avulsa, controle de estoque</p></div>
-              <button class="btn btn--ghost btn--sm" id="js-ob-btn-produto">+ Cadastrar</button>
+              <div class="cadastro-card__corpo"><p style="font-weight:700;">Produtos</p><p class="text-secondary" style="font-size:var(--text-sm);">Que você vende</p></div>
+              <div class="cadastro-card__acao">
+                <button class="btn btn--ghost btn--sm" id="js-ob-btn-produto">+ Cadastrar</button>
+                <p class="cadastro-card__contador" id="js-ob-contador-produtos"></p>
+              </div>
             </div>
             <div class="cadastro-card__lista" id="js-ob-lista-produtos"></div>
           </div>
@@ -191,17 +197,29 @@
           <div class="card cadastro-card">
             <div class="cadastro-card__topo">
               <div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg></div>
-              <div class="cadastro-card__corpo"><p style="font-weight:700;">Formas de pagamento</p><p class="text-secondary" style="font-size:var(--text-sm);">Já vem pronto: Pix, Dinheiro, Crédito e Débito — dá pra editar depois em Mais &gt; Formas de pagamento</p></div>
+              <div class="cadastro-card__corpo"><p style="font-weight:700;">Formas de pagamento</p><p class="text-secondary" style="font-size:var(--text-sm);">Que você aceita</p></div>
             </div>
+            <div class="cadastro-card__lista" id="js-ob-lista-formas"></div>
           </div>
 
           <div class="card cadastro-card">
             <div class="cadastro-card__topo">
               <div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></div>
-              <div class="cadastro-card__corpo"><p style="font-weight:700;">Bloqueios fixos</p><p class="text-secondary" style="font-size:var(--text-sm);">Almoço, folgas recorrentes</p></div>
-              <button class="btn btn--ghost btn--sm" id="js-ob-btn-intervalo">+ Cadastrar</button>
+              <div class="cadastro-card__corpo"><p style="font-weight:700;">Bloqueios fixos</p><p class="text-secondary" style="font-size:var(--text-sm);">Como almoço, folgas etc</p></div>
+              <div class="cadastro-card__acao">
+                <button class="btn btn--ghost btn--sm" id="js-ob-btn-intervalo">+ Cadastrar</button>
+                <p class="cadastro-card__contador" id="js-ob-contador-intervalos"></p>
+              </div>
             </div>
             <div class="cadastro-card__lista" id="js-ob-lista-intervalos"></div>
+          </div>
+
+          <div class="card cadastro-card">
+            <div class="cadastro-card__topo">
+              <div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></div>
+              <div class="cadastro-card__corpo"><p style="font-weight:700;">Mensagens WhatsApp</p><p class="text-secondary" style="font-size:var(--text-sm);">Que o app manda por você</p></div>
+              <a href="whatsapp.html?voltarOnboarding=4" class="btn btn--ghost btn--sm">Editar</a>
+            </div>
           </div>
         </div>
 
@@ -278,11 +296,28 @@
     </div>
   </div>
 
-  <script src="js/utils.js?v=20260817i"></script>
-  <script src="js/storage.js?v=20260817i"></script>
-  <script src="js/tema.js?v=20260817i"></script>
-  <script src="js/chips.js?v=20260817i"></script>
-  <script src="js/modal.js?v=20260817i"></script>
-  <script src="js/onboarding.js?v=20260817i"></script>
+  <!-- Editar forma de pagamento — markup duplicado de pagamentos.html, só
+       edição das 4 formas padrão (sem cadastrar nova nem excluir aqui). -->
+  <div class="modal-overlay is-hidden" id="modal-ob-editar-forma">
+    <div class="modal-sheet">
+      <div class="modal-sheet__header"><p class="modal-sheet__title">Editar forma de pagamento</p><button class="modal-close">✕</button></div>
+      <div class="field"><label class="field__label">Nome</label><input class="input" id="js-ob-forma-nome"/></div>
+      <div class="field">
+        <label class="field__label">Tipo</label>
+        <div class="chip-group" data-chips="single" id="js-ob-forma-tipo">
+          <span class="chip" data-tipo="dinheiro">Dinheiro</span><span class="chip" data-tipo="pix">Pix</span><span class="chip" data-tipo="credito">Crédito</span><span class="chip" data-tipo="debito">Débito</span><span class="chip" data-tipo="outras">Outras</span>
+        </div>
+      </div>
+      <div class="field"><label class="field__label">Taxa opcional</label><input class="input" id="js-ob-forma-taxa" placeholder="Ex.: 2,99"/></div>
+      <div class="btn-row"><button class="btn btn--secondary" data-fechar-modal>Cancelar</button><button class="btn btn--primary" id="js-ob-forma-salvar">Salvar</button></div>
+    </div>
+  </div>
+
+  <script src="js/utils.js?v=20260817j"></script>
+  <script src="js/storage.js?v=20260817j"></script>
+  <script src="js/tema.js?v=20260817j"></script>
+  <script src="js/chips.js?v=20260817j"></script>
+  <script src="js/modal.js?v=20260817j"></script>
+  <script src="js/onboarding.js?v=20260817j"></script>
 </body>
 </html>
