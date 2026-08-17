@@ -224,7 +224,7 @@ body[data-page="onboarding"] .page--secundaria {
   flex: 1;
   border: 1px solid var(--border-strong);
   border-radius: var(--radius-lg);
-  padding: clamp(8px, 2dvh, var(--space-4));
+  padding: clamp(8px, 1.3dvh, var(--space-4));
   text-align: center;
   background: var(--card);
   cursor: pointer;
@@ -267,7 +267,7 @@ body[data-page="onboarding"] .page--secundaria {
    consumidor de altura vertical, então ele precisa ceder espaço primeiro
    pra o passo caber sem rolar (Victor, 2026-08-17). */
 .mockup {
-  width: clamp(84px, calc(84px + (100dvh - 667px) * 0.4), 190px);
+  width: clamp(56px, calc(56px + (100dvh - 667px) * 0.44), 190px);
   aspect-ratio: 9 / 17.5;
   background: linear-gradient(155deg, #2A2A32, #17171C);
   border-radius: 30px;
