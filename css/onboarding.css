@@ -55,6 +55,14 @@ body[data-page="onboarding"] .page--secundaria {
   padding-bottom: var(--space-3);
 }
 
+/* Passo 0 (Boas-vindas): logo+título centralizados no espaço disponível,
+   com o subtítulo separado logo acima do botão (Victor, 2026-08-17). */
+.onboarding-conteudo--central {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
 /* ---------- Passos: só o ativo é visível, com slide+fade na troca ---------- */
 .onboarding-step {
   display: none;
