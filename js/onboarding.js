@@ -296,22 +296,10 @@ document.addEventListener("DOMContentLoaded", () => {
     atualizarContador("js-ob-contador-intervalos", lista.filter((i) => i.ativo).length);
   });
 
-  /* ---------- Formas de pagamento: só texto de status, edição de verdade
-     é em pagamentos.html (botão "Editar" no card leva pra lá) ---------- */
-  function atualizarStatusFormas() {
-    const el = qs("#js-ob-status-formas");
-    if (!el) return;
-    const nomes = obterFormasPagamento().filter((f) => f.ativo).map((f) => f.nome);
-    if (nomes.length === 0) { el.textContent = "Nenhuma cadastrada ainda"; return; }
-    const texto = nomes.length === 1 ? nomes[0] : `${nomes.slice(0, -1).join(", ")} e ${nomes[nomes.length - 1]}`;
-    el.textContent = `Já cadastradas: ${texto}`;
-  }
-
   popularSelectsHorario();
   carregarValoresIniciais();
   atualizarMockup();
   garantirFormasPagamentoPadrao();
-  atualizarStatusFormas();
   popularCadastrosExistentes();
 
   /* ---------- Retomar num passo específico (?passo=N) — usado ao voltar
