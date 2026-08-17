@@ -148,7 +148,7 @@ body[data-page="onboarding"] .page--secundaria {
 }
 
 @keyframes onboarding-pulso-sucesso {
-  0% { box-shadow: 0 0 0 0 var(--success-soft); }
+  0% { box-shadow: 0 0 0 0 var(--primary-soft); }
   100% { box-shadow: 0 0 0 18px transparent; }
 }
 
