@@ -43,32 +43,41 @@ function fecharModal(origem) {
   if (overlay) overlay.classList.add("is-hidden");
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  qsa(".modal-overlay").forEach((overlay) => {
+/* Escopável (não só document) porque o menu inferior — e o sheet de "Mais"
+   que vive junto dele — chega depois via loadComponent (fetch assíncrono,
+   js/app.js), ou seja, ainda não existe no DOM quando este
+   DOMContentLoaded roda. js/app.js chama de novo, só pro pedaço recém-
+   injetado, depois que o fetch termina (Victor, 2026-08-18). */
+function inicializarModais(escopo) {
+  escopo = escopo || document;
+
+  qsa(".modal-overlay", escopo).forEach((overlay) => {
     overlay.addEventListener("click", (evento) => {
       if (evento.target === overlay) fecharModal(overlay);
     });
   });
 
-  qsa(".modal-close, [data-fechar-modal]").forEach((botao) => {
+  qsa(".modal-close, [data-fechar-modal]", escopo).forEach((botao) => {
     botao.addEventListener("click", (evento) => {
       evento.preventDefault();
       fecharModal(botao);
     });
   });
 
-  qsa("[data-abrir-modal]").forEach((gatilho) => {
+  qsa("[data-abrir-modal]", escopo).forEach((gatilho) => {
     gatilho.addEventListener("click", (evento) => {
       evento.preventDefault();
       abrirModal(gatilho.dataset.abrirModal);
     });
   });
 
-  qsa("[data-trocar-modal]").forEach((gatilho) => {
+  qsa("[data-trocar-modal]", escopo).forEach((gatilho) => {
     gatilho.addEventListener("click", (evento) => {
       evento.preventDefault();
       fecharModal(gatilho);
       abrirModal(gatilho.dataset.trocarModal);
     });
   });
-});
+}
+
+document.addEventListener("DOMContentLoaded", () => inicializarModais());

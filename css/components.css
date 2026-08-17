@@ -976,6 +976,17 @@
   padding-bottom: calc(var(--space-6) + var(--safe-bottom));
 }
 
+/* Alcinha decorativa opcional no topo do sheet (só visual — arrastar pra
+   fechar não funciona bem nesse PWA, o navegador intercepta o gesto, ver
+   memória do projeto; fechar continua sendo tocar fora ou um botão). */
+.modal-sheet__handle {
+  width: 36px;
+  height: 4px;
+  border-radius: var(--radius-full);
+  background: var(--border-strong);
+  margin: 0 auto var(--space-4);
+}
+
 .modal-overlay--centro {
   align-items: center;
   padding: var(--space-5);

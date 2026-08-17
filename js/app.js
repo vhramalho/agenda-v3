@@ -14,9 +14,15 @@ if (!PAGINAS_SEM_GATE_ONBOARDING.includes(document.body.dataset.page) && !obterO
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
-  if (qs("#js-bottom-nav-mount")) {
+  const montagemMenu = qs("#js-bottom-nav-mount");
+  if (montagemMenu) {
     await loadComponent("#js-bottom-nav-mount", "components/menu.html");
     destacarItemMenuAtivo();
+    /* O sheet de "Mais" chega junto do menu inferior nesse mesmo fetch —
+       precisa religar data-abrir-modal/fechar-no-fundo pra esse pedaço,
+       já que js/modal.js rodou sua própria varredura antes desse
+       componente existir (ver js/modal.js). */
+    inicializarModais(montagemMenu);
   }
 });
 
