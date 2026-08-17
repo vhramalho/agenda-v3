@@ -81,6 +81,16 @@ function abrirEdicaoForma(id) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+  /* Chegando aqui a partir do card "Formas de pagamento" do onboarding
+     (?voltarOnboarding=N) — "Voltar" leva de volta pro mesmo passo do
+     onboarding em vez de sair do fluxo pro histórico normal (mesmo
+     padrão de js/whatsapp.js, Victor, 2026-08-17). */
+  const voltarOnboarding = new URLSearchParams(location.search).get("voltarOnboarding");
+  if (voltarOnboarding !== null) {
+    const botaoVoltar = qs('.icon-btn[aria-label="Voltar"]');
+    if (botaoVoltar) botaoVoltar.onclick = () => { location.href = `onboarding.html?passo=${voltarOnboarding}`; };
+  }
+
   garantirFormasPagamentoPadrao();
   renderizarFormas();
 

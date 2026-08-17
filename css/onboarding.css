@@ -402,37 +402,7 @@ body[data-page="onboarding"] .page--secundaria {
   min-width: 0;
 }
 
-.cadastro-card__lista {
-  display: flex;
-  gap: 6px;
-  flex-wrap: wrap;
-  margin-top: clamp(6px, 1.5dvh, var(--space-3));
-}
-
-.cadastro-card__lista:empty {
-  margin-top: 0;
-}
-
-/* Sem opacity:0 estático nem "forwards" -- o estado de repouso (sem
-   animação nenhuma rolando) já é opacity:1 por padrão. Um chip só fica
-   invisível enquanto a animação está tocando; se ela não disparar por
-   qualquer motivo (visto num iPhone real: contador dizia "5 cadastrados"
-   mas nenhum chip aparecia, opacity preso em 0 pra sempre — o padrão
-   antigo dependia 100% da animação terminar pra chegar em opacity:1),
-   o chip aparece igual, só sem o efeito de entrada (Victor, 2026-08-17). */
-@keyframes onboarding-chip-entra {
-  from { opacity: 0; transform: scale(0.85); }
-  to { opacity: 1; transform: scale(1); }
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .onboarding-step,
-  .onboarding-ilustracao,
-  .onboarding-ilustracao::after,
-  .onboarding-marca,
-  .intro-cascata > *,
-  .mockup__linha,
-  .cadastro-card__lista .chip,
   .onboarding-dot,
   .opcao-card,
   .cor-swatch {

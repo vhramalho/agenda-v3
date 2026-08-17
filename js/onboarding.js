@@ -296,70 +296,22 @@ document.addEventListener("DOMContentLoaded", () => {
     atualizarContador("js-ob-contador-intervalos", lista.filter((i) => i.ativo).length);
   });
 
-  /* ---------- Formas de pagamento: só edita as 4 padrão, sem cadastrar
-     nem excluir aqui (mesma lógica de js/pagamentos.js, adaptada) ---------- */
-  let formaEditandoIdOb = null;
-
-  function textoChipForma(forma) {
-    return forma.taxaPercentual ? `${forma.nome} (${String(forma.taxaPercentual).replace(".", ",")}%)` : forma.nome;
+  /* ---------- Formas de pagamento: só texto de status, edição de verdade
+     é em pagamentos.html (botão "Editar" no card leva pra lá) ---------- */
+  function atualizarStatusFormas() {
+    const el = qs("#js-ob-status-formas");
+    if (!el) return;
+    const nomes = obterFormasPagamento().filter((f) => f.ativo).map((f) => f.nome);
+    if (nomes.length === 0) { el.textContent = "Nenhuma cadastrada ainda"; return; }
+    const texto = nomes.length === 1 ? nomes[0] : `${nomes.slice(0, -1).join(", ")} e ${nomes[nomes.length - 1]}`;
+    el.textContent = `Já cadastradas: ${texto}`;
   }
-
-  function montarChipForma(forma) {
-    const chip = document.createElement("span");
-    chip.className = "chip";
-    chip.dataset.formaId = forma.id;
-    chip.textContent = textoChipForma(forma);
-    chip.addEventListener("click", () => abrirEdicaoFormaOb(forma.id));
-    return chip;
-  }
-
-  /* Renderiza só na carga da página (lista vazia -> 4 chips). Depois de
-     editar, atualiza só o chip da forma editada (ver salvar abaixo) em vez
-     de destruir e recriar os 4 -- limpar+reconstruir com innerHTML=""
-     deixava os chips com opacity computado 1 mas invisíveis na tela
-     (a entrada CSS deles depende de animation, que não se comporta bem
-     quando a lista inteira é substituída de uma vez; atualizar só o texto
-     do chip existente evita o problema de raiz). */
-  function renderizarFormasOb() {
-    const container = qs("#js-ob-lista-formas");
-    container.innerHTML = "";
-    obterFormasPagamento().filter((f) => f.ativo).forEach((f) => container.appendChild(montarChipForma(f)));
-  }
-
-  function abrirEdicaoFormaOb(id) {
-    const forma = obterFormasPagamento().find((f) => f.id === id);
-    if (!forma) return;
-    formaEditandoIdOb = id;
-    qs("#js-ob-forma-nome").value = forma.nome;
-    qs("#js-ob-forma-taxa").value = forma.taxaPercentual != null ? String(forma.taxaPercentual).replace(".", ",") : "";
-    qsa("#js-ob-forma-tipo .chip").forEach((c) => c.classList.toggle("chip--ativo", c.dataset.tipo === forma.tipo));
-    abrirModal("modal-ob-editar-forma");
-  }
-
-  qs("#js-ob-forma-salvar").addEventListener("click", () => {
-    const nome = qs("#js-ob-forma-nome").value.trim();
-    if (!nome || !formaEditandoIdOb) return;
-    const lista = obterFormasPagamento();
-    const forma = lista.find((f) => f.id === formaEditandoIdOb);
-    if (!forma) return;
-    forma.nome = nome;
-    const tipoAtivo = qs("#js-ob-forma-tipo .chip--ativo");
-    if (tipoAtivo) forma.tipo = tipoAtivo.dataset.tipo;
-    const taxaTexto = qs("#js-ob-forma-taxa").value.replace(",", ".").replace("%", "").trim();
-    const taxaNumero = parseFloat(taxaTexto);
-    forma.taxaPercentual = isNaN(taxaNumero) ? null : taxaNumero;
-    salvarFormasPagamento(lista);
-    fecharModal("modal-ob-editar-forma");
-    mostrarSucesso();
-    const chip = qs(`#js-ob-lista-formas .chip[data-forma-id="${forma.id}"]`);
-    if (chip) chip.textContent = textoChipForma(forma);
-  });
 
   popularSelectsHorario();
   carregarValoresIniciais();
   atualizarMockup();
   garantirFormasPagamentoPadrao();
-  renderizarFormasOb();
+  atualizarStatusFormas();
   popularCadastrosExistentes();
 
   /* ---------- Retomar num passo específico (?passo=N) — usado ao voltar

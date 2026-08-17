@@ -3,16 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <link rel="manifest" href="manifest.json?v=20260817n" />
-  <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg?v=20260817n" />
-  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png?v=20260817n" />
+  <link rel="manifest" href="manifest.json?v=20260817o" />
+  <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg?v=20260817o" />
+  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png?v=20260817o" />
   <meta name="theme-color" content="#0B0B10" />
   <title>Configuração inicial — Swipo Agenda</title>
-  <link rel="stylesheet" href="css/tokens.css?v=20260817n" />
-  <link rel="stylesheet" href="css/base.css?v=20260817n" />
-  <link rel="stylesheet" href="css/layout.css?v=20260817n" />
-  <link rel="stylesheet" href="css/components.css?v=20260817n" />
-  <link rel="stylesheet" href="css/onboarding.css?v=20260817n" />
+  <link rel="stylesheet" href="css/tokens.css?v=20260817o" />
+  <link rel="stylesheet" href="css/base.css?v=20260817o" />
+  <link rel="stylesheet" href="css/layout.css?v=20260817o" />
+  <link rel="stylesheet" href="css/components.css?v=20260817o" />
+  <link rel="stylesheet" href="css/onboarding.css?v=20260817o" />
 </head>
 <body data-page="onboarding">
   <div class="app">
@@ -46,8 +46,8 @@
 
         <div class="onboarding-conteudo onboarding-conteudo--central">
           <div class="onboarding-marca">
-            <img class="tema-so-escuro" src="assets/logos/swipo-lockup-dark.png?v=20260817n" alt="Swipo Agenda" />
-            <img class="tema-so-claro" src="assets/logos/swipo-lockup-light.png?v=20260817n" alt="Swipo Agenda" />
+            <img class="tema-so-escuro" src="assets/logos/swipo-lockup-dark.png?v=20260817o" alt="Swipo Agenda" />
+            <img class="tema-so-claro" src="assets/logos/swipo-lockup-light.png?v=20260817o" alt="Swipo Agenda" />
           </div>
 
           <div class="intro-cascata">
@@ -211,9 +211,13 @@
           <div class="card cadastro-card">
             <div class="cadastro-card__topo">
               <div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg></div>
-              <div class="cadastro-card__corpo"><p style="font-weight:700;">Formas de pagamento</p><p class="text-secondary" style="font-size:var(--text-sm);">Que você aceita</p></div>
+              <div class="cadastro-card__corpo">
+                <p style="font-weight:700;">Formas de pagamento</p>
+                <p class="text-secondary" style="font-size:var(--text-sm);">Você poderá editar depois se quiser</p>
+                <p class="cadastro-card__contador" id="js-ob-status-formas"></p>
+              </div>
+              <a href="pagamentos.html?voltarOnboarding=4" class="btn btn--ghost btn--sm">Editar</a>
             </div>
-            <div class="cadastro-card__lista" id="js-ob-lista-formas"></div>
           </div>
 
           <div class="card cadastro-card">
@@ -310,28 +314,11 @@
     </div>
   </div>
 
-  <!-- Editar forma de pagamento — markup duplicado de pagamentos.html, só
-       edição das 4 formas padrão (sem cadastrar nova nem excluir aqui). -->
-  <div class="modal-overlay is-hidden" id="modal-ob-editar-forma">
-    <div class="modal-sheet">
-      <div class="modal-sheet__header"><p class="modal-sheet__title">Editar forma de pagamento</p><button class="modal-close">✕</button></div>
-      <div class="field"><label class="field__label">Nome</label><input class="input" id="js-ob-forma-nome"/></div>
-      <div class="field">
-        <label class="field__label">Tipo</label>
-        <div class="chip-group" data-chips="single" id="js-ob-forma-tipo">
-          <span class="chip" data-tipo="dinheiro">Dinheiro</span><span class="chip" data-tipo="pix">Pix</span><span class="chip" data-tipo="credito">Crédito</span><span class="chip" data-tipo="debito">Débito</span><span class="chip" data-tipo="outras">Outras</span>
-        </div>
-      </div>
-      <div class="field"><label class="field__label">Taxa opcional</label><input class="input" id="js-ob-forma-taxa" placeholder="Ex.: 2,99"/></div>
-      <div class="btn-row"><button class="btn btn--secondary" data-fechar-modal>Cancelar</button><button class="btn btn--primary" id="js-ob-forma-salvar">Salvar</button></div>
-    </div>
-  </div>
-
-  <script src="js/utils.js?v=20260817n"></script>
-  <script src="js/storage.js?v=20260817n"></script>
-  <script src="js/tema.js?v=20260817n"></script>
-  <script src="js/chips.js?v=20260817n"></script>
-  <script src="js/modal.js?v=20260817n"></script>
-  <script src="js/onboarding.js?v=20260817n"></script>
+  <script src="js/utils.js?v=20260817o"></script>
+  <script src="js/storage.js?v=20260817o"></script>
+  <script src="js/tema.js?v=20260817o"></script>
+  <script src="js/chips.js?v=20260817o"></script>
+  <script src="js/modal.js?v=20260817o"></script>
+  <script src="js/onboarding.js?v=20260817o"></script>
 </body>
 </html>
