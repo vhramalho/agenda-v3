@@ -35,7 +35,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const whatsapp = obterWhatsapp();
     qs("#js-ob-profissional").value = config.nomeProfissional || "";
     qs("#js-ob-whatsapp").value = whatsapp.numero || "";
-    qs("#js-ob-endereco").value = config.endereco || "";
     qs("#js-ob-hora-inicio").value = config.horaInicio || "08:00";
     qs("#js-ob-hora-fim").value = config.horaFim || "20:30";
     definirValorGrade(config.intervaloGrade || 30);
@@ -61,7 +60,6 @@ document.addEventListener("DOMContentLoaded", () => {
   function salvarPasso1() {
     const config = obterConfig();
     config.nomeProfissional = qs("#js-ob-profissional").value.trim();
-    config.endereco = qs("#js-ob-endereco").value.trim();
     salvarConfig(config);
     const whatsapp = obterWhatsapp();
     whatsapp.numero = qs("#js-ob-whatsapp").value.trim();
