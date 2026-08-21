@@ -1,0 +1,1309 @@
+{
+    "geradoEm":  "2026-07-21T12:00:00.000Z",
+    "dados":  {
+                  "config":  {
+                                 "tema":  "escuro",
+                                 "corPrincipal":  "roxo",
+                                 "horaInicio":  "08:00",
+                                 "horaFim":  "20:00",
+                                 "intervaloGrade":  30,
+                                 "tempoPadraoAtendimento":  60,
+                                 "assinaturaStatus":  "gratuito",
+                                 "semRetornarBucketsInsight":  [
+                                                                   20,
+                                                                   30,
+                                                                   45
+                                                               ],
+                                 "nomeEstabelecimento":  "Espaço Unhas \u0026 Cia",
+                                 "nomeProfissional":  "Fernanda Lopes",
+                                 "endereco":  "Rua Santo Antônio, 88 - São Mateus, Juiz de Fora - MG",
+                                 "linkMapa":  "https://maps.google.com/?q=Rua+Santo+Antonio+88+Juiz+de+Fora"
+                             },
+                  "clientes":  [
+                                   {
+                                       "id":  "cli_01",
+                                       "nome":  "Ana Paula Souza",
+                                       "telefone":  "(32) 99111-1101",
+                                       "aniversarioDia":  15,
+                                       "aniversarioMes":  3,
+                                       "aniversarioAno":  null,
+                                       "observacao":  "",
+                                       "criadoEm":  "2026-06-16",
+                                       "atualizadoEm":  "2026-06-16",
+                                       "ativo":  true
+                                   },
+                                   {
+                                       "id":  "cli_02",
+                                       "nome":  "Camila Ferreira",
+                                       "telefone":  "(32) 99111-1102",
+                                       "aniversarioDia":  22,
+                                       "aniversarioMes":  8,
+                                       "aniversarioAno":  null,
+                                       "observacao":  "",
+                                       "criadoEm":  "2026-06-11",
+                                       "atualizadoEm":  "2026-06-11",
+                                       "ativo":  true
+                                   },
+                                   {
+                                       "id":  "cli_03",
+                                       "nome":  "Juliana Rocha",
+                                       "telefone":  "(32) 99111-1103",
+                                       "aniversarioDia":  null,
+                                       "aniversarioMes":  null,
+                                       "aniversarioAno":  null,
+                                       "observacao":  "",
+                                       "criadoEm":  "2026-06-06",
+                                       "atualizadoEm":  "2026-06-06",
+                                       "ativo":  true
+                                   },
+                                   {
+                                       "id":  "cli_04",
+                                       "nome":  "Mariana Alves",
+                                       "telefone":  "(32) 99111-1104",
+                                       "aniversarioDia":  9,
+                                       "aniversarioMes":  5,
+                                       "aniversarioAno":  null,
+                                       "observacao":  "",
+                                       "criadoEm":  "2026-06-01",
+                                       "atualizadoEm":  "2026-06-01",
+                                       "ativo":  true
+                                   },
+                                   {
+                                       "id":  "cli_05",
+                                       "nome":  "Beatriz Lima",
+                                       "telefone":  "(32) 99111-1105",
+                                       "aniversarioDia":  1,
+                                       "aniversarioMes":  11,
+                                       "aniversarioAno":  null,
+                                       "observacao":  "",
+                                       "criadoEm":  "2026-05-27",
+                                       "atualizadoEm":  "2026-05-27",
+                                       "ativo":  true
+                                   },
+                                   {
+                                       "id":  "cli_06",
+                                       "nome":  "Larissa Martins",
+                                       "telefone":  "(32) 99111-1106",
+                                       "aniversarioDia":  null,
+                                       "aniversarioMes":  7,
+                                       "aniversarioAno":  null,
+                                       "observacao":  "",
+                                       "criadoEm":  "2026-05-22",
+                                       "atualizadoEm":  "2026-05-22",
+                                       "ativo":  true
+                                   },
+                                   {
+                                       "id":  "cli_07",
+                                       "nome":  "Fernanda Costa",
+                                       "telefone":  "(32) 99111-1107",
+                                       "aniversarioDia":  30,
+                                       "aniversarioMes":  1,
+                                       "aniversarioAno":  null,
+                                       "observacao":  "",
+                                       "criadoEm":  "2026-05-17",
+                                       "atualizadoEm":  "2026-05-17",
+                                       "ativo":  true
+                                   },
+                                   {
+                                       "id":  "cli_08",
+                                       "nome":  "Patrícia Gomes",
+                                       "telefone":  "(32) 99111-1108",
+                                       "aniversarioDia":  17,
+                                       "aniversarioMes":  9,
+                                       "aniversarioAno":  null,
+                                       "observacao":  "",
+                                       "criadoEm":  "2026-05-12",
+                                       "atualizadoEm":  "2026-05-12",
+                                       "ativo":  true
+                                   },
+                                   {
+                                       "id":  "cli_09",
+                                       "nome":  "Débora Ribeiro",
+                                       "telefone":  "(32) 99111-1109",
+                                       "aniversarioDia":  null,
+                                       "aniversarioMes":  null,
+                                       "aniversarioAno":  null,
+                                       "observacao":  "",
+                                       "criadoEm":  "2026-05-07",
+                                       "atualizadoEm":  "2026-05-07",
+                                       "ativo":  true
+                                   },
+                                   {
+                                       "id":  "cli_10",
+                                       "nome":  "Vanessa Oliveira",
+                                       "telefone":  "(32) 99111-1110",
+                                       "aniversarioDia":  4,
+                                       "aniversarioMes":  6,
+                                       "aniversarioAno":  null,
+                                       "observacao":  "",
+                                       "criadoEm":  "2026-05-02",
+                                       "atualizadoEm":  "2026-05-02",
+                                       "ativo":  true
+                                   },
+                                   {
+                                       "id":  "cli_11",
+                                       "nome":  "Renata Cardoso",
+                                       "telefone":  "(32) 99111-1111",
+                                       "aniversarioDia":  28,
+                                       "aniversarioMes":  2,
+                                       "aniversarioAno":  null,
+                                       "observacao":  "",
+                                       "criadoEm":  "2026-04-27",
+                                       "atualizadoEm":  "2026-04-27",
+                                       "ativo":  true
+                                   },
+                                   {
+                                       "id":  "cli_12",
+                                       "nome":  "Priscila Nunes",
+                                       "telefone":  "(32) 99111-1112",
+                                       "aniversarioDia":  null,
+                                       "aniversarioMes":  4,
+                                       "aniversarioAno":  null,
+                                       "observacao":  "",
+                                       "criadoEm":  "2026-04-22",
+                                       "atualizadoEm":  "2026-04-22",
+                                       "ativo":  true
+                                   },
+                                   {
+                                       "id":  "cli_13",
+                                       "nome":  "Bianca Teixeira",
+                                       "telefone":  "(32) 99111-1113",
+                                       "aniversarioDia":  13,
+                                       "aniversarioMes":  12,
+                                       "aniversarioAno":  null,
+                                       "observacao":  "",
+                                       "criadoEm":  "2026-04-17",
+                                       "atualizadoEm":  "2026-04-17",
+                                       "ativo":  true
+                                   },
+                                   {
+                                       "id":  "cli_14",
+                                       "nome":  "Gabriela Moreira",
+                                       "telefone":  "(32) 99111-1114",
+                                       "aniversarioDia":  21,
+                                       "aniversarioMes":  10,
+                                       "aniversarioAno":  null,
+                                       "observacao":  "",
+                                       "criadoEm":  "2026-04-12",
+                                       "atualizadoEm":  "2026-04-12",
+                                       "ativo":  true
+                                   }
+                               ],
+                  "clientesLixeira":  [
+                                          {
+                                              "id":  "cli_lix_01",
+                                              "nome":  "Sônia Aparecida",
+                                              "telefone":  "(32) 99000-3333",
+                                              "aniversarioDia":  null,
+                                              "aniversarioMes":  null,
+                                              "aniversarioAno":  null,
+                                              "observacao":  "",
+                                              "criadoEm":  "2025-09-24",
+                                              "atualizadoEm":  "2026-07-01",
+                                              "ativo":  false,
+                                              "movidoParaLixeiraEm":  "2026-07-01"
+                                          },
+                                          {
+                                              "id":  "cli_lix_02",
+                                              "nome":  "Kátia Regina",
+                                              "telefone":  "(32) 99000-4444",
+                                              "aniversarioDia":  6,
+                                              "aniversarioMes":  3,
+                                              "aniversarioAno":  null,
+                                              "observacao":  "",
+                                              "criadoEm":  "2025-09-24",
+                                              "atualizadoEm":  "2026-07-01",
+                                              "ativo":  false,
+                                              "movidoParaLixeiraEm":  "2026-07-01"
+                                          }
+                                      ],
+                  "servicos":  [
+                                   {
+                                       "id":  "srv_01",
+                                       "nome":  "Manicure simples",
+                                       "valorOpcional":  25,
+                                       "ativo":  true,
+                                       "criadoEm":  "2026-01-22",
+                                       "atualizadoEm":  "2026-01-22"
+                                   },
+                                   {
+                                       "id":  "srv_02",
+                                       "nome":  "Pedicure simples",
+                                       "valorOpcional":  30,
+                                       "ativo":  true,
+                                       "criadoEm":  "2026-01-22",
+                                       "atualizadoEm":  "2026-01-22"
+                                   },
+                                   {
+                                       "id":  "srv_03",
+                                       "nome":  "Manicure + Pedicure",
+                                       "valorOpcional":  50,
+                                       "ativo":  true,
+                                       "criadoEm":  "2026-01-22",
+                                       "atualizadoEm":  "2026-01-22"
+                                   },
+                                   {
+                                       "id":  "srv_04",
+                                       "nome":  "Esmaltação em gel",
+                                       "valorOpcional":  45,
+                                       "ativo":  true,
+                                       "criadoEm":  "2026-01-22",
+                                       "atualizadoEm":  "2026-01-22"
+                                   },
+                                   {
+                                       "id":  "srv_05",
+                                       "nome":  "Alongamento em gel",
+                                       "valorOpcional":  90,
+                                       "ativo":  true,
+                                       "criadoEm":  "2026-01-22",
+                                       "atualizadoEm":  "2026-01-22"
+                                   },
+                                   {
+                                       "id":  "srv_06",
+                                       "nome":  "Nail art",
+                                       "valorOpcional":  15,
+                                       "ativo":  true,
+                                       "criadoEm":  "2026-01-22",
+                                       "atualizadoEm":  "2026-01-22"
+                                   },
+                                   {
+                                       "id":  "srv_07",
+                                       "nome":  "Remoção de gel",
+                                       "valorOpcional":  20,
+                                       "ativo":  true,
+                                       "criadoEm":  "2026-01-22",
+                                       "atualizadoEm":  "2026-01-22"
+                                   }
+                               ],
+                  "formasPagamento":  [
+                                          {
+                                              "id":  "pgto_pix",
+                                              "nome":  "Pix",
+                                              "tipo":  "pix",
+                                              "taxaPercentual":  null,
+                                              "ativo":  true
+                                          },
+                                          {
+                                              "id":  "pgto_dinheiro",
+                                              "nome":  "Dinheiro",
+                                              "tipo":  "dinheiro",
+                                              "taxaPercentual":  null,
+                                              "ativo":  true
+                                          },
+                                          {
+                                              "id":  "pgto_credito",
+                                              "nome":  "Crédito",
+                                              "tipo":  "credito",
+                                              "taxaPercentual":  3.5,
+                                              "ativo":  true
+                                          },
+                                          {
+                                              "id":  "pgto_debito",
+                                              "nome":  "Débito",
+                                              "tipo":  "debito",
+                                              "taxaPercentual":  1.8,
+                                              "ativo":  true
+                                          },
+                                          {
+                                              "id":  "pgto_outras",
+                                              "nome":  "Outras",
+                                              "tipo":  "outras",
+                                              "taxaPercentual":  null,
+                                              "ativo":  true
+                                          }
+                                      ],
+                  "agendamentos":  [
+                                       {
+                                           "id":  "agd_01",
+                                           "data":  "2026-07-14",
+                                           "hora":  "09:00",
+                                           "clienteId":  "cli_01",
+                                           "nomeCliente":  "Ana Paula Souza",
+                                           "servicosIds":  [
+                                                               "srv_01",
+                                                               "srv_02"
+                                                           ],
+                                           "observacao":  "",
+                                           "duracaoMinutos":  90,
+                                           "realizadoEm":  "2026-07-14T09:00:00.000Z",
+                                           "valorTotal":  55,
+                                           "status":  "realizado_pago",
+                                           "pago":  true,
+                                           "pagamentos":  [
+                                                              {
+                                                                  "formaPagamentoId":  "pgto_pix",
+                                                                  "valor":  55
+                                                              }
+                                                          ],
+                                           "vendaId":  "venda_01"
+                                       },
+                                       {
+                                           "id":  "agd_02",
+                                           "data":  "2026-07-14",
+                                           "hora":  "10:00",
+                                           "clienteId":  "cli_02",
+                                           "nomeCliente":  "Camila Ferreira",
+                                           "servicosIds":  [
+                                                               "srv_02"
+                                                           ],
+                                           "observacao":  "",
+                                           "duracaoMinutos":  60,
+                                           "realizadoEm":  "2026-07-14T10:00:00.000Z",
+                                           "valorTotal":  30,
+                                           "status":  "realizado_pago",
+                                           "pago":  true,
+                                           "pagamentos":  [
+                                                              {
+                                                                  "formaPagamentoId":  "pgto_dinheiro",
+                                                                  "valor":  30
+                                                              }
+                                                          ]
+                                       },
+                                       {
+                                           "id":  "agd_03",
+                                           "data":  "2026-07-14",
+                                           "hora":  "11:00",
+                                           "clienteId":  "cli_03",
+                                           "nomeCliente":  "Juliana Rocha",
+                                           "servicosIds":  [
+                                                               "srv_03"
+                                                           ],
+                                           "observacao":  "",
+                                           "duracaoMinutos":  60,
+                                           "realizadoEm":  "2026-07-14T11:00:00.000Z",
+                                           "valorTotal":  50,
+                                           "status":  "realizado_pago",
+                                           "pago":  true,
+                                           "pagamentos":  [
+                                                              {
+                                                                  "formaPagamentoId":  "pgto_credito",
+                                                                  "valor":  50
+                                                              }
+                                                          ],
+                                           "foiPendente":  true,
+                                           "pagoEm":  "2026-07-14T12:00:00.000Z"
+                                       },
+                                       {
+                                           "id":  "agd_04",
+                                           "data":  "2026-07-15",
+                                           "hora":  "09:00",
+                                           "clienteId":  "cli_04",
+                                           "nomeCliente":  "Mariana Alves",
+                                           "servicosIds":  [
+                                                               "srv_04"
+                                                           ],
+                                           "observacao":  "",
+                                           "duracaoMinutos":  60,
+                                           "realizadoEm":  "2026-07-15T09:00:00.000Z",
+                                           "valorTotal":  45,
+                                           "status":  "realizado_pendente",
+                                           "pago":  false,
+                                           "valorPendente":  45
+                                       },
+                                       {
+                                           "id":  "agd_05",
+                                           "data":  "2026-07-15",
+                                           "hora":  "10:00",
+                                           "clienteId":  "cli_05",
+                                           "nomeCliente":  "Beatriz Lima",
+                                           "servicosIds":  [
+                                                               "srv_05"
+                                                           ],
+                                           "observacao":  "",
+                                           "duracaoMinutos":  60,
+                                           "realizadoEm":  "2026-07-15T10:00:00.000Z",
+                                           "valorTotal":  90,
+                                           "status":  "realizado_pago",
+                                           "pago":  true,
+                                           "pagamentos":  [
+                                                              {
+                                                                  "formaPagamentoId":  "pgto_pix",
+                                                                  "valor":  90
+                                                              }
+                                                          ]
+                                       },
+                                       {
+                                           "id":  "agd_06",
+                                           "data":  "2026-07-15",
+                                           "hora":  "11:00",
+                                           "clienteId":  "cli_06",
+                                           "nomeCliente":  "Larissa Martins",
+                                           "servicosIds":  [
+                                                               "srv_06",
+                                                               "srv_07"
+                                                           ],
+                                           "observacao":  "",
+                                           "duracaoMinutos":  90,
+                                           "realizadoEm":  "2026-07-15T11:00:00.000Z",
+                                           "valorTotal":  35,
+                                           "status":  "realizado_pago",
+                                           "pago":  true,
+                                           "pagamentos":  [
+                                                              {
+                                                                  "formaPagamentoId":  "pgto_credito",
+                                                                  "valor":  35
+                                                              }
+                                                          ]
+                                       },
+                                       {
+                                           "id":  "agd_07",
+                                           "data":  "2026-07-16",
+                                           "hora":  "09:00",
+                                           "clienteId":  "cli_07",
+                                           "nomeCliente":  "Fernanda Costa",
+                                           "servicosIds":  [
+                                                               "srv_07"
+                                                           ],
+                                           "observacao":  "",
+                                           "duracaoMinutos":  60,
+                                           "realizadoEm":  "2026-07-16T09:00:00.000Z",
+                                           "valorTotal":  20,
+                                           "status":  "realizado_pago",
+                                           "pago":  true,
+                                           "pagamentos":  [
+                                                              {
+                                                                  "formaPagamentoId":  "pgto_pix",
+                                                                  "valor":  20
+                                                              }
+                                                          ],
+                                           "vendaId":  "venda_02"
+                                       },
+                                       {
+                                           "id":  "agd_08",
+                                           "data":  "2026-07-16",
+                                           "hora":  "10:00",
+                                           "clienteId":  "cli_08",
+                                           "nomeCliente":  "Patrícia Gomes",
+                                           "servicosIds":  [
+                                                               "srv_01"
+                                                           ],
+                                           "observacao":  "",
+                                           "duracaoMinutos":  60,
+                                           "realizadoEm":  "2026-07-16T10:00:00.000Z",
+                                           "valorTotal":  25,
+                                           "status":  "realizado_pendente",
+                                           "pago":  false,
+                                           "valorPendente":  25
+                                       },
+                                       {
+                                           "id":  "agd_09",
+                                           "data":  "2026-07-16",
+                                           "hora":  "11:00",
+                                           "clienteId":  "cli_09",
+                                           "nomeCliente":  "Débora Ribeiro",
+                                           "servicosIds":  [
+                                                               "srv_02"
+                                                           ],
+                                           "observacao":  "",
+                                           "duracaoMinutos":  60,
+                                           "realizadoEm":  "2026-07-16T11:00:00.000Z",
+                                           "valorTotal":  30,
+                                           "status":  "realizado_pago",
+                                           "pago":  true,
+                                           "pagamentos":  [
+                                                              {
+                                                                  "formaPagamentoId":  "pgto_credito",
+                                                                  "valor":  30
+                                                              }
+                                                          ]
+                                       },
+                                       {
+                                           "id":  "agd_10",
+                                           "data":  "2026-07-17",
+                                           "hora":  "09:00",
+                                           "clienteId":  "cli_10",
+                                           "nomeCliente":  "Vanessa Oliveira",
+                                           "servicosIds":  [
+                                                               "srv_03"
+                                                           ],
+                                           "observacao":  "",
+                                           "duracaoMinutos":  60,
+                                           "realizadoEm":  "2026-07-17T09:00:00.000Z",
+                                           "valorTotal":  50,
+                                           "status":  "realizado_pago",
+                                           "pago":  true,
+                                           "pagamentos":  [
+                                                              {
+                                                                  "formaPagamentoId":  "pgto_debito",
+                                                                  "valor":  50
+                                                              }
+                                                          ]
+                                       },
+                                       {
+                                           "id":  "agd_11",
+                                           "data":  "2026-07-17",
+                                           "hora":  "10:00",
+                                           "clienteId":  "cli_11",
+                                           "nomeCliente":  "Renata Cardoso",
+                                           "servicosIds":  [
+                                                               "srv_04",
+                                                               "srv_05"
+                                                           ],
+                                           "observacao":  "",
+                                           "duracaoMinutos":  90,
+                                           "realizadoEm":  "2026-07-17T10:00:00.000Z",
+                                           "valorTotal":  135,
+                                           "status":  "realizado_pago",
+                                           "pago":  true,
+                                           "pagamentos":  [
+                                                              {
+                                                                  "formaPagamentoId":  "pgto_pix",
+                                                                  "valor":  135
+                                                              }
+                                                          ]
+                                       },
+                                       {
+                                           "id":  "agd_12",
+                                           "data":  "2026-07-17",
+                                           "hora":  "11:00",
+                                           "clienteId":  "cli_12",
+                                           "nomeCliente":  "Priscila Nunes",
+                                           "servicosIds":  [
+                                                               "srv_05"
+                                                           ],
+                                           "observacao":  "",
+                                           "duracaoMinutos":  60,
+                                           "realizadoEm":  "2026-07-17T11:00:00.000Z",
+                                           "valorTotal":  90,
+                                           "status":  "realizado_pendente",
+                                           "pago":  false,
+                                           "valorPendente":  90
+                                       },
+                                       {
+                                           "id":  "agd_13",
+                                           "data":  "2026-07-18",
+                                           "hora":  "09:00",
+                                           "clienteId":  "cli_13",
+                                           "nomeCliente":  "Bianca Teixeira",
+                                           "servicosIds":  [
+                                                               "srv_06"
+                                                           ],
+                                           "observacao":  "",
+                                           "duracaoMinutos":  60,
+                                           "realizadoEm":  "2026-07-18T09:00:00.000Z",
+                                           "valorTotal":  15,
+                                           "status":  "realizado_pago",
+                                           "pago":  true,
+                                           "pagamentos":  [
+                                                              {
+                                                                  "formaPagamentoId":  "pgto_pix",
+                                                                  "valor":  15
+                                                              }
+                                                          ],
+                                           "vendaId":  "venda_03"
+                                       },
+                                       {
+                                           "id":  "agd_14",
+                                           "data":  "2026-07-18",
+                                           "hora":  "10:00",
+                                           "clienteId":  "cli_14",
+                                           "nomeCliente":  "Gabriela Moreira",
+                                           "servicosIds":  [
+                                                               "srv_07"
+                                                           ],
+                                           "observacao":  "",
+                                           "duracaoMinutos":  60,
+                                           "realizadoEm":  "2026-07-18T10:00:00.000Z",
+                                           "valorTotal":  20,
+                                           "status":  "realizado_pago",
+                                           "pago":  true,
+                                           "pagamentos":  [
+                                                              {
+                                                                  "formaPagamentoId":  "pgto_dinheiro",
+                                                                  "valor":  20
+                                                              }
+                                                          ]
+                                       },
+                                       {
+                                           "id":  "agd_15",
+                                           "data":  "2026-07-18",
+                                           "hora":  "11:00",
+                                           "clienteId":  "cli_01",
+                                           "nomeCliente":  "Ana Paula Souza",
+                                           "servicosIds":  [
+                                                               "srv_01"
+                                                           ],
+                                           "observacao":  "",
+                                           "duracaoMinutos":  60,
+                                           "realizadoEm":  "2026-07-18T11:00:00.000Z",
+                                           "valorTotal":  25,
+                                           "status":  "realizado_pago",
+                                           "pago":  true,
+                                           "pagamentos":  [
+                                                              {
+                                                                  "formaPagamentoId":  "pgto_credito",
+                                                                  "valor":  25
+                                                              }
+                                                          ]
+                                       },
+                                       {
+                                           "id":  "agd_16",
+                                           "data":  "2026-07-20",
+                                           "hora":  "09:00",
+                                           "clienteId":  "cli_02",
+                                           "nomeCliente":  "Camila Ferreira",
+                                           "servicosIds":  [
+                                                               "srv_02",
+                                                               "srv_03"
+                                                           ],
+                                           "observacao":  "",
+                                           "duracaoMinutos":  90,
+                                           "realizadoEm":  "2026-07-20T09:00:00.000Z",
+                                           "valorTotal":  80,
+                                           "status":  "realizado_pendente",
+                                           "pago":  false,
+                                           "valorPendente":  80
+                                       },
+                                       {
+                                           "id":  "agd_17",
+                                           "data":  "2026-07-20",
+                                           "hora":  "10:00",
+                                           "clienteId":  "cli_03",
+                                           "nomeCliente":  "Juliana Rocha",
+                                           "servicosIds":  [
+                                                               "srv_03"
+                                                           ],
+                                           "observacao":  "",
+                                           "duracaoMinutos":  60,
+                                           "realizadoEm":  "2026-07-20T10:00:00.000Z",
+                                           "valorTotal":  50,
+                                           "status":  "realizado_pago",
+                                           "pago":  true,
+                                           "pagamentos":  [
+                                                              {
+                                                                  "formaPagamentoId":  "pgto_pix",
+                                                                  "valor":  50
+                                                              }
+                                                          ]
+                                       },
+                                       {
+                                           "id":  "agd_18",
+                                           "data":  "2026-07-20",
+                                           "hora":  "11:00",
+                                           "clienteId":  "cli_04",
+                                           "nomeCliente":  "Mariana Alves",
+                                           "servicosIds":  [
+                                                               "srv_04"
+                                                           ],
+                                           "observacao":  "",
+                                           "duracaoMinutos":  60,
+                                           "realizadoEm":  "2026-07-20T11:00:00.000Z",
+                                           "valorTotal":  45,
+                                           "status":  "realizado_pago",
+                                           "pago":  true,
+                                           "pagamentos":  [
+                                                              {
+                                                                  "formaPagamentoId":  "pgto_credito",
+                                                                  "valor":  45
+                                                              }
+                                                          ]
+                                       },
+                                       {
+                                           "id":  "agd_19",
+                                           "data":  "2026-07-21",
+                                           "hora":  "09:00",
+                                           "clienteId":  "cli_05",
+                                           "nomeCliente":  "Beatriz Lima",
+                                           "servicosIds":  [
+                                                               "srv_05"
+                                                           ],
+                                           "observacao":  "",
+                                           "duracaoMinutos":  60,
+                                           "realizadoEm":  "2026-07-21T09:00:00.000Z",
+                                           "valorTotal":  90,
+                                           "status":  "realizado_pago",
+                                           "pago":  true,
+                                           "pagamentos":  [
+                                                              {
+                                                                  "formaPagamentoId":  "pgto_pix",
+                                                                  "valor":  90
+                                                              }
+                                                          ]
+                                       },
+                                       {
+                                           "id":  "agd_20",
+                                           "data":  "2026-07-21",
+                                           "hora":  "10:00",
+                                           "clienteId":  "cli_06",
+                                           "nomeCliente":  "Larissa Martins",
+                                           "servicosIds":  [
+                                                               "srv_06"
+                                                           ],
+                                           "observacao":  "",
+                                           "duracaoMinutos":  60,
+                                           "realizadoEm":  "2026-07-21T10:00:00.000Z",
+                                           "valorTotal":  15,
+                                           "status":  "realizado_pendente",
+                                           "pago":  false,
+                                           "valorPendente":  15
+                                       },
+                                       {
+                                           "id":  "agd_21",
+                                           "data":  "2026-07-21",
+                                           "hora":  "11:00",
+                                           "clienteId":  "cli_07",
+                                           "nomeCliente":  "Fernanda Costa",
+                                           "servicosIds":  [
+                                                               "srv_07",
+                                                               "srv_01"
+                                                           ],
+                                           "observacao":  "",
+                                           "duracaoMinutos":  90,
+                                           "realizadoEm":  "2026-07-21T11:00:00.000Z",
+                                           "valorTotal":  45,
+                                           "status":  "realizado_pago",
+                                           "pago":  true,
+                                           "pagamentos":  [
+                                                              {
+                                                                  "formaPagamentoId":  "pgto_credito",
+                                                                  "valor":  45
+                                                              }
+                                                          ],
+                                           "foiPendente":  true,
+                                           "pagoEm":  "2026-07-21T12:00:00.000Z"
+                                       },
+                                       {
+                                           "id":  "agd_22",
+                                           "data":  "2026-07-21",
+                                           "hora":  "13:30",
+                                           "clienteId":  "cli_08",
+                                           "nomeCliente":  "Patrícia Gomes",
+                                           "servicosIds":  [
+                                                               "srv_01"
+                                                           ],
+                                           "observacao":  "",
+                                           "duracaoMinutos":  60,
+                                           "status":  "agendado"
+                                       },
+                                       {
+                                           "id":  "agd_23",
+                                           "data":  "2026-07-21",
+                                           "hora":  "14:30",
+                                           "clienteId":  "cli_09",
+                                           "nomeCliente":  "Débora Ribeiro",
+                                           "servicosIds":  [
+                                                               "srv_02"
+                                                           ],
+                                           "observacao":  "",
+                                           "duracaoMinutos":  60,
+                                           "status":  "agendado"
+                                       },
+                                       {
+                                           "id":  "agd_24",
+                                           "data":  "2026-07-21",
+                                           "hora":  "15:30",
+                                           "clienteId":  "cli_10",
+                                           "nomeCliente":  "Vanessa Oliveira",
+                                           "servicosIds":  [
+                                                               "srv_03"
+                                                           ],
+                                           "observacao":  "",
+                                           "duracaoMinutos":  60,
+                                           "status":  "agendado"
+                                       },
+                                       {
+                                           "id":  "agd_25",
+                                           "data":  "2026-07-22",
+                                           "hora":  "10:00",
+                                           "clienteId":  "cli_11",
+                                           "nomeCliente":  "Renata Cardoso",
+                                           "servicosIds":  [
+                                                               "srv_04"
+                                                           ],
+                                           "observacao":  "",
+                                           "duracaoMinutos":  60,
+                                           "status":  "agendado"
+                                       },
+                                       {
+                                           "id":  "agd_26",
+                                           "data":  "2026-07-22",
+                                           "hora":  "11:00",
+                                           "clienteId":  "cli_12",
+                                           "nomeCliente":  "Priscila Nunes",
+                                           "servicosIds":  [
+                                                               "srv_05",
+                                                               "srv_06"
+                                                           ],
+                                           "observacao":  "",
+                                           "duracaoMinutos":  90,
+                                           "status":  "agendado"
+                                       },
+                                       {
+                                           "id":  "agd_27",
+                                           "data":  "2026-07-22",
+                                           "hora":  "13:30",
+                                           "clienteId":  "cli_13",
+                                           "nomeCliente":  "Bianca Teixeira",
+                                           "servicosIds":  [
+                                                               "srv_06"
+                                                           ],
+                                           "observacao":  "",
+                                           "duracaoMinutos":  60,
+                                           "status":  "agendado"
+                                       },
+                                       {
+                                           "id":  "agd_28",
+                                           "data":  "2026-07-23",
+                                           "hora":  "10:00",
+                                           "clienteId":  "cli_14",
+                                           "nomeCliente":  "Gabriela Moreira",
+                                           "servicosIds":  [
+                                                               "srv_07"
+                                                           ],
+                                           "observacao":  "",
+                                           "duracaoMinutos":  60,
+                                           "status":  "agendado"
+                                       },
+                                       {
+                                           "id":  "agd_29",
+                                           "data":  "2026-07-23",
+                                           "hora":  "11:00",
+                                           "clienteId":  "cli_01",
+                                           "nomeCliente":  "Ana Paula Souza",
+                                           "servicosIds":  [
+                                                               "srv_01"
+                                                           ],
+                                           "observacao":  "",
+                                           "duracaoMinutos":  60,
+                                           "status":  "agendado"
+                                       },
+                                       {
+                                           "id":  "agd_30",
+                                           "data":  "2026-07-23",
+                                           "hora":  "13:30",
+                                           "clienteId":  "cli_02",
+                                           "nomeCliente":  "Camila Ferreira",
+                                           "servicosIds":  [
+                                                               "srv_02"
+                                                           ],
+                                           "observacao":  "",
+                                           "duracaoMinutos":  60,
+                                           "status":  "agendado"
+                                       },
+                                       {
+                                           "id":  "agd_31",
+                                           "data":  "2026-07-24",
+                                           "hora":  "10:00",
+                                           "clienteId":  "cli_03",
+                                           "nomeCliente":  "Juliana Rocha",
+                                           "servicosIds":  [
+                                                               "srv_03",
+                                                               "srv_04"
+                                                           ],
+                                           "observacao":  "",
+                                           "duracaoMinutos":  90,
+                                           "status":  "agendado"
+                                       },
+                                       {
+                                           "id":  "agd_32",
+                                           "data":  "2026-07-24",
+                                           "hora":  "11:00",
+                                           "clienteId":  "cli_04",
+                                           "nomeCliente":  "Mariana Alves",
+                                           "servicosIds":  [
+                                                               "srv_04"
+                                                           ],
+                                           "observacao":  "",
+                                           "duracaoMinutos":  60,
+                                           "status":  "agendado"
+                                       },
+                                       {
+                                           "id":  "agd_33",
+                                           "data":  "2026-07-24",
+                                           "hora":  "13:30",
+                                           "clienteId":  null,
+                                           "nomeCliente":  "",
+                                           "servicosIds":  [
+
+                                                           ],
+                                           "observacao":  "",
+                                           "status":  "bloqueado",
+                                           "nomeBloqueio":  "Compromisso pessoal"
+                                       },
+                                       {
+                                           "id":  "agd_34",
+                                           "data":  "2026-07-25",
+                                           "hora":  "10:00",
+                                           "clienteId":  "cli_06",
+                                           "nomeCliente":  "Larissa Martins",
+                                           "servicosIds":  [
+                                                               "srv_06"
+                                                           ],
+                                           "observacao":  "",
+                                           "duracaoMinutos":  60,
+                                           "status":  "agendado"
+                                       },
+                                       {
+                                           "id":  "agd_35",
+                                           "data":  "2026-07-25",
+                                           "hora":  "11:00",
+                                           "clienteId":  "cli_07",
+                                           "nomeCliente":  "Fernanda Costa",
+                                           "servicosIds":  [
+                                                               "srv_07"
+                                                           ],
+                                           "observacao":  "",
+                                           "duracaoMinutos":  60,
+                                           "status":  "agendado"
+                                       },
+                                       {
+                                           "id":  "agd_36",
+                                           "data":  "2026-07-25",
+                                           "hora":  "13:30",
+                                           "clienteId":  "cli_08",
+                                           "nomeCliente":  "Patrícia Gomes",
+                                           "servicosIds":  [
+                                                               "srv_01",
+                                                               "srv_02"
+                                                           ],
+                                           "observacao":  "",
+                                           "duracaoMinutos":  90,
+                                           "status":  "agendado"
+                                       }
+                                   ],
+                  "bloqueiosFixos":  [
+                                         {
+                                             "id":  "blq_01",
+                                             "nome":  "Almoço",
+                                             "diasSemana":  [
+                                                                "seg",
+                                                                "ter",
+                                                                "qua",
+                                                                "qui",
+                                                                "sex",
+                                                                "sab"
+                                                            ],
+                                             "horariosBloqueados":  [
+                                                                        "12:00",
+                                                                        "12:30"
+                                                                    ],
+                                             "ativo":  true
+                                         }
+                                     ],
+                  "whatsapp":  {
+                                   "numero":  "(32) 99223-4502",
+                                   "mensagemHorarios":  "{saudacao}! Tenho estes horários disponíveis para você:",
+                                   "mensagemLembrete":  "{saudacao}, {nome}! Passando para lembrar do seu horário agendado para {dia} às {hora}.",
+                                   "mensagemAniversario":  "{saudacao}, {nome}! Feliz aniversário! Que seu dia seja incrível e cheio de conquistas!",
+                                   "mensagemEndereco":  "{saudacao}, {nome}! Nosso endereço é: {endereco}. Veja no mapa: {mapa}",
+                                   "mensagemSemRetornar":  "{saudacao}, {nome}! Já faz {dias} dias que você não aparece por aqui. Que tal agendar um horário?"
+                               },
+                  "onboarding":  {
+                                     "concluido":  true
+                                 },
+                  "extensoesGrade":  {
+
+                                     },
+                  "notasDiarias":  [
+                                       {
+                                           "id":  "nota_01",
+                                           "dataIso":  "2026-07-21",
+                                           "texto":  "Separar esmaltes da coleção nova"
+                                       }
+                                   ],
+                  "tarefasDiarias":  [
+                                         {
+                                             "id":  "tar_01",
+                                             "dataIso":  "2026-07-21",
+                                             "texto":  "Comprar lixas descartáveis",
+                                             "feito":  false
+                                         }
+                                     ],
+                  "listasDiarias":  [
+                                        {
+                                            "id":  "lista_01",
+                                            "dataIso":  "2026-07-21",
+                                            "nome":  "Compras",
+                                            "itens":  [
+                                                          {
+                                                              "id":  "item_01",
+                                                              "texto":  "Esmalte vermelho",
+                                                              "feito":  false
+                                                          },
+                                                          {
+                                                              "id":  "item_02",
+                                                              "texto":  "Removedor",
+                                                              "feito":  true
+                                                          }
+                                                      ]
+                                        }
+                                    ],
+                  "produtos":  [
+                                   {
+                                       "id":  "prod_01",
+                                       "nome":  "Esmalte tradicional",
+                                       "precoVenda":  12,
+                                       "precoCusto":  5,
+                                       "estoque":  40,
+                                       "diasParaAvisarParado":  30,
+                                       "ativo":  true,
+                                       "criadoEm":  "2026-02-21",
+                                       "atualizadoEm":  "2026-07-18"
+                                   },
+                                   {
+                                       "id":  "prod_02",
+                                       "nome":  "Base fortalecedora",
+                                       "precoVenda":  18,
+                                       "precoCusto":  8,
+                                       "estoque":  20,
+                                       "diasParaAvisarParado":  30,
+                                       "ativo":  true,
+                                       "criadoEm":  "2026-02-21",
+                                       "atualizadoEm":  "2026-07-18"
+                                   },
+                                   {
+                                       "id":  "prod_03",
+                                       "nome":  "Óleo de cutícula",
+                                       "precoVenda":  15,
+                                       "precoCusto":  6,
+                                       "estoque":  25,
+                                       "diasParaAvisarParado":  15,
+                                       "ativo":  true,
+                                       "criadoEm":  "2026-02-21",
+                                       "atualizadoEm":  "2026-07-18"
+                                   },
+                                   {
+                                       "id":  "prod_04",
+                                       "nome":  "Top coat",
+                                       "precoVenda":  16,
+                                       "precoCusto":  7,
+                                       "estoque":  15,
+                                       "diasParaAvisarParado":  30,
+                                       "ativo":  true,
+                                       "criadoEm":  "2026-02-21",
+                                       "atualizadoEm":  "2026-07-18"
+                                   },
+                                   {
+                                       "id":  "prod_05",
+                                       "nome":  "Removedor de esmalte",
+                                       "precoVenda":  10,
+                                       "precoCusto":  4,
+                                       "estoque":  30,
+                                       "diasParaAvisarParado":  60,
+                                       "ativo":  true,
+                                       "criadoEm":  "2026-02-21",
+                                       "atualizadoEm":  "2026-07-18"
+                                   },
+                                   {
+                                       "id":  "prod_06",
+                                       "nome":  "Lixa profissional",
+                                       "precoVenda":  8,
+                                       "precoCusto":  3,
+                                       "estoque":  0,
+                                       "diasParaAvisarParado":  30,
+                                       "ativo":  true,
+                                       "criadoEm":  "2026-02-21",
+                                       "atualizadoEm":  "2026-07-18"
+                                   }
+                               ],
+                  "vendas":  [
+                                 {
+                                     "id":  "venda_01",
+                                     "clienteId":  "cli_01",
+                                     "nomeCliente":  "Ana Paula Souza",
+                                     "agendamentoId":  "agd_01",
+                                     "itens":  [
+                                                   {
+                                                       "produtoId":  "prod_01",
+                                                       "nomeProduto":  "Esmalte tradicional",
+                                                       "quantidade":  1,
+                                                       "precoUnitario":  12
+                                                   }
+                                               ],
+                                     "subtotal":  12,
+                                     "valorTotal":  12,
+                                     "criadaEm":  "2026-07-14T12:00:00.000Z",
+                                     "status":  "paga",
+                                     "pagamentos":  [
+                                                        {
+                                                            "formaPagamentoId":  "pgto_pix",
+                                                            "valor":  12
+                                                        }
+                                                    ]
+                                 },
+                                 {
+                                     "id":  "venda_02",
+                                     "clienteId":  "cli_07",
+                                     "nomeCliente":  "Fernanda Costa",
+                                     "agendamentoId":  "agd_07",
+                                     "itens":  [
+                                                   {
+                                                       "produtoId":  "prod_02",
+                                                       "nomeProduto":  "Base fortalecedora",
+                                                       "quantidade":  2,
+                                                       "precoUnitario":  18
+                                                   }
+                                               ],
+                                     "subtotal":  36,
+                                     "valorTotal":  36,
+                                     "criadaEm":  "2026-07-16T12:00:00.000Z",
+                                     "status":  "paga",
+                                     "pagamentos":  [
+                                                        {
+                                                            "formaPagamentoId":  "pgto_pix",
+                                                            "valor":  36
+                                                        }
+                                                    ]
+                                 },
+                                 {
+                                     "id":  "venda_03",
+                                     "clienteId":  "cli_13",
+                                     "nomeCliente":  "Bianca Teixeira",
+                                     "agendamentoId":  "agd_13",
+                                     "itens":  [
+                                                   {
+                                                       "produtoId":  "prod_03",
+                                                       "nomeProduto":  "Óleo de cutícula",
+                                                       "quantidade":  1,
+                                                       "precoUnitario":  15
+                                                   }
+                                               ],
+                                     "subtotal":  15,
+                                     "valorTotal":  15,
+                                     "criadaEm":  "2026-07-18T12:00:00.000Z",
+                                     "status":  "paga",
+                                     "pagamentos":  [
+                                                        {
+                                                            "formaPagamentoId":  "pgto_pix",
+                                                            "valor":  15
+                                                        }
+                                                    ]
+                                 },
+                                 {
+                                     "id":  "venda_04",
+                                     "clienteId":  "cli_01",
+                                     "nomeCliente":  "Ana Paula Souza",
+                                     "agendamentoId":  null,
+                                     "itens":  [
+                                                   {
+                                                       "produtoId":  "prod_02",
+                                                       "nomeProduto":  "Base fortalecedora",
+                                                       "quantidade":  1,
+                                                       "precoUnitario":  18
+                                                   }
+                                               ],
+                                     "subtotal":  18,
+                                     "valorTotal":  18,
+                                     "criadaEm":  "2026-07-15T12:00:00.000Z",
+                                     "status":  "paga",
+                                     "pagamentos":  [
+                                                        {
+                                                            "formaPagamentoId":  "pgto_pix",
+                                                            "valor":  18
+                                                        }
+                                                    ]
+                                 },
+                                 {
+                                     "id":  "venda_05",
+                                     "clienteId":  "cli_04",
+                                     "nomeCliente":  "Mariana Alves",
+                                     "agendamentoId":  null,
+                                     "itens":  [
+                                                   {
+                                                       "produtoId":  "prod_03",
+                                                       "nomeProduto":  "Óleo de cutícula",
+                                                       "quantidade":  2,
+                                                       "precoUnitario":  15
+                                                   }
+                                               ],
+                                     "subtotal":  30,
+                                     "valorTotal":  30,
+                                     "criadaEm":  "2026-07-17T12:00:00.000Z",
+                                     "status":  "paga",
+                                     "pagamentos":  [
+                                                        {
+                                                            "formaPagamentoId":  "pgto_dinheiro",
+                                                            "valor":  30
+                                                        }
+                                                    ]
+                                 },
+                                 {
+                                     "id":  "venda_06",
+                                     "clienteId":  null,
+                                     "nomeCliente":  "Avulso",
+                                     "agendamentoId":  null,
+                                     "itens":  [
+                                                   {
+                                                       "produtoId":  "prod_04",
+                                                       "nomeProduto":  "Top coat",
+                                                       "quantidade":  1,
+                                                       "precoUnitario":  16
+                                                   }
+                                               ],
+                                     "subtotal":  16,
+                                     "valorTotal":  16,
+                                     "criadaEm":  "2026-07-19T12:00:00.000Z",
+                                     "status":  "paga",
+                                     "pagamentos":  [
+                                                        {
+                                                            "formaPagamentoId":  "pgto_credito",
+                                                            "valor":  16
+                                                        }
+                                                    ]
+                                 },
+                                 {
+                                     "id":  "venda_07",
+                                     "clienteId":  "cli_10",
+                                     "nomeCliente":  "Vanessa Oliveira",
+                                     "agendamentoId":  null,
+                                     "itens":  [
+                                                   {
+                                                       "produtoId":  "prod_05",
+                                                       "nomeProduto":  "Removedor de esmalte",
+                                                       "quantidade":  2,
+                                                       "precoUnitario":  10
+                                                   }
+                                               ],
+                                     "subtotal":  20,
+                                     "valorTotal":  20,
+                                     "criadaEm":  "2026-07-21T12:00:00.000Z",
+                                     "status":  "pendente",
+                                     "valorPendente":  20
+                                 }
+                             ],
+                  "ajuda":  {
+                                "agenda":  {
+                                               "introVista":  true,
+                                               "dicasVistas":  [
+
+                                                               ]
+                                           },
+                                "vendas":  {
+                                               "introVista":  true,
+                                               "dicasVistas":  [
+
+                                                               ]
+                                           },
+                                "produtos":  {
+                                                 "introVista":  true,
+                                                 "dicasVistas":  [
+
+                                                                 ]
+                                             },
+                                "relatorios":  {
+                                                   "introVista":  true,
+                                                   "dicasVistas":  [
+
+                                                                   ]
+                                               },
+                                "pendentes":  {
+                                                  "introVista":  true,
+                                                  "dicasVistas":  [
+
+                                                                  ]
+                                              },
+                                "clientes":  {
+                                                 "introVista":  true,
+                                                 "dicasVistas":  [
+
+                                                                 ]
+                                             },
+                                "mais":  {
+                                             "introVista":  true,
+                                             "dicasVistas":  [
+
+                                                             ]
+                                         }
+                            }
+              }
+}

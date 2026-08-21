@@ -964,10 +964,6 @@
   width: 100%;
   max-width: 480px;
   max-height: 90vh;
-  /* Sobrescreve a linha acima quando js/modal.js consegue medir a altura
-     real visível (visualViewport) — encolhe o sheet quando o teclado
-     virtual abre, em vez de deixar Salvar/Cancelar escondidos atrás dele. */
-  max-height: calc(var(--viewport-visivel, 100vh) * 0.9);
   overflow-y: auto;
   background: var(--card-elevated);
   border-radius: var(--radius-xl) var(--radius-xl) 0 0;

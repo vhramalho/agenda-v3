@@ -1,0 +1,1266 @@
+{
+    "geradoEm":  "2026-07-21T12:00:00.000Z",
+    "dados":  {
+                  "config":  {
+                                 "tema":  "escuro",
+                                 "corPrincipal":  "roxo",
+                                 "horaInicio":  "08:00",
+                                 "horaFim":  "20:00",
+                                 "intervaloGrade":  30,
+                                 "tempoPadraoAtendimento":  60,
+                                 "assinaturaStatus":  "gratuito",
+                                 "semRetornarBucketsInsight":  [
+                                                                   20,
+                                                                   30,
+                                                                   45
+                                                               ],
+                                 "nomeEstabelecimento":  "Camila Duarte Tattoo",
+                                 "nomeProfissional":  "Camila Duarte",
+                                 "endereco":  "Rua São Sebastião, 410 - Bairro Bom Pastor, Juiz de Fora - MG",
+                                 "linkMapa":  "https://maps.google.com/?q=Rua+Sao+Sebastiao+410+Juiz+de+Fora"
+                             },
+                  "clientes":  [
+                                   {
+                                       "id":  "cli_01",
+                                       "nome":  "Rodrigo Vasconcelos",
+                                       "telefone":  "(32) 99444-4401",
+                                       "aniversarioDia":  13,
+                                       "aniversarioMes":  6,
+                                       "aniversarioAno":  null,
+                                       "observacao":  "",
+                                       "criadoEm":  "2026-06-16",
+                                       "atualizadoEm":  "2026-06-16",
+                                       "ativo":  true
+                                   },
+                                   {
+                                       "id":  "cli_02",
+                                       "nome":  "Mariana Kravitz",
+                                       "telefone":  "(32) 99444-4402",
+                                       "aniversarioDia":  null,
+                                       "aniversarioMes":  null,
+                                       "aniversarioAno":  null,
+                                       "observacao":  "",
+                                       "criadoEm":  "2026-06-11",
+                                       "atualizadoEm":  "2026-06-11",
+                                       "ativo":  true
+                                   },
+                                   {
+                                       "id":  "cli_03",
+                                       "nome":  "Igor Salvatierra",
+                                       "telefone":  "(32) 99444-4403",
+                                       "aniversarioDia":  27,
+                                       "aniversarioMes":  9,
+                                       "aniversarioAno":  null,
+                                       "observacao":  "",
+                                       "criadoEm":  "2026-06-06",
+                                       "atualizadoEm":  "2026-06-06",
+                                       "ativo":  true
+                                   },
+                                   {
+                                       "id":  "cli_04",
+                                       "nome":  "Aline Petronilho",
+                                       "telefone":  "(32) 99444-4404",
+                                       "aniversarioDia":  4,
+                                       "aniversarioMes":  3,
+                                       "aniversarioAno":  null,
+                                       "observacao":  "",
+                                       "criadoEm":  "2026-06-01",
+                                       "atualizadoEm":  "2026-06-01",
+                                       "ativo":  true
+                                   },
+                                   {
+                                       "id":  "cli_05",
+                                       "nome":  "Diego Wendel",
+                                       "telefone":  "(32) 99444-4405",
+                                       "aniversarioDia":  null,
+                                       "aniversarioMes":  11,
+                                       "aniversarioAno":  null,
+                                       "observacao":  "",
+                                       "criadoEm":  "2026-05-27",
+                                       "atualizadoEm":  "2026-05-27",
+                                       "ativo":  true
+                                   },
+                                   {
+                                       "id":  "cli_06",
+                                       "nome":  "Nathalia Piovezan",
+                                       "telefone":  "(32) 99444-4406",
+                                       "aniversarioDia":  20,
+                                       "aniversarioMes":  5,
+                                       "aniversarioAno":  null,
+                                       "observacao":  "",
+                                       "criadoEm":  "2026-05-22",
+                                       "atualizadoEm":  "2026-05-22",
+                                       "ativo":  true
+                                   },
+                                   {
+                                       "id":  "cli_07",
+                                       "nome":  "Rafael Grimaldi",
+                                       "telefone":  "(32) 99444-4407",
+                                       "aniversarioDia":  1,
+                                       "aniversarioMes":  8,
+                                       "aniversarioAno":  null,
+                                       "observacao":  "",
+                                       "criadoEm":  "2026-05-17",
+                                       "atualizadoEm":  "2026-05-17",
+                                       "ativo":  true
+                                   },
+                                   {
+                                       "id":  "cli_08",
+                                       "nome":  "Juliana Bicalho",
+                                       "telefone":  "(32) 99444-4408",
+                                       "aniversarioDia":  null,
+                                       "aniversarioMes":  null,
+                                       "aniversarioAno":  null,
+                                       "observacao":  "",
+                                       "criadoEm":  "2026-05-12",
+                                       "atualizadoEm":  "2026-05-12",
+                                       "ativo":  true
+                                   },
+                                   {
+                                       "id":  "cli_09",
+                                       "nome":  "Otávio Mendonça",
+                                       "telefone":  "(32) 99444-4409",
+                                       "aniversarioDia":  17,
+                                       "aniversarioMes":  2,
+                                       "aniversarioAno":  null,
+                                       "observacao":  "",
+                                       "criadoEm":  "2026-05-07",
+                                       "atualizadoEm":  "2026-05-07",
+                                       "ativo":  true
+                                   },
+                                   {
+                                       "id":  "cli_10",
+                                       "nome":  "Carla Espinosa",
+                                       "telefone":  "(32) 99444-4410",
+                                       "aniversarioDia":  25,
+                                       "aniversarioMes":  10,
+                                       "aniversarioAno":  null,
+                                       "observacao":  "",
+                                       "criadoEm":  "2026-05-02",
+                                       "atualizadoEm":  "2026-05-02",
+                                       "ativo":  true
+                                   },
+                                   {
+                                       "id":  "cli_11",
+                                       "nome":  "Bruno Cassiano",
+                                       "telefone":  "(32) 99444-4411",
+                                       "aniversarioDia":  null,
+                                       "aniversarioMes":  7,
+                                       "aniversarioAno":  null,
+                                       "observacao":  "",
+                                       "criadoEm":  "2026-04-27",
+                                       "atualizadoEm":  "2026-04-27",
+                                       "ativo":  true
+                                   },
+                                   {
+                                       "id":  "cli_12",
+                                       "nome":  "Vanessa Prado",
+                                       "telefone":  "(32) 99444-4412",
+                                       "aniversarioDia":  9,
+                                       "aniversarioMes":  12,
+                                       "aniversarioAno":  null,
+                                       "observacao":  "",
+                                       "criadoEm":  "2026-04-22",
+                                       "atualizadoEm":  "2026-04-22",
+                                       "ativo":  true
+                                   }
+                               ],
+                  "clientesLixeira":  [
+                                          {
+                                              "id":  "cli_lix_01",
+                                              "nome":  "Fábio Cordeiro",
+                                              "telefone":  "(32) 99000-9999",
+                                              "aniversarioDia":  null,
+                                              "aniversarioMes":  null,
+                                              "aniversarioAno":  null,
+                                              "observacao":  "",
+                                              "criadoEm":  "2025-09-24",
+                                              "atualizadoEm":  "2026-07-01",
+                                              "ativo":  false,
+                                              "movidoParaLixeiraEm":  "2026-07-01"
+                                          },
+                                          {
+                                              "id":  "cli_lix_02",
+                                              "nome":  "Patrícia Vale",
+                                              "telefone":  "(32) 99001-0000",
+                                              "aniversarioDia":  12,
+                                              "aniversarioMes":  4,
+                                              "aniversarioAno":  null,
+                                              "observacao":  "",
+                                              "criadoEm":  "2025-09-24",
+                                              "atualizadoEm":  "2026-07-01",
+                                              "ativo":  false,
+                                              "movidoParaLixeiraEm":  "2026-07-01"
+                                          }
+                                      ],
+                  "servicos":  [
+                                   {
+                                       "id":  "srv_01",
+                                       "nome":  "Tatuagem pequena",
+                                       "valorOpcional":  150,
+                                       "ativo":  true,
+                                       "criadoEm":  "2026-01-22",
+                                       "atualizadoEm":  "2026-01-22"
+                                   },
+                                   {
+                                       "id":  "srv_02",
+                                       "nome":  "Tatuagem média",
+                                       "valorOpcional":  350,
+                                       "ativo":  true,
+                                       "criadoEm":  "2026-01-22",
+                                       "atualizadoEm":  "2026-01-22"
+                                   },
+                                   {
+                                       "id":  "srv_03",
+                                       "nome":  "Tatuagem grande",
+                                       "valorOpcional":  700,
+                                       "ativo":  true,
+                                       "criadoEm":  "2026-01-22",
+                                       "atualizadoEm":  "2026-01-22"
+                                   },
+                                   {
+                                       "id":  "srv_04",
+                                       "nome":  "Sessão de retoque",
+                                       "valorOpcional":  80,
+                                       "ativo":  true,
+                                       "criadoEm":  "2026-01-22",
+                                       "atualizadoEm":  "2026-01-22"
+                                   },
+                                   {
+                                       "id":  "srv_05",
+                                       "nome":  "Cover-up",
+                                       "valorOpcional":  500,
+                                       "ativo":  true,
+                                       "criadoEm":  "2026-01-22",
+                                       "atualizadoEm":  "2026-01-22"
+                                   },
+                                   {
+                                       "id":  "srv_06",
+                                       "nome":  "Consulta e orçamento",
+                                       "valorOpcional":  null,
+                                       "ativo":  true,
+                                       "criadoEm":  "2026-01-22",
+                                       "atualizadoEm":  "2026-01-22"
+                                   }
+                               ],
+                  "formasPagamento":  [
+                                          {
+                                              "id":  "pgto_pix",
+                                              "nome":  "Pix",
+                                              "tipo":  "pix",
+                                              "taxaPercentual":  null,
+                                              "ativo":  true
+                                          },
+                                          {
+                                              "id":  "pgto_dinheiro",
+                                              "nome":  "Dinheiro",
+                                              "tipo":  "dinheiro",
+                                              "taxaPercentual":  null,
+                                              "ativo":  true
+                                          },
+                                          {
+                                              "id":  "pgto_credito",
+                                              "nome":  "Crédito",
+                                              "tipo":  "credito",
+                                              "taxaPercentual":  3.5,
+                                              "ativo":  true
+                                          },
+                                          {
+                                              "id":  "pgto_debito",
+                                              "nome":  "Débito",
+                                              "tipo":  "debito",
+                                              "taxaPercentual":  1.8,
+                                              "ativo":  true
+                                          },
+                                          {
+                                              "id":  "pgto_outras",
+                                              "nome":  "Outras",
+                                              "tipo":  "outras",
+                                              "taxaPercentual":  null,
+                                              "ativo":  true
+                                          }
+                                      ],
+                  "agendamentos":  [
+                                       {
+                                           "id":  "agd_01",
+                                           "data":  "2026-07-14",
+                                           "hora":  "09:00",
+                                           "clienteId":  "cli_01",
+                                           "nomeCliente":  "Rodrigo Vasconcelos",
+                                           "servicosIds":  [
+                                                               "srv_01",
+                                                               "srv_02"
+                                                           ],
+                                           "observacao":  "",
+                                           "duracaoMinutos":  90,
+                                           "realizadoEm":  "2026-07-14T09:00:00.000Z",
+                                           "valorTotal":  500,
+                                           "status":  "realizado_pago",
+                                           "pago":  true,
+                                           "pagamentos":  [
+                                                              {
+                                                                  "formaPagamentoId":  "pgto_pix",
+                                                                  "valor":  500
+                                                              }
+                                                          ],
+                                           "vendaId":  "venda_01"
+                                       },
+                                       {
+                                           "id":  "agd_02",
+                                           "data":  "2026-07-14",
+                                           "hora":  "10:00",
+                                           "clienteId":  "cli_02",
+                                           "nomeCliente":  "Mariana Kravitz",
+                                           "servicosIds":  [
+                                                               "srv_02"
+                                                           ],
+                                           "observacao":  "",
+                                           "duracaoMinutos":  60,
+                                           "realizadoEm":  "2026-07-14T10:00:00.000Z",
+                                           "valorTotal":  350,
+                                           "status":  "realizado_pago",
+                                           "pago":  true,
+                                           "pagamentos":  [
+                                                              {
+                                                                  "formaPagamentoId":  "pgto_dinheiro",
+                                                                  "valor":  350
+                                                              }
+                                                          ]
+                                       },
+                                       {
+                                           "id":  "agd_03",
+                                           "data":  "2026-07-14",
+                                           "hora":  "11:00",
+                                           "clienteId":  "cli_03",
+                                           "nomeCliente":  "Igor Salvatierra",
+                                           "servicosIds":  [
+                                                               "srv_03"
+                                                           ],
+                                           "observacao":  "",
+                                           "duracaoMinutos":  60,
+                                           "realizadoEm":  "2026-07-14T11:00:00.000Z",
+                                           "valorTotal":  700,
+                                           "status":  "realizado_pago",
+                                           "pago":  true,
+                                           "pagamentos":  [
+                                                              {
+                                                                  "formaPagamentoId":  "pgto_credito",
+                                                                  "valor":  700
+                                                              }
+                                                          ],
+                                           "foiPendente":  true,
+                                           "pagoEm":  "2026-07-14T12:00:00.000Z"
+                                       },
+                                       {
+                                           "id":  "agd_04",
+                                           "data":  "2026-07-15",
+                                           "hora":  "09:00",
+                                           "clienteId":  "cli_04",
+                                           "nomeCliente":  "Aline Petronilho",
+                                           "servicosIds":  [
+                                                               "srv_04"
+                                                           ],
+                                           "observacao":  "",
+                                           "duracaoMinutos":  60,
+                                           "realizadoEm":  "2026-07-15T09:00:00.000Z",
+                                           "valorTotal":  80,
+                                           "status":  "realizado_pendente",
+                                           "pago":  false,
+                                           "valorPendente":  80
+                                       },
+                                       {
+                                           "id":  "agd_05",
+                                           "data":  "2026-07-15",
+                                           "hora":  "10:00",
+                                           "clienteId":  "cli_05",
+                                           "nomeCliente":  "Diego Wendel",
+                                           "servicosIds":  [
+                                                               "srv_05"
+                                                           ],
+                                           "observacao":  "",
+                                           "duracaoMinutos":  60,
+                                           "realizadoEm":  "2026-07-15T10:00:00.000Z",
+                                           "valorTotal":  500,
+                                           "status":  "realizado_pago",
+                                           "pago":  true,
+                                           "pagamentos":  [
+                                                              {
+                                                                  "formaPagamentoId":  "pgto_pix",
+                                                                  "valor":  500
+                                                              }
+                                                          ]
+                                       },
+                                       {
+                                           "id":  "agd_06",
+                                           "data":  "2026-07-15",
+                                           "hora":  "11:00",
+                                           "clienteId":  "cli_06",
+                                           "nomeCliente":  "Nathalia Piovezan",
+                                           "servicosIds":  [
+                                                               "srv_06",
+                                                               "srv_01"
+                                                           ],
+                                           "observacao":  "",
+                                           "duracaoMinutos":  90,
+                                           "realizadoEm":  "2026-07-15T11:00:00.000Z",
+                                           "valorTotal":  150,
+                                           "status":  "realizado_pago",
+                                           "pago":  true,
+                                           "pagamentos":  [
+                                                              {
+                                                                  "formaPagamentoId":  "pgto_credito",
+                                                                  "valor":  150
+                                                              }
+                                                          ]
+                                       },
+                                       {
+                                           "id":  "agd_07",
+                                           "data":  "2026-07-16",
+                                           "hora":  "09:00",
+                                           "clienteId":  "cli_07",
+                                           "nomeCliente":  "Rafael Grimaldi",
+                                           "servicosIds":  [
+                                                               "srv_01"
+                                                           ],
+                                           "observacao":  "",
+                                           "duracaoMinutos":  60,
+                                           "realizadoEm":  "2026-07-16T09:00:00.000Z",
+                                           "valorTotal":  150,
+                                           "status":  "realizado_pago",
+                                           "pago":  true,
+                                           "pagamentos":  [
+                                                              {
+                                                                  "formaPagamentoId":  "pgto_pix",
+                                                                  "valor":  150
+                                                              }
+                                                          ],
+                                           "vendaId":  "venda_02"
+                                       },
+                                       {
+                                           "id":  "agd_08",
+                                           "data":  "2026-07-16",
+                                           "hora":  "10:00",
+                                           "clienteId":  "cli_08",
+                                           "nomeCliente":  "Juliana Bicalho",
+                                           "servicosIds":  [
+                                                               "srv_02"
+                                                           ],
+                                           "observacao":  "",
+                                           "duracaoMinutos":  60,
+                                           "realizadoEm":  "2026-07-16T10:00:00.000Z",
+                                           "valorTotal":  350,
+                                           "status":  "realizado_pendente",
+                                           "pago":  false,
+                                           "valorPendente":  350
+                                       },
+                                       {
+                                           "id":  "agd_09",
+                                           "data":  "2026-07-16",
+                                           "hora":  "11:00",
+                                           "clienteId":  "cli_09",
+                                           "nomeCliente":  "Otávio Mendonça",
+                                           "servicosIds":  [
+                                                               "srv_03"
+                                                           ],
+                                           "observacao":  "",
+                                           "duracaoMinutos":  60,
+                                           "realizadoEm":  "2026-07-16T11:00:00.000Z",
+                                           "valorTotal":  700,
+                                           "status":  "realizado_pago",
+                                           "pago":  true,
+                                           "pagamentos":  [
+                                                              {
+                                                                  "formaPagamentoId":  "pgto_credito",
+                                                                  "valor":  700
+                                                              }
+                                                          ]
+                                       },
+                                       {
+                                           "id":  "agd_10",
+                                           "data":  "2026-07-17",
+                                           "hora":  "09:00",
+                                           "clienteId":  "cli_10",
+                                           "nomeCliente":  "Carla Espinosa",
+                                           "servicosIds":  [
+                                                               "srv_04"
+                                                           ],
+                                           "observacao":  "",
+                                           "duracaoMinutos":  60,
+                                           "realizadoEm":  "2026-07-17T09:00:00.000Z",
+                                           "valorTotal":  80,
+                                           "status":  "realizado_pago",
+                                           "pago":  true,
+                                           "pagamentos":  [
+                                                              {
+                                                                  "formaPagamentoId":  "pgto_debito",
+                                                                  "valor":  80
+                                                              }
+                                                          ]
+                                       },
+                                       {
+                                           "id":  "agd_11",
+                                           "data":  "2026-07-17",
+                                           "hora":  "10:00",
+                                           "clienteId":  "cli_11",
+                                           "nomeCliente":  "Bruno Cassiano",
+                                           "servicosIds":  [
+                                                               "srv_05",
+                                                               "srv_06"
+                                                           ],
+                                           "observacao":  "",
+                                           "duracaoMinutos":  90,
+                                           "realizadoEm":  "2026-07-17T10:00:00.000Z",
+                                           "valorTotal":  500,
+                                           "status":  "realizado_pago",
+                                           "pago":  true,
+                                           "pagamentos":  [
+                                                              {
+                                                                  "formaPagamentoId":  "pgto_pix",
+                                                                  "valor":  500
+                                                              }
+                                                          ]
+                                       },
+                                       {
+                                           "id":  "agd_12",
+                                           "data":  "2026-07-17",
+                                           "hora":  "11:00",
+                                           "clienteId":  "cli_12",
+                                           "nomeCliente":  "Vanessa Prado",
+                                           "servicosIds":  [
+                                                               "srv_06"
+                                                           ],
+                                           "observacao":  "",
+                                           "duracaoMinutos":  60,
+                                           "realizadoEm":  "2026-07-17T11:00:00.000Z",
+                                           "valorTotal":  null,
+                                           "status":  "realizado_pendente",
+                                           "pago":  false,
+                                           "valorPendente":  null
+                                       },
+                                       {
+                                           "id":  "agd_13",
+                                           "data":  "2026-07-18",
+                                           "hora":  "09:00",
+                                           "clienteId":  "cli_01",
+                                           "nomeCliente":  "Rodrigo Vasconcelos",
+                                           "servicosIds":  [
+                                                               "srv_01"
+                                                           ],
+                                           "observacao":  "",
+                                           "duracaoMinutos":  60,
+                                           "realizadoEm":  "2026-07-18T09:00:00.000Z",
+                                           "valorTotal":  150,
+                                           "status":  "realizado_pago",
+                                           "pago":  true,
+                                           "pagamentos":  [
+                                                              {
+                                                                  "formaPagamentoId":  "pgto_pix",
+                                                                  "valor":  150
+                                                              }
+                                                          ],
+                                           "vendaId":  "venda_03"
+                                       },
+                                       {
+                                           "id":  "agd_14",
+                                           "data":  "2026-07-18",
+                                           "hora":  "10:00",
+                                           "clienteId":  "cli_02",
+                                           "nomeCliente":  "Mariana Kravitz",
+                                           "servicosIds":  [
+                                                               "srv_02"
+                                                           ],
+                                           "observacao":  "",
+                                           "duracaoMinutos":  60,
+                                           "realizadoEm":  "2026-07-18T10:00:00.000Z",
+                                           "valorTotal":  350,
+                                           "status":  "realizado_pago",
+                                           "pago":  true,
+                                           "pagamentos":  [
+                                                              {
+                                                                  "formaPagamentoId":  "pgto_dinheiro",
+                                                                  "valor":  350
+                                                              }
+                                                          ]
+                                       },
+                                       {
+                                           "id":  "agd_15",
+                                           "data":  "2026-07-18",
+                                           "hora":  "11:00",
+                                           "clienteId":  "cli_03",
+                                           "nomeCliente":  "Igor Salvatierra",
+                                           "servicosIds":  [
+                                                               "srv_03"
+                                                           ],
+                                           "observacao":  "",
+                                           "duracaoMinutos":  60,
+                                           "realizadoEm":  "2026-07-18T11:00:00.000Z",
+                                           "valorTotal":  700,
+                                           "status":  "realizado_pago",
+                                           "pago":  true,
+                                           "pagamentos":  [
+                                                              {
+                                                                  "formaPagamentoId":  "pgto_credito",
+                                                                  "valor":  700
+                                                              }
+                                                          ]
+                                       },
+                                       {
+                                           "id":  "agd_16",
+                                           "data":  "2026-07-20",
+                                           "hora":  "09:00",
+                                           "clienteId":  "cli_04",
+                                           "nomeCliente":  "Aline Petronilho",
+                                           "servicosIds":  [
+                                                               "srv_04",
+                                                               "srv_05"
+                                                           ],
+                                           "observacao":  "",
+                                           "duracaoMinutos":  90,
+                                           "realizadoEm":  "2026-07-20T09:00:00.000Z",
+                                           "valorTotal":  580,
+                                           "status":  "realizado_pendente",
+                                           "pago":  false,
+                                           "valorPendente":  580
+                                       },
+                                       {
+                                           "id":  "agd_17",
+                                           "data":  "2026-07-20",
+                                           "hora":  "10:00",
+                                           "clienteId":  "cli_05",
+                                           "nomeCliente":  "Diego Wendel",
+                                           "servicosIds":  [
+                                                               "srv_05"
+                                                           ],
+                                           "observacao":  "",
+                                           "duracaoMinutos":  60,
+                                           "realizadoEm":  "2026-07-20T10:00:00.000Z",
+                                           "valorTotal":  500,
+                                           "status":  "realizado_pago",
+                                           "pago":  true,
+                                           "pagamentos":  [
+                                                              {
+                                                                  "formaPagamentoId":  "pgto_pix",
+                                                                  "valor":  500
+                                                              }
+                                                          ]
+                                       },
+                                       {
+                                           "id":  "agd_18",
+                                           "data":  "2026-07-20",
+                                           "hora":  "11:00",
+                                           "clienteId":  "cli_06",
+                                           "nomeCliente":  "Nathalia Piovezan",
+                                           "servicosIds":  [
+                                                               "srv_06"
+                                                           ],
+                                           "observacao":  "",
+                                           "duracaoMinutos":  60,
+                                           "realizadoEm":  "2026-07-20T11:00:00.000Z",
+                                           "valorTotal":  null,
+                                           "status":  "realizado_pago",
+                                           "pago":  true,
+                                           "pagamentos":  [
+                                                              {
+                                                                  "formaPagamentoId":  "pgto_credito",
+                                                                  "valor":  null
+                                                              }
+                                                          ]
+                                       },
+                                       {
+                                           "id":  "agd_19",
+                                           "data":  "2026-07-21",
+                                           "hora":  "09:00",
+                                           "clienteId":  "cli_07",
+                                           "nomeCliente":  "Rafael Grimaldi",
+                                           "servicosIds":  [
+                                                               "srv_01"
+                                                           ],
+                                           "observacao":  "",
+                                           "duracaoMinutos":  60,
+                                           "realizadoEm":  "2026-07-21T09:00:00.000Z",
+                                           "valorTotal":  150,
+                                           "status":  "realizado_pago",
+                                           "pago":  true,
+                                           "pagamentos":  [
+                                                              {
+                                                                  "formaPagamentoId":  "pgto_pix",
+                                                                  "valor":  150
+                                                              }
+                                                          ]
+                                       },
+                                       {
+                                           "id":  "agd_20",
+                                           "data":  "2026-07-21",
+                                           "hora":  "10:00",
+                                           "clienteId":  "cli_08",
+                                           "nomeCliente":  "Juliana Bicalho",
+                                           "servicosIds":  [
+                                                               "srv_02"
+                                                           ],
+                                           "observacao":  "",
+                                           "duracaoMinutos":  60,
+                                           "realizadoEm":  "2026-07-21T10:00:00.000Z",
+                                           "valorTotal":  350,
+                                           "status":  "realizado_pendente",
+                                           "pago":  false,
+                                           "valorPendente":  350
+                                       },
+                                       {
+                                           "id":  "agd_21",
+                                           "data":  "2026-07-21",
+                                           "hora":  "11:00",
+                                           "clienteId":  "cli_09",
+                                           "nomeCliente":  "Otávio Mendonça",
+                                           "servicosIds":  [
+                                                               "srv_03",
+                                                               "srv_04"
+                                                           ],
+                                           "observacao":  "",
+                                           "duracaoMinutos":  90,
+                                           "realizadoEm":  "2026-07-21T11:00:00.000Z",
+                                           "valorTotal":  780,
+                                           "status":  "realizado_pago",
+                                           "pago":  true,
+                                           "pagamentos":  [
+                                                              {
+                                                                  "formaPagamentoId":  "pgto_credito",
+                                                                  "valor":  780
+                                                              }
+                                                          ],
+                                           "foiPendente":  true,
+                                           "pagoEm":  "2026-07-21T12:00:00.000Z"
+                                       },
+                                       {
+                                           "id":  "agd_22",
+                                           "data":  "2026-07-21",
+                                           "hora":  "13:30",
+                                           "clienteId":  "cli_10",
+                                           "nomeCliente":  "Carla Espinosa",
+                                           "servicosIds":  [
+                                                               "srv_04"
+                                                           ],
+                                           "observacao":  "",
+                                           "duracaoMinutos":  60,
+                                           "status":  "agendado"
+                                       },
+                                       {
+                                           "id":  "agd_23",
+                                           "data":  "2026-07-21",
+                                           "hora":  "14:30",
+                                           "clienteId":  "cli_11",
+                                           "nomeCliente":  "Bruno Cassiano",
+                                           "servicosIds":  [
+                                                               "srv_05"
+                                                           ],
+                                           "observacao":  "",
+                                           "duracaoMinutos":  60,
+                                           "status":  "agendado"
+                                       },
+                                       {
+                                           "id":  "agd_24",
+                                           "data":  "2026-07-21",
+                                           "hora":  "15:30",
+                                           "clienteId":  "cli_12",
+                                           "nomeCliente":  "Vanessa Prado",
+                                           "servicosIds":  [
+                                                               "srv_06"
+                                                           ],
+                                           "observacao":  "",
+                                           "duracaoMinutos":  60,
+                                           "status":  "agendado"
+                                       },
+                                       {
+                                           "id":  "agd_25",
+                                           "data":  "2026-07-22",
+                                           "hora":  "10:00",
+                                           "clienteId":  "cli_01",
+                                           "nomeCliente":  "Rodrigo Vasconcelos",
+                                           "servicosIds":  [
+                                                               "srv_01"
+                                                           ],
+                                           "observacao":  "",
+                                           "duracaoMinutos":  60,
+                                           "status":  "agendado"
+                                       },
+                                       {
+                                           "id":  "agd_26",
+                                           "data":  "2026-07-22",
+                                           "hora":  "11:00",
+                                           "clienteId":  "cli_02",
+                                           "nomeCliente":  "Mariana Kravitz",
+                                           "servicosIds":  [
+                                                               "srv_02",
+                                                               "srv_03"
+                                                           ],
+                                           "observacao":  "",
+                                           "duracaoMinutos":  90,
+                                           "status":  "agendado"
+                                       },
+                                       {
+                                           "id":  "agd_27",
+                                           "data":  "2026-07-22",
+                                           "hora":  "13:30",
+                                           "clienteId":  "cli_03",
+                                           "nomeCliente":  "Igor Salvatierra",
+                                           "servicosIds":  [
+                                                               "srv_03"
+                                                           ],
+                                           "observacao":  "",
+                                           "duracaoMinutos":  60,
+                                           "status":  "agendado"
+                                       },
+                                       {
+                                           "id":  "agd_28",
+                                           "data":  "2026-07-23",
+                                           "hora":  "10:00",
+                                           "clienteId":  "cli_04",
+                                           "nomeCliente":  "Aline Petronilho",
+                                           "servicosIds":  [
+                                                               "srv_04"
+                                                           ],
+                                           "observacao":  "",
+                                           "duracaoMinutos":  60,
+                                           "status":  "agendado"
+                                       },
+                                       {
+                                           "id":  "agd_29",
+                                           "data":  "2026-07-23",
+                                           "hora":  "11:00",
+                                           "clienteId":  "cli_05",
+                                           "nomeCliente":  "Diego Wendel",
+                                           "servicosIds":  [
+                                                               "srv_05"
+                                                           ],
+                                           "observacao":  "",
+                                           "duracaoMinutos":  60,
+                                           "status":  "agendado"
+                                       },
+                                       {
+                                           "id":  "agd_30",
+                                           "data":  "2026-07-23",
+                                           "hora":  "13:30",
+                                           "clienteId":  "cli_06",
+                                           "nomeCliente":  "Nathalia Piovezan",
+                                           "servicosIds":  [
+                                                               "srv_06"
+                                                           ],
+                                           "observacao":  "",
+                                           "duracaoMinutos":  60,
+                                           "status":  "agendado"
+                                       },
+                                       {
+                                           "id":  "agd_31",
+                                           "data":  "2026-07-24",
+                                           "hora":  "10:00",
+                                           "clienteId":  "cli_07",
+                                           "nomeCliente":  "Rafael Grimaldi",
+                                           "servicosIds":  [
+                                                               "srv_01",
+                                                               "srv_02"
+                                                           ],
+                                           "observacao":  "",
+                                           "duracaoMinutos":  90,
+                                           "status":  "agendado"
+                                       },
+                                       {
+                                           "id":  "agd_32",
+                                           "data":  "2026-07-24",
+                                           "hora":  "11:00",
+                                           "clienteId":  "cli_08",
+                                           "nomeCliente":  "Juliana Bicalho",
+                                           "servicosIds":  [
+                                                               "srv_02"
+                                                           ],
+                                           "observacao":  "",
+                                           "duracaoMinutos":  60,
+                                           "status":  "agendado"
+                                       },
+                                       {
+                                           "id":  "agd_33",
+                                           "data":  "2026-07-24",
+                                           "hora":  "13:30",
+                                           "clienteId":  null,
+                                           "nomeCliente":  "",
+                                           "servicosIds":  [
+
+                                                           ],
+                                           "observacao":  "",
+                                           "status":  "bloqueado",
+                                           "nomeBloqueio":  "Compromisso pessoal"
+                                       },
+                                       {
+                                           "id":  "agd_34",
+                                           "data":  "2026-07-25",
+                                           "hora":  "10:00",
+                                           "clienteId":  "cli_10",
+                                           "nomeCliente":  "Carla Espinosa",
+                                           "servicosIds":  [
+                                                               "srv_04"
+                                                           ],
+                                           "observacao":  "",
+                                           "duracaoMinutos":  60,
+                                           "status":  "agendado"
+                                       },
+                                       {
+                                           "id":  "agd_35",
+                                           "data":  "2026-07-25",
+                                           "hora":  "11:00",
+                                           "clienteId":  "cli_11",
+                                           "nomeCliente":  "Bruno Cassiano",
+                                           "servicosIds":  [
+                                                               "srv_05"
+                                                           ],
+                                           "observacao":  "",
+                                           "duracaoMinutos":  60,
+                                           "status":  "agendado"
+                                       },
+                                       {
+                                           "id":  "agd_36",
+                                           "data":  "2026-07-25",
+                                           "hora":  "13:30",
+                                           "clienteId":  "cli_12",
+                                           "nomeCliente":  "Vanessa Prado",
+                                           "servicosIds":  [
+                                                               "srv_06",
+                                                               "srv_01"
+                                                           ],
+                                           "observacao":  "",
+                                           "duracaoMinutos":  90,
+                                           "status":  "agendado"
+                                       }
+                                   ],
+                  "bloqueiosFixos":  [
+                                         {
+                                             "id":  "blq_01",
+                                             "nome":  "Almoço",
+                                             "diasSemana":  [
+                                                                "seg",
+                                                                "ter",
+                                                                "qua",
+                                                                "qui",
+                                                                "sex",
+                                                                "sab"
+                                                            ],
+                                             "horariosBloqueados":  [
+                                                                        "12:00",
+                                                                        "12:30"
+                                                                    ],
+                                             "ativo":  true
+                                         }
+                                     ],
+                  "whatsapp":  {
+                                   "numero":  "(32) 99223-4505",
+                                   "mensagemHorarios":  "{saudacao}! Tenho estes horários disponíveis para você:",
+                                   "mensagemLembrete":  "{saudacao}, {nome}! Passando para lembrar do seu horário agendado para {dia} às {hora}.",
+                                   "mensagemAniversario":  "{saudacao}, {nome}! Feliz aniversário! Que seu dia seja incrível e cheio de conquistas!",
+                                   "mensagemEndereco":  "{saudacao}, {nome}! Nosso endereço é: {endereco}. Veja no mapa: {mapa}",
+                                   "mensagemSemRetornar":  "{saudacao}, {nome}! Já faz {dias} dias que você não aparece por aqui. Que tal agendar um horário?"
+                               },
+                  "onboarding":  {
+                                     "concluido":  true
+                                 },
+                  "extensoesGrade":  {
+
+                                     },
+                  "notasDiarias":  [
+                                       {
+                                           "id":  "nota_01",
+                                           "dataIso":  "2026-07-21",
+                                           "texto":  "Preparar desenho da tatuagem de cover-up"
+                                       }
+                                   ],
+                  "tarefasDiarias":  [
+                                         {
+                                             "id":  "tar_01",
+                                             "dataIso":  "2026-07-21",
+                                             "texto":  "Comprar filme protetor pós-tatuagem",
+                                             "feito":  false
+                                         }
+                                     ],
+                  "listasDiarias":  [
+                                        {
+                                            "id":  "lista_01",
+                                            "dataIso":  "2026-07-21",
+                                            "nome":  "Compras",
+                                            "itens":  [
+                                                          {
+                                                              "id":  "item_01",
+                                                              "texto":  "Pomada cicatrizante",
+                                                              "feito":  false
+                                                          },
+                                                          {
+                                                              "id":  "item_02",
+                                                              "texto":  "Filme protetor",
+                                                              "feito":  true
+                                                          }
+                                                      ]
+                                        }
+                                    ],
+                  "produtos":  [
+                                   {
+                                       "id":  "prod_01",
+                                       "nome":  "Pomada cicatrizante",
+                                       "precoVenda":  40,
+                                       "precoCusto":  20,
+                                       "estoque":  15,
+                                       "diasParaAvisarParado":  30,
+                                       "ativo":  true,
+                                       "criadoEm":  "2026-02-21",
+                                       "atualizadoEm":  "2026-07-18"
+                                   },
+                                   {
+                                       "id":  "prod_02",
+                                       "nome":  "Filme protetor pós-tatuagem",
+                                       "precoVenda":  25,
+                                       "precoCusto":  12,
+                                       "estoque":  20,
+                                       "diasParaAvisarParado":  30,
+                                       "ativo":  true,
+                                       "criadoEm":  "2026-02-21",
+                                       "atualizadoEm":  "2026-07-18"
+                                   },
+                                   {
+                                       "id":  "prod_03",
+                                       "nome":  "Sabonete neutro",
+                                       "precoVenda":  18,
+                                       "precoCusto":  9,
+                                       "estoque":  10,
+                                       "diasParaAvisarParado":  30,
+                                       "ativo":  true,
+                                       "criadoEm":  "2026-02-21",
+                                       "atualizadoEm":  "2026-07-18"
+                                   },
+                                   {
+                                       "id":  "prod_04",
+                                       "nome":  "Óleo hidratante para pele tatuada",
+                                       "precoVenda":  35,
+                                       "precoCusto":  17,
+                                       "estoque":  8,
+                                       "diasParaAvisarParado":  30,
+                                       "ativo":  true,
+                                       "criadoEm":  "2026-02-21",
+                                       "atualizadoEm":  "2026-07-18"
+                                   },
+                                   {
+                                       "id":  "prod_05",
+                                       "nome":  "Protetor solar para tatuagem",
+                                       "precoVenda":  45,
+                                       "precoCusto":  22,
+                                       "estoque":  0,
+                                       "diasParaAvisarParado":  60,
+                                       "ativo":  true,
+                                       "criadoEm":  "2026-02-21",
+                                       "atualizadoEm":  "2026-07-18"
+                                   }
+                               ],
+                  "vendas":  [
+                                 {
+                                     "id":  "venda_01",
+                                     "clienteId":  "cli_01",
+                                     "nomeCliente":  "Rodrigo Vasconcelos",
+                                     "agendamentoId":  "agd_01",
+                                     "itens":  [
+                                                   {
+                                                       "produtoId":  "prod_01",
+                                                       "nomeProduto":  "Pomada cicatrizante",
+                                                       "quantidade":  1,
+                                                       "precoUnitario":  40
+                                                   }
+                                               ],
+                                     "subtotal":  40,
+                                     "valorTotal":  40,
+                                     "criadaEm":  "2026-07-14T12:00:00.000Z",
+                                     "status":  "paga",
+                                     "pagamentos":  [
+                                                        {
+                                                            "formaPagamentoId":  "pgto_pix",
+                                                            "valor":  40
+                                                        }
+                                                    ]
+                                 },
+                                 {
+                                     "id":  "venda_02",
+                                     "clienteId":  "cli_07",
+                                     "nomeCliente":  "Rafael Grimaldi",
+                                     "agendamentoId":  "agd_07",
+                                     "itens":  [
+                                                   {
+                                                       "produtoId":  "prod_02",
+                                                       "nomeProduto":  "Filme protetor pós-tatuagem",
+                                                       "quantidade":  2,
+                                                       "precoUnitario":  25
+                                                   }
+                                               ],
+                                     "subtotal":  50,
+                                     "valorTotal":  50,
+                                     "criadaEm":  "2026-07-16T12:00:00.000Z",
+                                     "status":  "paga",
+                                     "pagamentos":  [
+                                                        {
+                                                            "formaPagamentoId":  "pgto_pix",
+                                                            "valor":  50
+                                                        }
+                                                    ]
+                                 },
+                                 {
+                                     "id":  "venda_03",
+                                     "clienteId":  "cli_01",
+                                     "nomeCliente":  "Rodrigo Vasconcelos",
+                                     "agendamentoId":  "agd_13",
+                                     "itens":  [
+                                                   {
+                                                       "produtoId":  "prod_03",
+                                                       "nomeProduto":  "Sabonete neutro",
+                                                       "quantidade":  1,
+                                                       "precoUnitario":  18
+                                                   }
+                                               ],
+                                     "subtotal":  18,
+                                     "valorTotal":  18,
+                                     "criadaEm":  "2026-07-18T12:00:00.000Z",
+                                     "status":  "paga",
+                                     "pagamentos":  [
+                                                        {
+                                                            "formaPagamentoId":  "pgto_pix",
+                                                            "valor":  18
+                                                        }
+                                                    ]
+                                 },
+                                 {
+                                     "id":  "venda_04",
+                                     "clienteId":  "cli_01",
+                                     "nomeCliente":  "Rodrigo Vasconcelos",
+                                     "agendamentoId":  null,
+                                     "itens":  [
+                                                   {
+                                                       "produtoId":  "prod_02",
+                                                       "nomeProduto":  "Filme protetor pós-tatuagem",
+                                                       "quantidade":  1,
+                                                       "precoUnitario":  25
+                                                   }
+                                               ],
+                                     "subtotal":  25,
+                                     "valorTotal":  25,
+                                     "criadaEm":  "2026-07-15T12:00:00.000Z",
+                                     "status":  "paga",
+                                     "pagamentos":  [
+                                                        {
+                                                            "formaPagamentoId":  "pgto_pix",
+                                                            "valor":  25
+                                                        }
+                                                    ]
+                                 },
+                                 {
+                                     "id":  "venda_05",
+                                     "clienteId":  "cli_04",
+                                     "nomeCliente":  "Aline Petronilho",
+                                     "agendamentoId":  null,
+                                     "itens":  [
+                                                   {
+                                                       "produtoId":  "prod_03",
+                                                       "nomeProduto":  "Sabonete neutro",
+                                                       "quantidade":  2,
+                                                       "precoUnitario":  18
+                                                   }
+                                               ],
+                                     "subtotal":  36,
+                                     "valorTotal":  36,
+                                     "criadaEm":  "2026-07-17T12:00:00.000Z",
+                                     "status":  "paga",
+                                     "pagamentos":  [
+                                                        {
+                                                            "formaPagamentoId":  "pgto_dinheiro",
+                                                            "valor":  36
+                                                        }
+                                                    ]
+                                 },
+                                 {
+                                     "id":  "venda_06",
+                                     "clienteId":  null,
+                                     "nomeCliente":  "Avulso",
+                                     "agendamentoId":  null,
+                                     "itens":  [
+                                                   {
+                                                       "produtoId":  "prod_04",
+                                                       "nomeProduto":  "Óleo hidratante para pele tatuada",
+                                                       "quantidade":  1,
+                                                       "precoUnitario":  35
+                                                   }
+                                               ],
+                                     "subtotal":  35,
+                                     "valorTotal":  35,
+                                     "criadaEm":  "2026-07-19T12:00:00.000Z",
+                                     "status":  "paga",
+                                     "pagamentos":  [
+                                                        {
+                                                            "formaPagamentoId":  "pgto_credito",
+                                                            "valor":  35
+                                                        }
+                                                    ]
+                                 },
+                                 {
+                                     "id":  "venda_07",
+                                     "clienteId":  "cli_10",
+                                     "nomeCliente":  "Carla Espinosa",
+                                     "agendamentoId":  null,
+                                     "itens":  [
+                                                   {
+                                                       "produtoId":  "prod_05",
+                                                       "nomeProduto":  "Protetor solar para tatuagem",
+                                                       "quantidade":  2,
+                                                       "precoUnitario":  45
+                                                   }
+                                               ],
+                                     "subtotal":  90,
+                                     "valorTotal":  90,
+                                     "criadaEm":  "2026-07-21T12:00:00.000Z",
+                                     "status":  "pendente",
+                                     "valorPendente":  90
+                                 }
+                             ],
+                  "ajuda":  {
+                                "agenda":  {
+                                               "introVista":  true,
+                                               "dicasVistas":  [
+
+                                                               ]
+                                           },
+                                "vendas":  {
+                                               "introVista":  true,
+                                               "dicasVistas":  [
+
+                                                               ]
+                                           },
+                                "produtos":  {
+                                                 "introVista":  true,
+                                                 "dicasVistas":  [
+
+                                                                 ]
+                                             },
+                                "relatorios":  {
+                                                   "introVista":  true,
+                                                   "dicasVistas":  [
+
+                                                                   ]
+                                               },
+                                "pendentes":  {
+                                                  "introVista":  true,
+                                                  "dicasVistas":  [
+
+                                                                  ]
+                                              },
+                                "clientes":  {
+                                                 "introVista":  true,
+                                                 "dicasVistas":  [
+
+                                                                 ]
+                                             },
+                                "mais":  {
+                                             "introVista":  true,
+                                             "dicasVistas":  [
+
+                                                             ]
+                                         }
+                            }
+              }
+}

@@ -11,22 +11,6 @@
    Ainda não salva nenhum dado real — isso é Fase 3.
    ============================================================ */
 
-/* Teclado virtual no mobile não encolhe 100vh/90vh em navegadores mais
-   antigos — o modal calcula a altura contra a viewport inteira, então com
-   o teclado aberto o rodapé (Salvar/Cancelar) pode ficar escondido atrás
-   dele. `visualViewport` reporta a altura REAL visível (já descontando o
-   teclado); a var CSS abaixo é lida por `.modal-sheet` em components.css,
-   com fallback pra 100vh em navegadores sem suporte a visualViewport
-   (auditoria pré-backend P1, 2026-08-10). */
-function atualizarViewportVisivel() {
-  const altura = window.visualViewport ? window.visualViewport.height : window.innerHeight;
-  document.documentElement.style.setProperty("--viewport-visivel", `${altura}px`);
-}
-if (window.visualViewport) {
-  window.visualViewport.addEventListener("resize", atualizarViewportVisivel);
-}
-atualizarViewportVisivel();
-
 function abrirModal(id) {
   const overlay = document.getElementById(id);
   if (!overlay) return;
