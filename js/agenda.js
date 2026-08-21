@@ -1033,7 +1033,7 @@ function prepararFinalizarAtendimento(agendamento) {
    (usado pelo hook "Vendeu algo?" acima) — mesmo motor, callback aqui só
    fecha o modal, não há lista de histórico pra atualizar na Agenda. */
 function abrirVendaAvulsaDaAgenda() {
-  prepararNovaVenda({ clienteId: null, nomeCliente: null, agendamentoId: null }, () => {
+  prepararNovaVenda({ clienteId: null, nomeCliente: null, agendamentoId: null, data: dataSelecionada }, () => {
     fecharModal("modal-nova-venda");
   });
   abrirModal("modal-nova-venda");

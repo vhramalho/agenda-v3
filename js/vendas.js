@@ -62,8 +62,6 @@ function prepararNovaVenda(contexto, aoConcluir, aoCancelar) {
     fixo.classList.remove("is-hidden");
   } else {
     fixo.classList.add("is-hidden");
-    qsa("#js-venda-cliente-tipo .chip").forEach((chip) => chip.classList.toggle("chip--ativo", chip.dataset.tipoCliente === "avulso"));
-    qs("#js-venda-cliente-busca-wrap").classList.add("is-hidden");
     qs("#js-venda-cliente-busca").value = "";
     qs("#js-venda-cliente-resultados").classList.add("is-hidden");
   }
@@ -71,7 +69,7 @@ function prepararNovaVenda(contexto, aoConcluir, aoCancelar) {
   const dataWrap = qs("#js-venda-data-wrap");
   if (dataWrap) {
     dataWrap.classList.toggle("is-hidden", vindoDeAtendimento);
-    vendaDataSelecionada = hojeIso();
+    vendaDataSelecionada = vendaContexto.data || hojeIso();
     atualizarTextoDataVenda();
   }
 
@@ -116,8 +114,6 @@ function prepararEditarVenda(venda, aoConcluir, aoCancelar, aoExcluir) {
   } else {
     fixo.classList.add("is-hidden");
     const ehExistente = !!venda.clienteId;
-    qsa("#js-venda-cliente-tipo .chip").forEach((chip) => chip.classList.toggle("chip--ativo", chip.dataset.tipoCliente === (ehExistente ? "existente" : "avulso")));
-    qs("#js-venda-cliente-busca-wrap").classList.toggle("is-hidden", !ehExistente);
     qs("#js-venda-cliente-busca").value = ehExistente ? venda.nomeCliente || "" : "";
     qs("#js-venda-cliente-resultados").classList.add("is-hidden");
   }
@@ -311,20 +307,6 @@ document.addEventListener("DOMContentLoaded", () => {
         vendaDataSelecionada = `${ano}-${String(mes + 1).padStart(2, "0")}-${String(dia).padStart(2, "0")}`;
         atualizarTextoDataVenda();
       };
-    });
-  }
-
-  const tipoClienteContainer = qs("#js-venda-cliente-tipo");
-  if (tipoClienteContainer) {
-    tipoClienteContainer.addEventListener("click", (e) => {
-      if (!e.target.closest(".chip")) return;
-      const modoExistente = e.target.closest(".chip").dataset.tipoCliente === "existente";
-      qs("#js-venda-cliente-busca-wrap").classList.toggle("is-hidden", !modoExistente);
-      if (!modoExistente) {
-        vendaClienteSelecionadoId = null;
-        qs("#js-venda-cliente-busca").value = "";
-        qs("#js-venda-cliente-resultados").classList.add("is-hidden");
-      }
     });
   }
 
