@@ -18,6 +18,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   if (montagemMenu) {
     await loadComponent("#js-bottom-nav-mount", "components/menu.html");
     destacarItemMenuAtivo();
+    atualizarBadgeClientes();
     /* O sheet de "Mais" chega junto do menu inferior nesse mesmo fetch —
        precisa religar data-abrir-modal/fechar-no-fundo pra esse pedaço,
        já que js/modal.js rodou sua própria varredura antes desse

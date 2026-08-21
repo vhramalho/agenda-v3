@@ -34,6 +34,10 @@ function renderizarAniversariantesESemRetornar(clientesAtivos) {
     return bucketsInsight.includes(bucket);
   });
   qs("#js-sem-retornar-contagem").textContent = `${semRetornar.length} cliente${semRetornar.length === 1 ? "" : "s"}`;
+
+  const pendentes = calcularNotificacoesClientesPendentes();
+  qs("#js-aniversariantes-badge .notificacao-bolinha").classList.toggle("is-hidden", !pendentes.aniversariantes);
+  qs("#js-sem-retornar-badge .notificacao-bolinha").classList.toggle("is-hidden", !pendentes.semRetornar);
 }
 
 function renderizarClientes() {

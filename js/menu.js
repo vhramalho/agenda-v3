@@ -12,6 +12,17 @@ function destacarItemMenuAtivo() {
   });
 }
 
+/* Bolinha vermelha (estilo Instagram) no ícone "Clientes" quando há
+   cliente novo em "Sem retornar" ou "Aniversariantes" ainda não visto
+   (js/notificacoes-clientes.js) — roda em toda página, não só em
+   clientes.html, porque o ícone do menu é visível em qualquer tela. */
+function atualizarBadgeClientes() {
+  const badge = qs("#js-nav-clientes-badge .notificacao-bolinha");
+  if (!badge) return;
+  const pendentes = calcularNotificacoesClientesPendentes();
+  badge.classList.toggle("is-hidden", !(pendentes.semRetornar || pendentes.aniversariantes));
+}
+
 function voltarOuInicio() {
   if (window.history.length > 1) {
     window.history.back();

@@ -165,6 +165,13 @@ if (qs("#js-aniv-mes-label")) {
 
       qs("#js-aniv-titulo").textContent = `Aniversariantes (${lista.length})`;
 
+      // Só marca como visto quando o mês exibido é o mês ATUAL de
+      // verdade — navegar pra outros meses não conta como "viu a
+      // novidade" (a bolinha é sobre quem faz aniversário agora).
+      if (anivAno === hoje.getFullYear() && anivMes === hoje.getMonth()) {
+        marcarAniversariantesVistos(lista.map((c) => c.id), `${anivAno}-${mesNumero}`);
+      }
+
       const container = qs("#js-aniv-lista");
       const vazio = qs("#js-aniv-vazio");
       container.innerHTML = "";
@@ -193,24 +200,11 @@ if (qs("#js-aniv-mes-label")) {
   });
 }
 
-/* ---------- Sem retornar ---------- */
-
-function bucketDiasSemRetornar(dias) {
-  if (dias >= 90) return 90;
-  if (dias >= 60) return 60;
-  if (dias >= 45) return 45;
-  if (dias >= 30) return 30;
-  if (dias >= 20) return 20;
-  return null;
-}
-
-function ultimaVisitaInfo(clienteId) {
-  const realizados = obterAgendamentos().filter((a) => a.clienteId === clienteId && a.status && a.status.startsWith("realizado_"));
-  if (realizados.length === 0) return { dias: null, data: null };
-  const maisRecente = realizados.reduce((max, a) => (a.data > max ? a.data : max), realizados[0].data);
-  const dias = Math.max(0, Math.floor((new Date() - new Date(`${maisRecente}T00:00:00`)) / 86400000));
-  return { dias, data: maisRecente };
-}
+/* ---------- Sem retornar ----------
+   bucketDiasSemRetornar/ultimaVisitaInfo moram agora em
+   js/notificacoes-clientes.js (carregado em toda página, não só aqui)
+   — a bolinha de notificação do menu inferior precisa delas em
+   qualquer tela, não só nesta. */
 
 function montarLinhaSemRetornar(item, indice) {
   const linha = document.createElement("div");
@@ -246,6 +240,11 @@ if (qs("#js-semretornar-lista")) {
         .map((c) => ({ cliente: c, info: ultimaVisitaInfo(c.id) }))
         .filter((r) => r.info.dias !== null && bucketDiasSemRetornar(r.info.dias) === faixaDias)
         .sort((a, b) => b.info.dias - a.info.dias);
+
+      // Marca só os clientes DESSA faixa como vistos, não a lista
+      // inteira — as outras 4 faixas continuam com bolinha até a
+      // pessoa realmente clicar nelas.
+      marcarSemRetornarVistos(linhas.map((l) => l.cliente.id), faixaDias);
 
       const container = qs("#js-semretornar-lista");
       const vazio = qs("#js-semretornar-vazio");

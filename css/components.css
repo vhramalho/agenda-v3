@@ -46,6 +46,27 @@
   background: var(--primary);
 }
 
+/* Bolinha de notificação (ícone "Clientes" do menu inferior + cards
+   "Sem retornar"/"Aniversariantes" de clientes.html, js/menu.js +
+   js/clientes.js). Vermelho fixo (var(--danger)), não var(--primary)
+   como o .icon-btn__dot acima — pedido explícito do usuário ("igual
+   ao do Instagram"), e o app tem 8 temas de accent selecionáveis, então
+   uma cor de alerta precisa ficar separada da cor de marca. */
+.notificacao-ancora {
+  position: relative;
+  display: inline-flex;
+}
+
+.notificacao-bolinha {
+  position: absolute;
+  top: -2px;
+  right: -4px;
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-full);
+  background: var(--danger);
+}
+
 /* ---------- Botões ---------- */
 .btn {
   display: inline-flex;

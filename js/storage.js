@@ -1,6 +1,6 @@
 /* ============================================================
    AGENDA V3 — Acesso centralizado ao localStorage (Fase 3)
-   Todas as 15 chaves do app passam por aqui. Nenhuma outra tela
+   Todas as 16 chaves do app passam por aqui. Nenhuma outra tela
    ou script deve chamar localStorage.getItem/setItem direto —
    sempre por uma das funções abaixo, pra manter os dados
    consistentes e fáceis de mudar no futuro (ex.: trocar pra um
@@ -24,6 +24,7 @@ const CHAVES = {
   produtos: "agendaV3:produtos",
   vendas: "agendaV3:vendas",
   ajuda: "agendaV3:ajuda",
+  notificacoesClientes: "agendaV3:notificacoesClientes",
 };
 
 const AJUDA_TELAS = [
