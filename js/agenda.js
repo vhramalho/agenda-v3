@@ -570,21 +570,54 @@ function adicionarGestoSwipe(elemento, aoArrastarEsquerda, aoArrastarDireita, ao
 
 let agendamentoEditandoId = null;
 
+/* Cards de serviço — mesmo componente visual e a mesma interação de
+   tocar-pra-selecionar da grade de Produtos do modal de venda
+   (renderizarListaVendaProdutos, js/vendas.js): avatar com iniciais,
+   nome, valor (ou "—" quando o serviço não tem valorOpcional), badge no
+   canto. Diferença inerente ao domínio: produto tem quantidade (badge
+   numérica, incrementa a cada toque), serviço é só selecionado/não
+   (badge "✓", toque alterna) — não existe conceito de "quantidade de
+   serviço" no app. Re-renderiza a grade inteira a cada toque, mesmo
+   padrão de produtos, pra manter o badge sempre em sincronia com o
+   estado atual (2026-08-21, pedido explícito do usuário depois do
+   primeiro retoque ter ficado só parecido, não igual). */
 function montarServicosChips(containerId, selecionadosIds) {
   const container = qs(`#${containerId}`);
+  const servicosAtivos = obterServicos().filter((s) => s.ativo);
   container.innerHTML = "";
-  obterServicos().filter((s) => s.ativo).forEach((servico) => {
-    const chip = document.createElement("span");
-    chip.className = "chip" + (selecionadosIds.includes(servico.id) ? " chip--ativo" : "");
-    chip.dataset.id = servico.id;
-    chip.textContent = servico.nome;
-    container.appendChild(chip);
+  if (servicosAtivos.length === 0) {
+    container.innerHTML = `<p class="text-muted" style="padding:12px;grid-column:1 / -1;">Nenhum serviço cadastrado ainda.</p>`;
+    return;
+  }
+  servicosAtivos.forEach((servico) => {
+    const selecionado = selecionadosIds.includes(servico.id);
+    const card = document.createElement("div");
+    card.className = "card";
+    card.style.cursor = "pointer";
+    card.style.textAlign = "center";
+    card.style.position = "relative";
+    card.dataset.id = servico.id;
+    card.dataset.selecionado = selecionado ? "1" : "0";
+    card.innerHTML = `
+      ${selecionado ? `<span style="position:absolute;top:6px;right:6px;background:var(--primary);color:#fff;border-radius:999px;width:20px;height:20px;font-size:var(--text-xs);font-weight:700;display:flex;align-items:center;justify-content:center;">✓</span>` : ""}
+      <div class="list-item__avatar" style="margin:0 auto 8px;"></div>
+      <p style="font-weight:600;font-size:var(--text-sm);"></p>
+      <p class="text-secondary" style="font-size:var(--text-xs);"></p>
+    `;
+    card.querySelector(".list-item__avatar").textContent = iniciaisItem(servico.nome);
+    card.querySelectorAll("p")[0].textContent = servico.nome;
+    card.querySelectorAll("p")[1].textContent = servico.valorOpcional ? formatarMoeda(servico.valorOpcional) : "—";
+    card.addEventListener("click", () => {
+      const atuais = idsSelecionados(containerId);
+      const novos = atuais.includes(servico.id) ? atuais.filter((id) => id !== servico.id) : [...atuais, servico.id];
+      montarServicosChips(containerId, novos);
+    });
+    container.appendChild(card);
   });
-  inicializarGrupoChips(container, true);
 }
 
 function idsSelecionados(containerId) {
-  return qsa(".chip--ativo", qs(`#${containerId}`)).map((c) => c.dataset.id);
+  return qsa("[data-selecionado='1']", qs(`#${containerId}`)).map((c) => c.dataset.id);
 }
 
 /* Soma do valorOpcional (preço de referência, opcional) dos serviços
