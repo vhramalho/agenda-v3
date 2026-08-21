@@ -170,6 +170,9 @@ if (qs("#js-aniv-mes-label")) {
       // novidade" (a bolinha é sobre quem faz aniversário agora).
       if (anivAno === hoje.getFullYear() && anivMes === hoje.getMonth()) {
         marcarAniversariantesVistos(lista.map((c) => c.id), `${anivAno}-${mesNumero}`);
+        // Atualiza a bolinha do PRÓPRIO menu desta página também, não só
+        // da próxima navegação (ver comentário em js/app.js).
+        if (window.menuInferiorPronto) window.menuInferiorPronto.then(atualizarBadgeClientes);
       }
 
       const container = qs("#js-aniv-lista");
@@ -245,6 +248,9 @@ if (qs("#js-semretornar-lista")) {
       // inteira — as outras 4 faixas continuam com bolinha até a
       // pessoa realmente clicar nelas.
       marcarSemRetornarVistos(linhas.map((l) => l.cliente.id), faixaDias);
+      // Atualiza a bolinha do PRÓPRIO menu desta página também, não só
+      // da próxima navegação (ver comentário em js/app.js).
+      if (window.menuInferiorPronto) window.menuInferiorPronto.then(atualizarBadgeClientes);
 
       const container = qs("#js-semretornar-lista");
       const vazio = qs("#js-semretornar-vazio");

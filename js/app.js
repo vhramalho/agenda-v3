@@ -13,18 +13,31 @@ if (!PAGINAS_SEM_GATE_ONBOARDING.includes(document.body.dataset.page) && !obterO
   window.location.href = "onboarding.html";
 }
 
-document.addEventListener("DOMContentLoaded", async () => {
-  const montagemMenu = qs("#js-bottom-nav-mount");
-  if (montagemMenu) {
-    await loadComponent("#js-bottom-nav-mount", "components/menu.html");
-    destacarItemMenuAtivo();
-    atualizarBadgeClientes();
-    /* O sheet de "Mais" chega junto do menu inferior nesse mesmo fetch —
-       precisa religar data-abrir-modal/fechar-no-fundo pra esse pedaço,
-       já que js/modal.js rodou sua própria varredura antes desse
-       componente existir (ver js/modal.js). */
-    inicializarModais(montagemMenu);
-  }
+/* Promise resolvida quando o menu inferior termina de ser injetado (o
+   fetch de loadComponent é assíncrono) — outros scripts que também
+   escutam DOMContentLoaded e precisam mexer no menu depois (ex.:
+   js/clientes-derivadas.js atualizando a bolinha de notificação assim
+   que marca um cliente como visto) encadeiam aqui em vez de arriscar
+   rodar antes do menu existir. Dois listeners de DOMContentLoaded não
+   esperam um pelo outro — sem isso, a bolinha só sumia da PRÓPRIA
+   página depois de trocar de tela, porque o ícone já tinha sido
+   desenhado (ou nem existia ainda) no momento em que o cliente era
+   marcado como visto (achado pelo usuário, 2026-08-21). */
+window.menuInferiorPronto = new Promise((resolve) => {
+  document.addEventListener("DOMContentLoaded", async () => {
+    const montagemMenu = qs("#js-bottom-nav-mount");
+    if (montagemMenu) {
+      await loadComponent("#js-bottom-nav-mount", "components/menu.html");
+      destacarItemMenuAtivo();
+      atualizarBadgeClientes();
+      /* O sheet de "Mais" chega junto do menu inferior nesse mesmo fetch —
+         precisa religar data-abrir-modal/fechar-no-fundo pra esse pedaço,
+         já que js/modal.js rodou sua própria varredura antes desse
+         componente existir (ver js/modal.js). */
+      inicializarModais(montagemMenu);
+    }
+    resolve();
+  });
 });
 
 /* Menu inferior some ao rolar pra baixo, volta ao rolar pra cima — libera
