@@ -83,16 +83,46 @@ function garantirNotificacoesClientes() {
   salvarNotificacoesClientes(calcularEstadoNotificaveisClientes());
 }
 
+/* Base de tudo que precisa saber "quem é novidade agora, antes de
+   marcar como visto" — usada tanto pro resumo (bolinha do menu/cards)
+   quanto pro detalhe (bolinha por faixa/por cliente em
+   sem-retornar.html/aniversariantes.html). Sempre chamar ANTES de
+   marcarSemRetornarVistos/marcarAniversariantesVistos — depois de
+   marcar, o diff fica vazio (é exatamente o objetivo da marcação). */
+function calcularDiffNotificaveisClientes() {
+  garantirNotificacoesClientes();
+  const vistos = obterNotificacoesClientes();
+  const estadoAtual = calcularEstadoNotificaveisClientes();
+  const clientesNovosSemRetornar = Object.entries(estadoAtual.semRetornar)
+    .filter(([id, bucket]) => (vistos.semRetornar[id] || 0) < bucket)
+    .map(([id]) => id);
+  const clientesNovosAniversariantes = Object.entries(estadoAtual.aniversariantes)
+    .filter(([id, chave]) => vistos.aniversariantes[id] !== chave)
+    .map(([id]) => id);
+  return { clientesNovosSemRetornar, clientesNovosAniversariantes, estadoAtual };
+}
+
 /* Usado pelo ícone "Clientes" do menu inferior (toda página) e pelos 2
    cards de clientes.html: existe algo que o estado atual tem e o mapa
    de "visto" ainda não reflete? */
 function calcularNotificacoesClientesPendentes() {
-  garantirNotificacoesClientes();
-  const vistos = obterNotificacoesClientes();
-  const estadoAtual = calcularEstadoNotificaveisClientes();
-  const semRetornar = Object.entries(estadoAtual.semRetornar).some(([id, bucket]) => (vistos.semRetornar[id] || 0) < bucket);
-  const aniversariantes = Object.entries(estadoAtual.aniversariantes).some(([id, chave]) => vistos.aniversariantes[id] !== chave);
-  return { semRetornar, aniversariantes };
+  const diff = calcularDiffNotificaveisClientes();
+  return {
+    semRetornar: diff.clientesNovosSemRetornar.length > 0,
+    aniversariantes: diff.clientesNovosAniversariantes.length > 0,
+  };
+}
+
+/* Usado pelas 5 abas (20/30/45/60/90) de sem-retornar.html: em quais
+   faixas existe pelo menos um cliente novo, independente de qual aba
+   está aberta agora? Chamar ANTES de marcarSemRetornarVistos. */
+function calcularFaixasSemRetornarComNovidade() {
+  const diff = calcularDiffNotificaveisClientes();
+  const faixas = {};
+  diff.clientesNovosSemRetornar.forEach((id) => {
+    faixas[diff.estadoAtual.semRetornar[id]] = true;
+  });
+  return faixas;
 }
 
 /* Chamado por sem-retornar.html toda vez que uma faixa é exibida (no

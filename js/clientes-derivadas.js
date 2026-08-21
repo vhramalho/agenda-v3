@@ -122,19 +122,20 @@ if (qs("#js-ranking-tabela")) {
 
 /* ---------- Aniversariantes ---------- */
 
-function montarLinhaAniversariante(cliente, indice) {
+function montarLinhaAniversariante(cliente, indice, ehNovo) {
   const linha = document.createElement("div");
   linha.className = "list-item";
   linha.innerHTML = `
     <div class="list-item__avatar ${classeAvatarPorIndice(indice)}"></div>
     <div class="list-item__body">
-      <p class="list-item__title"></p>
+      <p class="list-item__title"><span class="notificacao-ancora"><span class="js-aniv-nome"></span><span class="notificacao-bolinha is-hidden"></span></span></p>
       <p class="text-primary-accent js-aniv-data" style="font-size:var(--text-sm);"></p>
       <p class="js-aniv-telefone" style="font-size:var(--text-sm);"></p>
     </div>
   `;
   linha.querySelector(".list-item__avatar").textContent = iniciaisCliente(cliente.nome);
-  linha.querySelector(".list-item__title").textContent = cliente.nome;
+  linha.querySelector(".js-aniv-nome").textContent = cliente.nome;
+  if (ehNovo) linha.querySelector(".notificacao-bolinha").classList.remove("is-hidden");
   linha.querySelector(".js-aniv-data").textContent = `${cliente.aniversarioDia} de ${MESES_NOME[(cliente.aniversarioMes || 1) - 1].toLowerCase()}`;
 
   const tel = linha.querySelector(".js-aniv-telefone");
@@ -165,6 +166,11 @@ if (qs("#js-aniv-mes-label")) {
 
       qs("#js-aniv-titulo").textContent = `Aniversariantes (${lista.length})`;
 
+      // Calcula quem é novidade ANTES de marcar como visto — a marcação
+      // abaixo zeraria o diff, e a bolinha por cliente precisa refletir
+      // o estado de quando a pessoa chegou nesta tela, não depois.
+      const novosSet = new Set(calcularDiffNotificaveisClientes().clientesNovosAniversariantes);
+
       // Só marca como visto quando o mês exibido é o mês ATUAL de
       // verdade — navegar pra outros meses não conta como "viu a
       // novidade" (a bolinha é sobre quem faz aniversário agora).
@@ -184,7 +190,7 @@ if (qs("#js-aniv-mes-label")) {
       } else {
         container.classList.remove("is-hidden");
         vazio.classList.add("is-hidden");
-        lista.forEach((c, i) => container.appendChild(montarLinhaAniversariante(c, i)));
+        lista.forEach((c, i) => container.appendChild(montarLinhaAniversariante(c, i, novosSet.has(c.id))));
       }
     }
 
@@ -209,19 +215,20 @@ if (qs("#js-aniv-mes-label")) {
    — a bolinha de notificação do menu inferior precisa delas em
    qualquer tela, não só nesta. */
 
-function montarLinhaSemRetornar(item, indice) {
+function montarLinhaSemRetornar(item, indice, ehNovo) {
   const linha = document.createElement("div");
   linha.className = "list-item";
   linha.innerHTML = `
     <div class="list-item__avatar ${classeAvatarPorIndice(indice)}"></div>
     <div class="list-item__body">
-      <p class="list-item__title"></p>
+      <p class="list-item__title"><span class="notificacao-ancora"><span class="js-sr-nome"></span><span class="notificacao-bolinha is-hidden"></span></span></p>
       <p class="list-item__subtitle js-sr-data"></p>
     </div>
     <p class="text-primary-accent js-sr-dias" style="font-weight:700;white-space:nowrap;"></p>
   `;
   linha.querySelector(".list-item__avatar").textContent = iniciaisCliente(item.cliente.nome);
-  linha.querySelector(".list-item__title").textContent = item.cliente.nome;
+  linha.querySelector(".js-sr-nome").textContent = item.cliente.nome;
+  if (ehNovo) linha.querySelector(".notificacao-bolinha").classList.remove("is-hidden");
   linha.querySelector(".js-sr-data").textContent = item.info.data ? `última visita em ${formatarDataCurta(item.info.data)}` : "Nunca atendido";
   linha.querySelector(".js-sr-dias").textContent = item.info.dias === null ? "—" : `${item.info.dias} dias`;
 
@@ -237,7 +244,22 @@ function montarLinhaSemRetornar(item, indice) {
 
 if (qs("#js-semretornar-lista")) {
   document.addEventListener("DOMContentLoaded", () => {
+    // Bolinha em cada aba (20/30/45/60/90) com pelo menos 1 cliente
+    // novo, independente de qual aba está aberta agora.
+    function atualizarBadgesAbasSemRetornar() {
+      const faixasComNovidade = calcularFaixasSemRetornarComNovidade();
+      qsa("#js-semretornar-filtro .segmented__item").forEach((item) => {
+        const badge = item.querySelector(".notificacao-bolinha");
+        if (badge) badge.classList.toggle("is-hidden", !faixasComNovidade[item.dataset.dias]);
+      });
+    }
+
     function renderizarSemRetornar(faixaDias) {
+      // Calcula quem é novidade ANTES de marcar como visto — a marcação
+      // abaixo zeraria o diff, e a bolinha por cliente precisa refletir
+      // o estado de quando a pessoa abriu esta aba, não depois.
+      const novosSet = new Set(calcularDiffNotificaveisClientes().clientesNovosSemRetornar);
+
       const linhas = obterClientes()
         .filter((c) => c.ativo)
         .map((c) => ({ cliente: c, info: ultimaVisitaInfo(c.id) }))
@@ -251,6 +273,7 @@ if (qs("#js-semretornar-lista")) {
       // Atualiza a bolinha do PRÓPRIO menu desta página também, não só
       // da próxima navegação (ver comentário em js/app.js).
       if (window.menuInferiorPronto) window.menuInferiorPronto.then(atualizarBadgeClientes);
+      atualizarBadgesAbasSemRetornar();
 
       const container = qs("#js-semretornar-lista");
       const vazio = qs("#js-semretornar-vazio");
@@ -261,7 +284,7 @@ if (qs("#js-semretornar-lista")) {
       } else {
         container.classList.remove("is-hidden");
         vazio.classList.add("is-hidden");
-        linhas.forEach((item, i) => container.appendChild(montarLinhaSemRetornar(item, i)));
+        linhas.forEach((item, i) => container.appendChild(montarLinhaSemRetornar(item, i, novosSet.has(item.cliente.id))));
       }
     }
 
