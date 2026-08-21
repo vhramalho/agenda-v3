@@ -50,7 +50,7 @@ function prepararNovaVenda(contexto, aoConcluir, aoCancelar) {
   vendaEditandoId = null;
   vendaItensOriginais = {};
   vendaAoExcluir = null;
-  qs("#js-venda-modal-titulo").textContent = "Registrar venda";
+  qs("#js-venda-modal-titulo").textContent = "Nova venda";
   qs("#js-venda-confirmar").textContent = "Confirmar venda";
   qs("#js-venda-excluir").classList.add("is-hidden");
 
