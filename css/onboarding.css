@@ -234,15 +234,6 @@ body[data-page="onboarding"] .page--secundaria {
   display: flex;
 }
 
-/* Passo Aparência tem menos conteúdo abaixo do mockup (só Tema+Cor) que o
-   passo Agenda (Horário+Grade) -- sobra mais espaço vertical ali, então o
-   mockup cresce mais só nesse passo (classe alternada por JS em
-   mostrarPasso, [[js/onboarding.js]]), sem mexer no tamanho do passo
-   Agenda (já ajustado no limite seguro, ver histórico do CSS). */
-.mockup-wrap--grande .mockup {
-  width: clamp(56px, calc(56px + (100dvh - 667px) * 0.6), 230px);
-}
-
 .mockup__botao-lateral {
   position: absolute;
   right: -2px;
@@ -295,11 +286,19 @@ body[data-page="onboarding"] .page--secundaria {
   color: var(--text-muted);
 }
 
+/* flex:1 (em vez de um max-height fixo) -- preenche sempre o espaço que
+   sobrar dentro do "aparelho" (.mockup__tela), que agora varia de tamanho
+   por passo ([[js/onboarding.js]] mostrarPasso) -- um número fixo deixava
+   metade da tela do celular vazia quando o mockup crescia bastante
+   (Victor, 2026-08-24). overflow-y:auto continua cortando as últimas
+   linhas quando o conteúdo (24 horários) ainda for maior que o espaço
+   disponível, mesmo comportamento de antes. */
 .mockup__grade {
   display: flex;
   flex-direction: column;
   gap: 4px;
-  max-height: clamp(90px, 20dvh, 190px);
+  flex: 1;
+  min-height: 0;
   overflow-y: auto;
 }
 
