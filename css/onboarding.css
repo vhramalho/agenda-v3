@@ -234,6 +234,15 @@ body[data-page="onboarding"] .page--secundaria {
   display: flex;
 }
 
+/* Passo Aparência tem menos conteúdo abaixo do mockup (só Tema+Cor) que o
+   passo Agenda (Horário+Grade) -- sobra mais espaço vertical ali, então o
+   mockup cresce mais só nesse passo (classe alternada por JS em
+   mostrarPasso, [[js/onboarding.js]]), sem mexer no tamanho do passo
+   Agenda (já ajustado no limite seguro, ver histórico do CSS). */
+.mockup-wrap--grande .mockup {
+  width: clamp(56px, calc(56px + (100dvh - 667px) * 0.6), 230px);
+}
+
 .mockup__botao-lateral {
   position: absolute;
   right: -2px;

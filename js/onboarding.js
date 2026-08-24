@@ -144,6 +144,11 @@ document.addEventListener("DOMContentLoaded", () => {
     pontos.forEach((p, i) => p.classList.toggle("is-active", i === indice));
     atual = indice;
     mockupWrap.classList.toggle("is-hidden", indice !== 2 && indice !== 3);
+    /* Passo Aparência (2) tem só Tema+Cor abaixo do mockup -- bem menos
+       conteúdo que o passo Agenda (3, Horário+Grade) -- então sobra mais
+       espaço vertical ali; mockup cresce mais nesse passo especificamente
+       pra aproveitar (Victor, 2026-08-24). */
+    mockupWrap.classList.toggle("mockup-wrap--grande", indice === 2);
     if (indice === 2 || indice === 3) {
       moveMockupParaPassoAtivo(passos[indice]);
       atualizarMockup();
