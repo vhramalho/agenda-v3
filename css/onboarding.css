@@ -286,19 +286,16 @@ body[data-page="onboarding"] .page--secundaria {
   color: var(--text-muted);
 }
 
-/* flex:1 (em vez de um max-height fixo) -- preenche sempre o espaço que
-   sobrar dentro do "aparelho" (.mockup__tela), que agora varia de tamanho
-   por passo ([[js/onboarding.js]] mostrarPasso) -- um número fixo deixava
-   metade da tela do celular vazia quando o mockup crescia bastante
-   (Victor, 2026-08-24). overflow-y:auto continua cortando as últimas
-   linhas quando o conteúdo (24 horários) ainda for maior que o espaço
-   disponível, mesmo comportamento de antes. */
+/* Tentativa de trocar por flex:1 (2026-08-24) revertida -- no iPhone
+   real (não no headless de teste) a lista inteira de 24 horários
+   renderizava sem cortar, esticando o mockup pra muito além do tamanho
+   de celular e empurrando Tema/Cor pra fora da tela. max-height fixo +
+   overflow-y:auto de volta ao original. */
 .mockup__grade {
   display: flex;
   flex-direction: column;
   gap: 4px;
-  flex: 1;
-  min-height: 0;
+  max-height: clamp(90px, 20dvh, 190px);
   overflow-y: auto;
 }
 
