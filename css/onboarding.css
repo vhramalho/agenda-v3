@@ -222,9 +222,17 @@ body[data-page="onboarding"] .page--secundaria {
    não lia como celular). Largura em clamp(dvh) pra encolher em telas
    baixas — nas telas com prévia (Aparência/Agenda) esse mockup é o maior
    consumidor de altura vertical, então ele precisa ceder espaço primeiro
-   pra o passo caber sem rolar (Victor, 2026-08-17). */
+   pra o passo caber sem rolar (Victor, 2026-08-17).
+   Slope 0.5/cap 210px (2026-08-24) voltou pra 0.46/200 -- num iPhone
+   real de tela grande, esse crescimento extra bastou pra estourar a
+   altura disponível de verdade (dvh se comporta diferente do esperado
+   em telas grandes reais vs. os tamanhos testados no headless), forçando
+   rolagem da página e escondendo "Visualização da grade". Prioridade é
+   nunca rolar -- prefira um resíduo de espaço vazio antes do card a
+   arriscar overflow de novo; não subir esse slope sem testar num
+   aparelho real primeiro. */
 .mockup {
-  width: clamp(56px, calc(56px + (100dvh - 667px) * 0.5), 210px);
+  width: clamp(56px, calc(56px + (100dvh - 667px) * 0.46), 200px);
   aspect-ratio: 9 / 17.5;
   background: linear-gradient(155deg, #2A2A32, #17171C);
   border-radius: 30px;
