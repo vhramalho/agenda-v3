@@ -203,33 +203,6 @@ body[data-page="onboarding"] .page--secundaria {
   background: var(--primary);
 }
 
-/* ---------- Cartões de seleção (tema) ---------- */
-.opcao-card {
-  flex: 1;
-  border: 1px solid var(--border-strong);
-  border-radius: var(--radius-lg);
-  padding: clamp(8px, 1.3dvh, var(--space-4));
-  text-align: center;
-  background: var(--card);
-  cursor: pointer;
-  transition: border-color 0.2s ease, background 0.2s ease, transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease;
-}
-
-.opcao-card.is-selecionada {
-  border-color: var(--primary);
-  background: var(--primary-soft);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18);
-}
-
-.opcao-card__amostra {
-  width: 100%;
-  height: clamp(28px, 5dvh, 48px);
-  border-radius: var(--radius-md);
-  margin-bottom: clamp(6px, 1.5dvh, var(--space-3));
-  transition: background 0.3s ease;
-}
-
 /* cor-swatch mora em css/components.css (reaproveitado em Configurações) — só o
    "lift" ao selecionar é específico do onboarding */
 .cor-swatch { transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.2s ease; }
@@ -251,7 +224,7 @@ body[data-page="onboarding"] .page--secundaria {
    consumidor de altura vertical, então ele precisa ceder espaço primeiro
    pra o passo caber sem rolar (Victor, 2026-08-17). */
 .mockup {
-  width: clamp(56px, calc(56px + (100dvh - 667px) * 0.44), 190px);
+  width: clamp(56px, calc(56px + (100dvh - 667px) * 0.46), 200px);
   aspect-ratio: 9 / 17.5;
   background: linear-gradient(155deg, #2A2A32, #17171C);
   border-radius: 30px;
@@ -399,7 +372,6 @@ body[data-page="onboarding"] .page--secundaria {
 
 @media (prefers-reduced-motion: reduce) {
   .onboarding-dot,
-  .opcao-card,
   .cor-swatch {
     animation-duration: 0.001ms !important;
     transition-duration: 0.001ms !important;

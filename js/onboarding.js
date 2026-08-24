@@ -40,7 +40,7 @@ document.addEventListener("DOMContentLoaded", () => {
     definirValorGrade(config.intervaloGrade || 30);
 
     const tema = config.tema || "escuro";
-    qsa(".opcao-card[data-tema]").forEach((c) => c.classList.toggle("is-selecionada", c.dataset.tema === tema));
+    qsa(".chip[data-tema]").forEach((c) => c.classList.toggle("chip--ativo", c.dataset.tema === tema));
     const cor = config.corPrincipal || "roxo";
     qsa(".cor-swatch[data-cor]").forEach((c) => c.classList.toggle("is-selecionada", c.dataset.cor === cor));
   }
@@ -182,11 +182,11 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  qsa(".opcao-card[data-tema]").forEach((card) => {
-    card.addEventListener("click", () => {
-      qsa(".opcao-card[data-tema]").forEach((c) => c.classList.remove("is-selecionada"));
-      card.classList.add("is-selecionada");
-      definirTema(card.dataset.tema);
+  qsa(".chip[data-tema]").forEach((chip) => {
+    chip.addEventListener("click", () => {
+      qsa(".chip[data-tema]").forEach((c) => c.classList.remove("chip--ativo"));
+      chip.classList.add("chip--ativo");
+      definirTema(chip.dataset.tema);
       vibrar();
     });
   });
