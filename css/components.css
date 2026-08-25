@@ -69,16 +69,20 @@
 
 /* ---------- Botões ---------- */
 .btn {
+  appearance: none;
+  -webkit-appearance: none;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: var(--space-2);
   width: 100%;
+  margin: 0;
   padding: 14px var(--space-5);
   border-radius: var(--radius-md);
   border: none;
   font-size: var(--text-base);
   font-weight: 600;
+  line-height: 1;
   transition: opacity 0.15s ease, transform 0.05s ease;
 }
 
