@@ -230,10 +230,22 @@ body[data-page="onboarding"] .page--secundaria {
    rolagem da página e escondendo "Visualização da grade". Prioridade é
    nunca rolar -- prefira um resíduo de espaço vazio antes do card a
    arriscar overflow de novo; não subir esse slope sem testar num
-   aparelho real primeiro. */
+   aparelho real primeiro.
+   `aspect-ratio` (usado até aqui pra derivar a altura da largura)
+   trocado por um `height` explícito com a mesma proporção (17.5/9),
+   calculado em paralelo ao `width` -- em outro iPhone real (2026-08-24)
+   o mockup saiu esticado/desproporcional, provavelmente porque o
+   conteúdo interno (a lista de horários, depois que o cap dela subiu
+   pra 400px) forçou a altura a crescer além do que o aspect-ratio
+   dita, num jeito que o WebKit resolve diferente do Chromium (mesma
+   família do bug do flex:1 já documentado). Com largura E altura como
+   valores fixos/explícitos (nenhum derivado do outro nem do conteúdo),
+   não sobra brecha pra layout nenhum esticar o "aparelho" fora de
+   proporção -- quem estoura vira corte por overflow:hidden, não
+   deformação do retângulo. */
 .mockup {
   width: clamp(56px, calc(56px + (100dvh - 667px) * 0.46), 200px);
-  aspect-ratio: 9 / 17.5;
+  height: clamp(108.9px, calc(108.9px + (100dvh - 667px) * 0.8944), 388.9px);
   background: linear-gradient(155deg, #2A2A32, #17171C);
   border-radius: 30px;
   padding: 8px;
