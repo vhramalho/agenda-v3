@@ -11,97 +11,17 @@ function renderizarWhatsappPerfil() {
   qs("#js-perfil-whatsapp-numero").textContent = numero || "Nenhum número cadastrado";
 }
 
-// Upload de foto de perfil desativado (2026-07-12) — não usa em lugar nenhum
-// do app. Comentado, não removido; ver também perfil.html (botões/input de
-// foto) e os 3 listeners abaixo (editar/trocar/remover foto).
-function renderizarAvatarPerfil(config) {
-  const avatar = qs("#js-perfil-avatar");
-  // const botaoRemover = qs("#js-perfil-remover-foto");
-  // if (config.fotoPerfil) {
-  //   avatar.innerHTML = "";
-  //   const img = document.createElement("img");
-  //   img.src = config.fotoPerfil;
-  //   img.alt = "Foto de perfil";
-  //   avatar.appendChild(img);
-  //   botaoRemover.classList.remove("is-hidden");
-  // } else {
-  //   avatar.textContent = config.nomeProfissional ? iniciaisCliente(config.nomeProfissional) : "?";
-  //   botaoRemover.classList.add("is-hidden");
-  // }
-  avatar.textContent = config.nomeProfissional ? iniciaisCliente(config.nomeProfissional) : "?";
-}
-
 function renderizarNegocioPerfil() {
   const config = obterConfig();
-  const estabelecimento = config.nomeEstabelecimento || "";
-  const profissional = config.nomeProfissional || "";
-  const endereco = config.endereco || "";
-  const linkMapa = config.linkMapa || "";
-
-  qs("#js-perfil-estabelecimento").textContent = estabelecimento || "Nenhum nome cadastrado";
-  qs("#js-perfil-profissional").textContent = profissional || "Nenhum nome cadastrado";
-  qs("#js-perfil-endereco").textContent = endereco || "Nenhum endereço cadastrado";
-  qs("#js-perfil-link-mapa").textContent = linkMapa || "Gerado automaticamente pelo endereço";
-
-  qs("#js-perfil-estabelecimento-topo").textContent = estabelecimento || "Nenhum nome cadastrado";
-  qs("#js-perfil-profissional-topo").textContent = profissional || "Nenhum nome cadastrado";
-  renderizarAvatarPerfil(config);
+  qs("#js-perfil-estabelecimento").textContent = config.nomeEstabelecimento || "Nenhum nome cadastrado";
+  qs("#js-perfil-profissional").textContent = config.nomeProfissional || "Nenhum nome cadastrado";
+  qs("#js-perfil-endereco").textContent = config.endereco || "Nenhum endereço cadastrado";
+  qs("#js-perfil-link-mapa").textContent = config.linkMapa || "Gerado automaticamente pelo endereço";
 }
-
-// function redimensionarImagem(arquivo, tamanhoMax) {
-//   return new Promise((resolve, reject) => {
-//     const leitor = new FileReader();
-//     leitor.onload = (e) => {
-//       const img = new Image();
-//       img.onload = () => {
-//         const escala = Math.min(1, tamanhoMax / Math.max(img.width, img.height));
-//         const largura = Math.round(img.width * escala);
-//         const altura = Math.round(img.height * escala);
-//         const canvas = document.createElement("canvas");
-//         canvas.width = largura;
-//         canvas.height = altura;
-//         canvas.getContext("2d").drawImage(img, 0, 0, largura, altura);
-//         resolve(canvas.toDataURL("image/jpeg", 0.85));
-//       };
-//       img.onerror = () => reject(new Error("Não foi possível ler a imagem"));
-//       img.src = e.target.result;
-//     };
-//     leitor.onerror = () => reject(new Error("Não foi possível ler o arquivo"));
-//     leitor.readAsDataURL(arquivo);
-//   });
-// }
 
 document.addEventListener("DOMContentLoaded", () => {
   renderizarWhatsappPerfil();
   renderizarNegocioPerfil();
-
-  // qs("#js-perfil-editar-foto").addEventListener("click", () => {
-  //   qs("#js-perfil-foto-input").click();
-  // });
-
-  // qs("#js-perfil-foto-input").addEventListener("change", async (evento) => {
-  //   const arquivo = evento.target.files[0];
-  //   evento.target.value = "";
-  //   if (!arquivo) return;
-  //   try {
-  //     const dataUri = await redimensionarImagem(arquivo, 300);
-  //     const config = obterConfig();
-  //     config.fotoPerfil = dataUri;
-  //     salvarConfig(config);
-  //     renderizarAvatarPerfil(config);
-  //     mostrarSucesso();
-  //   } catch (erro) {
-  //     mostrarAviso("Não foi possível carregar essa foto");
-  //   }
-  // });
-
-  // qs("#js-perfil-remover-foto").addEventListener("click", () => {
-  //   const config = obterConfig();
-  //   delete config.fotoPerfil;
-  //   salvarConfig(config);
-  //   renderizarAvatarPerfil(config);
-  //   mostrarSucesso();
-  // });
 
   qs("[data-abrir-modal='modal-editar-numero']").addEventListener("click", () => {
     qs("#js-numero-input").value = obterWhatsapp().numero || "";
