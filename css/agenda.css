@@ -288,8 +288,9 @@ body[data-page="index"] #js-agenda-lista-preview {
 }
 
 .agenda-slot--bloqueado {
-  padding: 6px 14px;
+  padding: 8px 14px;
   background: transparent;
+  border-style: dashed;
   opacity: 0.55;
 }
 
@@ -300,8 +301,8 @@ body[data-page="index"] #js-agenda-lista-preview {
 
 .agenda-slot--bloqueado .agenda-slot__titulo {
   color: var(--text-secondary);
-  font-weight: 600;
-  font-size: var(--text-xs);
+  font-weight: 500;
+  font-size: var(--text-sm);
 }
 
 .agenda-slot--bloqueado .agenda-slot__subtitulo {
