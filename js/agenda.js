@@ -340,25 +340,35 @@ function animarSlotsRecemAdicionados(direcao, limiteAntigo) {
   });
 }
 
-/* Barra de ocupação: quando um agendamento/realizado dura mais que um
-   intervalo da grade, os horários "encaixe" que caem dentro dessa duração
-   ganham uma borda na cor do cliente, junto com o próprio card — dá pra ver
-   de relance até onde o horário está ocupado, sem mudar o clique de nenhum
-   dos dois (Encaixe continua sendo sua própria linha, igual antes). */
+/* Linha fina ligando a bolinha do agendado/realizado até o ícone do
+   "Encaixe" logo abaixo, quando a duração do atendimento cobre mais de um
+   intervalo da grade — dá pra ver de relance até onde o horário está
+   ocupado, sem mudar o clique de nenhum dos dois (Encaixe continua sendo
+   sua própria linha, igual antes). Cada item na cadeia recebe "baixo"
+   (puxa uma linha da própria bolinha até a de baixo) e/ou "cima" (recebe
+   a linha vinda de cima) -- marcados aos pares conforme anda pela lista,
+   pra nunca sobrar uma ponta solta sem o par correspondente. */
 function marcarLigacoesDeOcupacao(itens) {
   const config = obterConfig();
   let spanFimMin = null;
+  let itemAnteriorDoSpan = null;
   itens.forEach((item) => {
     const horaMin = horaParaMinutos(item.hora);
-    if (spanFimMin !== null && horaMin >= spanFimMin) spanFimMin = null;
+    if (spanFimMin !== null && horaMin >= spanFimMin) {
+      spanFimMin = null;
+      itemAnteriorDoSpan = null;
+    }
 
     if ((item.tipo === "agendado" || item.tipo === "realizado") && item.agendamento.duracaoMinutos > config.intervaloGrade) {
-      item._ligacaoInicio = true;
       spanFimMin = horaMin + item.agendamento.duracaoMinutos;
+      itemAnteriorDoSpan = item;
     } else if (item.tipo === "encaixe" && spanFimMin !== null) {
-      item._ligacaoMeio = true;
+      item._ligacaoCima = true;
+      itemAnteriorDoSpan._ligacaoBaixo = true;
+      itemAnteriorDoSpan = item;
     } else if (spanFimMin !== null) {
       spanFimMin = null;
+      itemAnteriorDoSpan = null;
     }
   });
 }
@@ -375,8 +385,8 @@ function montarListaDoDia(container, iso) {
     else if (item.tipo === "realizado") el = montarSlotRealizado(item);
     else el = montarSlotBloqueado(item);
     el.dataset.hora = item.hora;
-    if (item._ligacaoInicio) el.classList.add("agenda-slot--ligacao-inicio");
-    if (item._ligacaoMeio) el.classList.add("agenda-slot--ligacao-meio");
+    if (item._ligacaoBaixo) el.classList.add("agenda-slot--linha-baixo");
+    if (item._ligacaoCima) el.classList.add("agenda-slot--linha-cima");
     container.appendChild(el);
   });
   container.appendChild(montarBotaoEstenderGrade(iso, "depois"));

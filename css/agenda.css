@@ -171,6 +171,7 @@ body[data-page="index"] #js-agenda-lista-preview {
 }
 
 .agenda-slot {
+  position: relative;
   display: flex;
   align-items: center;
   gap: var(--space-3);
@@ -318,12 +319,29 @@ body[data-page="index"] #js-agenda-lista-preview {
   font-size: var(--text-sm);
 }
 
-/* Ligação visual entre o card do cliente e os "Encaixe" que caem dentro da
-   duração dele -- ver marcarLigacoesDeOcupacao() em js/agenda.js. */
-.agenda-slot--ligacao-inicio,
-.agenda-slot--ligacao-meio {
-  border-left-width: 3px;
-  border-left-color: var(--primary);
+/* Linha fina ligando a bolinha/ícone de status de um card ao de baixo,
+   quando o horário abaixo cai dentro da duração do atendimento -- ver
+   marcarLigacoesDeOcupacao() em js/agenda.js. Cada metade (baixo/cima)
+   avança até o meio do espaço entre os cards (metade de --space-2), então
+   as duas metades sempre se encontram, não importa a altura de cada card. */
+.agenda-slot--linha-baixo::after,
+.agenda-slot--linha-cima::before {
+  content: "";
+  position: absolute;
+  left: 77px;
+  width: 2px;
+  background: var(--primary);
+  opacity: 0.6;
+}
+
+.agenda-slot--linha-baixo::after {
+  top: 50%;
+  height: calc(50% + 5px);
+}
+
+.agenda-slot--linha-cima::before {
+  bottom: 50%;
+  height: calc(50% + 5px);
 }
 
 /* Entrada dos horários criados por "+ Adicionar mais 1 hora" — cascata leve
