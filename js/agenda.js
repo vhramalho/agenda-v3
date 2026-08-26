@@ -340,10 +340,34 @@ function animarSlotsRecemAdicionados(direcao, limiteAntigo) {
   });
 }
 
+/* Barra de ocupação: quando um agendamento/realizado dura mais que um
+   intervalo da grade, os horários "encaixe" que caem dentro dessa duração
+   ganham uma borda na cor do cliente, junto com o próprio card — dá pra ver
+   de relance até onde o horário está ocupado, sem mudar o clique de nenhum
+   dos dois (Encaixe continua sendo sua própria linha, igual antes). */
+function marcarLigacoesDeOcupacao(itens) {
+  const config = obterConfig();
+  let spanFimMin = null;
+  itens.forEach((item) => {
+    const horaMin = horaParaMinutos(item.hora);
+    if (spanFimMin !== null && horaMin >= spanFimMin) spanFimMin = null;
+
+    if ((item.tipo === "agendado" || item.tipo === "realizado") && item.agendamento.duracaoMinutos > config.intervaloGrade) {
+      item._ligacaoInicio = true;
+      spanFimMin = horaMin + item.agendamento.duracaoMinutos;
+    } else if (item.tipo === "encaixe" && spanFimMin !== null) {
+      item._ligacaoMeio = true;
+    } else if (spanFimMin !== null) {
+      spanFimMin = null;
+    }
+  });
+}
+
 function montarListaDoDia(container, iso) {
   container.innerHTML = "";
   container.appendChild(montarBotaoEstenderGrade(iso, "antes"));
   const itens = classificarGradeDoDia(iso);
+  marcarLigacoesDeOcupacao(itens);
   itens.forEach((item) => {
     let el;
     if (item.tipo === "livre" || item.tipo === "encaixe") el = montarSlotLivreOuEncaixe(item);
@@ -351,6 +375,8 @@ function montarListaDoDia(container, iso) {
     else if (item.tipo === "realizado") el = montarSlotRealizado(item);
     else el = montarSlotBloqueado(item);
     el.dataset.hora = item.hora;
+    if (item._ligacaoInicio) el.classList.add("agenda-slot--ligacao-inicio");
+    if (item._ligacaoMeio) el.classList.add("agenda-slot--ligacao-meio");
     container.appendChild(el);
   });
   container.appendChild(montarBotaoEstenderGrade(iso, "depois"));

@@ -318,6 +318,14 @@ body[data-page="index"] #js-agenda-lista-preview {
   font-size: var(--text-sm);
 }
 
+/* Ligação visual entre o card do cliente e os "Encaixe" que caem dentro da
+   duração dele -- ver marcarLigacoesDeOcupacao() em js/agenda.js. */
+.agenda-slot--ligacao-inicio,
+.agenda-slot--ligacao-meio {
+  border-left-width: 3px;
+  border-left-color: var(--primary);
+}
+
 /* Entrada dos horários criados por "+ Adicionar mais 1 hora" — cascata leve
    em vez de aparecer sem transição nenhuma. */
 @keyframes agenda-slot-entrar {
