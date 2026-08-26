@@ -288,14 +288,20 @@ body[data-page="index"] #js-agenda-lista-preview {
 }
 
 .agenda-slot--bloqueado {
-  padding: 8px 14px;
+  padding: 6px 14px;
   background: transparent;
+  opacity: 0.55;
+}
+
+.agenda-slot--bloqueado .agenda-slot__icone--bloqueado {
+  width: 13px;
+  height: 13px;
 }
 
 .agenda-slot--bloqueado .agenda-slot__titulo {
   color: var(--text-secondary);
   font-weight: 600;
-  font-size: var(--text-sm);
+  font-size: var(--text-xs);
 }
 
 .agenda-slot--bloqueado .agenda-slot__subtitulo {
@@ -307,6 +313,7 @@ body[data-page="index"] #js-agenda-lista-preview {
   padding: 8px 14px;
   background: transparent;
   border-style: dashed;
+  opacity: 0.55;
 }
 
 .agenda-slot--encaixe .agenda-slot__titulo {

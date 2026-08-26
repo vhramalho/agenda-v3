@@ -198,7 +198,7 @@ function montarSlotLivreOuEncaixe(item) {
   el.innerHTML = `
     <span class="agenda-slot__hora">${item.hora}</span>
     <span class="agenda-slot__icone agenda-slot__icone--${isEncaixe ? "encaixe" : ""}"></span>
-    <div class="agenda-slot__body"><p class="agenda-slot__titulo">${isEncaixe ? "Encaixe" : "Livre"}</p></div>
+    <div class="agenda-slot__body"><p class="agenda-slot__titulo">${isEncaixe ? "Encaixe" : ""}</p></div>
   `;
   el.addEventListener("click", (e) => { e.preventDefault(); abrirHorarioLivre(item.hora); });
   return el;
