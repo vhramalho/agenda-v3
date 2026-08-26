@@ -191,9 +191,13 @@ body[data-page="index"] #js-agenda-lista-preview {
   color: var(--text-secondary);
 }
 
+/* Os 4 ícones de status (agendado/realizado/bloqueado/encaixe) usam o
+   mesmo width/height de propósito -- é o que faz o centro de cada um cair
+   exatamente no mesmo X, pra linha de ligação (.agenda-slot--linha-*)
+   encostar certinho neles não importa qual card seja. */
 .agenda-slot__icone {
-  width: 10px;
-  height: 10px;
+  width: 14px;
+  height: 14px;
   border-radius: var(--radius-full);
   flex-shrink: 0;
 }
@@ -203,21 +207,21 @@ body[data-page="index"] #js-agenda-lista-preview {
 }
 
 .agenda-slot__icone--realizado {
-  width: 18px;
-  height: 18px;
+  width: 14px;
+  height: 14px;
   color: var(--success);
 }
 
 .agenda-slot__icone--bloqueado {
-  width: 16px;
-  height: 16px;
+  width: 14px;
+  height: 14px;
   color: var(--danger);
   flex-shrink: 0;
 }
 
 .agenda-slot__icone--encaixe {
-  width: 12px;
-  height: 12px;
+  width: 14px;
+  height: 14px;
   border-radius: var(--radius-full);
   border: 1.5px dashed var(--text-muted);
 }
@@ -295,11 +299,6 @@ body[data-page="index"] #js-agenda-lista-preview {
   opacity: 0.55;
 }
 
-.agenda-slot--bloqueado .agenda-slot__icone--bloqueado {
-  width: 13px;
-  height: 13px;
-}
-
 .agenda-slot--bloqueado .agenda-slot__titulo {
   color: var(--text-secondary);
   font-weight: 500;
@@ -319,18 +318,21 @@ body[data-page="index"] #js-agenda-lista-preview {
   font-size: var(--text-sm);
 }
 
-/* Linha fina ligando a bolinha/ícone de status de um card ao de baixo,
-   quando o horário abaixo cai dentro da duração do atendimento -- ver
-   marcarLigacoesDeOcupacao() em js/agenda.js. Cada metade (baixo/cima)
-   avança até o meio do espaço entre os cards (metade de --space-2), então
-   as duas metades sempre se encontram, não importa a altura de cada card. */
+/* Linha fina ligando o ícone de status de um card ao de baixo -- de um
+   agendado/realizado até os "Encaixe" dentro da duração dele, ou de um
+   bloqueio fixo até o próximo slot do mesmo bloqueio -- ver
+   marcarLigacoesDeOcupacao()/marcarLigacoesDeBloqueio() em js/agenda.js.
+   left:79px cai exatamente no centro dos ícones (14px, ver .agenda-slot__icone
+   acima). Cada metade (baixo/cima) avança até o meio do espaço entre os
+   cards (metade de --space-2), então as duas metades sempre se encontram,
+   não importa a altura de cada card. A cor segue quem originou a ligação:
+   roxo (agendado), verde (realizado) ou vermelho (bloqueado). */
 .agenda-slot--linha-baixo::after,
 .agenda-slot--linha-cima::before {
   content: "";
   position: absolute;
-  left: 77px;
+  left: 79px;
   width: 2px;
-  background: var(--primary);
   opacity: 0.6;
 }
 
@@ -342,6 +344,21 @@ body[data-page="index"] #js-agenda-lista-preview {
 .agenda-slot--linha-cima::before {
   bottom: 50%;
   height: calc(50% + 5px);
+}
+
+.agenda-slot--linha-agendado.agenda-slot--linha-baixo::after,
+.agenda-slot--linha-agendado.agenda-slot--linha-cima::before {
+  background: var(--primary);
+}
+
+.agenda-slot--linha-realizado.agenda-slot--linha-baixo::after,
+.agenda-slot--linha-realizado.agenda-slot--linha-cima::before {
+  background: var(--success);
+}
+
+.agenda-slot--linha-bloqueado.agenda-slot--linha-baixo::after,
+.agenda-slot--linha-bloqueado.agenda-slot--linha-cima::before {
+  background: var(--danger);
 }
 
 /* Entrada dos horários criados por "+ Adicionar mais 1 hora" — cascata leve

@@ -340,35 +340,65 @@ function animarSlotsRecemAdicionados(direcao, limiteAntigo) {
   });
 }
 
-/* Linha fina ligando a bolinha do agendado/realizado até o ícone do
-   "Encaixe" logo abaixo, quando a duração do atendimento cobre mais de um
-   intervalo da grade — dá pra ver de relance até onde o horário está
-   ocupado, sem mudar o clique de nenhum dos dois (Encaixe continua sendo
-   sua própria linha, igual antes). Cada item na cadeia recebe "baixo"
-   (puxa uma linha da própria bolinha até a de baixo) e/ou "cima" (recebe
-   a linha vinda de cima) -- marcados aos pares conforme anda pela lista,
-   pra nunca sobrar uma ponta solta sem o par correspondente. */
+/* Linha fina ligando o ícone do agendado/realizado até o do "Encaixe" logo
+   abaixo, quando a duração do atendimento cobre mais de um intervalo da
+   grade — dá pra ver de relance até onde o horário está ocupado, sem mudar
+   o clique de nenhum dos dois (Encaixe continua sendo sua própria linha,
+   igual antes). Cada item na cadeia recebe "baixo" (puxa uma linha do
+   próprio ícone até o de baixo) e/ou "cima" (recebe a linha vinda de cima)
+   -- marcados aos pares conforme anda pela lista, pra nunca sobrar uma
+   ponta solta sem o par correspondente. _ligacaoTipo carrega a cor (segue
+   quem originou: agendado ou realizado) pelos itens "encaixe" no meio. */
 function marcarLigacoesDeOcupacao(itens) {
   const config = obterConfig();
   let spanFimMin = null;
   let itemAnteriorDoSpan = null;
+  let tipoSpanAtual = null;
   itens.forEach((item) => {
     const horaMin = horaParaMinutos(item.hora);
     if (spanFimMin !== null && horaMin >= spanFimMin) {
       spanFimMin = null;
       itemAnteriorDoSpan = null;
+      tipoSpanAtual = null;
     }
 
     if ((item.tipo === "agendado" || item.tipo === "realizado") && item.agendamento.duracaoMinutos > config.intervaloGrade) {
       spanFimMin = horaMin + item.agendamento.duracaoMinutos;
       itemAnteriorDoSpan = item;
+      tipoSpanAtual = item.tipo;
     } else if (item.tipo === "encaixe" && spanFimMin !== null) {
       item._ligacaoCima = true;
+      item._ligacaoTipo = tipoSpanAtual;
       itemAnteriorDoSpan._ligacaoBaixo = true;
+      itemAnteriorDoSpan._ligacaoTipo = tipoSpanAtual;
       itemAnteriorDoSpan = item;
     } else if (spanFimMin !== null) {
       spanFimMin = null;
       itemAnteriorDoSpan = null;
+      tipoSpanAtual = null;
+    }
+  });
+}
+
+/* Mesma ideia, mas pra bloqueios fixos recorrentes: quando o mesmo bloqueio
+   (ex.: "Quarta Tiago") ocupa 2+ slots seguidos da grade, cada um hoje
+   aparece como um card idêntico e solto -- a linha deixa claro que é um
+   bloqueio contínuo só, não coincidência de nomes. Bloqueio pontual
+   (avulso, sem bloqueio.id compartilhado) nunca liga com o vizinho -- são
+   blocks independentes mesmo que colados no horário. */
+function marcarLigacoesDeBloqueio(itens) {
+  let anterior = null;
+  itens.forEach((item) => {
+    if (item.tipo === "bloqueado" && !item.pontual) {
+      if (anterior && anterior.bloqueio.id === item.bloqueio.id) {
+        anterior._ligacaoBaixo = true;
+        anterior._ligacaoTipo = "bloqueado";
+        item._ligacaoCima = true;
+        item._ligacaoTipo = "bloqueado";
+      }
+      anterior = item;
+    } else {
+      anterior = null;
     }
   });
 }
@@ -378,6 +408,7 @@ function montarListaDoDia(container, iso) {
   container.appendChild(montarBotaoEstenderGrade(iso, "antes"));
   const itens = classificarGradeDoDia(iso);
   marcarLigacoesDeOcupacao(itens);
+  marcarLigacoesDeBloqueio(itens);
   itens.forEach((item) => {
     let el;
     if (item.tipo === "livre" || item.tipo === "encaixe") el = montarSlotLivreOuEncaixe(item);
@@ -385,8 +416,8 @@ function montarListaDoDia(container, iso) {
     else if (item.tipo === "realizado") el = montarSlotRealizado(item);
     else el = montarSlotBloqueado(item);
     el.dataset.hora = item.hora;
-    if (item._ligacaoBaixo) el.classList.add("agenda-slot--linha-baixo");
-    if (item._ligacaoCima) el.classList.add("agenda-slot--linha-cima");
+    if (item._ligacaoBaixo) el.classList.add("agenda-slot--linha-baixo", `agenda-slot--linha-${item._ligacaoTipo}`);
+    if (item._ligacaoCima) el.classList.add("agenda-slot--linha-cima", `agenda-slot--linha-${item._ligacaoTipo}`);
     container.appendChild(el);
   });
   container.appendChild(montarBotaoEstenderGrade(iso, "depois"));
