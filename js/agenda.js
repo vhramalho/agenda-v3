@@ -294,15 +294,13 @@ function montarSlotBloqueado(item) {
   const el = document.createElement("div");
   el.className = "agenda-slot agenda-slot--bloqueado";
   const nome = item.pontual ? (item.agendamento.nomeBloqueio || "Bloqueado") : item.bloqueio.nome;
+  const titulo = nome && nome !== "Bloqueado" ? `Bloqueado · ${nome}` : "Bloqueado";
   el.innerHTML = `
     <span class="agenda-slot__hora">${item.hora}</span>
     <svg class="agenda-slot__icone--bloqueado" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="11" width="14" height="9" rx="1"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
-    <div class="agenda-slot__body">
-      <p class="agenda-slot__titulo">Bloqueado</p>
-      <p class="agenda-slot__subtitulo"></p>
-    </div>
+    <div class="agenda-slot__body"><p class="agenda-slot__titulo"></p></div>
   `;
-  el.querySelector(".agenda-slot__subtitulo").textContent = nome;
+  el.querySelector(".agenda-slot__titulo").textContent = titulo;
   el.addEventListener("click", () => abrirHorarioBloqueado(item));
   return el;
 }
