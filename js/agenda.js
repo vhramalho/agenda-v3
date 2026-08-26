@@ -814,6 +814,14 @@ function atualizarCadastroWrapPicker(prefixo) {
   qs(`#${ids.cadastroWrap}`).classList.toggle("is-hidden", !temNome);
 }
 
+/* Inclui a lixeira pra não deixar o cartão do cliente "sumir" quando um
+   agendamento antigo ainda aponta pro clienteId de alguém já excluído --
+   antes disso, o campo parecia vazio/quebrado e retipar o nome perdia o
+   vínculo de vez (obterClientes() sozinho não acha clientes na lixeira). */
+function buscarClientePorIdIncluindoLixeira(clienteId) {
+  return obterClientes().find((c) => c.id === clienteId) || obterClientesLixeira().find((c) => c.id === clienteId) || null;
+}
+
 function mostrarClienteCardPicker(prefixo, cliente) {
   const ids = clientePickerIds(prefixo);
   const card = qs(`#${ids.card}`);
@@ -830,7 +838,7 @@ function mostrarClienteCardPicker(prefixo, cliente) {
     return;
   }
   qs(`#${ids.avatar}`).textContent = iniciaisCliente(cliente.nome);
-  qs(`#${ids.nomeCard}`).textContent = cliente.nome;
+  qs(`#${ids.nomeCard}`).textContent = cliente.ativo === false ? `${cliente.nome} (excluído)` : cliente.nome;
   card.classList.remove("is-hidden");
   nomeWrap.classList.add("is-hidden");
   // Cliente já identificado: "+ Completar cadastro" edita essa mesma pessoa,
@@ -880,7 +888,7 @@ function prepararClientePicker(prefixo, clienteId, nome) {
   const ids = clientePickerIds(prefixo);
   qs(`#${ids.nome}`).value = nome || "";
   qs(`#${ids.resultados}`).classList.add("is-hidden");
-  const cliente = clienteId ? obterClientes().find((c) => c.id === clienteId) : null;
+  const cliente = clienteId ? buscarClientePorIdIncluindoLixeira(clienteId) : null;
   mostrarClienteCardPicker(prefixo, cliente);
 }
 
@@ -1053,21 +1061,20 @@ function finalizarCriacaoOuEdicaoAgendamento(clienteId, nome) {
 
 /* ---------- Finalizar atendimento ---------- */
 
+/* Só usa o clienteId que o picker tem agora (selecionado numa sugestão, ou
+   intacto porque a pessoa não mexeu no campo) -- nunca herda de volta o
+   clienteId antigo do agendamento nem reescreve o nome de um cadastro
+   existente. Antes, digitar um nome diferente sem escolher ninguém da lista
+   mantinha o vínculo antigo por baixo E renomeava esse cliente pro texto
+   novo -- foi assim que um agendamento de "Marlon Brando" acabou apontando
+   (e rebatizando) o cadastro de outro cliente (achado 2026-08-26). Se a
+   pessoa só digitou um nome sem selecionar ninguém, o agendamento fica com
+   esse texto solto, sem vínculo -- igual ao Novo agendamento já faz. */
 function salvarNomeClienteInline(ag, prefixo) {
   const nome = qs(`#${clientePickerIds(prefixo).nome}`).value.trim();
   if (!nome) return;
-  const clienteId = clientePickerEstado[prefixo] || ag.clienteId || null;
   ag.nomeCliente = nome;
-  ag.clienteId = clienteId;
-  if (clienteId) {
-    const clientes = obterClientes();
-    const cliente = clientes.find((c) => c.id === clienteId);
-    if (cliente && cliente.nome !== nome) {
-      cliente.nome = nome;
-      cliente.atualizadoEm = hojeIso();
-      salvarClientes(clientes);
-    }
-  }
+  ag.clienteId = clientePickerEstado[prefixo] || null;
 }
 
 function prepararFinalizarAtendimento(agendamento) {

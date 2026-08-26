@@ -207,10 +207,30 @@ function abrirEdicaoCliente() {
   abrirModal("modal-editar-cliente");
 }
 
+/* Agendamentos futuros ainda não realizados que apontam pro clienteId --
+   usado só pra avisar antes de mover o cliente pra lixeira (ver
+   modal-mover-lixeira), já que excluir não desfaz esse vínculo sozinho. */
+function agendamentosFuturosPendentesDoCliente(id) {
+  const hoje = hojeIso();
+  return obterAgendamentos().filter((a) => a.clienteId === id && a.status === "agendado" && a.data >= hoje);
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   renderizarPagina();
 
   qs("#js-btn-editar-cliente").addEventListener("click", abrirEdicaoCliente);
+
+  qs('[data-trocar-modal="modal-mover-lixeira"]').addEventListener("click", () => {
+    const futuros = agendamentosFuturosPendentesDoCliente(obterIdClienteDaUrl());
+    const aviso = qs("#js-mover-lixeira-aviso-futuro");
+    if (futuros.length > 0) {
+      const plural = futuros.length > 1;
+      aviso.textContent = `Atenção: ${futuros.length} agendamento${plural ? "s" : ""} futuro${plural ? "s" : ""} ainda ${plural ? "estão marcados" : "está marcado"} com esse cliente.`;
+      aviso.classList.remove("is-hidden");
+    } else {
+      aviso.classList.add("is-hidden");
+    }
+  });
 
   qs("#js-editar-cliente-salvar").addEventListener("click", () => {
     const nome = qs("#js-editar-cliente-nome").value.trim();
@@ -252,6 +272,18 @@ document.addEventListener("DOMContentLoaded", () => {
     const lixeira = obterClientesLixeira();
     lixeira.push({ ...cliente, ativo: false, movidoParaLixeiraEm: hojeIso() });
     salvarClientesLixeira(lixeira);
+
+    // Desvincula o id em qualquer agendamento que apontava pra esse cliente
+    // (o nome digitado na hora continua salvo em nomeCliente) -- sem isso,
+    // reabrir um desses agendamentos pra editar mostrava o seletor de
+    // cliente vazio/quebrado, porque ele só busca na lista de ativos.
+    const agendamentos = obterAgendamentos();
+    let mudou = false;
+    agendamentos.forEach((a) => {
+      if (a.clienteId === id) { a.clienteId = null; mudou = true; }
+    });
+    if (mudou) salvarAgendamentos(agendamentos);
+
     mostrarSucesso();
     setTimeout(() => { window.location.href = "clientes.html"; }, 700);
   });
