@@ -3,15 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <link rel="manifest" href="manifest.json?v=20260826i" />
-  <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg?v=20260826i" />
-  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png?v=20260826i" />
+  <link rel="manifest" href="manifest.json?v=20260826j" />
+  <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg?v=20260826j" />
+  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png?v=20260826j" />
   <meta name="theme-color" content="#0B0B10" />
   <title>Mais — Swipo Agenda</title>
-  <link rel="stylesheet" href="css/tokens.css?v=20260826i" />
-  <link rel="stylesheet" href="css/base.css?v=20260826i" />
-  <link rel="stylesheet" href="css/layout.css?v=20260826i" />
-  <link rel="stylesheet" href="css/components.css?v=20260826i" />
+  <link rel="stylesheet" href="css/tokens.css?v=20260826j" />
+  <link rel="stylesheet" href="css/base.css?v=20260826j" />
+  <link rel="stylesheet" href="css/layout.css?v=20260826j" />
+  <link rel="stylesheet" href="css/components.css?v=20260826j" />
 </head>
 <body data-page="mais">
   <div class="app">
@@ -25,10 +25,10 @@
       </header>
 
       <a href="perfil.html" class="card section" style="display:flex;align-items:center;gap:12px;text-decoration:none;margin-top:var(--space-2);">
-        <div class="list-item__avatar" style="width:52px;height:52px;font-size:var(--text-lg);">VH</div>
+        <div class="list-item__avatar" style="width:52px;height:52px;font-size:var(--text-lg);" id="js-mais-avatar"></div>
         <div style="flex:1;">
-          <p style="font-weight:700;">Victor Henrique</p>
-          <p class="text-secondary">Primos Barbearia</p>
+          <p style="font-weight:700;" id="js-mais-nome"></p>
+          <p class="text-secondary" id="js-mais-plano"></p>
         </div>
         <svg class="list-item__chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
       </a>
@@ -89,14 +89,15 @@
     <div id="js-bottom-nav-mount"></div>
   </div>
 
-  <script src="js/utils.js?v=20260826i"></script>
-  <script src="js/menu.js?v=20260826i"></script>
-  <script src="js/storage.js?v=20260826i"></script>
-  <script src="js/notificacoes-clientes.js?v=20260826i"></script>
-  <script src="js/tema.js?v=20260826i"></script>
-  <script src="js/app.js?v=20260826i"></script>
-  <script src="js/modal.js?v=20260826i"></script>
-  <script src="js/ajuda-dados.js?v=20260826i"></script>
-  <script src="js/ajuda.js?v=20260826i"></script>
+  <script src="js/utils.js?v=20260826j"></script>
+  <script src="js/menu.js?v=20260826j"></script>
+  <script src="js/storage.js?v=20260826j"></script>
+  <script src="js/notificacoes-clientes.js?v=20260826j"></script>
+  <script src="js/tema.js?v=20260826j"></script>
+  <script src="js/app.js?v=20260826j"></script>
+  <script src="js/modal.js?v=20260826j"></script>
+  <script src="js/ajuda-dados.js?v=20260826j"></script>
+  <script src="js/ajuda.js?v=20260826j"></script>
+  <script src="js/mais.js?v=20260826j"></script>
 </body>
 </html>
