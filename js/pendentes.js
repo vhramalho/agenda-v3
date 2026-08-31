@@ -136,10 +136,10 @@ function rankingDevedores(periodo) {
 /* Top 3 de devedor usa a mesma mecânica visual do pódio (anel + selo no
    avatar), mas em paleta de alerta — ficar devendo não é conquista, ao
    contrário do ranking de Melhores clientes (que usa ouro/prata/bronze
-   em js/clientes-derivadas.js). 4º em diante segue com .ranking-posicao
-   neutro, igual antes. */
+   em js/clientes-derivadas.js). 4º em diante usa texto simples (sem
+   bolinha), mesmo padrão do "resto" de Atendimentos/Vendas/Clientes. */
 function avatarRankingDevedor(indice, posicao) {
-  if (posicao > 3) return `<span class="ranking-posicao">${posicao}</span><div class="list-item__avatar ${classeAvatarPorIndice(indice)}"></div>`;
+  if (posicao > 3) return `<span class="ranking-posicao--texto">${posicao}º</span><div class="list-item__avatar ${classeAvatarPorIndice(indice)}"></div>`;
   return `<div class="list-item__avatar-wrap list-item__avatar-wrap--alerta${posicao}">
       <div class="list-item__avatar ${classeAvatarPorIndice(indice)}"></div>
       <span class="list-item__medalha list-item__medalha--alerta${posicao}">${posicao}</span>
