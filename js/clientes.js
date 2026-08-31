@@ -17,7 +17,11 @@ function renderizarRankingTop3(clientesAtivos) {
     container.innerHTML = `<p class="text-secondary" style="text-align:center;">Ainda não há atendimentos realizados.</p>`;
     return;
   }
-  ranqueados.forEach((item, indice) => container.appendChild(montarLinhaRanking(item, indice, indice + 1, "faturamento")));
+  const podio = document.createElement("div");
+  podio.className = "podio";
+  const colunas = ranqueados.map((item, i) => ({ item: { nome: item.cliente.nome, valor: formatarValorMetrica(valorPorMetrica(item.stats, "faturamento"), "faturamento") }, posicao: i + 1 }));
+  [colunas[1], colunas[0], colunas[2]].filter(Boolean).forEach(({ item, posicao }) => podio.appendChild(montarPodioColuna(item, posicao)));
+  container.appendChild(podio);
 }
 
 function renderizarAniversariantesESemRetornar(clientesAtivos) {

@@ -58,7 +58,7 @@ function montarLinhaRanking(item, indice, posicao, metrica) {
          <div class="list-item__avatar ${classeAvatarPorIndice(indice)}"></div>
          <span class="list-item__medalha list-item__medalha--${sufixo}">${posicao}</span>
        </div>`
-    : `<span class="ranking-posicao">${posicao}</span><div class="list-item__avatar ${classeAvatarPorIndice(indice)}"></div>`;
+    : `<span class="ranking-posicao--texto">${posicao}º</span><div class="list-item__avatar ${classeAvatarPorIndice(indice)}"></div>`;
   linha.innerHTML = `
     ${avatar}
     <div class="list-item__body"><p class="list-item__title"></p></div>
