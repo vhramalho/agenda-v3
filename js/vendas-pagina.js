@@ -314,6 +314,19 @@ document.addEventListener("DOMContentLoaded", () => {
   const rotulo = qs("#js-periodo-label");
   if (!rotulo) return;
   iniciarTour("vendas");
+
+  /* Editar uma venda a partir de outra página (histórico do cliente em
+     cliente-detalhe.html) — o link já vem com ?abrirVenda=Y, mesma ideia do
+     ?abrirAtendimento de index.html (js/agenda.js). Limpa o parâmetro da URL
+     depois de abrir, senão um F5 reabriria o modal sem clique nenhum. */
+  const idVendaParaAbrir = new URLSearchParams(window.location.search).get("abrirVenda");
+  if (idVendaParaAbrir) {
+    const vendaParaAbrir = obterVendas().find((v) => v.id === idVendaParaAbrir);
+    if (vendaParaAbrir) {
+      abrirEdicaoVenda(vendaParaAbrir);
+      window.history.replaceState(null, "", "vendas.html");
+    }
+  }
   const labelPrincipal = qs("#js-periodo-principal");
   const labelSecundario = qs("#js-periodo-secundario");
   const rotulosPeriodo = { dia: "dia", semana: "semana", mes: "mês", ano: "ano" };

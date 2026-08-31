@@ -1077,6 +1077,26 @@ function abrirVendaAvulsaDaAgenda() {
   abrirModal("modal-nova-venda");
 }
 
+/* Botão "Resumo do dia" do topo da Agenda — números do dia que está sendo
+   visualizado (dataSelecionada, não necessariamente hoje). Agendamento
+   "bloqueado" não é atendimento de verdade, fica fora da contagem;
+   "realizado" cobre tanto pago quanto pendente (já é a regra usada em
+   calcularResumo de Atendimentos). */
+function abrirResumoDoDia() {
+  const dia = dataSelecionada;
+  const agendamentosDoDia = obterAgendamentos().filter((a) => a.data === dia && a.status !== "bloqueado");
+  const realizados = agendamentosDoDia.filter((a) => a.status && a.status.startsWith("realizado_"));
+  const valorAtendimentos = realizados.reduce((soma, a) => soma + (a.valorTotal || 0), 0);
+  const vendasDoDia = obterVendas().filter((v) => v.criadaEm.slice(0, 10) === dia);
+  const valorVendas = vendasDoDia.reduce((soma, v) => soma + (v.valorTotal || 0), 0);
+
+  qs("#js-resumo-dia-data").textContent = formatarDataCurta(dia);
+  qs("#js-resumo-dia-agendamentos").textContent = `${agendamentosDoDia.length} (${realizados.length} realizado${realizados.length === 1 ? "" : "s"})`;
+  qs("#js-resumo-dia-atendimentos").textContent = `${realizados.length} · ${formatarMoeda(valorAtendimentos)}`;
+  qs("#js-resumo-dia-vendas").textContent = `${vendasDoDia.length} · ${formatarMoeda(valorVendas)}`;
+  abrirModal("modal-resumo-dia");
+}
+
 function textoResumoVenda(venda) {
   const statusTexto = venda.status === "paga" ? "Pago" : "Pendente";
   return `${venda.itens.length} ite${venda.itens.length === 1 ? "m" : "ns"} — ${formatarMoeda(venda.valorTotal)} — ${statusTexto}`;

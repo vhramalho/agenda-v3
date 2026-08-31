@@ -58,8 +58,11 @@ function renderizarHistorico() {
       .map((sid) => (servicos.find((s) => s.id === sid) || {}).nome)
       .filter(Boolean)
       .join(" + ");
-    const linha = document.createElement("div");
+    const linha = document.createElement("a");
+    linha.href = `index.html?data=${a.data}&abrirAtendimento=${a.id}`;
     linha.className = "list-item";
+    linha.style.textDecoration = "none";
+    linha.style.color = "inherit";
     linha.innerHTML = `
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.8"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/></svg>
       <div class="list-item__body">
@@ -67,6 +70,7 @@ function renderizarHistorico() {
         <p class="list-item__subtitle"></p>
       </div>
       <p class="text-success" style="font-weight:700;"></p>
+      <svg class="list-item__chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
     `;
     linha.querySelector(".list-item__subtitle").textContent = nomesServicos || "—";
     linha.querySelector(".text-success").textContent = formatarMoeda(a.valorTotal || 0);
@@ -110,8 +114,11 @@ function renderizarCompras() {
       .map((item) => (produtos.find((p) => p.id === item.produtoId) || {}).nome || item.nomeProduto)
       .filter(Boolean)
       .join(" + ");
-    const linha = document.createElement("div");
+    const linha = document.createElement("a");
+    linha.href = `vendas.html?abrirVenda=${v.id}`;
     linha.className = "list-item";
+    linha.style.textDecoration = "none";
+    linha.style.color = "inherit";
     linha.innerHTML = `
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.8"><path d="M6 6h15l-1.5 9h-12z"/><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/></svg>
       <div class="list-item__body">
@@ -119,6 +126,7 @@ function renderizarCompras() {
         <p class="list-item__subtitle"></p>
       </div>
       <p style="font-weight:700;" class="js-compra-valor"></p>
+      <svg class="list-item__chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
     `;
     linha.querySelector(".list-item__subtitle").textContent = nomesItens || "—";
     const valorEl = linha.querySelector(".js-compra-valor");

@@ -731,20 +731,22 @@ function montarRecebimentos(resumo, formasContainerId, pizzaContainerId) {
    vendidos" (Vendas, 2026-08-05) — cada item da lista precisa só de
    { nome, valor } (quem chama normaliza a forma antes de passar, ex.
    { nome: produto.nome, valor: quantidade }). 2º/1º/3º da esquerda pra
-   direita, degrau mais alto pro 1º, número sempre visível em cada coluna
-   (não só a altura/posição, já que a diferença entre 1º e 3º pode ser
-   grande — o pódio é só um reforço visual de posição, não deveria
-   sugerir "quase empate"). "Ver todos" expande uma lista normal com o 4º
+   direita. Posição vira medalha (anel colorido + selo ouro/prata/bronze
+   no avatar, 2026-08-31) em vez dos degraus antigos — número sempre
+   visível em cada coluna. "Ver todos" expande uma lista normal com o 4º
    em diante, embaixo do pódio — não repete o top 3. `expandido` é
    controlado por quem chama (cada página guarda seu próprio estado). */
 function montarPodioColuna(item, posicao) {
   const coluna = document.createElement("div");
+  const sufixo = classePosicaoRanking(posicao).replace("ranking-posicao--", "");
   coluna.className = `podio__coluna podio__coluna--${posicao}`;
   coluna.innerHTML = `
-    <div class="list-item__avatar podio__avatar ${classeAvatarPorIndice(posicao - 1)}"></div>
+    <div class="podio__avatar-wrap podio__avatar-wrap--${sufixo}">
+      <div class="list-item__avatar podio__avatar ${classeAvatarPorIndice(posicao - 1)}"></div>
+      <span class="podio__medalha podio__medalha--${sufixo}">${posicao}º</span>
+    </div>
     <p class="podio__nome"></p>
     <p class="podio__valor"></p>
-    <div class="podio__degrau ${classePosicaoRanking(posicao).replace("ranking-posicao", "podio__degrau")}">${posicao}º</div>
   `;
   coluna.querySelector(".podio__avatar").textContent = iniciaisCliente(item.nome);
   coluna.querySelector(".podio__nome").textContent = item.nome;

@@ -52,9 +52,15 @@ function montarLinhaRanking(item, indice, posicao, metrica) {
   linha.className = "list-item";
   linha.style.textDecoration = "none";
   linha.style.color = "inherit";
+  const sufixo = classePosicaoRanking(posicao).replace("ranking-posicao--", "");
+  const avatar = sufixo
+    ? `<div class="list-item__avatar-wrap list-item__avatar-wrap--${sufixo}">
+         <div class="list-item__avatar ${classeAvatarPorIndice(indice)}"></div>
+         <span class="list-item__medalha list-item__medalha--${sufixo}">${posicao}</span>
+       </div>`
+    : `<span class="ranking-posicao">${posicao}</span><div class="list-item__avatar ${classeAvatarPorIndice(indice)}"></div>`;
   linha.innerHTML = `
-    <span class="ranking-posicao ${classePosicaoRanking(posicao)}">${posicao}</span>
-    <div class="list-item__avatar ${classeAvatarPorIndice(indice)}"></div>
+    ${avatar}
     <div class="list-item__body"><p class="list-item__title"></p></div>
     <span class="text-primary-accent" style="font-weight:700;"></span>
   `;

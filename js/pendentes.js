@@ -3,12 +3,12 @@
    Atende pendentes.html e pendentes-devedores.html — cada função só roda
    se os elementos daquela tela existirem no documento.
    pendentes.html: dois cards "A receber" lado a lado (atendimentos/vendas),
-   uma lista única "Quem deve" (mistura os dois tipos, cada linha diz qual é
-   qual num texto terciário) e um card "Devedores" com ranking combinado.
+   uma lista "Quem deve" com abas Atendimentos/Vendas (quemDeveAba, 2026-08-31
+   — pendenciasUnificadas() continua misturando os dois tipos, a aba só
+   filtra o que é exibido) e um card "Devedores" com ranking combinado.
    pendentes-devedores.html: ranking completo, com abas Atendimentos/Vendas
    (cada ocorrência ainda precisa saber seu tipo, pro modal de "conta/não
-   conta" funcionar — só a lista resumida de pendentes.html é que não
-   precisa mais dessa separação).
+   conta" funcionar).
    "Quem deve" leva à Agenda na data exata do pendente (?data=...).
    ============================================================ */
 
@@ -133,12 +133,24 @@ function rankingDevedores(periodo) {
   return Object.values(contagem).sort((a, b) => b.vezes - a.vezes);
 }
 
+/* Top 3 de devedor usa a mesma mecânica visual do pódio (anel + selo no
+   avatar), mas em paleta de alerta — ficar devendo não é conquista, ao
+   contrário do ranking de Melhores clientes (que usa ouro/prata/bronze
+   em js/clientes-derivadas.js). 4º em diante segue com .ranking-posicao
+   neutro, igual antes. */
+function avatarRankingDevedor(indice, posicao) {
+  if (posicao > 3) return `<span class="ranking-posicao">${posicao}</span><div class="list-item__avatar ${classeAvatarPorIndice(indice)}"></div>`;
+  return `<div class="list-item__avatar-wrap list-item__avatar-wrap--alerta${posicao}">
+      <div class="list-item__avatar ${classeAvatarPorIndice(indice)}"></div>
+      <span class="list-item__medalha list-item__medalha--alerta${posicao}">${posicao}</span>
+    </div>`;
+}
+
 function montarLinhaDevedorCompleta(item, indice, posicao, aoAtualizar) {
   const linha = document.createElement("div");
   linha.className = "list-item";
   linha.innerHTML = `
-    <span class="ranking-posicao ${classePosicaoRanking(posicao)}">${posicao}</span>
-    <div class="list-item__avatar ${classeAvatarPorIndice(indice)}"></div>
+    ${avatarRankingDevedor(indice, posicao)}
     <div class="list-item__body"><p class="list-item__title"></p></div>
     <span class="text-primary-accent" style="font-weight:700;"></span>
     ${aoAtualizar ? '<svg class="list-item__chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>' : ""}
@@ -172,8 +184,7 @@ function montarLinhaDevedorVendaCompleta(item, indice, posicao, aoAtualizar) {
   const linha = document.createElement("div");
   linha.className = "list-item";
   linha.innerHTML = `
-    <span class="ranking-posicao ${classePosicaoRanking(posicao)}">${posicao}</span>
-    <div class="list-item__avatar ${classeAvatarPorIndice(indice)}"></div>
+    ${avatarRankingDevedor(indice, posicao)}
     <div class="list-item__body"><p class="list-item__title"></p></div>
     <span class="text-primary-accent" style="font-weight:700;"></span>
     ${aoAtualizar ? '<svg class="list-item__chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>' : ""}
@@ -264,10 +275,12 @@ function renderizarOcorrenciasDevedor(item) {
   });
 }
 
-/* Estado de "Ver todos" do Quem deve — fora do closure do DOMContentLoaded
-   pra sobreviver a atualizarPendentesResumo() (chamada de novo depois de
-   editar/excluir uma venda pendente pelo modal, ver abrirEdicaoVendaPendente). */
+/* Estado de "Ver todos" e da aba (Atendimentos/Vendas) do Quem deve — fora
+   do closure do DOMContentLoaded pra sobreviver a atualizarPendentesResumo()
+   (chamada de novo depois de editar/excluir uma venda pendente pelo modal,
+   ver abrirEdicaoVendaPendente). */
 let quemDeveExpandido = false;
+let quemDeveAba = "atendimento";
 
 function atualizarCardsPendentes() {
   if (!qs("#js-pendentes-valor")) return;
@@ -283,7 +296,8 @@ function atualizarCardsPendentes() {
 
 function atualizarQuemDeve() {
   if (!qs("#js-quem-deve-lista")) return;
-  const unificada = pendenciasUnificadas();
+  const tipoFiltro = quemDeveAba === "vendas" ? "venda" : "atendimento";
+  const unificada = pendenciasUnificadas().filter((item) => item.tipo === tipoFiltro);
   const titulo = qs("#js-quem-deve-titulo");
   const toggle = qs("#js-quem-deve-toggle");
   const container = qs("#js-quem-deve-lista");
@@ -293,13 +307,14 @@ function atualizarQuemDeve() {
   if (unificada.length === 0) {
     container.classList.add("is-hidden");
     vazio.classList.remove("is-hidden");
+    vazio.querySelector(".empty-state__title").textContent = tipoFiltro === "venda" ? "Nenhuma venda pendente" : "Nenhum atendimento pendente";
     titulo.textContent = "Quem deve";
     toggle.classList.add("is-hidden");
   } else {
     container.classList.remove("is-hidden");
     vazio.classList.add("is-hidden");
-    (quemDeveExpandido ? unificada : unificada.slice(0, 2)).forEach((item, i) => container.appendChild(montarLinhaPendenteUnificada(item, i)));
-    if (unificada.length > 2) {
+    (quemDeveExpandido ? unificada : unificada.slice(0, 5)).forEach((item, i) => container.appendChild(montarLinhaPendenteUnificada(item, i)));
+    if (unificada.length > 5) {
       titulo.textContent = `Quem deve (${unificada.length})`;
       toggle.textContent = quemDeveExpandido ? "Ver menos" : "Ver todos";
       toggle.classList.remove("is-hidden");
@@ -335,11 +350,21 @@ document.addEventListener("DOMContentLoaded", () => {
   if (qs("#js-pendentes-valor")) iniciarTour("pendentes");
   atualizarPendentesResumo();
 
-  // ---- Quem deve — lista única, atendimento e venda misturados (expansível, limite 5) ----
+  // ---- Quem deve — aba Atendimentos/Vendas, cada uma expansível (limite 5) ----
   if (qs("#js-quem-deve-lista")) {
     qs("#js-quem-deve-toggle").addEventListener("click", () => {
       quemDeveExpandido = !quemDeveExpandido;
       atualizarQuemDeve();
+    });
+
+    qsa(".segmented__item", qs("#js-quem-deve-tabs")).forEach((item) => {
+      item.addEventListener("click", () => {
+        qsa(".segmented__item", qs("#js-quem-deve-tabs")).forEach((i) => i.classList.remove("is-active"));
+        item.classList.add("is-active");
+        quemDeveAba = item.dataset.aba;
+        quemDeveExpandido = false;
+        atualizarQuemDeve();
+      });
     });
 
     // Dica avulsa "clique para receber": só numa visita DEPOIS que o tour de

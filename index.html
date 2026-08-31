@@ -3,16 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <link rel="manifest" href="manifest.json?v=20260826k" />
-  <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg?v=20260826k" />
-  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png?v=20260826k" />
+  <link rel="manifest" href="manifest.json?v=20260831a" />
+  <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg?v=20260831a" />
+  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png?v=20260831a" />
   <meta name="theme-color" content="#0B0B10" />
   <title>Agenda — Swipo Agenda</title>
-  <link rel="stylesheet" href="css/tokens.css?v=20260826k" />
-  <link rel="stylesheet" href="css/base.css?v=20260826k" />
-  <link rel="stylesheet" href="css/layout.css?v=20260826k" />
-  <link rel="stylesheet" href="css/components.css?v=20260826k" />
-  <link rel="stylesheet" href="css/agenda.css?v=20260826k" />
+  <link rel="stylesheet" href="css/tokens.css?v=20260831a" />
+  <link rel="stylesheet" href="css/base.css?v=20260831a" />
+  <link rel="stylesheet" href="css/layout.css?v=20260831a" />
+  <link rel="stylesheet" href="css/components.css?v=20260831a" />
+  <link rel="stylesheet" href="css/agenda.css?v=20260831a" />
 </head>
 <body data-page="index">
   <div class="app">
@@ -28,6 +28,9 @@
           </button>
           <button class="icon-btn" aria-label="Ajuda" onclick="reiniciarTour('agenda')">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><text x="12" y="12.7" text-anchor="middle" dominant-baseline="middle" fill="currentColor" stroke="none" font-family="Arial, sans-serif" font-size="12.5" font-weight="700">?</text></svg>
+          </button>
+          <button type="button" class="icon-btn" aria-label="Resumo do dia" onclick="abrirResumoDoDia()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 20V10M12 20V4M20 20v-7"/></svg>
           </button>
           <button type="button" class="icon-btn" aria-label="Vender" onclick="abrirVendaAvulsaDaAgenda()">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 7h12l1 13H5L6 7z"/><path d="M9 7a3 3 0 0 1 6 0"/><text x="12" y="14" text-anchor="middle" dominant-baseline="middle" fill="currentColor" stroke="none" font-family="Arial, sans-serif" font-size="9.5" font-weight="700">$</text></svg>
@@ -163,6 +166,39 @@
           <span class="cal-grid__weekday">D</span><span class="cal-grid__weekday">S</span><span class="cal-grid__weekday">T</span><span class="cal-grid__weekday">Q</span><span class="cal-grid__weekday">Q</span><span class="cal-grid__weekday">S</span><span class="cal-grid__weekday">S</span>
         </div>
         <div class="cal-grid" id="js-cal-dias"></div>
+      </div>
+    </div>
+
+    <div class="modal-overlay is-hidden modal-overlay--centro" id="modal-resumo-dia">
+      <div class="modal-sheet modal-sheet--centro">
+        <div class="modal-sheet__header" style="text-align:left;">
+          <div>
+            <p class="modal-sheet__title">Resumo do dia</p>
+            <p class="text-secondary" style="font-size:var(--text-xs);" id="js-resumo-dia-data"></p>
+          </div>
+          <button class="modal-close">✕</button>
+        </div>
+        <div class="row row--between" style="padding:14px 0;border-bottom:1px solid var(--border);">
+          <div class="row" style="gap:var(--space-3);">
+            <span class="icon-circle icon-circle--blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/></svg></span>
+            <p style="font-weight:700;">Agendamentos</p>
+          </div>
+          <p style="font-weight:800;font-size:var(--text-md);" id="js-resumo-dia-agendamentos"></p>
+        </div>
+        <div class="row row--between" style="padding:14px 0;border-bottom:1px solid var(--border);">
+          <div class="row" style="gap:var(--space-3);">
+            <span class="icon-circle icon-circle--green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>
+            <p style="font-weight:700;">Atendimentos</p>
+          </div>
+          <p style="font-weight:800;font-size:var(--text-md);" id="js-resumo-dia-atendimentos"></p>
+        </div>
+        <div class="row row--between" style="padding:14px 0;">
+          <div class="row" style="gap:var(--space-3);">
+            <span class="icon-circle icon-circle--teal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 7h12l1 13H5L6 7z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg></span>
+            <p style="font-weight:700;">Vendas</p>
+          </div>
+          <p style="font-weight:800;font-size:var(--text-md);" id="js-resumo-dia-vendas"></p>
+        </div>
       </div>
     </div>
 
@@ -606,24 +642,24 @@
     </div>
   </div>
 
-  <script src="js/utils.js?v=20260826k"></script>
-  <script src="js/menu.js?v=20260826k"></script>
-  <script src="js/storage.js?v=20260826k"></script>
-  <script src="js/notificacoes-clientes.js?v=20260826k"></script>
-  <script src="js/tema.js?v=20260826k"></script>
-  <script src="js/app.js?v=20260826k"></script>
-  <script src="js/chips.js?v=20260826k"></script>
-  <script src="js/modal.js?v=20260826k"></script>
-  <script src="js/ajuda-dados.js?v=20260826k"></script>
-  <script src="js/ajuda.js?v=20260826k"></script>
-  <script src="js/calendario.js?v=20260826k"></script>
-  <script src="js/acoes-simuladas.js?v=20260826k"></script>
-  <script src="js/vendas.js?v=20260826k"></script>
-  <script src="js/agenda.js?v=20260826k"></script>
+  <script src="js/utils.js?v=20260831a"></script>
+  <script src="js/menu.js?v=20260831a"></script>
+  <script src="js/storage.js?v=20260831a"></script>
+  <script src="js/notificacoes-clientes.js?v=20260831a"></script>
+  <script src="js/tema.js?v=20260831a"></script>
+  <script src="js/app.js?v=20260831a"></script>
+  <script src="js/chips.js?v=20260831a"></script>
+  <script src="js/modal.js?v=20260831a"></script>
+  <script src="js/ajuda-dados.js?v=20260831a"></script>
+  <script src="js/ajuda.js?v=20260831a"></script>
+  <script src="js/calendario.js?v=20260831a"></script>
+  <script src="js/acoes-simuladas.js?v=20260831a"></script>
+  <script src="js/vendas.js?v=20260831a"></script>
+  <script src="js/agenda.js?v=20260831a"></script>
   <!-- Funcionalidade de lembrete desativada (2026-07-12) -- js/agenda.js já
        guarda a chamada com "typeof window.renderizarAgendaDiario === 'function'",
        então não carregar este arquivo não quebra nada.
-  <script src="js/agenda-diario.js?v=20260826k"></script>
+  <script src="js/agenda-diario.js?v=20260831a"></script>
   -->
 </body>
 </html>
