@@ -1078,22 +1078,25 @@ function abrirVendaAvulsaDaAgenda() {
 }
 
 /* Botão "Resumo do dia" do topo da Agenda — números do dia que está sendo
-   visualizado (dataSelecionada, não necessariamente hoje). Agendamento
-   "bloqueado" não é atendimento de verdade, fica fora da contagem;
-   "realizado" cobre tanto pago quanto pendente (já é a regra usada em
-   calcularResumo de Atendimentos). */
+   visualizado (dataSelecionada, não necessariamente hoje). "Agendamentos"
+   conta só quem ainda não foi atendido (status "agendado" — bloqueio não
+   é agendamento de verdade, fica fora); "Atendimentos" é quem já foi
+   realizado (pago ou pendente, mesma regra de calcularResumo). */
 function abrirResumoDoDia() {
   const dia = dataSelecionada;
-  const agendamentosDoDia = obterAgendamentos().filter((a) => a.data === dia && a.status !== "bloqueado");
-  const realizados = agendamentosDoDia.filter((a) => a.status && a.status.startsWith("realizado_"));
+  const agendamentosDoDia = obterAgendamentos().filter((a) => a.data === dia && a.status === "agendado");
+  const realizados = obterAgendamentos().filter((a) => a.data === dia && a.status && a.status.startsWith("realizado_"));
   const valorAtendimentos = realizados.reduce((soma, a) => soma + (a.valorTotal || 0), 0);
   const vendasDoDia = obterVendas().filter((v) => v.criadaEm.slice(0, 10) === dia);
   const valorVendas = vendasDoDia.reduce((soma, v) => soma + (v.valorTotal || 0), 0);
+  const [, mes, diaNum] = dia.split("-");
 
-  qs("#js-resumo-dia-data").textContent = formatarDataCurta(dia);
-  qs("#js-resumo-dia-agendamentos").textContent = `${agendamentosDoDia.length} (${realizados.length} realizado${realizados.length === 1 ? "" : "s"})`;
-  qs("#js-resumo-dia-atendimentos").textContent = `${realizados.length} · ${formatarMoeda(valorAtendimentos)}`;
-  qs("#js-resumo-dia-vendas").textContent = `${vendasDoDia.length} · ${formatarMoeda(valorVendas)}`;
+  qs("#js-resumo-dia-data").textContent = `${diaNum}/${mes}`;
+  qs("#js-resumo-dia-agendamentos").textContent = agendamentosDoDia.length;
+  qs("#js-resumo-dia-atendimentos-und").textContent = realizados.length;
+  qs("#js-resumo-dia-atendimentos-valor").textContent = formatarMoeda(valorAtendimentos);
+  qs("#js-resumo-dia-vendas-und").textContent = vendasDoDia.length;
+  qs("#js-resumo-dia-vendas-valor").textContent = formatarMoeda(valorVendas);
   abrirModal("modal-resumo-dia");
 }
 
