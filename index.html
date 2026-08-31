@@ -3,16 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <link rel="manifest" href="manifest.json?v=20260831d" />
-  <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg?v=20260831d" />
-  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png?v=20260831d" />
+  <link rel="manifest" href="manifest.json?v=20260831e" />
+  <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg?v=20260831e" />
+  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png?v=20260831e" />
   <meta name="theme-color" content="#0B0B10" />
   <title>Agenda — Swipo Agenda</title>
-  <link rel="stylesheet" href="css/tokens.css?v=20260831d" />
-  <link rel="stylesheet" href="css/base.css?v=20260831d" />
-  <link rel="stylesheet" href="css/layout.css?v=20260831d" />
-  <link rel="stylesheet" href="css/components.css?v=20260831d" />
-  <link rel="stylesheet" href="css/agenda.css?v=20260831d" />
+  <link rel="stylesheet" href="css/tokens.css?v=20260831e" />
+  <link rel="stylesheet" href="css/base.css?v=20260831e" />
+  <link rel="stylesheet" href="css/layout.css?v=20260831e" />
+  <link rel="stylesheet" href="css/components.css?v=20260831e" />
+  <link rel="stylesheet" href="css/agenda.css?v=20260831e" />
 </head>
 <body data-page="index">
   <div class="app">
@@ -179,31 +179,26 @@
           <button class="modal-close">✕</button>
         </div>
 
-        <div class="card" style="text-align:center;margin-top:20px;">
-          <p style="font-weight:800;font-size:var(--text-lg);" id="js-resumo-dia-agendamentos"></p>
-          <p class="text-secondary" style="font-size:var(--text-xs);">agendamentos</p>
+        <div class="row row--between" style="padding:14px 0;">
+          <div class="row" style="gap:var(--space-3);">
+            <span class="icon-circle icon-circle--blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/></svg></span>
+            <p style="font-weight:700;">Agendamentos</p>
+          </div>
+          <p style="font-weight:800;font-size:var(--text-md);" id="js-resumo-dia-agendamentos"></p>
         </div>
-
-        <div class="card grid-2" style="grid-template-columns:1fr 1fr;text-align:center;margin-top:12px;">
-          <div>
-            <p style="font-weight:800;font-size:var(--text-lg);" id="js-resumo-dia-atendimentos-und"></p>
-            <p class="text-secondary" style="font-size:var(--text-xs);">atendimentos</p>
+        <div class="row row--between" style="padding:14px 0;">
+          <div class="row" style="gap:var(--space-3);">
+            <span class="icon-circle icon-circle--green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>
+            <p style="font-weight:700;">Atendimentos</p>
           </div>
-          <div style="border-left:1px solid var(--border);">
-            <p style="font-weight:800;font-size:var(--text-lg);" id="js-resumo-dia-atendimentos-valor"></p>
-            <p class="text-secondary" style="font-size:var(--text-xs);">faturado</p>
-          </div>
+          <p style="font-weight:800;font-size:var(--text-md);" id="js-resumo-dia-atendimentos"></p>
         </div>
-
-        <div class="card grid-2" style="grid-template-columns:1fr 1fr;text-align:center;margin-top:12px;">
-          <div>
-            <p style="font-weight:800;font-size:var(--text-lg);" id="js-resumo-dia-vendas-und"></p>
-            <p class="text-secondary" style="font-size:var(--text-xs);">vendas</p>
+        <div class="row row--between" style="padding:14px 0;">
+          <div class="row" style="gap:var(--space-3);">
+            <span class="icon-circle icon-circle--teal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 7h12l1 13H5L6 7z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg></span>
+            <p style="font-weight:700;">Vendas</p>
           </div>
-          <div style="border-left:1px solid var(--border);">
-            <p style="font-weight:800;font-size:var(--text-lg);" id="js-resumo-dia-vendas-valor"></p>
-            <p class="text-secondary" style="font-size:var(--text-xs);">faturado</p>
-          </div>
+          <p style="font-weight:800;font-size:var(--text-md);" id="js-resumo-dia-vendas"></p>
         </div>
       </div>
     </div>
@@ -648,24 +643,24 @@
     </div>
   </div>
 
-  <script src="js/utils.js?v=20260831d"></script>
-  <script src="js/menu.js?v=20260831d"></script>
-  <script src="js/storage.js?v=20260831d"></script>
-  <script src="js/notificacoes-clientes.js?v=20260831d"></script>
-  <script src="js/tema.js?v=20260831d"></script>
-  <script src="js/app.js?v=20260831d"></script>
-  <script src="js/chips.js?v=20260831d"></script>
-  <script src="js/modal.js?v=20260831d"></script>
-  <script src="js/ajuda-dados.js?v=20260831d"></script>
-  <script src="js/ajuda.js?v=20260831d"></script>
-  <script src="js/calendario.js?v=20260831d"></script>
-  <script src="js/acoes-simuladas.js?v=20260831d"></script>
-  <script src="js/vendas.js?v=20260831d"></script>
-  <script src="js/agenda.js?v=20260831d"></script>
+  <script src="js/utils.js?v=20260831e"></script>
+  <script src="js/menu.js?v=20260831e"></script>
+  <script src="js/storage.js?v=20260831e"></script>
+  <script src="js/notificacoes-clientes.js?v=20260831e"></script>
+  <script src="js/tema.js?v=20260831e"></script>
+  <script src="js/app.js?v=20260831e"></script>
+  <script src="js/chips.js?v=20260831e"></script>
+  <script src="js/modal.js?v=20260831e"></script>
+  <script src="js/ajuda-dados.js?v=20260831e"></script>
+  <script src="js/ajuda.js?v=20260831e"></script>
+  <script src="js/calendario.js?v=20260831e"></script>
+  <script src="js/acoes-simuladas.js?v=20260831e"></script>
+  <script src="js/vendas.js?v=20260831e"></script>
+  <script src="js/agenda.js?v=20260831e"></script>
   <!-- Funcionalidade de lembrete desativada (2026-07-12) -- js/agenda.js já
        guarda a chamada com "typeof window.renderizarAgendaDiario === 'function'",
        então não carregar este arquivo não quebra nada.
-  <script src="js/agenda-diario.js?v=20260831d"></script>
+  <script src="js/agenda-diario.js?v=20260831e"></script>
   -->
 </body>
 </html>

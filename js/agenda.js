@@ -1093,10 +1093,8 @@ function abrirResumoDoDia() {
 
   qs("#js-resumo-dia-data").textContent = `${diaNum}/${mes}`;
   qs("#js-resumo-dia-agendamentos").textContent = agendamentosDoDia.length;
-  qs("#js-resumo-dia-atendimentos-und").textContent = realizados.length;
-  qs("#js-resumo-dia-atendimentos-valor").textContent = formatarMoeda(valorAtendimentos);
-  qs("#js-resumo-dia-vendas-und").textContent = vendasDoDia.length;
-  qs("#js-resumo-dia-vendas-valor").textContent = formatarMoeda(valorVendas);
+  qs("#js-resumo-dia-atendimentos").textContent = `${realizados.length} · ${formatarMoeda(valorAtendimentos)}`;
+  qs("#js-resumo-dia-vendas").textContent = `${vendasDoDia.length} · ${formatarMoeda(valorVendas)}`;
   abrirModal("modal-resumo-dia");
 }
 
