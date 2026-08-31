@@ -65,7 +65,7 @@ body[data-page="index"] #js-agenda-lista-preview {
   color: inherit;
   font-family: inherit;
   font-weight: 800;
-  font-size: var(--text-md);
+  font-size: var(--text-sm);
   cursor: pointer;
 }
 
