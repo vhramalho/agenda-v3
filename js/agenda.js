@@ -652,7 +652,13 @@ function duracaoAprendida(opcoes) {
 }
 
 /* Chips de duração do atendimento — sempre múltiplos da grade atual. Sem
-   opção "sem duração": a menor opção já cobre "ocupa só este horário". */
+   opção "sem duração": a menor opção já cobre "ocupa só este horário".
+   Só os 4 primeiros valores viram chip (2026-09-01) — grades finas geram
+   muita opção (ver teto em gerarOpcoesDuracao, js/utils.js) e uma fileira
+   crescendo sem limite "suja" o bottom sheet. O que sobra do 5º valor em
+   diante mora dentro de um seletor tipo dropdown (reaproveita
+   .time-select__option), que ocupa o lugar do 5º chip — só aparece
+   quando há mesmo o que mostrar ali. */
 function montarDuracaoChips(containerId, duracaoAtual) {
   const container = qs(`#${containerId}`);
   container.innerHTML = "";
@@ -660,15 +666,91 @@ function montarDuracaoChips(containerId, duracaoAtual) {
   const opcoes = gerarOpcoesDuracao(config.intervaloGrade);
   const aprendida = duracaoAprendida(opcoes);
   const sugestao = duracaoAtual || aprendida || (config.tempoPadraoAtendimento && opcoes.includes(config.tempoPadraoAtendimento) ? config.tempoPadraoAtendimento : opcoes[0]);
-  opcoes.forEach((valor) => {
+  const principais = opcoes.slice(0, 4);
+  const resto = opcoes.slice(4);
+
+  principais.forEach((valor) => {
     const chip = document.createElement("span");
     chip.className = "chip" + (valor === sugestao ? " chip--ativo" : "");
     chip.dataset.valor = valor;
     chip.textContent = `${valor} min`;
     container.appendChild(chip);
   });
+
+  if (resto.length > 0) {
+    const sugestaoNoResto = resto.includes(sugestao);
+    const seletor = document.createElement("div");
+    seletor.className = "chip duracao-mais" + (sugestaoNoResto ? " chip--ativo" : "");
+    seletor.dataset.valor = sugestaoNoResto ? sugestao : "";
+    seletor.dataset.duracaoMais = "1";
+    seletor.innerHTML = `
+      <span class="duracao-mais__texto">${sugestaoNoResto ? `${sugestao} min` : "+"}</span>
+      <div class="duracao-mais__menu is-hidden">
+        ${resto.map((v) => `<button type="button" class="time-select__option${v === sugestao ? " is-ativo" : ""}" data-valor="${v}">${v} min</button>`).join("")}
+      </div>
+    `;
+    container.appendChild(seletor);
+  }
+
   inicializarGrupoChips(container, false);
+  inicializarDuracaoMais(container);
 }
+
+/* Abre/fecha o dropdown do seletor "+" e sincroniza estado com os chips
+   normais do mesmo grupo (escolher um chip normal reseta o seletor pra
+   "+"; escolher um valor no seletor desmarca os chips normais — sempre
+   single-select entre os dois). */
+function inicializarDuracaoMais(container) {
+  const seletor = qs(".duracao-mais", container);
+  if (!seletor) return;
+  const menu = qs(".duracao-mais__menu", seletor);
+  const texto = qs(".duracao-mais__texto", seletor);
+
+  seletor.addEventListener("click", (evento) => {
+    // Clique numa opção do próprio menu passa direto (não abre/fecha de
+    // novo) — precisa borbulhar até o container pra disparar o listener de
+    // página (ex. atualizarPreviaWhatsapp), então esse listener aqui (o
+    // gatilho do "+") só reage a clique fora do menu.
+    if (evento.target.closest(".duracao-mais__menu")) return;
+    evento.stopPropagation();
+    const estavaAberto = !menu.classList.contains("is-hidden");
+    qsa(".duracao-mais__menu").forEach((m) => m.classList.add("is-hidden"));
+    if (estavaAberto) return;
+    menu.classList.remove("is-hidden");
+    const ativa = qs(".is-ativo", menu);
+    if (ativa) ativa.scrollIntoView({ block: "center" });
+  });
+
+  qsa(".time-select__option", menu).forEach((opcao) => {
+    opcao.addEventListener("click", () => {
+      // Sem stopPropagation aqui: precisa borbulhar até o container pra
+      // disparar o listener de página (ex. atualizarPreviaWhatsapp) que já
+      // escuta clique em ".chip" ali — o guard de dataset.duracaoMais no
+      // listener do container (abaixo) já impede o reset indevido do
+      // próprio seletor nesse caso.
+      qsa(".chip", container).forEach((c) => c.classList.remove("chip--ativo"));
+      seletor.classList.add("chip--ativo");
+      seletor.dataset.valor = opcao.dataset.valor;
+      texto.textContent = `${opcao.dataset.valor} min`;
+      qsa(".time-select__option", menu).forEach((o) => o.classList.remove("is-ativo"));
+      opcao.classList.add("is-ativo");
+      menu.classList.add("is-hidden");
+    });
+  });
+
+  container.addEventListener("click", (evento) => {
+    const chipClicado = evento.target.closest(".chip");
+    if (!chipClicado || chipClicado.dataset.duracaoMais) return;
+    seletor.classList.remove("chip--ativo");
+    seletor.dataset.valor = "";
+    texto.textContent = "+";
+    qsa(".time-select__option", menu).forEach((o) => o.classList.remove("is-ativo"));
+  });
+}
+
+document.addEventListener("click", () => {
+  qsa(".duracao-mais__menu").forEach((m) => m.classList.add("is-hidden"));
+});
 
 function duracaoSelecionada(containerId) {
   const ativo = qs(".chip--ativo", qs(`#${containerId}`));

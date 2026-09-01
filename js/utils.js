@@ -166,10 +166,16 @@ function gerarGradeHorarios(horaInicio, horaFim, intervaloGrade) {
 }
 
 /* Opções de duração/compartilhamento: sempre múltiplos exatos da grade, até
-   o total chegar em pelo menos 120min E existirem pelo menos 3 opções —
-   regra validada nas simulações antes da implementação (ver
-   docs/REFATORACAO_DURACAO_COMPARTILHAMENTO.md). */
+   o total chegar no teto E existirem pelo menos 3 opções — regra original
+   validada nas simulações antes da implementação (ver
+   docs/REFATORACAO_DURACAO_COMPARTILHAMENTO.md). Só os 4 primeiros valores
+   viram chip (montarDuracaoChips, js/agenda.js) — o resto mora num
+   seletor "+", por isso o teto pôde subir sem "sujar" o bottom sheet
+   (2026-09-01): grades finas (≤10min) já geram muita opção só pra chegar
+   em 120min, então o teto fica baixo mesmo; grades ≥15min sobem pra 240min
+   (4h), útil pra bloco grande de disponibilidade em Compartilhar horários. */
 function gerarOpcoesDuracao(grade) {
+  const teto = grade <= 10 ? 120 : 240;
   const opcoes = [];
   let total = 0;
   let mult = 1;
@@ -178,7 +184,7 @@ function gerarOpcoesDuracao(grade) {
     opcoes.push(valor);
     total = valor;
     mult++;
-    if (total >= 120 && opcoes.length >= 3) break;
+    if (total >= teto && opcoes.length >= 3) break;
     if (opcoes.length > 20) break;
   }
   return opcoes;

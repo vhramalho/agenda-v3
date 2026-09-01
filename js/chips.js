@@ -71,6 +71,9 @@ function inicializarGrupoChips(container, multiplo) {
   const classeAtiva = container.dataset.chipEstilo === "outline" ? "chip--outline-ativo" : "chip--ativo";
   const chips = qsa(".chip", container);
   chips.forEach((chip) => {
+    // Seletor "+" de duração (js/agenda.js, montarDuracaoChips) cuida do
+    // próprio clique — abre um menu em vez de só alternar chip--ativo.
+    if (chip.dataset.duracaoMais) return;
     chip.addEventListener("click", () => {
       if (!multiplo) {
         chips.forEach((c) => c.classList.remove("chip--ativo", "chip--outline-ativo"));
