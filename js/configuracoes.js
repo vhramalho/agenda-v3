@@ -54,19 +54,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const GRADE_BASE_HORARIOS = gerarGradeHorarios("00:00", "23:30", 30);
 
-  function montarChipsHorario(containerId, valorAtual) {
-    const container = qs(`#${containerId}`);
-    container.innerHTML = "";
-    GRADE_BASE_HORARIOS.forEach((hora) => {
-      const chip = document.createElement("span");
-      chip.className = "chip" + (hora === valorAtual ? " chip--ativo" : "");
-      chip.dataset.valor = hora;
-      chip.textContent = hora;
-      container.appendChild(chip);
-    });
-    inicializarGrupoChips(container, false);
-  }
-
   function marcarChipValor(containerId, valor) {
     qsa(".chip", qs(`#${containerId}`)).forEach((chip) => {
       chip.classList.toggle("chip--ativo", chip.dataset.valor === String(valor));
@@ -85,32 +72,30 @@ document.addEventListener("DOMContentLoaded", () => {
     qs("#js-grade-valor").textContent = `${config.intervaloGrade} minutos`;
   }
 
-  qs("#js-primeiro-horario-row").addEventListener("click", () => {
-    montarChipsHorario("js-primeiro-horario-chips", obterConfig().horaInicio);
-    abrirModal("modal-primeiro-horario");
-  });
-  qs("#js-primeiro-horario-salvar").addEventListener("click", () => {
-    const novoValor = valorSelecionado("js-primeiro-horario-chips");
-    const config = obterConfig();
-    if (!novoValor || novoValor >= config.horaFim) return;
-    config.horaInicio = novoValor;
-    salvarConfig(config);
-    atualizarTextosAgenda();
-    fecharModal("modal-primeiro-horario");
-  });
-
-  qs("#js-ultimo-horario-row").addEventListener("click", () => {
-    montarChipsHorario("js-ultimo-horario-chips", obterConfig().horaFim);
-    abrirModal("modal-ultimo-horario");
-  });
-  qs("#js-ultimo-horario-salvar").addEventListener("click", () => {
-    const novoValor = valorSelecionado("js-ultimo-horario-chips");
-    const config = obterConfig();
-    if (!novoValor || novoValor <= config.horaInicio) return;
-    config.horaFim = novoValor;
-    salvarConfig(config);
-    atualizarTextosAgenda();
-    fecharModal("modal-ultimo-horario");
+  /* Primeiro/Último horário viraram dropdown-picker inline (2026-09-01,
+     js/chips.js) — escolha aplica na hora, sem passo de "Salvar". Validação
+     cruzada (início não pode passar do fim e vice-versa) agora acontece no
+     próprio clique da opção: `aoSelecionar` retorna `false` pra rejeitar e
+     manter o menu aberto, com um aviso explicando por quê. */
+  ["js-primeiro-horario-row", "js-ultimo-horario-row"].forEach((id) => {
+    const wrapper = qs(`#${id}`);
+    const campo = id === "js-primeiro-horario-row" ? "horaInicio" : "horaFim";
+    montarOpcoesDropdownPicker(qs(".dropdown-picker__menu", wrapper), GRADE_BASE_HORARIOS, obterConfig()[campo]);
+    inicializarDropdownPicker(wrapper, (valor) => {
+      const config = obterConfig();
+      if (campo === "horaInicio" && valor >= config.horaFim) {
+        mostrarAviso("Primeiro horário precisa ser antes do último");
+        return false;
+      }
+      if (campo === "horaFim" && valor <= config.horaInicio) {
+        mostrarAviso("Último horário precisa ser depois do primeiro");
+        return false;
+      }
+      config[campo] = valor;
+      salvarConfig(config);
+      atualizarTextosAgenda();
+      qsa(".time-select__option", wrapper).forEach((o) => o.classList.toggle("is-ativo", o.dataset.valor === valor));
+    });
   });
 
   qs("#js-grade-row").addEventListener("click", () => {

@@ -3,15 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <link rel="manifest" href="manifest.json?v=20260901d" />
-  <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg?v=20260901d" />
-  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png?v=20260901d" />
+  <link rel="manifest" href="manifest.json?v=20260901e" />
+  <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg?v=20260901e" />
+  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png?v=20260901e" />
   <meta name="theme-color" content="#0B0B10" />
   <title>Configurações — Swipo Agenda</title>
-  <link rel="stylesheet" href="css/tokens.css?v=20260901d" />
-  <link rel="stylesheet" href="css/base.css?v=20260901d" />
-  <link rel="stylesheet" href="css/layout.css?v=20260901d" />
-  <link rel="stylesheet" href="css/components.css?v=20260901d" />
+  <link rel="stylesheet" href="css/tokens.css?v=20260901e" />
+  <link rel="stylesheet" href="css/base.css?v=20260901e" />
+  <link rel="stylesheet" href="css/layout.css?v=20260901e" />
+  <link rel="stylesheet" href="css/components.css?v=20260901e" />
 </head>
 <body data-page="mais">
   <div class="app">
@@ -53,18 +53,24 @@
       <section class="section">
         <h2 class="section__title">Agenda</h2>
         <div class="card">
-          <button class="list-item" id="js-primeiro-horario-row" style="text-decoration:none;color:inherit;background:none;border:none;width:100%;text-align:left;">
-            <div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></div>
-            <div class="list-item__body"><p class="list-item__title">Primeiro horário</p></div>
-            <span class="text-secondary" id="js-primeiro-horario-valor"></span>
-            <svg class="list-item__chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
-          </button>
-          <button class="list-item" id="js-ultimo-horario-row" style="text-decoration:none;color:inherit;background:none;border:none;width:100%;text-align:left;">
-            <div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></div>
-            <div class="list-item__body"><p class="list-item__title">Último horário</p></div>
-            <span class="text-secondary" id="js-ultimo-horario-valor"></span>
-            <svg class="list-item__chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
-          </button>
+          <div class="dropdown-picker" id="js-primeiro-horario-row">
+            <button class="list-item dropdown-picker__trigger" style="text-decoration:none;color:inherit;background:none;border:none;width:100%;">
+              <div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></div>
+              <div class="list-item__body"><p class="list-item__title">Primeiro horário</p></div>
+              <span class="text-secondary" id="js-primeiro-horario-valor"></span>
+              <svg class="list-item__chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
+            </button>
+            <div class="dropdown-picker__menu is-hidden"></div>
+          </div>
+          <div class="dropdown-picker" id="js-ultimo-horario-row">
+            <button class="list-item dropdown-picker__trigger" style="text-decoration:none;color:inherit;background:none;border:none;width:100%;">
+              <div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></div>
+              <div class="list-item__body"><p class="list-item__title">Último horário</p></div>
+              <span class="text-secondary" id="js-ultimo-horario-valor"></span>
+              <svg class="list-item__chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
+            </button>
+            <div class="dropdown-picker__menu is-hidden"></div>
+          </div>
           <button class="list-item" id="js-grade-row" style="text-decoration:none;color:inherit;background:none;border:none;width:100%;text-align:left;">
             <div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/></svg></div>
             <div class="list-item__body"><p class="list-item__title">Visualização</p></div>
@@ -72,6 +78,7 @@
             <svg class="list-item__chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
           </button>
         </div>
+        <p class="text-secondary" style="font-size:var(--text-xs);margin-top:8px;">Agendamentos já criados continuam aparecendo normalmente, mesmo fora do novo horário.</p>
       </section>
 
       <section class="section">
@@ -129,25 +136,9 @@
 
     <div id="js-bottom-nav-mount"></div>
 
-    <!-- Modais de configuração da Agenda — ligados de verdade ao localStorage (Fase 3) -->
-    <div class="modal-overlay is-hidden" id="modal-primeiro-horario">
-      <div class="modal-sheet">
-        <div class="modal-sheet__header"><p class="modal-sheet__title">Primeiro horário</p><button class="modal-close">✕</button></div>
-        <p class="text-secondary" style="margin-bottom:12px;">Agendamentos já criados continuam aparecendo normalmente, mesmo fora do novo horário.</p>
-        <div class="chip-group" style="max-height:50vh;overflow-y:auto;" data-chips="single" id="js-primeiro-horario-chips"></div>
-        <div class="btn-row" style="margin-top:16px;"><button class="btn btn--secondary" data-fechar-modal>Cancelar</button><button class="btn btn--primary" id="js-primeiro-horario-salvar">Salvar</button></div>
-      </div>
-    </div>
-
-    <div class="modal-overlay is-hidden" id="modal-ultimo-horario">
-      <div class="modal-sheet">
-        <div class="modal-sheet__header"><p class="modal-sheet__title">Último horário</p><button class="modal-close">✕</button></div>
-        <p class="text-secondary" style="margin-bottom:12px;">Agendamentos já criados continuam aparecendo normalmente, mesmo fora do novo horário.</p>
-        <div class="chip-group" style="max-height:50vh;overflow-y:auto;" data-chips="single" id="js-ultimo-horario-chips"></div>
-        <div class="btn-row" style="margin-top:16px;"><button class="btn btn--secondary" data-fechar-modal>Cancelar</button><button class="btn btn--primary" id="js-ultimo-horario-salvar">Salvar</button></div>
-      </div>
-    </div>
-
+    <!-- Modal de configuração da Agenda restante — ligado de verdade ao localStorage (Fase 3).
+         Primeiro/Último horário viraram dropdown-picker inline (2026-09-01, ver js/chips.js) —
+         não são mais modal, escolha já aplica na hora. -->
     <div class="modal-overlay is-hidden" id="modal-grade">
       <div class="modal-sheet">
         <div class="modal-sheet__header"><p class="modal-sheet__title">Visualização da agenda</p><button class="modal-close">✕</button></div>
@@ -197,17 +188,17 @@
     </div>
   </div>
 
-  <script src="js/utils.js?v=20260901d"></script>
-  <script src="js/menu.js?v=20260901d"></script>
-  <script src="js/storage.js?v=20260901d"></script>
-  <script src="js/notificacoes-clientes.js?v=20260901d"></script>
-  <script src="js/tema.js?v=20260901d"></script>
-  <script src="js/app.js?v=20260901d"></script>
-  <script src="js/chips.js?v=20260901d"></script>
-  <script src="js/modal.js?v=20260901d"></script>
-  <script src="js/ajuda-dados.js?v=20260901d"></script>
-  <script src="js/ajuda.js?v=20260901d"></script>
-  <script src="js/configuracoes.js?v=20260901d"></script>
-  <script src="js/versao.js?v=20260901d"></script>
+  <script src="js/utils.js?v=20260901e"></script>
+  <script src="js/menu.js?v=20260901e"></script>
+  <script src="js/storage.js?v=20260901e"></script>
+  <script src="js/notificacoes-clientes.js?v=20260901e"></script>
+  <script src="js/tema.js?v=20260901e"></script>
+  <script src="js/app.js?v=20260901e"></script>
+  <script src="js/chips.js?v=20260901e"></script>
+  <script src="js/modal.js?v=20260901e"></script>
+  <script src="js/ajuda-dados.js?v=20260901e"></script>
+  <script src="js/ajuda.js?v=20260901e"></script>
+  <script src="js/configuracoes.js?v=20260901e"></script>
+  <script src="js/versao.js?v=20260901e"></script>
 </body>
 </html>

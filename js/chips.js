@@ -86,6 +86,48 @@ function inicializarGrupoChips(container, multiplo) {
   });
 }
 
+/* ---------- Seletor "dropdown-picker" genérico ----------
+   Popula o menu (montarOpcoesDropdownPicker) e liga abrir/fechar/escolher
+   (inicializarDropdownPicker) de um `.dropdown-picker` — usado em
+   Onboarding e Configurações pro campo Primeiro/Último horário (2026-09-01,
+   substituiu <select> nativo e bottom-sheet-com-chips respectivamente,
+   pra ficar no mesmo padrão do "+" de duração em js/agenda.js). Quem chama
+   é dono do estado (texto exibido, classe is-ativo) — `aoSelecionar`
+   recebe o valor escolhido e faz essa atualização; se retornar `false`
+   explicitamente, a escolha é rejeitada (menu continua aberto, nada muda
+   — usado em Configurações pra bloquear horário inválido). */
+function montarOpcoesDropdownPicker(menuEl, opcoes, valorAtual) {
+  menuEl.innerHTML = opcoes
+    .map((v) => `<button type="button" class="time-select__option${v === valorAtual ? " is-ativo" : ""}" data-valor="${v}">${v}</button>`)
+    .join("");
+}
+
+function inicializarDropdownPicker(wrapperEl, aoSelecionar) {
+  const trigger = qs(".dropdown-picker__trigger", wrapperEl);
+  const menu = qs(".dropdown-picker__menu", wrapperEl);
+
+  trigger.addEventListener("click", (evento) => {
+    evento.stopPropagation();
+    const estavaAberto = !menu.classList.contains("is-hidden");
+    qsa(".dropdown-picker__menu").forEach((m) => m.classList.add("is-hidden"));
+    if (estavaAberto) return;
+    menu.classList.remove("is-hidden");
+    const ativa = qs(".is-ativo", menu);
+    if (ativa) ativa.scrollIntoView({ block: "center" });
+  });
+
+  menu.addEventListener("click", (evento) => {
+    const opcao = evento.target.closest(".time-select__option");
+    if (!opcao) return;
+    if (aoSelecionar(opcao.dataset.valor) === false) return;
+    menu.classList.add("is-hidden");
+  });
+}
+
+document.addEventListener("click", () => {
+  qsa(".dropdown-picker__menu").forEach((m) => m.classList.add("is-hidden"));
+});
+
 function inicializarSegmentado(container) {
   const itens = qsa(".segmented__item", container);
   itens.forEach((item) => {

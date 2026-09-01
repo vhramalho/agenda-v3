@@ -19,15 +19,32 @@ document.addEventListener("DOMContentLoaded", () => {
     if (navigator.vibrate) navigator.vibrate(10);
   }
 
-  /* Horário início/fim viraram <select> (abrem o seletor giratório nativo
-     no iOS) — populados aqui com a mesma grade de 30 em 30min usada em
-     Intervalos/Agenda, em vez de duplicar a lista (auditoria pré-backend,
-     correção do onboarding, 2026-08-10). */
+  /* Horário início/fim usam o dropdown-picker genérico (js/chips.js) —
+     populados aqui com a mesma grade de 30 em 30min usada em
+     Intervalos/Agenda, em vez de duplicar a lista. Eram <select> nativo
+     até 2026-09-01 (troca pedida pelo usuário pra ficar no mesmo padrão
+     visual do "+" de duração de Compartilhar horários — o <select> nativo
+     tinha sido escolha deliberada em 2026-08-10 pra eliminar um bug de
+     digitação livre, mas o dropdown-picker é só-toque, sem input de
+     texto, então não reabre aquele risco). */
+  function valorDropdown(id) {
+    return qs(`#${id} .dropdown-picker__valor`).textContent.trim();
+  }
+  function definirValorDropdown(id, valor) {
+    const wrapper = qs(`#${id}`);
+    qs(".dropdown-picker__valor", wrapper).textContent = valor;
+    qsa(".time-select__option", wrapper).forEach((o) => o.classList.toggle("is-ativo", o.dataset.valor === valor));
+  }
   function popularSelectsHorario() {
     const opcoes = gerarGradeHorarios("00:00", "23:30", 30);
-    const html = opcoes.map((h) => `<option value="${h}">${h}</option>`).join("");
-    qs("#js-ob-hora-inicio").innerHTML = html;
-    qs("#js-ob-hora-fim").innerHTML = html;
+    ["js-ob-hora-inicio", "js-ob-hora-fim"].forEach((id) => {
+      const wrapper = qs(`#${id}`);
+      montarOpcoesDropdownPicker(qs(".dropdown-picker__menu", wrapper), opcoes, valorDropdown(id));
+      inicializarDropdownPicker(wrapper, (valor) => {
+        definirValorDropdown(id, valor);
+        atualizarMockup();
+      });
+    });
   }
 
   function carregarValoresIniciais() {
@@ -35,8 +52,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const whatsapp = obterWhatsapp();
     qs("#js-ob-profissional").value = config.nomeProfissional || "";
     qs("#js-ob-whatsapp").value = whatsapp.numero || "";
-    qs("#js-ob-hora-inicio").value = config.horaInicio || "08:00";
-    qs("#js-ob-hora-fim").value = config.horaFim || "20:30";
+    definirValorDropdown("js-ob-hora-inicio", config.horaInicio || "08:00");
+    definirValorDropdown("js-ob-hora-fim", config.horaFim || "20:30");
     definirValorGrade(config.intervaloGrade || 30);
 
     const tema = config.tema || "escuro";
@@ -68,8 +85,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function salvarPasso3() {
     const config = obterConfig();
-    const horaInicio = qs("#js-ob-hora-inicio").value;
-    const horaFim = qs("#js-ob-hora-fim").value;
+    const horaInicio = valorDropdown("js-ob-hora-inicio");
+    const horaFim = valorDropdown("js-ob-hora-fim");
     const horaValida = (v) => /^\d{2}:\d{2}$/.test(v);
     if (horaValida(horaInicio)) config.horaInicio = horaInicio;
     if (horaValida(horaFim)) config.horaFim = horaFim;
@@ -97,8 +114,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /* ---------- Mini-mockup: prévia ao vivo da agenda (passos Aparência/Agenda) ---------- */
   function atualizarMockup() {
-    const inicio = qs("#js-ob-hora-inicio").value || "08:00";
-    const fim = qs("#js-ob-hora-fim").value || "20:30";
+    const inicio = valorDropdown("js-ob-hora-inicio") || "08:00";
+    const fim = valorDropdown("js-ob-hora-fim") || "20:30";
     const grade = obterValorGrade();
     const horarios = gerarGradeHorarios(inicio, fim, grade);
     const container = qs("#mockup-grade");
@@ -114,9 +131,6 @@ document.addEventListener("DOMContentLoaded", () => {
     qs("#mockup-data").textContent = `${inicio} – ${fim}`;
   }
 
-  ["js-ob-hora-inicio", "js-ob-hora-fim"].forEach((id) => {
-    qs(`#${id}`).addEventListener("change", atualizarMockup);
-  });
   qs("#js-ob-grade").addEventListener("click", (evento) => {
     if (!evento.target.closest(".chip")) return;
     atualizarMockup();
@@ -268,8 +282,8 @@ document.addEventListener("DOMContentLoaded", () => {
   qs("#js-ob-btn-intervalo").addEventListener("click", () => {
     qs("#js-ob-intervalo-nome").value = "";
     qsa("#js-ob-intervalo-dias .chip").forEach((c) => c.classList.remove("chip--ativo"));
-    const inicio = qs("#js-ob-hora-inicio").value || "08:00";
-    const fim = qs("#js-ob-hora-fim").value || "20:30";
+    const inicio = valorDropdown("js-ob-hora-inicio") || "08:00";
+    const fim = valorDropdown("js-ob-hora-fim") || "20:30";
     const grade = obterValorGrade();
     const container = qs("#js-ob-intervalo-horarios");
     container.innerHTML = "";
