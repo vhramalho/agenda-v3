@@ -227,22 +227,25 @@
   justify-content: center;
   flex: 1;
   min-width: 0;
-  height: 52px;
+  height: 44px;
   padding: 0;
-  gap: 2px;
+  gap: 1px;
   line-height: 1.1;
   border-radius: var(--radius-md);
 }
 
 .chip--dia .chip-dia__label {
-  font-size: var(--text-xs);
+  font-size: 10px;
   font-weight: 600;
   text-transform: uppercase;
 }
 
+/* Mesmo tamanho/peso do texto de qualquer outro .chip do app (ex.: "30
+   min" ao lado) — a versão anterior (--text-md/700, 2026-09-01) ficou
+   desproporcional e pesada demais perto do resto da tela. */
 .chip--dia .chip-dia__numero {
-  font-size: var(--text-md);
-  font-weight: 700;
+  font-size: var(--text-sm);
+  font-weight: 600;
 }
 
 .chip-scroll {
@@ -964,6 +967,23 @@
   top: calc(100% + 6px);
   left: 0;
   right: 0;
+  max-height: 240px;
+  overflow-y: auto;
+  background: var(--card-elevated);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  z-index: 50;
+}
+
+/* Menos largo que o padrão full-width, alinhado à direita — usado nas
+   linhas de Configurações (Primeiro/Último horário), onde o gatilho é a
+   linha inteira e um menu full-width ficaria largo demais perto do
+   valor/chevron à direita. */
+.dropdown-picker__menu--metade {
+  left: auto;
+  right: 0;
+  width: 35%;
   max-height: 240px;
   overflow-y: auto;
   background: var(--card-elevated);
