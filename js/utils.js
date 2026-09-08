@@ -720,6 +720,18 @@ function montarRecebimentos(resumo, formasContainerId, pizzaContainerId) {
   });
 
   if (resumo.pendente > 0) {
+    if (totalRecebido > 0) {
+      const totalLinha = document.createElement("div");
+      totalLinha.className = "row row--between";
+      totalLinha.style.cssText = "margin-top:4px;";
+      totalLinha.innerHTML = `
+        <span style="font-weight:700;">Total recebido</span>
+        <span style="font-weight:700;"></span>
+      `;
+      totalLinha.lastElementChild.textContent = formatarMoeda(totalRecebido);
+      container.appendChild(totalLinha);
+    }
+
     const nota = document.createElement("div");
     nota.className = "row row--between";
     nota.style.cssText = "margin-top:8px;padding-top:8px;border-top:1px dashed var(--border);";

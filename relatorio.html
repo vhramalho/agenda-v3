@@ -3,15 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <link rel="manifest" href="manifest.json?v=20260901g" />
-  <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg?v=20260901g" />
-  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png?v=20260901g" />
+  <link rel="manifest" href="manifest.json?v=20260908a" />
+  <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg?v=20260908a" />
+  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png?v=20260908a" />
   <meta name="theme-color" content="#0B0B10" />
   <title>Atendimentos — Swipo Agenda</title>
-  <link rel="stylesheet" href="css/tokens.css?v=20260901g" />
-  <link rel="stylesheet" href="css/base.css?v=20260901g" />
-  <link rel="stylesheet" href="css/layout.css?v=20260901g" />
-  <link rel="stylesheet" href="css/components.css?v=20260901g" />
+  <link rel="stylesheet" href="css/tokens.css?v=20260908a" />
+  <link rel="stylesheet" href="css/base.css?v=20260908a" />
+  <link rel="stylesheet" href="css/layout.css?v=20260908a" />
+  <link rel="stylesheet" href="css/components.css?v=20260908a" />
 </head>
 <body data-page="relatorio">
   <div class="app">
@@ -52,30 +52,32 @@
       </div>
 
       <div id="js-conteudo-atendimentos">
-        <div class="card card--destaque section">
-          <p class="text-secondary">Faturamento em atendimentos</p>
-          <div class="row row--between" style="align-items:baseline;margin-bottom:8px;">
-            <p style="font-weight:800;font-size:var(--text-xl);" id="js-relatorio-faturamento"></p>
-            <p id="js-relatorio-faturamento-comparacao"></p>
+        <section class="section">
+          <h2 class="section__title">Faturamento</h2>
+          <div class="card card--destaque">
+            <div class="row row--between" style="align-items:baseline;margin-bottom:8px;">
+              <p style="font-weight:800;font-size:var(--text-xl);" id="js-relatorio-faturamento"></p>
+              <p id="js-relatorio-faturamento-comparacao"></p>
+            </div>
+            <svg id="js-relatorio-grafico-svg" viewBox="0 0 300 150" preserveAspectRatio="none" style="width:100%;height:140px;">
+              <defs>
+                <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="var(--primary)" stop-opacity="0.35"/>
+                  <stop offset="100%" stop-color="var(--primary)" stop-opacity="0"/>
+                </linearGradient>
+              </defs>
+              <line x1="42" y1="10" x2="288" y2="10" stroke="var(--border)" stroke-width="1"/>
+              <line x1="42" y1="68" x2="288" y2="68" stroke="var(--border)" stroke-width="1"/>
+              <line x1="42" y1="126" x2="288" y2="126" stroke="var(--border)" stroke-width="1"/>
+              <text x="4" y="13" text-anchor="start" font-size="8.5" fill="var(--text-muted)" id="js-relatorio-eixo-max"></text>
+              <text x="4" y="71" text-anchor="start" font-size="8.5" fill="var(--text-muted)" id="js-relatorio-eixo-meio"></text>
+              <text x="4" y="129" text-anchor="start" font-size="8.5" fill="var(--text-muted)">R$0</text>
+              <polygon id="js-relatorio-grafico-area" points="" fill="url(#areaGrad)"/>
+              <polyline id="js-relatorio-grafico-linha" points="" fill="none" stroke="var(--primary)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <g id="js-relatorio-grafico-dias" font-size="9" fill="var(--text-muted)" text-anchor="middle"></g>
+            </svg>
           </div>
-          <svg id="js-relatorio-grafico-svg" viewBox="0 0 300 150" preserveAspectRatio="none" style="width:100%;height:140px;">
-            <defs>
-              <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="var(--primary)" stop-opacity="0.35"/>
-                <stop offset="100%" stop-color="var(--primary)" stop-opacity="0"/>
-              </linearGradient>
-            </defs>
-            <line x1="42" y1="10" x2="288" y2="10" stroke="var(--border)" stroke-width="1"/>
-            <line x1="42" y1="68" x2="288" y2="68" stroke="var(--border)" stroke-width="1"/>
-            <line x1="42" y1="126" x2="288" y2="126" stroke="var(--border)" stroke-width="1"/>
-            <text x="4" y="13" text-anchor="start" font-size="8.5" fill="var(--text-muted)" id="js-relatorio-eixo-max"></text>
-            <text x="4" y="71" text-anchor="start" font-size="8.5" fill="var(--text-muted)" id="js-relatorio-eixo-meio"></text>
-            <text x="4" y="129" text-anchor="start" font-size="8.5" fill="var(--text-muted)">R$0</text>
-            <polygon id="js-relatorio-grafico-area" points="" fill="url(#areaGrad)"/>
-            <polyline id="js-relatorio-grafico-linha" points="" fill="none" stroke="var(--primary)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-            <g id="js-relatorio-grafico-dias" font-size="9" fill="var(--text-muted)" text-anchor="middle"></g>
-          </svg>
-        </div>
+        </section>
 
         <section class="section">
           <h2 class="section__title">Insights</h2>
@@ -157,17 +159,17 @@
     </div>
   </div>
 
-  <script src="js/utils.js?v=20260901g"></script>
-  <script src="js/menu.js?v=20260901g"></script>
-  <script src="js/storage.js?v=20260901g"></script>
-  <script src="js/notificacoes-clientes.js?v=20260901g"></script>
-  <script src="js/tema.js?v=20260901g"></script>
-  <script src="js/app.js?v=20260901g"></script>
-  <script src="js/chips.js?v=20260901g"></script>
-  <script src="js/modal.js?v=20260901g"></script>
-  <script src="js/ajuda-dados.js?v=20260901g"></script>
-  <script src="js/ajuda.js?v=20260901g"></script>
-  <script src="js/calendario.js?v=20260901g"></script>
-  <script src="js/relatorio.js?v=20260901g"></script>
+  <script src="js/utils.js?v=20260908a"></script>
+  <script src="js/menu.js?v=20260908a"></script>
+  <script src="js/storage.js?v=20260908a"></script>
+  <script src="js/notificacoes-clientes.js?v=20260908a"></script>
+  <script src="js/tema.js?v=20260908a"></script>
+  <script src="js/app.js?v=20260908a"></script>
+  <script src="js/chips.js?v=20260908a"></script>
+  <script src="js/modal.js?v=20260908a"></script>
+  <script src="js/ajuda-dados.js?v=20260908a"></script>
+  <script src="js/ajuda.js?v=20260908a"></script>
+  <script src="js/calendario.js?v=20260908a"></script>
+  <script src="js/relatorio.js?v=20260908a"></script>
 </body>
 </html>

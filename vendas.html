@@ -3,15 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <link rel="manifest" href="manifest.json?v=20260901g" />
-  <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg?v=20260901g" />
-  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png?v=20260901g" />
+  <link rel="manifest" href="manifest.json?v=20260908a" />
+  <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg?v=20260908a" />
+  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png?v=20260908a" />
   <meta name="theme-color" content="#0B0B10" />
   <title>Vendas — Swipo Agenda</title>
-  <link rel="stylesheet" href="css/tokens.css?v=20260901g" />
-  <link rel="stylesheet" href="css/base.css?v=20260901g" />
-  <link rel="stylesheet" href="css/layout.css?v=20260901g" />
-  <link rel="stylesheet" href="css/components.css?v=20260901g" />
+  <link rel="stylesheet" href="css/tokens.css?v=20260908a" />
+  <link rel="stylesheet" href="css/base.css?v=20260908a" />
+  <link rel="stylesheet" href="css/layout.css?v=20260908a" />
+  <link rel="stylesheet" href="css/components.css?v=20260908a" />
 </head>
 <body data-page="vendas">
   <div class="app">
@@ -51,16 +51,18 @@
         </button>
       </div>
 
-      <div class="card card--destaque section">
-        <p class="text-secondary">Faturamento em vendas</p>
-        <div class="row row--between" style="align-items:baseline;margin-bottom:8px;">
-          <p style="font-weight:800;font-size:var(--text-xl);" id="js-vendas-faturamento"></p>
-          <p id="js-vendas-faturamento-comparacao"></p>
+      <section class="section">
+        <h2 class="section__title">Faturamento</h2>
+        <div class="card card--destaque">
+          <div class="row row--between" style="align-items:baseline;margin-bottom:8px;">
+            <p style="font-weight:800;font-size:var(--text-xl);" id="js-vendas-faturamento"></p>
+            <p id="js-vendas-faturamento-comparacao"></p>
+          </div>
+          <div id="js-vendas-faturamento-produtos"></div>
+          <div class="empty-state is-hidden" id="js-vendas-faturamento-produtos-vazio"><p class="empty-state__title">Nenhuma venda no período</p></div>
+          <button class="text-primary-accent link-ver-todos is-hidden" id="js-vendas-faturamento-produtos-ver-todos" style="margin-top:10px;width:100%;text-align:center;">Ver todos</button>
         </div>
-        <div id="js-vendas-faturamento-produtos"></div>
-        <div class="empty-state is-hidden" id="js-vendas-faturamento-produtos-vazio"><p class="empty-state__title">Nenhuma venda no período</p></div>
-        <button class="text-primary-accent link-ver-todos is-hidden" id="js-vendas-faturamento-produtos-ver-todos" style="margin-top:10px;width:100%;text-align:center;">Ver todos</button>
-      </div>
+      </section>
 
       <section class="section">
         <h2 class="section__title">Insights</h2>
@@ -107,7 +109,7 @@
       </section>
 
       <section class="section">
-        <h2 class="section__title">Recebimentos em vendas</h2>
+        <h2 class="section__title">Recebimento</h2>
         <div class="card">
           <div class="row" style="align-items:center;gap:24px;">
             <div class="stack" style="flex:1;gap:10px;" id="js-vendas-formas"></div>
@@ -246,19 +248,19 @@
     </div>
   </div>
 
-  <script src="js/utils.js?v=20260901g"></script>
-  <script src="js/menu.js?v=20260901g"></script>
-  <script src="js/storage.js?v=20260901g"></script>
-  <script src="js/notificacoes-clientes.js?v=20260901g"></script>
-  <script src="js/tema.js?v=20260901g"></script>
-  <script src="js/app.js?v=20260901g"></script>
-  <script src="js/chips.js?v=20260901g"></script>
-  <script src="js/modal.js?v=20260901g"></script>
-  <script src="js/ajuda-dados.js?v=20260901g"></script>
-  <script src="js/ajuda.js?v=20260901g"></script>
-  <script src="js/calendario.js?v=20260901g"></script>
-  <script src="js/acoes-simuladas.js?v=20260901g"></script>
-  <script src="js/vendas.js?v=20260901g"></script>
-  <script src="js/vendas-pagina.js?v=20260901g"></script>
+  <script src="js/utils.js?v=20260908a"></script>
+  <script src="js/menu.js?v=20260908a"></script>
+  <script src="js/storage.js?v=20260908a"></script>
+  <script src="js/notificacoes-clientes.js?v=20260908a"></script>
+  <script src="js/tema.js?v=20260908a"></script>
+  <script src="js/app.js?v=20260908a"></script>
+  <script src="js/chips.js?v=20260908a"></script>
+  <script src="js/modal.js?v=20260908a"></script>
+  <script src="js/ajuda-dados.js?v=20260908a"></script>
+  <script src="js/ajuda.js?v=20260908a"></script>
+  <script src="js/calendario.js?v=20260908a"></script>
+  <script src="js/acoes-simuladas.js?v=20260908a"></script>
+  <script src="js/vendas.js?v=20260908a"></script>
+  <script src="js/vendas-pagina.js?v=20260908a"></script>
 </body>
 </html>
