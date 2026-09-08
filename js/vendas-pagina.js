@@ -44,6 +44,7 @@ function montarLinhaVenda(venda, produtos, indice) {
 
 const LIMITE_HISTORICO_VENDAS = 5;
 let historicoVendasExpandido = false;
+let historicoVendasAsc = false;
 let filtroVendasAtual = "todas";
 
 /* Estado de período — próprio desta página, independente do de
@@ -248,7 +249,7 @@ function montarGraficoBarrasProdutos(lista, containerId, vazioId, botaoId, chave
    a pedido do usuário em 2026-08-04. */
 function vendasFiltradas() {
   const { inicio, fim } = limitesPeriodo(tipoPeriodo, refData);
-  let vendas = vendasNoPeriodo(inicio, fim).slice().sort((a, b) => b.criadaEm.localeCompare(a.criadaEm));
+  let vendas = vendasNoPeriodo(inicio, fim).slice().sort((a, b) => historicoVendasAsc ? a.criadaEm.localeCompare(b.criadaEm) : b.criadaEm.localeCompare(a.criadaEm));
   if (filtroVendasAtual === "avulsas") vendas = vendas.filter((v) => !v.agendamentoId);
   else if (filtroVendasAtual === "atendimento") vendas = vendas.filter((v) => !!v.agendamentoId);
   return vendas;
@@ -261,17 +262,21 @@ function renderizarHistoricoVendas() {
   const container = qs("#js-lista-historico-vendas");
   const vazio = qs("#js-historico-vendas-vazio");
   const toggle = qs("#js-historico-vendas-toggle");
+  const ordenar = qs("#js-historico-vendas-ordenar");
+  ordenar.style.color = historicoVendasAsc ? "var(--primary)" : "var(--text-secondary)";
   container.innerHTML = "";
 
   if (vendas.length === 0) {
     container.classList.add("is-hidden");
     vazio.classList.remove("is-hidden");
     toggle.classList.add("is-hidden");
+    ordenar.classList.add("is-hidden");
     return;
   }
 
   container.classList.remove("is-hidden");
   vazio.classList.add("is-hidden");
+  ordenar.classList.remove("is-hidden");
   const visiveis = historicoVendasExpandido ? vendas : vendas.slice(0, LIMITE_HISTORICO_VENDAS);
   visiveis.forEach((venda, i) => container.appendChild(montarLinhaVenda(venda, produtos, i)));
 
@@ -410,6 +415,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   qs("#js-historico-vendas-toggle").addEventListener("click", () => {
     historicoVendasExpandido = !historicoVendasExpandido;
+    renderizarHistoricoVendas();
+  });
+
+  qs("#js-historico-vendas-ordenar").addEventListener("click", () => {
+    historicoVendasAsc = !historicoVendasAsc;
     renderizarHistoricoVendas();
   });
 

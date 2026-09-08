@@ -87,6 +87,7 @@ function nomesServicosAtendimento(ids) {
    nesta página — ver js/agenda.js pro bootstrap que lê esse parâmetro. */
 const LIMITE_ATENDIMENTOS_REALIZADOS = 5;
 let atendimentosRealizadosExpandido = false;
+let atendimentosRealizadosAsc = false;
 
 function montarLinhaAtendimento(agendamento, indice) {
   const linha = document.createElement("a");
@@ -116,22 +117,30 @@ function montarLinhaAtendimento(agendamento, indice) {
 }
 
 function renderizarAtendimentosRealizados(agendamentos) {
-  const lista = agendamentos.slice().sort((a, b) => `${b.data}${b.hora}`.localeCompare(`${a.data}${a.hora}`));
+  const lista = agendamentos.slice().sort((a, b) => {
+    const chaveA = `${a.data}${a.hora}`;
+    const chaveB = `${b.data}${b.hora}`;
+    return atendimentosRealizadosAsc ? chaveA.localeCompare(chaveB) : chaveB.localeCompare(chaveA);
+  });
   qs("#js-atendimentos-realizados-titulo").textContent = `Atendimentos (${lista.length})`;
   const container = qs("#js-lista-atendimentos-realizados");
   const vazio = qs("#js-atendimentos-realizados-vazio");
   const toggle = qs("#js-atendimentos-realizados-toggle");
+  const ordenar = qs("#js-atendimentos-realizados-ordenar");
+  ordenar.style.color = atendimentosRealizadosAsc ? "var(--primary)" : "var(--text-secondary)";
   container.innerHTML = "";
 
   if (lista.length === 0) {
     container.classList.add("is-hidden");
     vazio.classList.remove("is-hidden");
     toggle.classList.add("is-hidden");
+    ordenar.classList.add("is-hidden");
     return;
   }
 
   container.classList.remove("is-hidden");
   vazio.classList.add("is-hidden");
+  ordenar.classList.remove("is-hidden");
   const visiveis = atendimentosRealizadosExpandido ? lista : lista.slice(0, LIMITE_ATENDIMENTOS_REALIZADOS);
   visiveis.forEach((ag, i) => container.appendChild(montarLinhaAtendimento(ag, i)));
 
@@ -227,6 +236,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   qs("#js-atendimentos-realizados-toggle").addEventListener("click", () => {
     atendimentosRealizadosExpandido = !atendimentosRealizadosExpandido;
+    atualizarRelatorio();
+  });
+
+  qs("#js-atendimentos-realizados-ordenar").addEventListener("click", () => {
+    atendimentosRealizadosAsc = !atendimentosRealizadosAsc;
     atualizarRelatorio();
   });
 
