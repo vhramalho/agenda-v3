@@ -126,6 +126,106 @@ if (qs("#js-ranking-tabela")) {
   });
 }
 
+/* ---------- Ranking "Clientes que mais desmarcam" (Fase 6) ----------
+   Mesmo motor do ranking de Melhores clientes acima (período navegável +
+   metrica selecionável + tabela ordenada), mas a partir de
+   agendaV3:cancelamentos (ver obterCancelamentos/js/storage.js) — cada
+   registro só existe quando o usuário escolheu um motivo real ao excluir
+   um agendamento (não a opção "nenhuma"). Período conta pela data
+   ORIGINAL do agendamento cancelado, não pela data em que foi excluído —
+   mesma convenção do resto do app (evento conta na própria data, não na
+   de criação do registro). Cores/avatar usam a paleta de alerta
+   (avatarRankingAlerta, js/utils.js) — desmarcar não é conquista. */
+
+function estatisticasDesmarques(clienteId, periodo) {
+  const registros = obterCancelamentos().filter((c) => c.clienteId === clienteId && dataNoPeriodo(c.data, periodo));
+  const antecedencia = registros.filter((c) => c.motivo === "antecedencia").length;
+  const emCimaHora = registros.filter((c) => c.motivo === "em_cima_hora").length;
+  const faltou = registros.filter((c) => c.motivo === "faltou").length;
+  return { antecedencia, emCimaHora, faltou, total: antecedencia + emCimaHora + faltou };
+}
+
+function valorPorMetricaDesmarque(stats, metrica) {
+  if (metrica === "antecedencia") return stats.antecedencia;
+  if (metrica === "em_cima_hora") return stats.emCimaHora;
+  if (metrica === "faltou") return stats.faltou;
+  return stats.total;
+}
+
+function montarLinhaRankingDesmarque(item, indice, posicao, metrica) {
+  const linha = document.createElement("a");
+  linha.href = `cliente-detalhe.html?id=${item.cliente.id}`;
+  linha.className = "list-item";
+  linha.style.textDecoration = "none";
+  linha.style.color = "inherit";
+  const valor = valorPorMetricaDesmarque(item.stats, metrica);
+  linha.innerHTML = `
+    ${avatarRankingAlerta(indice, posicao)}
+    <div class="list-item__body"><p class="list-item__title"></p></div>
+    <span class="text-primary-accent" style="font-weight:700;"></span>
+  `;
+  linha.querySelector(".list-item__avatar").textContent = iniciaisCliente(item.cliente.nome);
+  linha.querySelector(".list-item__title").textContent = item.cliente.nome;
+  linha.querySelector(".text-primary-accent").textContent = `${valor} ${valor === 1 ? "vez" : "vezes"}`;
+  return linha;
+}
+
+function renderizarRankingDesmarques(metrica, periodo) {
+  const linhas = obterClientes()
+    .filter((c) => c.ativo)
+    .map((c) => ({ cliente: c, stats: estatisticasDesmarques(c.id, periodo) }))
+    .filter((r) => valorPorMetricaDesmarque(r.stats, metrica) > 0)
+    .sort((a, b) => valorPorMetricaDesmarque(b.stats, metrica) - valorPorMetricaDesmarque(a.stats, metrica));
+
+  const tabela = qs("#js-desmarques-tabela");
+  const vazio = qs("#js-desmarques-vazio");
+  tabela.innerHTML = "";
+
+  if (linhas.length === 0) {
+    tabela.classList.add("is-hidden");
+    vazio.classList.remove("is-hidden");
+    return;
+  }
+  tabela.classList.remove("is-hidden");
+  vazio.classList.add("is-hidden");
+
+  linhas.forEach((item, i) => tabela.appendChild(montarLinhaRankingDesmarque(item, i, i + 1, metrica)));
+}
+
+if (qs("#js-desmarques-tabela")) {
+  document.addEventListener("DOMContentLoaded", () => {
+    let metricaAtual = "antecedencia";
+    let periodoAtual = { tipo: "ano", ano: new Date().getFullYear() };
+
+    function atualizarDesmarquesPeriodo() {
+      qs("#js-ano-label").textContent = rotuloPeriodo(periodoAtual);
+      qs("#js-ano-anterior").classList.toggle("is-hidden", periodoAtual.tipo === "personalizado");
+      qs("#js-ano-proximo").classList.toggle("is-hidden", periodoAtual.tipo === "personalizado");
+      qs("#js-desmarques-ano-texto").textContent = rotuloPeriodo(periodoAtual);
+      renderizarRankingDesmarques(metricaAtual, periodoAtual);
+    }
+
+    atualizarDesmarquesPeriodo();
+
+    qs("#js-ano-anterior").addEventListener("click", () => { periodoAtual = periodoAnterior(periodoAtual); atualizarDesmarquesPeriodo(); });
+    qs("#js-ano-proximo").addEventListener("click", () => { periodoAtual = periodoProximo(periodoAtual); atualizarDesmarquesPeriodo(); });
+
+    qsa(".segmented__item[data-metrica-desmarque]").forEach((item) => {
+      item.addEventListener("click", () => {
+        qsa(".segmented__item[data-metrica-desmarque]").forEach((i) => i.classList.remove("is-active"));
+        item.classList.add("is-active");
+        metricaAtual = item.dataset.metricaDesmarque;
+        renderizarRankingDesmarques(metricaAtual, periodoAtual);
+      });
+    });
+
+    configurarFiltroPeriodo(() => periodoAtual, (novoPeriodo) => {
+      periodoAtual = novoPeriodo;
+      atualizarDesmarquesPeriodo();
+    });
+  });
+}
+
 /* ---------- Aniversariantes ---------- */
 
 function montarLinhaAniversariante(cliente, indice, ehNovo) {

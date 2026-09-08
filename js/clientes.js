@@ -24,6 +24,31 @@ function renderizarRankingTop3(clientesAtivos) {
   container.appendChild(podio);
 }
 
+/* Teaser "Clientes que mais desmarcam" — mesmo pódio horizontal 2º-1º-3º
+   de "Melhores clientes" acima, mas com montarPodioColunaAlerta (js/utils.js)
+   em vez de ouro/prata/bronze, já que desmarcar não é conquista. Métrica é
+   o total combinado (antecedência + em cima da hora + faltou); a página
+   completa (clientes-desmarques.html) permite separar por motivo. */
+function renderizarDesmarquesTop3(clientesAtivos) {
+  const ranqueados = clientesAtivos
+    .map((c) => ({ cliente: c, stats: estatisticasDesmarques(c.id, { tipo: "ano", ano: new Date().getFullYear() }) }))
+    .filter((r) => r.stats.total > 0)
+    .sort((a, b) => b.stats.total - a.stats.total)
+    .slice(0, 3);
+
+  const container = qs("#js-desmarques-top3");
+  container.innerHTML = "";
+  if (ranqueados.length === 0) {
+    container.innerHTML = `<p class="text-secondary" style="text-align:center;">Nenhum desmarque registrado.</p>`;
+    return;
+  }
+  const podio = document.createElement("div");
+  podio.className = "podio";
+  const colunas = ranqueados.map((item, i) => ({ item: { nome: item.cliente.nome, valor: item.stats.total }, posicao: i + 1 }));
+  [colunas[1], colunas[0], colunas[2]].filter(Boolean).forEach(({ item, posicao }) => podio.appendChild(montarPodioColunaAlerta(item, posicao)));
+  container.appendChild(podio);
+}
+
 function renderizarAniversariantesESemRetornar(clientesAtivos) {
   const hoje = new Date();
   const mesAtual = hoje.getMonth() + 1;
@@ -50,6 +75,7 @@ function renderizarClientes() {
     .sort((a, b) => a.nome.localeCompare(b.nome, "pt-BR"));
 
   renderizarRankingTop3(clientesAtivos);
+  renderizarDesmarquesTop3(clientesAtivos);
   renderizarAniversariantesESemRetornar(clientesAtivos);
 
   qs("#js-clientes-titulo").textContent = `Todos os clientes (${clientesAtivos.length})`;

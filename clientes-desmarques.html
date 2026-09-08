@@ -7,7 +7,7 @@
   <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg?v=20260908j" />
   <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png?v=20260908j" />
   <meta name="theme-color" content="#0B0B10" />
-  <title>Melhores clientes — Swipo Agenda</title>
+  <title>Clientes que mais desmarcam — Swipo Agenda</title>
   <link rel="stylesheet" href="css/tokens.css?v=20260908j" />
   <link rel="stylesheet" href="css/base.css?v=20260908j" />
   <link rel="stylesheet" href="css/layout.css?v=20260908j" />
@@ -20,9 +20,9 @@
         <button class="icon-btn" onclick="voltarOuInicio()" aria-label="Voltar">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
         </button>
-        <h1 class="app-header__title">Melhores clientes</h1>
+        <h1 class="app-header__title">Clientes que mais desmarcam</h1>
         <div class="app-header__acoes">
-          <button class="icon-btn" aria-label="Ajuda" onclick="reiniciarTour('ranking')">
+          <button class="icon-btn" aria-label="Ajuda" onclick="reiniciarTour('clientes-desmarques')">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><text x="12" y="12.7" text-anchor="middle" dominant-baseline="middle" fill="currentColor" stroke="none" font-family="Arial, sans-serif" font-size="12.5" font-weight="700">?</text></svg>
           </button>
           <button class="icon-btn icon-btn--accent" id="js-btn-filtrar" aria-label="Filtrar">
@@ -42,27 +42,16 @@
       </div>
 
       <div class="segmented section">
-        <span class="segmented__item is-active" data-metrica="faturamento">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M9 9.5c0-1.5 1.5-2 3-2s3 .8 3 2-1.5 2-3 2-3 .5-3 2 1.5 2 3 2 3-.5 3-2"/></svg>
-          Faturamento
-        </span>
-        <span class="segmented__item" data-metrica="visitas">
-          Visitas
-        </span>
-        <span class="segmented__item" data-metrica="ticket">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 20V10M12 20V4M20 20v-7"/></svg>
-          Ticket médio
-        </span>
-        <span class="segmented__item" data-metrica="compras">
-          Compras
-        </span>
+        <span class="segmented__item is-active" data-metrica-desmarque="antecedencia">Com antecedência</span>
+        <span class="segmented__item" data-metrica-desmarque="em_cima_hora">Em cima da hora</span>
+        <span class="segmented__item" data-metrica-desmarque="faltou">Faltou</span>
       </div>
 
-      <div class="card section" id="js-ranking-tabela"></div>
-      <div class="empty-state is-hidden" id="js-ranking-vazio"><p class="empty-state__title">Ainda não há atendimentos realizados</p></div>
+      <div class="card section" id="js-desmarques-tabela"></div>
+      <div class="empty-state is-hidden" id="js-desmarques-vazio"><p class="empty-state__title">Nenhum desmarque registrado no período</p></div>
 
       <p class="text-secondary section" style="text-align:center;margin-top:var(--space-5);">
-        O ranking é atualizado automaticamente todos os dias com base nos dados de <span id="js-ranking-ano-texto"></span>.
+        O ranking é atualizado automaticamente todos os dias com base nos dados de <span id="js-desmarques-ano-texto"></span>.
       </p>
     </main>
 

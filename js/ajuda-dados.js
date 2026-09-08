@@ -167,6 +167,13 @@ const AJUDA_DADOS = {
     ],
     dicas: {},
   },
+  "clientes-desmarques": {
+    tour: [
+      { tipo: "centro", legenda: "Veja quem mais desmarca com antecedência, em cima da hora ou falta sem avisar." },
+      { tipo: "spot", alvo: () => document.querySelector("#js-btn-filtrar"), legenda: "Troque o período do ranking por aqui." },
+    ],
+    dicas: {},
+  },
   "clientes-todos": {
     tour: [
       { tipo: "centro", legenda: "Esta é a lista completa dos seus clientes." },

@@ -214,6 +214,56 @@
   border-color: var(--primary);
 }
 
+/* ---------- Lista de opções de escolha única com texto longo ----------
+   Diferente do .chip (grade compacta, texto curto, corta com overflow
+   hidden), usada quando as opções são frases — ex.: motivo de exclusão
+   de um agendamento (Excluir → Cliente desmarcou com antecedência/em
+   cima da hora/não apareceu/nenhuma opção). Uma por linha, texto quebra
+   normalmente, círculo de rádio à esquerda indica a selecionada. */
+.opcao-radio {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 12px;
+  border-radius: var(--radius-md);
+  background: var(--card-elevated);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  text-align: left;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.opcao-radio__circulo {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid var(--border-strong);
+  flex-shrink: 0;
+  position: relative;
+}
+
+.opcao-radio.is-ativo {
+  border-color: var(--primary);
+  background: var(--primary-soft);
+  color: var(--primary);
+}
+
+.opcao-radio.is-ativo .opcao-radio__circulo {
+  border-color: var(--primary);
+}
+
+.opcao-radio.is-ativo .opcao-radio__circulo::after {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  border-radius: 50%;
+  background: var(--primary);
+}
+
 .chip--outline-ativo {
   background: var(--primary-soft);
   color: var(--primary);

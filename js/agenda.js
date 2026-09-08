@@ -13,6 +13,7 @@ let agendamentoModalAtual = null;
 let bloqueioPontualEditandoId = null;
 let bloqueioFixoEditando = null;
 let vendaAnexadaId = null;
+let motivoExclusaoAgendamento = "nenhum";
 
 function dataParaIso(date) {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
@@ -1368,8 +1369,41 @@ document.addEventListener("DOMContentLoaded", () => {
     window.open(`https://wa.me/55${digitos}?text=${encodeURIComponent(mensagem)}`, "_blank");
   });
 
+  /* Motivo de exclusão (Fase 6) — sempre escolha manual do usuário, nunca
+     inferida pelo horário. "Nenhuma opção" vem pré-selecionada toda vez que
+     o modal reabre, pra manter o fluxo de exclusão sem motivo tão rápido
+     quanto antes. Só as outras 3 opções guardam um registro em
+     agendaV3:cancelamentos (ver obterCancelamentos/js/storage.js), que
+     alimenta o ranking "Clientes que mais desmarcam" (js/clientes-derivadas.js). */
+  qs('[data-trocar-modal="modal-confirmar-exclusao-agendamento"]').addEventListener("click", () => {
+    motivoExclusaoAgendamento = "nenhum";
+    qsa("#js-motivo-exclusao-agendamento .opcao-radio").forEach((botao) => {
+      botao.classList.toggle("is-ativo", botao.dataset.motivo === "nenhum");
+    });
+  });
+
+  qsa("#js-motivo-exclusao-agendamento .opcao-radio").forEach((botao) => {
+    botao.addEventListener("click", () => {
+      motivoExclusaoAgendamento = botao.dataset.motivo;
+      qsa("#js-motivo-exclusao-agendamento .opcao-radio").forEach((b) => b.classList.toggle("is-ativo", b === botao));
+    });
+  });
+
   qs("#js-confirmar-exclusao-agendamento").addEventListener("click", () => {
     if (!agendamentoModalAtual) return;
+    if (motivoExclusaoAgendamento !== "nenhum") {
+      const cancelamentos = obterCancelamentos();
+      cancelamentos.push({
+        id: gerarId("canc"),
+        clienteId: agendamentoModalAtual.clienteId,
+        nomeCliente: agendamentoModalAtual.nomeCliente,
+        data: agendamentoModalAtual.data,
+        hora: agendamentoModalAtual.hora,
+        motivo: motivoExclusaoAgendamento,
+        canceladoEm: `${hojeIso()}T12:00:00.000Z`,
+      });
+      salvarCancelamentos(cancelamentos);
+    }
     salvarAgendamentos(obterAgendamentos().filter((a) => a.id !== agendamentoModalAtual.id));
     fecharModal("modal-confirmar-exclusao-agendamento");
     fecharModal("modal-horario-agendado");

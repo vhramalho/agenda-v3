@@ -1,6 +1,6 @@
 /* ============================================================
    AGENDA V3 — Acesso centralizado ao localStorage (Fase 3)
-   Todas as 16 chaves do app passam por aqui. Nenhuma outra tela
+   Todas as 17 chaves do app passam por aqui. Nenhuma outra tela
    ou script deve chamar localStorage.getItem/setItem direto —
    sempre por uma das funções abaixo, pra manter os dados
    consistentes e fáceis de mudar no futuro (ex.: trocar pra um
@@ -25,12 +25,13 @@ const CHAVES = {
   vendas: "agendaV3:vendas",
   ajuda: "agendaV3:ajuda",
   notificacoesClientes: "agendaV3:notificacoesClientes",
+  cancelamentos: "agendaV3:cancelamentos",
 };
 
 const AJUDA_TELAS = [
   "agenda", "vendas", "produtos", "relatorios", "pendentes", "clientes", "mais",
   "servicos", "pagamentos", "intervalos", "whatsapp", "configuracoes", "perfil", "backup", "assinatura",
-  "cliente-detalhe", "aniversariantes", "sem-retornar", "ranking", "clientes-todos", "clientes-lixeira", "pendentes-devedores",
+  "cliente-detalhe", "aniversariantes", "sem-retornar", "ranking", "clientes-todos", "clientes-lixeira", "pendentes-devedores", "clientes-desmarques",
 ];
 
 function gerarId(prefixo) {
@@ -183,6 +184,19 @@ function obterVendas() {
 }
 function salvarVendas(lista) {
   salvarChave(CHAVES.vendas, lista);
+}
+
+/* Registro leve de cancelamento (Fase 6): criado só quando o usuário
+   escolhe um motivo real ao excluir um agendamento "agendado" (ver
+   js/agenda.js) — a opção "nenhuma" continua sendo exclusão de verdade,
+   sem deixar rastro aqui. Alimenta o ranking "Clientes que mais
+   desmarcam" (js/clientes-derivadas.js). motivo é um de "antecedencia",
+   "em_cima_hora" ou "faltou". */
+function obterCancelamentos() {
+  return lerChave(CHAVES.cancelamentos, []);
+}
+function salvarCancelamentos(lista) {
+  salvarChave(CHAVES.cancelamentos, lista);
 }
 
 /* Ajuda contextual — uma entrada por tela (ver js/ajuda.js e js/ajuda-dados.js).

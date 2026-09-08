@@ -137,20 +137,15 @@ function rankingDevedores(periodo) {
    avatar), mas em paleta de alerta — ficar devendo não é conquista, ao
    contrário do ranking de Melhores clientes (que usa ouro/prata/bronze
    em js/clientes-derivadas.js). 4º em diante usa texto simples (sem
-   bolinha), mesmo padrão do "resto" de Atendimentos/Vendas/Clientes. */
-function avatarRankingDevedor(indice, posicao) {
-  if (posicao > 3) return `<span class="ranking-posicao--texto">${posicao}º</span><div class="list-item__avatar ${classeAvatarPorIndice(indice)}"></div>`;
-  return `<div class="list-item__avatar-wrap list-item__avatar-wrap--alerta${posicao}">
-      <div class="list-item__avatar ${classeAvatarPorIndice(indice)}"></div>
-      <span class="list-item__medalha list-item__medalha--alerta${posicao}">${posicao}</span>
-    </div>`;
-}
-
+   bolinha), mesmo padrão do "resto" de Atendimentos/Vendas/Clientes.
+   avatarRankingAlerta/montarPodioColunaAlerta moraram pra js/utils.js
+   (2026-09-08) pra serem reaproveitadas também no ranking "Clientes que
+   mais desmarcam" (js/clientes-derivadas.js). */
 function montarLinhaDevedorCompleta(item, indice, posicao, aoAtualizar) {
   const linha = document.createElement("div");
   linha.className = "list-item";
   linha.innerHTML = `
-    ${avatarRankingDevedor(indice, posicao)}
+    ${avatarRankingAlerta(indice, posicao)}
     <div class="list-item__body"><p class="list-item__title"></p></div>
     <span class="text-primary-accent" style="font-weight:700;"></span>
     ${aoAtualizar ? '<svg class="list-item__chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>' : ""}
@@ -184,7 +179,7 @@ function montarLinhaDevedorVendaCompleta(item, indice, posicao, aoAtualizar) {
   const linha = document.createElement("div");
   linha.className = "list-item";
   linha.innerHTML = `
-    ${avatarRankingDevedor(indice, posicao)}
+    ${avatarRankingAlerta(indice, posicao)}
     <div class="list-item__body"><p class="list-item__title"></p></div>
     <span class="text-primary-accent" style="font-weight:700;"></span>
     ${aoAtualizar ? '<svg class="list-item__chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>' : ""}
@@ -331,33 +326,12 @@ function atualizarQuemDeve() {
   }
 }
 
-/* Coluna de pódio com cores "alerta" (vermelho/laranja/amarelo) — mesma
-   estrutura de montarPodioColuna (js/utils.js), mas dívida não é conquista,
-   então não usa o ouro/prata/bronze genérico dos outros rankings. Mesmas
-   cores que já existiam na lista vertical (avatarRankingDevedor acima). */
-function montarPodioColunaDevedor(item, posicao) {
-  const coluna = document.createElement("div");
-  coluna.className = `podio__coluna podio__coluna--${posicao}`;
-  coluna.innerHTML = `
-    <div class="podio__avatar-wrap podio__avatar-wrap--alerta${posicao}">
-      <div class="list-item__avatar podio__avatar ${classeAvatarPorIndice(posicao - 1)}"></div>
-      <span class="podio__medalha podio__medalha--alerta${posicao}">${posicao}º</span>
-    </div>
-    <p class="podio__nome"></p>
-    <p class="podio__valor"></p>
-  `;
-  coluna.querySelector(".podio__avatar").textContent = iniciaisCliente(item.nome);
-  coluna.querySelector(".podio__nome").textContent = item.nome;
-  coluna.querySelector(".podio__valor").textContent = item.valor;
-  return coluna;
-}
-
 /* Top3 desta página é um teaser horizontal (pódio: 2º-1º-3º), igual aos
    outros rankings do app na disposição (Serviços mais realizados/Mais
-   vendidos), mas com as cores alerta acima em vez de ouro/prata/bronze —
-   diferente da lista vertical completa de pendentes-devedores.html, que
-   continua usando montarLinhaDevedorCompleta (essa função não muda, é
-   reaproveitada lá). */
+   vendidos), mas com montarPodioColunaAlerta (js/utils.js — vermelho/
+   laranja/amarelo) em vez de ouro/prata/bronze — diferente da lista
+   vertical completa de pendentes-devedores.html, que continua usando
+   montarLinhaDevedorCompleta (essa função não muda, é reaproveitada lá). */
 function atualizarDevedoresTop3() {
   if (!qs("#js-devedores-top3")) return;
   const top3 = rankingDevedoresCombinado({ tipo: "ano", ano: new Date().getFullYear() }).slice(0, 3);
@@ -369,7 +343,7 @@ function atualizarDevedoresTop3() {
     const podio = document.createElement("div");
     podio.className = "podio";
     const posicoes = top3.map((item, i) => ({ item: { nome: item.nome, valor: item.vezes }, posicao: i + 1 }));
-    [posicoes[1], posicoes[0], posicoes[2]].filter(Boolean).forEach(({ item, posicao }) => podio.appendChild(montarPodioColunaDevedor(item, posicao)));
+    [posicoes[1], posicoes[0], posicoes[2]].filter(Boolean).forEach(({ item, posicao }) => podio.appendChild(montarPodioColunaAlerta(item, posicao)));
     container.appendChild(podio);
   }
 }

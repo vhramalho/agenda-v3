@@ -3,16 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <link rel="manifest" href="manifest.json?v=20260908i" />
-  <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg?v=20260908i" />
-  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png?v=20260908i" />
+  <link rel="manifest" href="manifest.json?v=20260908j" />
+  <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg?v=20260908j" />
+  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png?v=20260908j" />
   <meta name="theme-color" content="#0B0B10" />
   <title>Agenda — Swipo Agenda</title>
-  <link rel="stylesheet" href="css/tokens.css?v=20260908i" />
-  <link rel="stylesheet" href="css/base.css?v=20260908i" />
-  <link rel="stylesheet" href="css/layout.css?v=20260908i" />
-  <link rel="stylesheet" href="css/components.css?v=20260908i" />
-  <link rel="stylesheet" href="css/agenda.css?v=20260908i" />
+  <link rel="stylesheet" href="css/tokens.css?v=20260908j" />
+  <link rel="stylesheet" href="css/base.css?v=20260908j" />
+  <link rel="stylesheet" href="css/layout.css?v=20260908j" />
+  <link rel="stylesheet" href="css/components.css?v=20260908j" />
+  <link rel="stylesheet" href="css/agenda.css?v=20260908j" />
 </head>
 <body data-page="index">
   <div class="app">
@@ -151,6 +151,25 @@
         <p style="font-size:32px;margin-bottom:8px;">⚠️</p>
         <p class="modal-sheet__title" style="margin-bottom:8px;">Excluir agendamento?</p>
         <p class="text-secondary" style="margin-bottom:20px;">Esta ação não pode ser desfeita. O agendamento será removido da sua agenda.</p>
+        <p class="field__label" style="text-align:left;margin-bottom:8px;">Por que está excluindo?</p>
+        <div class="stack" style="text-align:left;margin-bottom:20px;" id="js-motivo-exclusao-agendamento">
+          <button type="button" class="opcao-radio" data-motivo="antecedencia">
+            <span class="opcao-radio__circulo"></span>
+            <span>Cliente desmarcou com antecedência</span>
+          </button>
+          <button type="button" class="opcao-radio" data-motivo="em_cima_hora">
+            <span class="opcao-radio__circulo"></span>
+            <span>Cliente desmarcou em cima da hora</span>
+          </button>
+          <button type="button" class="opcao-radio" data-motivo="faltou">
+            <span class="opcao-radio__circulo"></span>
+            <span>Cliente não apareceu</span>
+          </button>
+          <button type="button" class="opcao-radio is-ativo" data-motivo="nenhum">
+            <span class="opcao-radio__circulo"></span>
+            <span>Nenhuma opção — apenas excluir</span>
+          </button>
+        </div>
         <div class="btn-row"><button class="btn btn--secondary" data-fechar-modal>Cancelar</button><button class="btn btn--danger-solid" id="js-confirmar-exclusao-agendamento">Confirmar</button></div>
       </div>
     </div>
@@ -643,24 +662,24 @@
     </div>
   </div>
 
-  <script src="js/utils.js?v=20260908i"></script>
-  <script src="js/menu.js?v=20260908i"></script>
-  <script src="js/storage.js?v=20260908i"></script>
-  <script src="js/notificacoes-clientes.js?v=20260908i"></script>
-  <script src="js/tema.js?v=20260908i"></script>
-  <script src="js/app.js?v=20260908i"></script>
-  <script src="js/chips.js?v=20260908i"></script>
-  <script src="js/modal.js?v=20260908i"></script>
-  <script src="js/ajuda-dados.js?v=20260908i"></script>
-  <script src="js/ajuda.js?v=20260908i"></script>
-  <script src="js/calendario.js?v=20260908i"></script>
-  <script src="js/acoes-simuladas.js?v=20260908i"></script>
-  <script src="js/vendas.js?v=20260908i"></script>
-  <script src="js/agenda.js?v=20260908i"></script>
+  <script src="js/utils.js?v=20260908j"></script>
+  <script src="js/menu.js?v=20260908j"></script>
+  <script src="js/storage.js?v=20260908j"></script>
+  <script src="js/notificacoes-clientes.js?v=20260908j"></script>
+  <script src="js/tema.js?v=20260908j"></script>
+  <script src="js/app.js?v=20260908j"></script>
+  <script src="js/chips.js?v=20260908j"></script>
+  <script src="js/modal.js?v=20260908j"></script>
+  <script src="js/ajuda-dados.js?v=20260908j"></script>
+  <script src="js/ajuda.js?v=20260908j"></script>
+  <script src="js/calendario.js?v=20260908j"></script>
+  <script src="js/acoes-simuladas.js?v=20260908j"></script>
+  <script src="js/vendas.js?v=20260908j"></script>
+  <script src="js/agenda.js?v=20260908j"></script>
   <!-- Funcionalidade de lembrete desativada (2026-07-12) -- js/agenda.js já
        guarda a chamada com "typeof window.renderizarAgendaDiario === 'function'",
        então não carregar este arquivo não quebra nada.
-  <script src="js/agenda-diario.js?v=20260908i"></script>
+  <script src="js/agenda-diario.js?v=20260908j"></script>
   -->
 </body>
 </html>

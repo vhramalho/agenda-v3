@@ -772,6 +772,37 @@ function montarPodioColuna(item, posicao) {
   return coluna;
 }
 
+/* ---------- Variante "alerta" (vermelho/laranja/amarelo) ----------
+   Mesma forma de montarPodioColuna/avatar com medalha, mas pra rankings
+   que não são conquista (quem mais deve, quem mais desmarca) — usa as
+   cores de alerta em vez de ouro/prata/bronze. Compartilhado por
+   js/pendentes.js ("Clientes que mais ficam devendo") e
+   js/clientes-derivadas.js ("Clientes que mais desmarcam"). */
+function avatarRankingAlerta(indice, posicao) {
+  if (posicao > 3) return `<span class="ranking-posicao--texto">${posicao}º</span><div class="list-item__avatar ${classeAvatarPorIndice(indice)}"></div>`;
+  return `<div class="list-item__avatar-wrap list-item__avatar-wrap--alerta${posicao}">
+      <div class="list-item__avatar ${classeAvatarPorIndice(indice)}"></div>
+      <span class="list-item__medalha list-item__medalha--alerta${posicao}">${posicao}</span>
+    </div>`;
+}
+
+function montarPodioColunaAlerta(item, posicao) {
+  const coluna = document.createElement("div");
+  coluna.className = `podio__coluna podio__coluna--${posicao}`;
+  coluna.innerHTML = `
+    <div class="podio__avatar-wrap podio__avatar-wrap--alerta${posicao}">
+      <div class="list-item__avatar podio__avatar ${classeAvatarPorIndice(posicao - 1)}"></div>
+      <span class="podio__medalha podio__medalha--alerta${posicao}">${posicao}º</span>
+    </div>
+    <p class="podio__nome"></p>
+    <p class="podio__valor"></p>
+  `;
+  coluna.querySelector(".podio__avatar").textContent = iniciaisCliente(item.nome);
+  coluna.querySelector(".podio__nome").textContent = item.nome;
+  coluna.querySelector(".podio__valor").textContent = item.valor;
+  return coluna;
+}
+
 function montarLinhaRestoRanking(item, posicao) {
   const linha = document.createElement("div");
   linha.className = "list-item";
