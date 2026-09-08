@@ -30,28 +30,36 @@ function extrairAniversarioCliente(texto) {
 }
 
 let historicoExpandido = false;
+let historicoAsc = false;
 
 function renderizarHistorico() {
   const id = obterIdClienteDaUrl();
   const servicos = obterServicos();
   const realizados = obterAgendamentos()
     .filter((a) => a.clienteId === id && a.status && a.status.startsWith("realizado_"))
-    .sort((a, b) => (a.data + a.hora < b.data + b.hora ? 1 : -1));
+    .sort((a, b) => {
+      const cmp = a.data + a.hora < b.data + b.hora ? -1 : 1;
+      return historicoAsc ? cmp : -cmp;
+    });
 
   const historico = qs("#js-cliente-historico");
   const historicoVazio = qs("#js-cliente-historico-vazio");
   const toggle = qs("#js-cliente-historico-toggle");
+  const ordenar = qs("#js-cliente-historico-ordenar");
+  ordenar.style.color = historicoAsc ? "var(--primary)" : "var(--text-secondary)";
   historico.innerHTML = "";
 
   if (realizados.length === 0) {
     historico.classList.add("is-hidden");
     historicoVazio.classList.remove("is-hidden");
     toggle.classList.add("is-hidden");
+    ordenar.classList.add("is-hidden");
     return;
   }
 
   historico.classList.remove("is-hidden");
   historicoVazio.classList.add("is-hidden");
+  ordenar.classList.remove("is-hidden");
 
   (historicoExpandido ? realizados : realizados.slice(0, 5)).forEach((a) => {
     const nomesServicos = (a.servicosIds || [])
@@ -86,28 +94,36 @@ function renderizarHistorico() {
 }
 
 let comprasExpandido = false;
+let comprasAsc = false;
 
 function renderizarCompras() {
   const id = obterIdClienteDaUrl();
   const produtos = obterProdutos();
   const vendas = obterVendas()
     .filter((v) => v.clienteId === id)
-    .sort((a, b) => (a.criadaEm < b.criadaEm ? 1 : -1));
+    .sort((a, b) => {
+      const cmp = a.criadaEm < b.criadaEm ? -1 : 1;
+      return comprasAsc ? cmp : -cmp;
+    });
 
   const compras = qs("#js-cliente-compras");
   const comprasVazio = qs("#js-cliente-compras-vazio");
   const toggle = qs("#js-cliente-compras-toggle");
+  const ordenar = qs("#js-cliente-compras-ordenar");
+  ordenar.style.color = comprasAsc ? "var(--primary)" : "var(--text-secondary)";
   compras.innerHTML = "";
 
   if (vendas.length === 0) {
     compras.classList.add("is-hidden");
     comprasVazio.classList.remove("is-hidden");
     toggle.classList.add("is-hidden");
+    ordenar.classList.add("is-hidden");
     return;
   }
 
   compras.classList.remove("is-hidden");
   comprasVazio.classList.add("is-hidden");
+  ordenar.classList.remove("is-hidden");
 
   (comprasExpandido ? vendas : vendas.slice(0, 5)).forEach((v) => {
     const nomesItens = (v.itens || [])
@@ -265,8 +281,18 @@ document.addEventListener("DOMContentLoaded", () => {
     renderizarHistorico();
   });
 
+  qs("#js-cliente-historico-ordenar").addEventListener("click", () => {
+    historicoAsc = !historicoAsc;
+    renderizarHistorico();
+  });
+
   qs("#js-cliente-compras-toggle").addEventListener("click", () => {
     comprasExpandido = !comprasExpandido;
+    renderizarCompras();
+  });
+
+  qs("#js-cliente-compras-ordenar").addEventListener("click", () => {
+    comprasAsc = !comprasAsc;
     renderizarCompras();
   });
 
