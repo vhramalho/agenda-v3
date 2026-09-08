@@ -8,7 +8,7 @@
    ============================================================ */
 
 const VERSAO_APP = "1.78.3";
-const BUILD_VERSAO = "20260908h";
+const BUILD_VERSAO = "20260908i";
 
 document.addEventListener("DOMContentLoaded", () => {
   const botao = qs("#js-btn-versao");

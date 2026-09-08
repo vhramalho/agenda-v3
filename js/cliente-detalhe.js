@@ -208,12 +208,13 @@ function renderizarPagina() {
   renderizarCompras();
 
   const whatsapp = qs("#js-cliente-whatsapp");
+  const whatsappWrap = qs("#js-cliente-whatsapp-wrap");
   if (cliente.telefone) {
     const digitos = cliente.telefone.replace(/\D/g, "");
     whatsapp.href = `https://wa.me/55${digitos}`;
-    whatsapp.classList.remove("is-hidden");
+    whatsappWrap.classList.remove("is-hidden");
   } else {
-    whatsapp.classList.add("is-hidden");
+    whatsappWrap.classList.add("is-hidden");
   }
 }
 
