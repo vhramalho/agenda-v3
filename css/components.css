@@ -637,6 +637,14 @@
 .podio__avatar-wrap--prata .podio__avatar { border-color: #94A3B8; }
 .podio__avatar-wrap--bronze .podio__avatar { border-color: #B45309; }
 
+/* Variante "alerta" (vermelho/laranja/amarelo) — pódio de quem mais fica
+   devendo (pendentes.html), mesmas cores já usadas na lista vertical
+   completa (list-item__avatar-wrap--alerta1/2/3, ver js/pendentes.js) —
+   dívida não é conquista, então não usa ouro/prata/bronze. */
+.podio__avatar-wrap--alerta1 .podio__avatar { border-color: var(--danger); }
+.podio__avatar-wrap--alerta2 .podio__avatar { border-color: #F97316; }
+.podio__avatar-wrap--alerta3 .podio__avatar { border-color: #FBBF24; }
+
 .podio__medalha {
   position: absolute;
   bottom: -4px;
@@ -655,6 +663,9 @@
 .podio__medalha--ouro { background: #F59E0B; color: #1a1200; }
 .podio__medalha--prata { background: #94A3B8; color: #0f172a; }
 .podio__medalha--bronze { background: #B45309; color: #1a1200; }
+.podio__medalha--alerta1 { background: var(--danger); color: #fff; }
+.podio__medalha--alerta2 { background: #F97316; color: #1a1200; }
+.podio__medalha--alerta3 { background: #FBBF24; color: #1a1200; }
 
 .podio__nome {
   font-size: var(--text-xs);
