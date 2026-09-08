@@ -3,15 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <link rel="manifest" href="manifest.json?v=20260908c" />
-  <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg?v=20260908c" />
-  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png?v=20260908c" />
+  <link rel="manifest" href="manifest.json?v=20260908e" />
+  <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg?v=20260908e" />
+  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png?v=20260908e" />
   <meta name="theme-color" content="#0B0B10" />
   <title>Pendentes — Swipo Agenda</title>
-  <link rel="stylesheet" href="css/tokens.css?v=20260908c" />
-  <link rel="stylesheet" href="css/base.css?v=20260908c" />
-  <link rel="stylesheet" href="css/layout.css?v=20260908c" />
-  <link rel="stylesheet" href="css/components.css?v=20260908c" />
+  <link rel="stylesheet" href="css/tokens.css?v=20260908e" />
+  <link rel="stylesheet" href="css/base.css?v=20260908e" />
+  <link rel="stylesheet" href="css/layout.css?v=20260908e" />
+  <link rel="stylesheet" href="css/components.css?v=20260908e" />
 </head>
 <body data-page="pendentes">
   <div class="app">
@@ -44,7 +44,12 @@
       <section class="section">
         <div class="row row--between" style="margin-bottom:8px;">
           <h2 class="section__title" style="margin-bottom:0;" id="js-quem-deve-titulo">Quem deve</h2>
-          <button class="text-primary-accent link-ver-todos is-hidden" id="js-quem-deve-toggle">Ver todos</button>
+          <div class="row" style="gap:10px;align-items:center;">
+            <button class="icon-btn" id="js-quem-deve-ordenar" aria-label="Inverter ordem" style="width:26px;height:26px;background:transparent;color:var(--text-secondary);">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="m21 16-4 4-4-4"/><path d="M17 20V4"/><path d="m3 8 4-4 4 4"/><path d="M7 4v16"/></svg>
+            </button>
+            <button class="text-primary-accent link-ver-todos is-hidden" id="js-quem-deve-toggle">Ver todos</button>
+          </div>
         </div>
         <div class="segmented" id="js-quem-deve-tabs" style="margin-bottom:12px;">
           <span class="segmented__item is-active" data-aba="atendimento">Atendimentos</span>
@@ -140,18 +145,18 @@
     </div>
   </div>
 
-  <script src="js/utils.js?v=20260908c"></script>
-  <script src="js/menu.js?v=20260908c"></script>
-  <script src="js/storage.js?v=20260908c"></script>
-  <script src="js/notificacoes-clientes.js?v=20260908c"></script>
-  <script src="js/tema.js?v=20260908c"></script>
-  <script src="js/app.js?v=20260908c"></script>
-  <script src="js/chips.js?v=20260908c"></script>
-  <script src="js/modal.js?v=20260908c"></script>
-  <script src="js/ajuda-dados.js?v=20260908c"></script>
-  <script src="js/ajuda.js?v=20260908c"></script>
-  <script src="js/acoes-simuladas.js?v=20260908c"></script>
-  <script src="js/vendas.js?v=20260908c"></script>
-  <script src="js/pendentes.js?v=20260908c"></script>
+  <script src="js/utils.js?v=20260908e"></script>
+  <script src="js/menu.js?v=20260908e"></script>
+  <script src="js/storage.js?v=20260908e"></script>
+  <script src="js/notificacoes-clientes.js?v=20260908e"></script>
+  <script src="js/tema.js?v=20260908e"></script>
+  <script src="js/app.js?v=20260908e"></script>
+  <script src="js/chips.js?v=20260908e"></script>
+  <script src="js/modal.js?v=20260908e"></script>
+  <script src="js/ajuda-dados.js?v=20260908e"></script>
+  <script src="js/ajuda.js?v=20260908e"></script>
+  <script src="js/acoes-simuladas.js?v=20260908e"></script>
+  <script src="js/vendas.js?v=20260908e"></script>
+  <script src="js/pendentes.js?v=20260908e"></script>
 </body>
 </html>

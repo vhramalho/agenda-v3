@@ -281,6 +281,7 @@ function renderizarOcorrenciasDevedor(item) {
    ver abrirEdicaoVendaPendente). */
 let quemDeveExpandido = false;
 let quemDeveAba = "atendimento";
+let quemDeveAsc = true;
 
 function atualizarCardsPendentes() {
   if (!qs("#js-pendentes-valor")) return;
@@ -298,10 +299,13 @@ function atualizarQuemDeve() {
   if (!qs("#js-quem-deve-lista")) return;
   const tipoFiltro = quemDeveAba === "vendas" ? "venda" : "atendimento";
   const unificada = pendenciasUnificadas().filter((item) => item.tipo === tipoFiltro);
+  if (!quemDeveAsc) unificada.reverse();
   const titulo = qs("#js-quem-deve-titulo");
   const toggle = qs("#js-quem-deve-toggle");
   const container = qs("#js-quem-deve-lista");
   const vazio = qs("#js-quem-deve-vazio");
+  const ordenar = qs("#js-quem-deve-ordenar");
+  ordenar.style.color = quemDeveAsc ? "var(--text-secondary)" : "var(--primary)";
 
   container.innerHTML = "";
   if (unificada.length === 0) {
@@ -310,9 +314,11 @@ function atualizarQuemDeve() {
     vazio.querySelector(".empty-state__title").textContent = tipoFiltro === "venda" ? "Nenhuma venda pendente" : "Nenhum atendimento pendente";
     titulo.textContent = "Quem deve";
     toggle.classList.add("is-hidden");
+    ordenar.classList.add("is-hidden");
   } else {
     container.classList.remove("is-hidden");
     vazio.classList.add("is-hidden");
+    ordenar.classList.remove("is-hidden");
     (quemDeveExpandido ? unificada : unificada.slice(0, 5)).forEach((item, i) => container.appendChild(montarLinhaPendenteUnificada(item, i)));
     if (unificada.length > 5) {
       titulo.textContent = `Quem deve (${unificada.length})`;
@@ -325,6 +331,11 @@ function atualizarQuemDeve() {
   }
 }
 
+/* Top3 desta página é um teaser horizontal (pódio: 2º-1º-3º), igual aos
+   outros rankings do app (Serviços mais realizados/Mais vendidos, ver
+   montarPodioColuna em js/utils.js) — diferente da lista vertical completa
+   de pendentes-devedores.html, que continua usando montarLinhaDevedorCompleta
+   (essa função não muda, é reaproveitada lá). */
 function atualizarDevedoresTop3() {
   if (!qs("#js-devedores-top3")) return;
   const top3 = rankingDevedoresCombinado({ tipo: "ano", ano: new Date().getFullYear() }).slice(0, 3);
@@ -333,7 +344,11 @@ function atualizarDevedoresTop3() {
   if (top3.length === 0) {
     container.innerHTML = `<p class="text-secondary" style="text-align:center;">Nenhum cliente com pendência no momento.</p>`;
   } else {
-    top3.forEach((item, i) => container.appendChild(montarLinhaDevedorCompleta(item, i, i + 1)));
+    const podio = document.createElement("div");
+    podio.className = "podio";
+    const posicoes = top3.map((item, i) => ({ item: { nome: item.nome, valor: item.vezes }, posicao: i + 1 }));
+    [posicoes[1], posicoes[0], posicoes[2]].filter(Boolean).forEach(({ item, posicao }) => podio.appendChild(montarPodioColuna(item, posicao)));
+    container.appendChild(podio);
   }
 }
 
@@ -354,6 +369,11 @@ document.addEventListener("DOMContentLoaded", () => {
   if (qs("#js-quem-deve-lista")) {
     qs("#js-quem-deve-toggle").addEventListener("click", () => {
       quemDeveExpandido = !quemDeveExpandido;
+      atualizarQuemDeve();
+    });
+
+    qs("#js-quem-deve-ordenar").addEventListener("click", () => {
+      quemDeveAsc = !quemDeveAsc;
       atualizarQuemDeve();
     });
 
