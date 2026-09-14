@@ -7,8 +7,8 @@
    tags <link>/<script> nas páginas .html.
    ============================================================ */
 
-const VERSAO_APP = "1.79.1";
-const BUILD_VERSAO = "20260910a";
+const VERSAO_APP = "1.79.2";
+const BUILD_VERSAO = "20260914a";
 
 document.addEventListener("DOMContentLoaded", () => {
   const botao = qs("#js-btn-versao");

@@ -16,6 +16,11 @@ body {
 html {
   background: var(--bg);
   color-scheme: dark;
+  /* Sem isso, dois toques rápidos em qualquer área vazia disparam o
+     gesto nativo de "double-tap to zoom" do Safari/iOS — mesmo com
+     user-scalable=no no viewport, que só bloqueia o pinça. O app
+     parece "subir" a cada duplo toque (bug reportado 2026-09-14). */
+  touch-action: manipulation;
 }
 
 html[data-theme="light"] {
