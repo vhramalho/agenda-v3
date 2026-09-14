@@ -2,6 +2,29 @@
    AGENDA V3 — Utilitários gerais
    ============================================================ */
 
+/* Bloqueia o gesto nativo de "double-tap to zoom" do Safari/iOS.
+   `touch-action: manipulation` no CSS (css/base.css) não é suficiente
+   sozinho no WKWebView do app instalado na tela de início — o zoom
+   continuava acontecendo mesmo com a regra CSS. Fix reforçado: se o
+   MESMO elemento receber dois toques em menos de 300ms, cancela o
+   evento antes do navegador interpretar como double-tap-zoom. Compara
+   o alvo (não só o tempo) pra não atrapalhar dois toques rápidos em
+   botões diferentes. */
+(function bloquearZoomDuploToque() {
+  let ultimoToque = { tempo: 0, alvo: null };
+  document.addEventListener(
+    "touchend",
+    (evento) => {
+      const agora = Date.now();
+      if (agora - ultimoToque.tempo <= 300 && evento.target === ultimoToque.alvo) {
+        evento.preventDefault();
+      }
+      ultimoToque = { tempo: agora, alvo: evento.target };
+    },
+    { passive: false }
+  );
+})();
+
 function qs(seletor, escopo) {
   return (escopo || document).querySelector(seletor);
 }
